@@ -1,115 +1,104 @@
 <script setup lang="ts">
-// Phase 0 placeholder. The real Start screen is lane S1 (docs/plan.md §3).
-import { SPECS } from '@fsim/contracts';
+// Start screen (route /): paste an export or pick a spec, see recent runs and what the engine is.
+useHead({ title: 'New run · forever/sim' });
 
-const classes = [...new Set(SPECS.map((s) => s.class))];
+const engine = useEngine();
+const imp = useStartImport();
+
+watch(imp.text, () => imp.schedule());
+// The paste box survives navigation; re-check it if the game data was not there the first time.
+onMounted(() => {
+  if (imp.text.value.trim() && !imp.result.value) imp.schedule(0);
+});
+
+const markers = computed(() => startLineMarkers(imp.text.value, imp.result.value));
+const down = computed(() => engine.status.value === 'unavailable' || engine.status.value === 'error');
 </script>
 
 <template>
-  <header class="chrome">
-    <div class="chrome__inner">
-      <span class="num wordmark">forever<span class="wordmark__slash">/</span>sim</span>
-      <span class="num status"><span class="status__dot" aria-hidden="true" />scaffold · phase 0</span>
-    </div>
-  </header>
   <main class="page">
     <h1 class="title">New run</h1>
-    <section class="panel" aria-labelledby="specs-h">
-      <div class="panel__head">
-        <h2 id="specs-h">Specs known to the contracts package</h2>
-        <span class="num meta">{{ SPECS.length }} specs · {{ classes.length }} classes</span>
+    <p class="lede">
+      Paste an export or start from a spec. Everything runs in this browser; nothing is uploaded.
+    </p>
+
+    <section v-if="down" class="notice" aria-labelledby="engine-down-h">
+      <UiStatusGlyph status="warning" hide-label label="Warning" />
+      <div>
+        <h2 id="engine-down-h" class="notice__title">
+          {{
+            engine.status.value === 'unavailable'
+              ? 'No engine is staged for this build'
+              : 'The engine failed to load'
+          }}
+        </h2>
+        <p class="notice__body">
+          <template v-if="engine.status.value === 'unavailable'">
+            Pasted exports cannot be checked, because that needs the item data that ships with the engine, and
+            nothing can be simmed. Starting from a spec still loads its preset into the workbench.
+          </template>
+          <template v-else>
+            {{ engine.error.value }}. Importing may still work, since the item data loads separately; simming
+            will not until the page is reloaded.
+          </template>
+        </p>
       </div>
-      <ul class="specs">
-        <li v-for="s in SPECS" :key="s.id">
-          <span class="specs__mark" :style="{ background: `var(--class-${s.class})` }" aria-hidden="true" />
-          {{ s.name }}
-        </li>
-      </ul>
     </section>
+
+    <UiPanelGrid>
+      <StartInputPanel v-model="imp.text.value" :markers="markers" :span="7" />
+      <StartParsedPanel
+        :span="5"
+        :input="imp.text.value"
+        :result="imp.result.value"
+        :parsing="imp.parsing.value"
+        :parse-error="imp.parseError.value"
+      />
+      <StartSpecPicker :span="7" />
+      <StartRecentRuns :span="5" />
+      <StartReferenceDps :span="7" />
+      <StartEngineData :span="5" />
+    </UiPanelGrid>
   </main>
 </template>
 
 <style scoped>
-.chrome {
-  height: var(--chrome-height);
-  background: var(--bg-chrome);
-  border-bottom: 1px solid var(--line-seam);
-}
-.chrome__inner {
-  max-width: var(--page-max);
-  height: 100%;
-  margin: 0 auto;
-  padding: 0 var(--space-6);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.wordmark {
-  font-size: var(--text-sm);
-  font-weight: 500;
-}
-.wordmark__slash {
-  color: var(--text-3);
-}
-.status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--text-xs);
-  color: var(--text-2);
-}
-.status__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--status-warning);
-}
 .page {
   max-width: var(--page-max);
   margin: 0 auto;
   padding: 20px var(--space-6) 40px;
 }
 .title {
-  margin: 0 0 var(--space-5);
+  margin: 0 0 4px;
   font-size: var(--text-lg);
   font-weight: 600;
 }
-.panel {
-  background: var(--bg-panel);
+.lede {
+  margin: 0 0 var(--space-5);
+  color: var(--text-2);
+}
+.notice {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: var(--space-5);
+  padding: 10px var(--space-4);
+  background: var(--status-warning-bg);
   border: 1px solid var(--line-seam);
 }
-.panel__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 10px var(--space-4);
-  border-bottom: 1px solid var(--line-seam);
-}
-.panel__head h2 {
+.notice__title {
   margin: 0;
   font-size: var(--text-sm);
   font-weight: 500;
 }
-.meta {
-  font-size: var(--text-xs);
-  color: var(--text-3);
+.notice__body {
+  margin: 2px 0 0;
+  max-width: 80ch;
+  color: var(--text-2);
 }
-.specs {
-  list-style: none;
-  margin: 0;
-  padding: var(--space-2) var(--space-4);
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 6px var(--space-6);
-}
-.specs li {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.specs__mark {
-  width: 3px;
-  height: 12px;
-  border-radius: var(--radius-mark);
+@media (max-width: 640px) {
+  .page {
+    padding: var(--space-5) var(--space-5) 32px;
+  }
 }
 </style>
