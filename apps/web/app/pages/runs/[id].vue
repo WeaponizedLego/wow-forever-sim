@@ -85,7 +85,10 @@ const busy = computed(() => session.progress.value !== null);
 async function rerun() {
   actionError.value = null;
   try {
-    const next = await session.runSim({ iterations: record.value!.iterations });
+    const next = await session.runSim({
+      iterations: record.value!.iterations,
+      character: record.value!.character,
+    });
     await navigateTo(`/runs/${runSlug(next.record.id)}`);
   } catch (e) {
     if (!(e instanceof DOMException && e.name === 'AbortError'))

@@ -132,6 +132,8 @@ function alignOf(col: TableColumn<Row>) {
 
 <style scoped>
 .scroll {
+  /* Contains the absolutely positioned visually-hidden labels, which otherwise widen the page on phones. */
+  position: relative;
   overflow: auto;
 }
 .table {

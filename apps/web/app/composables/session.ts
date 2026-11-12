@@ -72,9 +72,15 @@ export function useSession() {
   }
 
   async function runSim(
-    opts: { iterations: number; seed?: number; label?: RunRecord['kind'] } = { iterations: 5000 },
+    opts: {
+      iterations: number;
+      seed?: number;
+      label?: RunRecord['kind'];
+      /** Sim this character instead of the draft (e.g. re-running an old run). The baseline does not move. */
+      character?: Character;
+    } = { iterations: 5000 },
   ) {
-    const c = character.value;
+    const c = opts.character ?? character.value;
     if (!c) throw new Error('No character');
     lastError.value = null;
     abort?.abort();
@@ -120,7 +126,7 @@ export function useSession() {
         summary: { dpsMean: s.mean, dpsStdev: s.stdev, dpsCi95: s.ci95, wallMs: performance.now() - t0 },
       };
       runs.value = [{ record, result }, ...runs.value];
-      baseline.value = structuredClone(toRaw(c));
+      if (!opts.character) baseline.value = structuredClone(toRaw(c));
       return runs.value[0]!;
     } catch (e) {
       if (!signal.aborted) lastError.value = e instanceof Error ? e.message : String(e);
@@ -167,10 +173,22 @@ export function useSession() {
     abort = new AbortController();
     progress.value = { kind: 'stat-weights', fraction: null, completed: 0, total: 0 };
     try {
-      const result = await client.statWeights(req, { signal: abort.signal });
+      const result = await client.statWeights(req, {
+        signal: abort.signal,
+        onProgress: (p) => {
+          if (p.totalIterations > 0)
+            progress.value = {
+              kind: 'stat-weights',
+              fraction: p.completedIterations / p.totalIterations,
+              completed: p.completedIterations,
+              total: p.totalIterations,
+            };
+        },
+      });
       if (result.error) throw new Error(result.error.message.split('\n')[0]);
-      entry.statWeights = result;
-      runs.value = [...runs.value];
+      // Replace the entry rather than mutate it, so computeds over run(id) see the weights arrive.
+      const updated: RunEntry = { ...entry, statWeights: result };
+      runs.value = runs.value.map((r) => (r === entry ? updated : r));
       return result;
     } finally {
       progress.value = null;
