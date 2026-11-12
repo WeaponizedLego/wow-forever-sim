@@ -1,0 +1,126 @@
+{
+  "format": "simc",
+  "character": {
+    "name": "Aeryn of the High Order",
+    "realm": "ashbringer",
+    "region": "eu",
+    "class": "mage",
+    "spec": "mage",
+    "race": "highorderskyborne",
+    "level": 60,
+    "gear": {
+      "head": {
+        "itemId": 16686,
+        "enchantId": 2588
+      },
+      "neck": {
+        "itemId": 23057
+      },
+      "shoulder": {
+        "itemId": 22412,
+        "enchantId": 2605
+      },
+      "back": {
+        "itemId": 21415,
+        "enchantId": 2621
+      },
+      "chest": {
+        "itemId": 16688,
+        "enchantId": 1893
+      },
+      "wrist": {
+        "itemId": 16683,
+        "enchantId": 1883
+      },
+      "hands": {
+        "itemId": 16684
+      },
+      "waist": {
+        "itemId": 18405
+      },
+      "legs": {
+        "itemId": 13170
+      },
+      "feet": {
+        "itemId": 11822,
+        "enchantId": 911
+      },
+      "finger1": {
+        "itemId": 275982
+      },
+      "finger2": {
+        "itemId": 18543
+      },
+      "trinket1": {
+        "itemId": 18820
+      },
+      "trinket2": {
+        "itemId": 19379
+      },
+      "mainHand": {
+        "itemId": 23451,
+        "enchantId": 2504
+      },
+      "offHand": {
+        "itemId": 19366
+      },
+      "ranged": {
+        "itemId": 279246
+      }
+    },
+    "talents": "",
+    "professions": [
+      "tailoring",
+      "enchanting"
+    ],
+    "consumables": {},
+    "specOptions": {},
+    "buffs": "full-raid",
+    "rotation": {
+      "kind": "preset",
+      "presetId": "default"
+    },
+    "encounter": {
+      "durationSec": 180,
+      "durationVariationSec": 36,
+      "targetCount": 1,
+      "targetLevel": 63,
+      "executePhase": true
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "SPEC-04",
+      "severity": "info",
+      "message": "Spec not in the export. Mage is the only mage spec.",
+      "line": 13,
+      "field": "spec"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "warning",
+      "message": "Talents are a WoW client loadout string, which cannot be converted yet. The spec preset will be used; set talents in the workbench.",
+      "line": 15,
+      "field": "talents"
+    },
+    {
+      "code": "DATA-03",
+      "severity": "warning",
+      "message": "Hands enchant 2650 is not in data build upstream-b2047bf. The item is kept without it.",
+      "line": 31,
+      "field": "hands"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Rotation not in the export. Using the upstream default for Mage.",
+      "field": "rotation"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Consumables not in the export. The spec preset will be applied.",
+      "field": "consumables"
+    }
+  ]
+}

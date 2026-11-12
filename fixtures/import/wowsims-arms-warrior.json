@@ -1,0 +1,38 @@
+{
+  "class": "warrior",
+  "flavor": "forever",
+  "gear": {
+    "items": [
+      { "id": 12620 },
+      { "id": 18404 },
+      { "id": 12625 },
+      { "enchant": 849, "id": 10148 },
+      { "enchant": 1891, "id": 11604 },
+      { "enchant": 1885, "id": 16735 },
+      { "enchant": 927, "id": 13072 },
+      { "id": 13077 },
+      { "enchant": 8491, "id": 12619 },
+      { "enchant": 911, "id": 13070 },
+      { "id": 18821 },
+      { "id": 11990, "random_suffix": 12727 },
+      { "id": 10659 },
+      { "id": 10779 },
+      { "enchant": 1900, "id": 12784 },
+      null,
+      { "id": 16996 }
+    ]
+  },
+  "id": "Player-5826-0A1B2C3D",
+  "level": 60,
+  "name": "Brannoc",
+  "professions": [
+    { "level": 300, "name": "Blacksmithing" },
+    { "level": 300, "name": "Mining" }
+  ],
+  "race": "Dwarf",
+  "realm": "Ashbringer",
+  "spec": "arms",
+  "talents": "30303213132215201-55050000002-2",
+  "unit": "player",
+  "version": "v2.31"
+}
