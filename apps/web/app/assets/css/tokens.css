@@ -12,18 +12,25 @@
   --bg-panel: #141518;
   --bg-raised: #1c1e22; /* tooltips, active nav, pressed segments */
   --bg-input: #191b1e;
+  --bg-pressed: #24262a; /* pressed segment, empty meter cells, bar tracks */
+  --bg-row-changed: #121a26; /* table row changed in the draft (with a --series-1 inset marker) */
+  --bg-row-reference: #1a1714; /* table row that is the reference, e.g. "currently equipped" */
 
   /* Lines */
   --line-seam: #1e2024; /* gaps between tiled panels, panel header rule */
   --line-row: #1a1c1f; /* table row separators */
   --line-control: #2e3136; /* control borders */
   --line-axis: #3a3d43;
+  --line-subtle: #24262a; /* search field, whisker track */
+  --line-chip: #2a2d32; /* static chips */
 
   /* Text (all ≥ 4.5:1 on --bg-panel) */
   --text-1: #ecedee;
   --text-2: #a9adb4;
   --text-3: #868b93;
   --text-disabled: #5c6068;
+  --text-code: #c9ccd1; /* pasted text in the code input */
+  --text-gutter: #4e525a; /* line numbers (decorative; the line itself carries the meaning) */
 
   /* Primary action: inverted, no brand color */
   --action-bg: #ecedee;
@@ -36,6 +43,9 @@
   --series-muted: #4a4e56; /* miss / dodge / "other" */
   --series-neutral: #6b7180; /* magnitude bars with no identity */
   --series-baseline: #a9adb4; /* baseline run, drawn dashed */
+  --series-lane: #5b6170; /* aura lane segments */
+  --chart-region: rgb(236 237 238 / 3.5%); /* shaded x-range, e.g. execute phase */
+  --chart-hover: rgb(236 237 238 / 6%); /* hovered bin / column */
 
   /* Deltas: blue/orange, not green/red, and always with a ▲ ▼ ≈ glyph */
   --delta-up: #6fa8f0;
@@ -87,6 +97,7 @@
   --radius-control: 3px;
   --radius-tooltip: 4px;
   --radius-mark: 1px; /* bars, swatches */
+  --shadow-tooltip: 0 8px 24px rgb(0 0 0 / 50%);
 
   --page-max: 1440px;
   --chrome-height: 40px;
