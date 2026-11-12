@@ -109,14 +109,20 @@ describe('stat weights (fixture)', () => {
   ];
   const rows = statWeightRows(weightsFixture(), refs);
 
-  it('reads weight, stdev, CI95, EP and relative error', () => {
+  // weightsStdev is the stdev of one paired sample; the weight's standard error is that over √samples.
+  const AGI_SE = 0.34671760481417124 / Math.sqrt(2000);
+  const RAP_SE = 0.00781993312140753 / Math.sqrt(2000);
+
+  it('reads weight, standard error (per-sample stdev / √samples), CI95, EP and relative error', () => {
     const [agi, rap, str] = rows;
     expect(agi!.weight).toBeCloseTo(0.7879839707049089, 14);
-    expect(agi!.stdev).toBeCloseTo(0.34671760481417124, 14);
-    expect(agi!.ci95).toBeCloseTo(1.959963984540054 * 0.34671760481417124, 12);
+    expect(agi!.sampleStdev).toBeCloseTo(0.34671760481417124, 14);
+    expect(agi!.stdev).toBeCloseTo(AGI_SE, 14);
+    expect(agi!.ci95).toBeCloseTo(1.959963984540054 * AGI_SE, 12);
     expect(agi!.ep).toBeCloseTo(3.409526484493229, 12);
-    expect(agi!.relError).toBeCloseTo(0.34671760481417124 / 0.7879839707049089, 12);
+    expect(agi!.relError).toBeCloseTo(AGI_SE / 0.7879839707049089, 12);
     expect(agi!.samples).toBe(2000);
+    expect(str!.stdev).toBe(0);
     expect(rap!.ep).toBe(1);
     expect(str!.weight).toBe(0);
     expect(str!.relError).toBeNull();
@@ -132,7 +138,7 @@ describe('stat weights (fixture)', () => {
       rows,
     );
     expect(est.delta).toBeCloseTo(10 * 0.7879839707049089 - 20 * 0.2311124357850618, 12);
-    expect(est.stdev).toBeCloseTo(Math.hypot(10 * 0.34671760481417124, 20 * 0.00781993312140753), 12);
+    expect(est.stdev).toBeCloseTo(Math.hypot(10 * AGI_SE, 20 * RAP_SE), 12);
     expect(est.ci95).toBeCloseTo(1.959963984540054 * est.stdev, 12);
     expect(est.missing).toEqual([{ kind: 'stat', stat: Stat.StatHitRating }]);
     expect(est.terms).toHaveLength(2);
@@ -144,7 +150,7 @@ describe('stat weights (fixture)', () => {
     const w = [
       { ref: { kind: 'stat', stat: 0 } as StatRef, weight: 6.8, stdev: 1.4 / 1.959963984540054 },
       { ref: { kind: 'stat', stat: 1 } as StatRef, weight: 2.1, stdev: 0.3 / 1.959963984540054 },
-    ].map((x) => ({ ...x, ci95: 0, ep: 0, epStdev: 0, relError: null, samples: null }));
+    ].map((x) => ({ ...x, ci95: 0, ep: 0, epStdev: 0, relError: null, samples: 0, sampleStdev: 0 }));
     const est = linearEstimate(
       [
         { ref: { kind: 'stat', stat: 0 }, amount: 1 },

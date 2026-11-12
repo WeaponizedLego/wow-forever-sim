@@ -8,7 +8,7 @@
 // Screens read and change state only through useSession(); they never build engine requests themselves.
 import { CharacterSchema, type Character, type ImportResult, type RunRecord } from '@fsim/contracts';
 import type { RaidSimResult, StatWeightsResult } from '@fsim/proto';
-import { StatWeightsRequest } from '@fsim/proto/api';
+import { StatWeightsRequest, StatWeightsTarget } from '@fsim/proto/api';
 import type { PseudoStat, Stat } from '@fsim/proto/common';
 import { importAny } from '@fsim/importers';
 import { buildRaidSimRequest, fillFromPreset, loadSpecPresets, toImportContext } from '@fsim/gamedata';
@@ -38,6 +38,9 @@ const progress = ref<SimProgress | null>(null);
 const lastError = ref<string | null>(null);
 let runCounter = 0;
 let abort: AbortController | null = null;
+
+/** Stat weights default: each EP to ±0.05 (90%), at most 8× the engine's first pass. */
+export const DEFAULT_WEIGHT_PRECISION = { epCi: 0.05, maxIterationMultiplier: 8 } as const;
 
 const nextRunId = () => `#${String(++runCounter).padStart(4, '0')}`;
 
@@ -146,11 +149,17 @@ export function useSession() {
       runId?: string;
       /** Pseudo-stats to weigh too, e.g. weapon damage, so weapons can be valued. */
       pseudoStats?: PseudoStat[];
+      /**
+       * Keep simming until each EP's 90% ± is at most this (in EP units, reference stat = 1), capped at
+       * `maxIterationMultiplier` × the first pass. Default ±0.05, ×8. Pass null for one pass of `iterations`.
+       */
+      precision?: { epCi: number; maxIterationMultiplier: number } | null;
     } = {},
   ) {
     const c = character.value;
     const entry = opts.runId ? runs.value.find((r) => r.record.id === opts.runId) : runs.value[0];
     if (!c || !entry) throw new Error('Run a sim first');
+    const precision = opts.precision === undefined ? DEFAULT_WEIGHT_PRECISION : opts.precision;
     lastError.value = null;
     const [client, db, presets] = await Promise.all([
       engine.client(),
@@ -172,6 +181,7 @@ export function useSession() {
         simOptions: raid.simOptions,
         statsToWeigh: stats,
         pseudoStatsToWeigh: opts.pseudoStats ?? [],
+        ...(precision && { target: StatWeightsTarget.create(precision) }),
         epReferenceStat: referenceStat,
         hpsReferenceStat: referenceStat,
       }),

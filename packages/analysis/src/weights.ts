@@ -15,17 +15,20 @@ export interface StatWeightRow {
   ref: StatRef;
   /** Metric gained per 1 unit of the stat. */
   weight: number;
-  /** Standard error of `weight`, as the engine reports it (`weightsStdev`). */
+  /** Standard error of `weight`: the engine's per-sample stdev over √samples. */
   stdev: number;
   /** CI95 half-width of `weight` (Z95 · stdev). */
   ci95: number;
   /** Weight relative to the EP reference stat (reference = 1). */
   ep: number;
+  /** Standard error of `ep`. */
   epStdev: number;
   /** stdev / |weight|. Null when the weight is 0. */
   relError: number | null;
-  /** Paired samples behind the weight, when the engine reports it. */
-  samples: number | null;
+  /** Paired samples behind the weight (`sampleCounts`, else the run's iterations); 0 for a stat not weighed. */
+  samples: number;
+  /** The engine's `weightsStdev` as reported: the stdev of one paired sample, not of the weight. */
+  sampleStdev: number;
 }
 
 function read(stats: UnitStats | undefined, ref: StatRef): number {
@@ -36,28 +39,35 @@ function read(stats: UnitStats | undefined, ref: StatRef): number {
 /**
  * Stat weight rows for the requested stats, in the order given.
  *
- * Assumes `weightsStdev` is the standard error of each weight (the engine derives it from the
- * per-iteration DPS spread of the paired runs over √samples), so CI95 = 1.96 · stdev.
+ * The engine's `weightsStdev` / `epValuesStdev` are the spread of ONE paired sample (sim/core/statweight.go
+ * `meanAndStdDev` over the per-iteration differences), so the weight's standard error is that over √samples, where
+ * samples is `sampleCounts` for the stat (upstream's UI does the same). `iterations` is the fallback for results without
+ * per-stat counts.
  */
 export function statWeightRows(
   result: StatWeightsResult,
   stats: readonly StatRef[],
   metric: WeightMetric = 'dps',
+  iterations?: number,
 ): StatWeightRow[] {
   const v: StatWeightValues | undefined = result[metric];
   return stats.map((ref) => {
     const weight = read(v?.weights, ref);
-    const stdev = read(v?.weightsStdev, ref);
-    const samples = result.sampleCounts ? read(result.sampleCounts, ref) : null;
+    const sampleStdev = read(v?.weightsStdev, ref);
+    const samples = (result.sampleCounts && read(result.sampleCounts, ref)) || iterations || 0;
+    // A stat that was not weighed has no samples and no spread: its weight is 0 with no error.
+    const root = samples > 0 ? Math.sqrt(samples) : NaN;
+    const stdev = sampleStdev === 0 ? 0 : sampleStdev / root;
     return {
       ref,
       weight,
       stdev,
       ci95: Z95 * stdev,
       ep: read(v?.epValues, ref),
-      epStdev: read(v?.epValuesStdev, ref),
+      epStdev: read(v?.epValuesStdev, ref) === 0 ? 0 : read(v?.epValuesStdev, ref) / root,
       relError: weight === 0 ? null : stdev / Math.abs(weight),
       samples,
+      sampleStdev,
     };
   });
 }

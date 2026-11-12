@@ -329,7 +329,7 @@ export function useRunAnalysis(
     if (!sw || !entry.value) return null;
     const { stats, reference } = weightStatsFor(entry.value.record.character.spec);
     const refs: StatRef[] = stats.map((stat) => ({ kind: 'stat', stat }));
-    return statWeightRows(sw, refs).map((r) => ({
+    return statWeightRows(sw, refs, 'dps', entry.value.record.iterations).map((r) => ({
       ...r,
       label: statLabel(r.ref.stat as Stat),
       isReference: r.ref.kind === 'stat' && r.ref.stat === reference,

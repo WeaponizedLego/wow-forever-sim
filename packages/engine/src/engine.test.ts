@@ -132,6 +132,33 @@ describe.skipIf(!!VENDOR_MISSING)('engine in worker_threads', () => {
     expect(progress.at(-1)!.finalWeightResult).toBeDefined();
   });
 
+  it('parallel stat weights match the single-worker engine exactly', async () => {
+    const req = loadStatWeightsRequest();
+    req.simOptions = { ...req.simOptions!, iterations: 400 };
+    const [single1] = await timed(() => one.statWeightsSingleWorker(req));
+    const progress: ProgressMetrics[] = [];
+    let par;
+    [par, timings['statWeights 400 it, parallel']] = await timed(() =>
+      many.statWeights(req, { onProgress: (p) => progress.push(p) }),
+    );
+    expect(par.dps!.weights!.stats).toEqual(single1.dps!.weights!.stats);
+    expect(par.dps!.weightsStdev!.stats).toEqual(single1.dps!.weightsStdev!.stats);
+    expect(progress.at(-1)!.completedIterations).toBe(progress.at(-1)!.totalIterations);
+  });
+
+  it('tops up stat weight runs until a precision target is met', async () => {
+    const req = loadStatWeightsRequest();
+    const target = 0.25; // 90% ± of each EP, in EP units; loose so the test stays quick
+    const res = await many.statWeights({
+      ...req,
+      target: { epCi: target, maxIterationMultiplier: 0, metrics: [] },
+    });
+    // Agility (1); the EP reference (ranged AP, 15) is exact by definition.
+    const samples = res.sampleCounts!.stats[1]!;
+    const se = res.dps!.epValuesStdev!.stats[1]! / Math.sqrt(samples);
+    expect(1.6448536269514722 * se).toBeLessThanOrEqual(target * 1.0001);
+  });
+
   it('reports engine errors as EngineError', async () => {
     const bad = { ...fixtureReq, simOptions: { ...fixtureReq.simOptions!, iterations: 0 } };
     await expect(many.raidSim(bad)).rejects.toMatchObject({ name: 'EngineError' });

@@ -1,3 +1,4 @@
+import { runConcurrentStatWeights } from './statWeights';
 import type { EngineClient, EngineVersion, RunOptions } from '@fsim/contracts';
 import {
   ComputeStatsRequest,
@@ -176,8 +177,28 @@ export class WasmEngineClient implements EngineClient {
     return result;
   }
 
-  /** Stat weights on a single worker (`statWeightsAsync`). Progress is the engine's own. */
+  /**
+   * Stat weights split across every worker, with paired seeds; with `req.target` set, runs are topped up until each
+   * EP reaches the target ± (see ./statWeights.ts). Progress is iterations over all sims of all passes.
+   */
   async statWeights(req: StatWeightsRequest, opts: RunOptions = {}): Promise<StatWeightsResult> {
+    opts.signal?.throwIfAborted();
+    const res = await runConcurrentStatWeights(
+      {
+        call: (method, payload, signal) => this.pool.call(method, payload, signal ? { signal } : {}),
+        raidSim: (r, o) => this.raidSim(r, o),
+      },
+      req,
+      opts,
+    ).catch((e: unknown) => {
+      throw opts.signal?.aborted ? abortReason(opts.signal) : e;
+    });
+    if (res.error) throw outcomeError(res.error, opts.signal);
+    return res;
+  }
+
+  /** Stat weights on a single worker (`statWeightsAsync`), one pass. Kept for comparison and tests. */
+  async statWeightsSingleWorker(req: StatWeightsRequest, opts: RunOptions = {}): Promise<StatWeightsResult> {
     const { signal, onProgress } = opts;
     signal?.throwIfAborted();
     const final = await this.pool.callAsync(

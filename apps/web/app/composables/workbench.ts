@@ -259,6 +259,7 @@ function createWorkbench() {
       entry.statWeights as StatWeightsResult,
       ALL_REFS,
       weightPlan(c.spec).metric,
+      entry.record.iterations,
     ).filter((r) => r.weight !== 0 || r.stdev !== 0);
     return rows.length ? { runId: entry.record.id, rows } : null;
   });
