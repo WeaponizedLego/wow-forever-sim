@@ -15,3 +15,6 @@ packages/engine/vendor/
 
 # Agent worktrees
 .claude/worktrees/
+
+# Engine files staged for the browser by apps/web/scripts/stage-engine.mjs
+apps/web/public/engine/

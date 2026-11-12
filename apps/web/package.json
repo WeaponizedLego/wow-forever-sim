@@ -3,15 +3,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
+    "dev": "node scripts/stage-engine.mjs && nuxt dev",
+    "build": "node scripts/stage-engine.mjs --optional && nuxt build",
+    "generate": "node scripts/stage-engine.mjs --optional && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "stage-engine": "node scripts/stage-engine.mjs"
   },
   "dependencies": {
+    "@fsim/analysis": "workspace:*",
     "@fsim/contracts": "workspace:*",
+    "@fsim/engine": "workspace:*",
+    "@fsim/gamedata": "workspace:*",
+    "@fsim/importers": "workspace:*",
+    "@fsim/proto": "workspace:*",
     "nuxt": "^4.6.4",
     "vue": "^3.5.45"
   },
