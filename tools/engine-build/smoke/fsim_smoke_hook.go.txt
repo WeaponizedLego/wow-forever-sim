@@ -1,0 +1,140 @@
+//go:build fsim_smoke
+
+// Injected into the upstream clone as sim/core/zz_fsim_smoke_hook.go by tools/engine-build/smoke.mjs
+// (forever-sim engine-sync pipeline). Not part of upstream.
+//
+// With FSIM_SMOKE_OUT set, RunTestSuite does not run the suite. It writes the suite's
+// "Average-Default" RaidSimRequest (upstream's own default setup for the spec: default race, gear,
+// talents, rotation, consumables, full buffs, 2000 iterations, seed 101) with each player's
+// SimDatabase attached, as the browser client must send it, plus the native DPS that upstream's
+// committed .results file expects for that request.
+package core
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+
+	"github.com/wowsims/forever/assets/database"
+	"github.com/wowsims/forever/sim/core/proto"
+	"google.golang.org/protobuf/encoding/protojson"
+	googleProto "google.golang.org/protobuf/proto"
+)
+
+func fsimSmokeHook(suiteName string, generators []TestGenerator) bool {
+	outDir := os.Getenv("FSIM_SMOKE_OUT")
+	if outDir == "" {
+		return false
+	}
+	cwd, _ := os.Getwd()
+	meta := map[string]any{"suite": suiteName, "dir": cwd}
+
+	var req *proto.RaidSimRequest
+	for _, g := range generators {
+		cg, ok := g.(*CombinedTestGenerator)
+		if !ok {
+			continue
+		}
+		for _, sub := range cg.subgenerators {
+			if sub.name == "Average" {
+				if _, _, _, rsr := sub.generator.GetTest(0); rsr != nil {
+					req = googleProto.Clone(rsr).(*proto.RaidSimRequest)
+					break
+				}
+			}
+		}
+		if req != nil {
+			break
+		}
+	}
+	if req == nil {
+		meta["skip"] = "no Average-Default raid sim in this suite (stats-only or coverage suite)"
+		fsimWriteJSON(filepath.Join(outDir, suiteName+".meta.json"), meta)
+		return true
+	}
+
+	db := database.Load()
+	for _, party := range req.Raid.Parties {
+		for _, p := range party.Players {
+			if p != nil && p.Equipment != nil {
+				p.Database = fsimSubset(db, p)
+			}
+		}
+	}
+	player := req.Raid.Parties[0].Players[0]
+	meta["spec"] = PlayerProtoToSpec(player).String()
+	meta["class"] = player.Class.String()
+	meta["iterations"] = req.SimOptions.GetIterations()
+	meta["seed"] = req.SimOptions.GetRandomSeed()
+	if expected, err := NewIndividualTestSuite(suiteName).readExpectedResults(); err == nil {
+		if r, ok := expected.DpsResults[suiteName+"-Average-Default"]; ok {
+			meta["nativeDps"] = r.Dps
+			meta["nativeHps"] = r.Hps
+		}
+	}
+
+	js, err := protojson.Marshal(req)
+	if err != nil {
+		panic(err)
+	}
+	if err := os.WriteFile(filepath.Join(outDir, suiteName+".request.json"), js, 0o644); err != nil {
+		panic(err)
+	}
+	fsimWriteJSON(filepath.Join(outDir, suiteName+".meta.json"), meta)
+	return true
+}
+
+func fsimWriteJSON(path string, v any) {
+	b, _ := json.MarshalIndent(v, "", "  ")
+	if err := os.WriteFile(path, b, 0o644); err != nil {
+		panic(err)
+	}
+}
+
+// fsimSubset is the SimDatabase the browser client sends for one player: the equipped (and item
+// swap) items with their enchants and random suffixes, rand-prop points, and every consumable and
+// spell effect (the real client trims those to what the player uses).
+func fsimSubset(db *proto.UIDatabase, p *proto.Player) *proto.SimDatabase {
+	items, enchants, suffixes := map[int32]bool{}, map[int32]bool{}, map[int32]bool{}
+	specs := append([]*proto.ItemSpec{}, p.Equipment.Items...)
+	if p.ItemSwap != nil {
+		specs = append(specs, p.ItemSwap.Items...)
+	}
+	for _, it := range specs {
+		if it == nil {
+			continue
+		}
+		items[it.Id] = true
+		enchants[it.Enchant] = true
+		suffixes[it.RandomSuffix] = true
+	}
+	out := &proto.SimDatabase{}
+	for _, item := range db.Items {
+		if !items[item.Id] {
+			continue
+		}
+		out.Items = append(out.Items, &proto.SimItem{Id: item.Id, Name: item.Name, Type: item.Type, ArmorType: item.ArmorType,
+			WeaponType: item.WeaponType, HandType: item.HandType, RangedWeaponType: item.RangedWeaponType, PseudoStats: item.PseudoStats,
+			WeaponSpeed: item.WeaponSpeed, QualityModifier: item.QualityModifier, SpellSchool: item.SpellSchool, Unique: item.Unique,
+			LimitCategory: item.LimitCategory, SetName: item.SetName, SetId: item.SetId, ClassAllowlist: item.ClassAllowlist,
+			ScalingOptions: item.ScalingOptions, ItemEffects: item.ItemEffects})
+	}
+	for _, e := range db.Enchants {
+		if enchants[e.EffectId] {
+			out.Enchants = append(out.Enchants, &proto.SimEnchant{EffectId: e.EffectId, Stats: e.Stats, PseudoStats: e.PseudoStats,
+				WeaponDamage: e.WeaponDamage, EnchantEffects: e.EnchantEffects, Name: e.Name, Type: e.Type, EnchantType: e.EnchantType,
+				ExtraTypes: e.ExtraTypes, ProcKind: e.ProcKind})
+		}
+	}
+	for _, s := range db.RandomSuffixes {
+		if suffixes[s.Id] {
+			out.RandomSuffixes = append(out.RandomSuffixes, &proto.ItemRandomSuffix{Id: s.Id, Name: s.Name, Stats: s.Stats, PseudoStats: s.PseudoStats})
+		}
+	}
+	for _, r := range db.ItemEffectRandPropPoints {
+		out.ItemEffectRandPropPoints = append(out.ItemEffectRandPropPoints, &proto.ItemEffectRandPropPoints{Ilvl: r.Ilvl, RandPropPoints: r.RandPropPoints})
+	}
+	out.Consumables = db.Consumables
+	out.SpellEffects = db.SpellEffects
+	return out
+}
