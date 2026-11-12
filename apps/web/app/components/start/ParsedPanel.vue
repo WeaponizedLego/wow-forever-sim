@@ -193,15 +193,6 @@ const progress = computed(() => {
   max-height: 300px;
   overflow: auto;
 }
-/* UiCheckList's code column (64px) wraps "DEFAULT-05"; see the lane report. */
-.checks :deep(.check--code) {
-  grid-template-columns: 22px 76px minmax(0, 1fr) auto;
-}
-@media (max-width: 640px) {
-  .checks :deep(.check--code) {
-    grid-template-columns: 22px minmax(0, 1fr);
-  }
-}
 .actions {
   padding: 10px var(--space-4) var(--space-4);
   border-top: 1px solid var(--line-row);

@@ -37,7 +37,8 @@ withDefaults(defineProps<{ items: CheckItem[]; dense?: boolean }>(), { dense: fa
   border-bottom: 1px solid var(--line-row);
 }
 .check--code {
-  grid-template-columns: 22px 64px minmax(0, 1fr) auto;
+  /* 76px fits the longest code, "DEFAULT-05", without wrapping. */
+  grid-template-columns: 22px 76px minmax(0, 1fr) auto;
 }
 .checks--dense {
   padding: 6px 0;

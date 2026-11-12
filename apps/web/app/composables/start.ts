@@ -77,12 +77,16 @@ const severityStatus = (s: Diagnostic['severity']): LineMarker['status'] =>
 export function startLineMarkers(input: string, r: ImportResult | null): Record<number, LineMarker> {
   const out: Record<number, LineMarker> = {};
   if (!r) return out;
+  // An item line whose only notes are info ("bonus_id skipped") imported fine: show ✓, keep the note as its message.
+  const gear = r.character?.gear as Record<string, unknown> | undefined;
+  const rank: Record<LineMarker['status'], number> = { good: 0, info: 1, warning: 2 };
   for (const d of r.diagnostics) {
     if (!d.line) continue;
     const prev = out[d.line];
-    const status = severityStatus(d.severity);
+    const status: LineMarker['status'] =
+      d.severity === 'info' && d.field && gear?.[d.field] ? 'good' : severityStatus(d.severity);
     out[d.line] = {
-      status: prev?.status === 'warning' ? 'warning' : status,
+      status: prev && rank[prev.status] > rank[status] ? prev.status : status,
       message: prev?.message ? `${prev.message} ${d.message}` : d.message,
     };
   }
