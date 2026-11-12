@@ -1,3 +1,25 @@
-// Lane L2. Loads the engine WASM in Web Workers and exposes EngineClient. Also turns a Character into a RaidSimRequest.
-// Empty until its Phase 1 lane starts. See docs/plan.md §3.
-export {};
+// @fsim/engine (lane L2): runs the wowsims/forever engine (MIT) as WASM in workers and implements
+// EngineClient. Browser-safe; the Node worker_threads adapter lives in `@fsim/engine/node`.
+export { WasmEngineClient, DEFAULT_MAX_CONCURRENCY, type EngineClientOptions } from './client';
+export { createBrowserEngineClient, wrapWebWorker, type BrowserEngineOptions } from './browser';
+export { WorkerPool, EngineError, type WorkerLike, type WorkerFactory, type WorkerPoolOptions } from './pool';
+export {
+  loadEngineAssets,
+  assetSourcesFromLock,
+  engineVersionFromLock,
+  gunzipIfNeeded,
+  sha256Hex,
+  EngineIntegrityError,
+  type EngineAssets,
+  type EngineAssetSources,
+} from './loader';
+export {
+  buildPlayerDatabase,
+  withDatabases,
+  withStatWeightsDatabase,
+  indexUIDatabase,
+  consumableIds,
+  PARTY_BUFF_ITEM_IDS,
+  type UIDatabaseIndex,
+} from './database';
+export type { HostMessage, WorkerMessage, EngineMethod, SyncMethod, AsyncMethod } from './protocol';
