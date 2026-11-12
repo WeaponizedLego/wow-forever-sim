@@ -83,7 +83,7 @@ const taken = (slot: ItemSlotId, id: number) =>
               :disabled="taken(s.slot, item.id)"
               @click="emit('add', s.slot, item.id)"
             >
-              <UiQualityName :quality="qualityOf(item.quality)">{{ item.name }}</UiQualityName>
+              <UiQualityName :quality="qualityFromEnum(item.quality)">{{ item.name }}</UiQualityName>
               <span class="num muted">ilvl {{ itemLevel(item) }}</span>
               <span class="num muted">{{ taken(s.slot, item.id) ? 'added' : '+ add' }}</span>
             </button>

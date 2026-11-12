@@ -31,7 +31,7 @@ const QUALITY: Partial<Record<ItemQuality, Quality>> = {
   [ItemQuality.ItemQualityArtifact]: 'legendary',
   [ItemQuality.ItemQualityHeirloom]: 'legendary',
 };
-export const qualityOf = (q: ItemQuality | undefined): Quality =>
+export const qualityFromEnum = (q: ItemQuality | undefined): Quality =>
   q === undefined ? 'common' : (QUALITY[q] ?? 'common');
 
 const db = shallowRef<GameDatabase | null>(null);
@@ -88,7 +88,7 @@ export function useActionNames() {
     return suffix ? `${name} ${suffix}` : name;
   }
   function itemQuality(itemId: number): Quality {
-    return qualityOf(db.value?.item(itemId)?.quality);
+    return qualityFromEnum(db.value?.item(itemId)?.quality);
   }
 
   return { db, actionName, distinctNames, itemName, itemQuality };

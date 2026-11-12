@@ -9,7 +9,7 @@
 import { CharacterSchema, type Character, type ImportResult, type RunRecord } from '@fsim/contracts';
 import type { RaidSimResult, StatWeightsResult } from '@fsim/proto';
 import { StatWeightsRequest } from '@fsim/proto/api';
-import type { Stat } from '@fsim/proto/common';
+import type { PseudoStat, Stat } from '@fsim/proto/common';
 import { importAny } from '@fsim/importers';
 import { buildRaidSimRequest, fillFromPreset, loadSpecPresets, toImportContext } from '@fsim/gamedata';
 import { withDatabases, withStatWeightsDatabase } from '@fsim/engine';
@@ -141,11 +141,17 @@ export function useSession() {
   async function runStatWeights(
     stats: Stat[],
     referenceStat: Stat,
-    opts: { iterations?: number; runId?: string } = {},
+    opts: {
+      iterations?: number;
+      runId?: string;
+      /** Pseudo-stats to weigh too, e.g. weapon damage, so weapons can be valued. */
+      pseudoStats?: PseudoStat[];
+    } = {},
   ) {
     const c = character.value;
     const entry = opts.runId ? runs.value.find((r) => r.record.id === opts.runId) : runs.value[0];
     if (!c || !entry) throw new Error('Run a sim first');
+    lastError.value = null;
     const [client, db, presets] = await Promise.all([
       engine.client(),
       engine.gameDatabase(),
@@ -165,6 +171,7 @@ export function useSession() {
         encounter: raid.encounter,
         simOptions: raid.simOptions,
         statsToWeigh: stats,
+        pseudoStatsToWeigh: opts.pseudoStats ?? [],
         epReferenceStat: referenceStat,
         hpsReferenceStat: referenceStat,
       }),
@@ -190,6 +197,9 @@ export function useSession() {
       const updated: RunEntry = { ...entry, statWeights: result };
       runs.value = runs.value.map((r) => (r === entry ? updated : r));
       return result;
+    } catch (e) {
+      if (!abort?.signal.aborted) lastError.value = e instanceof Error ? e.message : String(e);
+      throw e;
     } finally {
       progress.value = null;
       abort = null;

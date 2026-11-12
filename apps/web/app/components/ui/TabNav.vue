@@ -25,7 +25,8 @@ defineProps<{ label: string; items: NavItem[]; current?: string }>();
   display: flex;
   gap: 2px;
   flex-grow: 1;
-  justify-content: center;
+  /* safe: when the tabs overflow and scroll, start at the first tab instead of clipping it. */
+  justify-content: safe center;
   overflow-x: auto;
   scrollbar-width: none;
 }
