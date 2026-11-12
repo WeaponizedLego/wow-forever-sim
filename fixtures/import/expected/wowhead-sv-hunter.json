@@ -67,6 +67,7 @@
     "professions": [],
     "consumables": {},
     "specOptions": {},
+    "playerOptions": {},
     "buffs": "full-raid",
     "rotation": {
       "kind": "preset",

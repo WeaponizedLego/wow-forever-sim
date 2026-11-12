@@ -64,6 +64,17 @@ export const CharacterSchema = z.object({
   consumables: z.record(z.string(), z.unknown()).default({}),
   specOptions: z.record(z.string(), z.unknown()).default({}),
 
+  /** Per-player sim settings; unset fields come from the spec preset. */
+  playerOptions: z
+    .object({
+      distanceFromTarget: z.number().nonnegative().optional(),
+      reactionTimeMs: z.number().int().nonnegative().optional(),
+      reactionTimeMaxMs: z.number().int().nonnegative().optional(),
+      channelClipDelayMs: z.number().int().nonnegative().optional(),
+      inFrontOfTarget: z.boolean().optional(),
+    })
+    .default({}),
+
   buffs: BuffsPresetSchema.default('full-raid'),
   rotation: RotationSchema,
   encounter: EncounterSchema.default({

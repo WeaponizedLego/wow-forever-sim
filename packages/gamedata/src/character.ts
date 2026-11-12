@@ -110,7 +110,12 @@ export function characterToPlayer(
     throw new Error(`presets are for ${presets.specId}, the character is ${character.spec}`);
   }
   const setup = options.setup ?? presets.defaults;
-  const playerOptions = { ...presets.defaults.playerOptions, ...options.playerOptions };
+  // Precedence: spec preset < character < explicit option.
+  const playerOptions = {
+    ...presets.defaults.playerOptions,
+    ...definedOnly(character.playerOptions),
+    ...definedOnly(options.playerOptions ?? {}),
+  };
   const [prof1, prof2] = character.professions.map(professionFromName);
   const enchanting = prof1 === Profession.Enchanting || prof2 === Profession.Enchanting;
 
@@ -168,4 +173,11 @@ function rotationOf(
     );
   }
   return APLRotation.fromJson(preset.rotation as never);
+}
+
+/** Drops keys whose value is undefined, so spreading an override never erases a default. */
+function definedOnly<T extends object>(o: T): Partial<{ [K in keyof T]: Exclude<T[K], undefined> }> {
+  return Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined)) as Partial<{
+    [K in keyof T]: Exclude<T[K], undefined>;
+  }>;
 }

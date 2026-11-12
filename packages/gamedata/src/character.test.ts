@@ -60,6 +60,29 @@ describe('characterToPlayer', () => {
     expect(characterToPlayer(character, presets, db).equipment!.items[10]!.enchant).toBe(ring.effectId);
   });
 
+  it('layers player options: preset < character < explicit option, ignoring unset fields', async () => {
+    const db = fixtureDb();
+    const presets = await loadSpecPresets('hunter');
+    const base = characterFromPresets(presets, 'sv');
+    const preset = presets.defaults.playerOptions;
+
+    const unset = characterToPlayer({ ...base, playerOptions: { reactionTimeMs: undefined } }, presets, db);
+    expect(unset.reactionTimeMs).toBe(preset.reactionTimeMs);
+
+    const fromCharacter = characterToPlayer(
+      { ...base, playerOptions: { distanceFromTarget: 30 } },
+      presets,
+      db,
+    );
+    expect(fromCharacter.distanceFromTarget).toBe(30);
+    expect(fromCharacter.reactionTimeMs).toBe(preset.reactionTimeMs);
+
+    const explicit = characterToPlayer({ ...base, playerOptions: { distanceFromTarget: 30 } }, presets, db, {
+      playerOptions: { distanceFromTarget: 5 },
+    });
+    expect(explicit.distanceFromTarget).toBe(5);
+  });
+
   it('needs a parser for SIML rotations', async () => {
     const presets = await loadSpecPresets('hunter');
     const character = { ...characterFromPresets(presets), rotation: { kind: 'siml' as const, source: 'x' } };
