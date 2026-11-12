@@ -3,3 +3,4 @@ pnpm-lock.yaml
 .output
 packages/proto/src/generated
 fixtures/**/*.json
+.claude

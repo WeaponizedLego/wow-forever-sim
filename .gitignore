@@ -12,3 +12,6 @@ coverage/
 
 # Engine artifacts are downloaded per engine.lock.json, never committed.
 packages/engine/vendor/
+
+# Agent worktrees
+.claude/worktrees/
