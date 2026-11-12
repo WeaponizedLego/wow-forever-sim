@@ -12,9 +12,18 @@ const fixture = RaidSimRequest.fromJson(
   ),
 );
 
+/** The parts of a request's protojson these tests read. */
+interface RequestJson {
+  raid: {
+    buffs?: object;
+    debuffs?: object;
+    parties: { buffs?: object; players?: (Record<string, unknown> & { buffs?: object })[] }[];
+  };
+}
+
 /** Drops what the engine package or the engine adds: per-player databases and all-zero bonus stats. */
 function comparable(req: RaidSimRequest) {
-  const json = RaidSimRequest.toJson(RaidSimRequest.clone(req)) as Record<string, any>;
+  const json = RaidSimRequest.toJson(RaidSimRequest.clone(req)) as unknown as RequestJson;
   for (const party of json.raid.parties ?? [])
     for (const p of party.players ?? []) {
       delete p.database;
@@ -41,19 +50,19 @@ describe('buildRaidSimRequest', () => {
     const opts = { iterations: 10, seed: 1 };
     const none = buildRaidSimRequest({ ...base, buffs: 'none' }, presets, fixtureDb(), opts);
     const five = buildRaidSimRequest({ ...base, buffs: 'five-man' }, presets, fixtureDb(), opts);
-    const json = (r: RaidSimRequest) => RaidSimRequest.toJson(r) as any;
+    const json = (r: RaidSimRequest) => RaidSimRequest.toJson(r) as unknown as RequestJson;
     const full = buildRaidSimRequest(base, presets, fixtureDb(), opts);
     // full raid: raid buffs, debuffs, party buffs and the player's individual buffs
     expect(Object.keys(json(full).raid.buffs ?? {})).not.toHaveLength(0);
     expect(Object.keys(json(full).raid.debuffs ?? {})).not.toHaveLength(0);
     // five-man: party and individual buffs, no raid buffs or debuffs
-    expect(json(five).raid.parties[0].buffs).toEqual(json(full).raid.parties[0].buffs);
-    expect(Object.keys(json(five).raid.parties[0].players[0].buffs ?? {})).not.toHaveLength(0);
+    expect(json(five).raid.parties[0]!.buffs).toEqual(json(full).raid.parties[0]!.buffs);
+    expect(Object.keys(json(five).raid.parties[0]!.players![0]!.buffs ?? {})).not.toHaveLength(0);
     expect(json(five).raid.buffs ?? {}).toEqual({});
     expect(json(five).raid.debuffs ?? {}).toEqual({});
     // none: nothing external
-    expect(json(none).raid.parties[0].buffs ?? {}).toEqual({});
-    expect(json(none).raid.parties[0].players[0].buffs ?? {}).toEqual({});
+    expect(json(none).raid.parties[0]!.buffs ?? {}).toEqual({});
+    expect(json(none).raid.parties[0]!.players![0]!.buffs ?? {}).toEqual({});
   });
 
   it('builds one target per targetCount and turns execute phase off', async () => {
