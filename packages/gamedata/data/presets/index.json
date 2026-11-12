@@ -1,0 +1,272 @@
+{
+  "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+  "specs": [
+    {
+      "specId": "balance-druid",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["builds"]
+    },
+    {
+      "specId": "feral-cat-druid",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["builds"]
+    },
+    {
+      "specId": "feral-bear-druid",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["builds"]
+    },
+    {
+      "specId": "restoration-druid",
+      "status": "none",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["gear", "talents", "rotation", "builds", "apl-rotation"]
+    },
+    {
+      "specId": "hunter",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "sv-weave",
+          "name": "SV Weave"
+        },
+        {
+          "id": "mm-weave",
+          "name": "MM Weave"
+        },
+        {
+          "id": "bm-weave",
+          "name": "BM Weave"
+        },
+        {
+          "id": "mm",
+          "name": "MM"
+        },
+        {
+          "id": "bm",
+          "name": "BM"
+        },
+        {
+          "id": "sv",
+          "name": "SV"
+        },
+        {
+          "id": "sv-melee",
+          "name": "SV Melee"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "mage",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "arcane-arcane",
+          "name": "Arcane",
+          "group": "Arcane"
+        },
+        {
+          "id": "arcane-arcane-fire",
+          "name": "Arcane Fire",
+          "group": "Arcane"
+        },
+        {
+          "id": "ffb-ffb",
+          "name": "FFB",
+          "group": "FFB"
+        },
+        {
+          "id": "fire-fire",
+          "name": "Fire",
+          "group": "Fire"
+        },
+        {
+          "id": "frost-frost-incin",
+          "name": "Frost Incin",
+          "group": "Frost"
+        },
+        {
+          "id": "frost-frost-med",
+          "name": "Frost Med",
+          "group": "Frost"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "holy-paladin",
+      "status": "partial",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["talents", "rotation", "builds", "apl-rotation"]
+    },
+    {
+      "specId": "protection-paladin",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["builds"]
+    },
+    {
+      "specId": "retribution-paladin",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "unsealed-wrath",
+          "name": "Unsealed Wrath"
+        },
+        {
+          "id": "holy-shock",
+          "name": "Holy Shock"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "dps-priest",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "shadow-testing",
+          "name": "Shadow Testing"
+        },
+        {
+          "id": "smite-testing",
+          "name": "Smite Testing"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "healer-priest",
+      "status": "partial",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["rotation", "builds", "apl-rotation"]
+    },
+    {
+      "specId": "rogue",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "asn-muti",
+          "name": "Asn Muti"
+        },
+        {
+          "id": "combat-ss",
+          "name": "Combat SS"
+        },
+        {
+          "id": "combat-bs",
+          "name": "Combat BS"
+        },
+        {
+          "id": "subtlety-hemo",
+          "name": "Subtlety Hemo"
+        },
+        {
+          "id": "combat-venom",
+          "name": "Combat Venom"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "elemental-shaman",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "testing",
+          "name": "Testing"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "enhancement-shaman",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "testing",
+          "name": "Testing"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "restoration-shaman",
+      "status": "none",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["gear", "talents", "rotation", "builds", "apl-rotation"]
+    },
+    {
+      "specId": "warlock",
+      "status": "partial",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "demo-fire-brand",
+          "name": "Demo (Fire Brand)"
+        },
+        {
+          "id": "demo-shadow-brand",
+          "name": "Demo (Shadow Brand)"
+        },
+        {
+          "id": "destro",
+          "name": "Destro"
+        },
+        {
+          "id": "sm-ruin",
+          "name": "SM/Ruin"
+        },
+        {
+          "id": "aff-wrack",
+          "name": "Aff (Wrack)"
+        }
+      ],
+      "missing": ["gear"]
+    },
+    {
+      "specId": "dps-warrior",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [
+        {
+          "id": "fury-pre-bis",
+          "name": "Pre-BiS",
+          "group": "Fury"
+        },
+        {
+          "id": "arms-pre-bis",
+          "name": "Pre-BiS",
+          "group": "Arms"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "specId": "protection-warrior",
+      "status": "complete",
+      "defaultBuildId": null,
+      "builds": [],
+      "missing": ["builds"]
+    }
+  ]
+}

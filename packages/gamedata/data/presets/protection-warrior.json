@@ -1,0 +1,1674 @@
+{
+  "specId": "protection-warrior",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "dir": "ui/specs/warrior/protection",
+    "files": [
+      "apls/default.apl.json",
+      "gear_sets/p1_bis.gear.json",
+      "gear_sets/prebis.gear.json",
+      "gear_sets/prebis_threat.gear.json",
+      "gear_sets/preraid.gear.json",
+      "presets.ts"
+    ]
+  },
+  "status": "complete",
+  "defaultBuildId": null,
+  "missing": ["builds"],
+  "notes": [
+    "Upstream defaults to the TypeAuto rotation, which the site builds into an APL in the browser; the defaults here use the APL preset \"generic\" instead.",
+    "Gear file p1_bis.gear.json is listed by no preset upstream; kept as gear set \"file-p1-bis\".",
+    "Gear file preraid.gear.json is listed by no preset upstream; kept as gear set \"file-preraid\"."
+  ],
+  "defaults": {
+    "race": "orc",
+    "professions": ["Engineering", "Blacksmithing"],
+    "talents": "05-05050005-150531120300001351",
+    "gearSetId": "pre-bis-defense-cap",
+    "rotationId": "generic",
+    "consumables": {
+      "foodId": 20452,
+      "conjuredId": 9421,
+      "explosiveId": 260817,
+      "mhImbueId": 12404,
+      "extraIds": [10646, 17048],
+      "elixirIds": [250350, 13452, 12820, 13445, 250329],
+      "offensivePotId": 250943
+    },
+    "specOptions": {
+      "classOptions": {
+        "defaultStance": "WarriorStanceDefensive",
+        "stanceSnapshot": true,
+        "useBattleShout": true,
+        "queueDelay": 250
+      }
+    },
+    "individualBuffs": {
+      "greaterBlessingOfKings": true,
+      "greaterBlessingOfMight": 1
+    },
+    "partyBuffs": {},
+    "raidBuffs": {
+      "markOfTheWild": true,
+      "powerWordFortitude": true,
+      "shadowProtection": true,
+      "strengthOfEarthTotem": 1,
+      "graceOfAirTotem": 1,
+      "windfuryTotem": true,
+      "leaderOfThePack": true
+    },
+    "debuffs": {
+      "curseOfRecklessness": true,
+      "faerieFire": true,
+      "exposeArmor": true,
+      "insectSwarm": true,
+      "curseOfWeakness": true,
+      "vindication": true
+    },
+    "playerOptions": {
+      "distanceFromTarget": 0,
+      "channelClipDelayMs": 0,
+      "reactionTimeMs": 100,
+      "reactionTimeMaxMs": 0,
+      "inFrontOfTarget": false
+    }
+  },
+  "builds": [],
+  "gearSets": [
+    {
+      "id": "pre-bis-defense-cap",
+      "name": "Pre-BiS (Defense Cap)",
+      "gear": {
+        "head": {
+          "itemId": 10388,
+          "enchantId": 2543,
+          "randomSuffix": 12736
+        },
+        "neck": {
+          "itemId": 22150
+        },
+        "shoulder": {
+          "itemId": 275737
+        },
+        "back": {
+          "itemId": 18413,
+          "enchantId": 7667
+        },
+        "chest": {
+          "itemId": 252483,
+          "enchantId": 1891
+        },
+        "wrist": {
+          "itemId": 10147,
+          "enchantId": 8214,
+          "randomSuffix": 12727
+        },
+        "hands": {
+          "itemId": 250552,
+          "enchantId": 8206
+        },
+        "waist": {
+          "itemId": 13077
+        },
+        "legs": {
+          "itemId": 10389,
+          "enchantId": 2543,
+          "randomSuffix": 12736
+        },
+        "feet": {
+          "itemId": 10376,
+          "enchantId": 1887,
+          "randomSuffix": 12736
+        },
+        "finger1": {
+          "itemId": 272409
+        },
+        "finger2": {
+          "itemId": 15855
+        },
+        "trinket1": {
+          "itemId": 272440
+        },
+        "trinket2": {
+          "itemId": 10779
+        },
+        "mainHand": {
+          "itemId": 12798,
+          "enchantId": 1900
+        },
+        "offHand": {
+          "itemId": 16998,
+          "enchantId": 1886
+        },
+        "ranged": {
+          "itemId": 15289,
+          "randomSuffix": 12736
+        }
+      }
+    },
+    {
+      "id": "pre-bis-threat",
+      "name": "Pre-BiS (Threat)",
+      "gear": {
+        "head": {
+          "itemId": 12640,
+          "enchantId": 2543
+        },
+        "neck": {
+          "itemId": 22150
+        },
+        "shoulder": {
+          "itemId": 10263,
+          "randomSuffix": 12727
+        },
+        "back": {
+          "itemId": 10249,
+          "enchantId": 7667,
+          "randomSuffix": 12727
+        },
+        "chest": {
+          "itemId": 252483,
+          "enchantId": 1891
+        },
+        "wrist": {
+          "itemId": 10147,
+          "enchantId": 7656,
+          "randomSuffix": 12727
+        },
+        "hands": {
+          "itemId": 11745,
+          "enchantId": 8206
+        },
+        "waist": {
+          "itemId": 272403
+        },
+        "legs": {
+          "itemId": 22385,
+          "enchantId": 2543
+        },
+        "feet": {
+          "itemId": 13070,
+          "enchantId": 1887
+        },
+        "finger1": {
+          "itemId": 272408
+        },
+        "finger2": {
+          "itemId": 272409
+        },
+        "trinket1": {
+          "itemId": 13164
+        },
+        "trinket2": {
+          "itemId": 272437
+        },
+        "mainHand": {
+          "itemId": 12798,
+          "enchantId": 1900
+        },
+        "offHand": {
+          "itemId": 16998,
+          "enchantId": 1886
+        },
+        "ranged": {
+          "itemId": 15289,
+          "randomSuffix": 12727
+        }
+      }
+    },
+    {
+      "id": "file-p1-bis",
+      "name": "p1_bis.gear.json",
+      "unlisted": true,
+      "gear": {
+        "head": {
+          "itemId": 12620
+        },
+        "neck": {
+          "itemId": 18404
+        },
+        "shoulder": {
+          "itemId": 12625
+        },
+        "back": {
+          "itemId": 10148
+        },
+        "chest": {
+          "itemId": 11604
+        },
+        "wrist": {
+          "itemId": 16735
+        },
+        "hands": {
+          "itemId": 16737
+        },
+        "waist": {
+          "itemId": 13077
+        },
+        "legs": {
+          "itemId": 12619
+        },
+        "feet": {
+          "itemId": 13070
+        },
+        "finger1": {
+          "itemId": 18879
+        },
+        "finger2": {
+          "itemId": 15855
+        },
+        "trinket1": {
+          "itemId": 10659
+        },
+        "trinket2": {
+          "itemId": 10779
+        },
+        "mainHand": {
+          "itemId": 12774
+        },
+        "offHand": {
+          "itemId": 16998
+        },
+        "ranged": {
+          "itemId": 16996
+        }
+      }
+    },
+    {
+      "id": "file-preraid",
+      "name": "preraid.gear.json",
+      "unlisted": true,
+      "gear": {
+        "head": {
+          "itemId": 12620
+        },
+        "neck": {
+          "itemId": 22150
+        },
+        "shoulder": {
+          "itemId": 12625
+        },
+        "back": {
+          "itemId": 10148
+        },
+        "chest": {
+          "itemId": 11604
+        },
+        "wrist": {
+          "itemId": 16735
+        },
+        "hands": {
+          "itemId": 16737
+        },
+        "waist": {
+          "itemId": 13077
+        },
+        "legs": {
+          "itemId": 12619
+        },
+        "feet": {
+          "itemId": 13070
+        },
+        "finger1": {
+          "itemId": 272409
+        },
+        "finger2": {
+          "itemId": 15855
+        },
+        "trinket1": {
+          "itemId": 10659
+        },
+        "trinket2": {
+          "itemId": 10779
+        },
+        "mainHand": {
+          "itemId": 12774
+        },
+        "offHand": {
+          "itemId": 16998
+        },
+        "ranged": {
+          "itemId": 16996
+        }
+      }
+    }
+  ],
+  "talents": [
+    {
+      "id": "protection",
+      "name": "Protection",
+      "talents": "05-05050005-150531120300001351"
+    }
+  ],
+  "rotations": [
+    {
+      "id": "generic",
+      "name": "Generic",
+      "kind": "apl",
+      "rotation": {
+        "type": "TypeAPL",
+        "prepullActions": [
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 2687
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-6"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 25289,
+                  "rank": 7
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-5"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 2457
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-4"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20230
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1.5"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 71
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "otherId": "OtherActionOffensivePotion"
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1.5s"
+              }
+            }
+          }
+        ],
+        "priorityList": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Engineering"
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "CD: Offensive Trinkets"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "not": {
+                        "val": {
+                          "variableRef": {
+                            "name": "Defensive Cooldown Active"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "currentHealthPercent": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "40%"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 12975
+                }
+              }
+            }
+          },
+          {
+            "hide": true,
+            "action": {
+              "schedule": {
+                "schedule": "0s, 0s",
+                "innerAction": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 12975
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "CD: Shield Wall Dual Wield"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "currentHealthPercent": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "35%"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "not": {
+                        "val": {
+                          "variableRef": {
+                            "name": "Defensive Cooldown Active"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 871
+                }
+              }
+            }
+          },
+          {
+            "hide": true,
+            "action": {
+              "schedule": {
+                "schedule": "0s, 0s",
+                "innerAction": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 871
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "not": {
+                        "val": {
+                          "variableRef": {
+                            "name": "Defensive Cooldown Active"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "currentHealthPercent": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "50%"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20594
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "not": {
+                        "val": {
+                          "variableRef": {
+                            "name": "Defensive Cooldown Active"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "currentHealthPercent": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "50%"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 1299026
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpLe",
+                  "lhs": {
+                    "currentHealthPercent": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "30%"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "itemId": 9421
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpLe",
+                  "lhs": {
+                    "currentHealthPercent": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "35%"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "otherId": "OtherActionDefensivePotion"
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "otherId": "OtherActionOffensivePotion"
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 1329555
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "otherId": "OtherActionResourcePotion"
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 12328
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "CD: Racials"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "or": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpGe",
+                        "lhs": {
+                          "currentRage": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "40"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "and": {
+                        "vals": [
+                          {
+                            "auraIsInactive": {
+                              "auraId": {
+                                "spellId": 25288
+                              },
+                              "includeReactionTime": true
+                            }
+                          },
+                          {
+                            "cmp": {
+                              "op": "OpLe",
+                              "lhs": {
+                                "spellTimeToReady": {
+                                  "spellId": {
+                                    "spellId": 25288,
+                                    "rank": 6
+                                  }
+                                }
+                              },
+                              "rhs": {
+                                "const": {
+                                  "val": "1.5s"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 2565
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpGt",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "1"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 12723
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpGt",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "2"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 11581,
+                  "rank": 6
+                }
+              }
+            }
+          },
+          {
+            "hide": true,
+            "action": {
+              "groupReference": {
+                "groupName": "Execute"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 25288,
+                  "rank": 6
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 23925,
+                  "rank": 4
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 23894,
+                  "rank": 4
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 21553,
+                  "rank": 4
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpGt",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "1"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 11581,
+                  "rank": 6
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "auraShouldRefresh": {
+                        "sourceUnit": {
+                          "type": "CurrentTarget"
+                        },
+                        "auraId": {
+                          "spellId": 11556
+                        },
+                        "maxOverlap": {
+                          "const": {
+                            "val": "6s"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 11556,
+                  "rank": 5
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "auraIsInactive": {
+                        "sourceUnit": {
+                          "type": "CurrentTarget"
+                        },
+                        "auraId": {
+                          "spellId": 27648
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "auraRemainingTime": {
+                            "sourceUnit": {
+                              "type": "CurrentTarget"
+                            },
+                            "auraId": {
+                              "spellId": 11581
+                            }
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "6s"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 11581,
+                  "rank": 6
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "not": {
+                        "val": {
+                          "auraIsKnown": {
+                            "auraId": {
+                              "spellId": 11551,
+                              "tag": -1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "not": {
+                        "val": {
+                          "auraIsKnown": {
+                            "auraId": {
+                              "spellId": 25289,
+                              "tag": -1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "auraRemainingTime": {
+                            "auraId": {
+                              "spellId": 25289,
+                              "rank": 7
+                            }
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "10s"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 25289,
+                  "rank": 7
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "auraIsInactive": {
+                        "sourceUnit": {
+                          "type": "CurrentTarget"
+                        },
+                        "auraId": {
+                          "spellId": 11574
+                        },
+                        "includeReactionTime": true
+                      }
+                    },
+                    {
+                      "or": {
+                        "vals": [
+                          {
+                            "and": {
+                              "vals": [
+                                {
+                                  "not": {
+                                    "val": {
+                                      "variableRef": {
+                                        "name": "Shield Equipped"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "and": {
+                              "vals": [
+                                {
+                                  "variableRef": {
+                                    "name": "Shield Equipped"
+                                  }
+                                },
+                                {
+                                  "variableRef": {
+                                    "name": "Delay Check"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 11574,
+                  "rank": 7
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "or": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpLt",
+                        "lhs": {
+                          "auraNumStacks": {
+                            "sourceUnit": {
+                              "type": "CurrentTarget"
+                            },
+                            "auraId": {
+                              "spellId": 11597
+                            },
+                            "includeReactionTime": true
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "5"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "and": {
+                        "vals": [
+                          {
+                            "variableRef": {
+                              "name": "Delay Check"
+                            }
+                          },
+                          {
+                            "cmp": {
+                              "op": "OpLe",
+                              "lhs": {
+                                "auraRemainingTime": {
+                                  "sourceUnit": {
+                                    "type": "CurrentTarget"
+                                  },
+                                  "auraId": {
+                                    "spellId": 11597
+                                  }
+                                }
+                              },
+                              "rhs": {
+                                "const": {
+                                  "val": "10s"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 11597,
+                  "rank": 5
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpEq",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "1"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpGe",
+                        "lhs": {
+                          "currentRage": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "20"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 25286,
+                  "tag": 1
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpGt",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "1"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpGe",
+                        "lhs": {
+                          "currentRage": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "40"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20569,
+                  "tag": 1
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpLt",
+                  "lhs": {
+                    "currentRage": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "90"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 2687
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "const": {
+                  "val": "false"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 1719
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "const": {
+                  "val": "false"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20230
+                }
+              }
+            }
+          },
+          {
+            "hide": true,
+            "action": {
+              "autocastOtherCooldowns": {}
+            }
+          }
+        ],
+        "groups": [
+          {
+            "name": "Recklessness ON/OFF",
+            "actions": [
+              {
+                "action": {}
+              }
+            ]
+          },
+          {
+            "name": "Engineering",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 10646
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 11566
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 18588
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "CD: Offensive Trinkets",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 21670
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 22954
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 23041
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 272440
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "CD: Racials",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20572
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20554
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1259813
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1259799
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Execute",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "isExecutePhase": {
+                      "threshold": "E20"
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 2458
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "isExecutePhase": {
+                      "threshold": "E20"
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1719
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "isExecutePhase": {
+                      "threshold": "E20"
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20662,
+                      "rank": 5
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "CD: Shield Wall Dual Wield",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Shield Equipped"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Defensive Cooldown Active"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpLe",
+                            "lhs": {
+                              "currentHealthPercent": {}
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "35%"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "spellIsReady": {
+                            "spellId": {
+                              "spellId": 871
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "strictSequence": {
+                    "actions": [
+                      {
+                        "itemSwap": {
+                          "swapSet": "Swap1"
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 871
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "auraIsInactive": {
+                            "auraId": {
+                              "spellId": 871
+                            },
+                            "includeReactionTime": true
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "spellIsReady": {
+                                "spellId": {
+                                  "spellId": 871
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "itemSwap": {
+                    "swapSet": "Main"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "valueVariables": [
+          {
+            "name": "Delay Check",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "cmp": {
+                      "op": "OpGe",
+                      "lhs": {
+                        "spellTimeToReady": {
+                          "spellId": {
+                            "spellId": 23925,
+                            "rank": 4
+                          }
+                        }
+                      },
+                      "rhs": {
+                        "const": {
+                          "val": "1.5s"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Shield Equipped",
+            "value": {
+              "cmp": {
+                "op": "OpEq",
+                "lhs": {
+                  "autoSwingTime": {
+                    "autoType": "OffHand"
+                  }
+                },
+                "rhs": {
+                  "const": {
+                    "val": "0s"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "Defensive Cooldown Active",
+            "value": {
+              "or": {
+                "vals": [
+                  {
+                    "auraIsActive": {
+                      "auraId": {
+                        "spellId": 12975
+                      }
+                    }
+                  },
+                  {
+                    "auraIsActive": {
+                      "auraId": {
+                        "spellId": 871
+                      }
+                    }
+                  },
+                  {}
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
