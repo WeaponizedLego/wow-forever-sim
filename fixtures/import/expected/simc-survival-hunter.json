@@ -1,0 +1,171 @@
+{
+  "format": "simc",
+  "character": {
+    "name": "Sylvaen Windrunner",
+    "realm": "ashbringer",
+    "region": "eu",
+    "class": "hunter",
+    "spec": "hunter",
+    "race": "orc",
+    "level": 60,
+    "gear": {
+      "head": {
+        "itemId": 16677
+      },
+      "neck": {
+        "itemId": 19620,
+        "enchantId": 904
+      },
+      "shoulder": {
+        "itemId": 16679
+      },
+      "back": {
+        "itemId": 18511,
+        "enchantId": 849
+      },
+      "chest": {
+        "itemId": 16674,
+        "enchantId": 1891
+      },
+      "wrist": {
+        "itemId": 16681,
+        "enchantId": 7656
+      },
+      "hands": {
+        "itemId": 16676,
+        "enchantId": 2564
+      },
+      "legs": {
+        "itemId": 16678,
+        "enchantId": 8491
+      },
+      "feet": {
+        "itemId": 16675,
+        "enchantId": 1887
+      },
+      "finger1": {
+        "itemId": 272408
+      },
+      "finger2": {
+        "itemId": 11990,
+        "randomSuffix": 12728
+      },
+      "trinket1": {
+        "itemId": 272437
+      },
+      "trinket2": {
+        "itemId": 19120
+      },
+      "mainHand": {
+        "itemId": 250619,
+        "enchantId": 2646
+      },
+      "ranged": {
+        "itemId": 22347,
+        "enchantId": 2523
+      }
+    },
+    "talents": "",
+    "professions": [
+      "engineering",
+      "blacksmithing"
+    ],
+    "consumables": {},
+    "specOptions": {},
+    "buffs": "full-raid",
+    "rotation": {
+      "kind": "preset",
+      "presetId": "default"
+    },
+    "encounter": {
+      "durationSec": 180,
+      "durationVariationSec": 36,
+      "targetCount": 1,
+      "targetLevel": 63,
+      "executePhase": true
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "SPEC-04",
+      "severity": "info",
+      "message": "Spec not in the export. Hunter is the only hunter spec.",
+      "line": 13,
+      "field": "spec"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "warning",
+      "message": "Talents are a WoW client loadout string, which cannot be converted yet. The spec preset will be used; set talents in the workbench.",
+      "line": 15,
+      "field": "talents"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "warning",
+      "message": "Line 33 could not be read and was skipped.",
+      "line": 33
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "ammo slot skipped; the engine does not use it.",
+      "line": 49,
+      "field": "ammo"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "bag1 skipped; the engine does not use it.",
+      "line": 54,
+      "field": "bag1"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "pet_family skipped; the engine does not use it.",
+      "line": 57,
+      "field": "pet_family"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "pet_creature_id skipped; the engine does not use it.",
+      "line": 58,
+      "field": "pet_creature_id"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "pet_level skipped; the engine does not use it.",
+      "line": 59,
+      "field": "pet_level"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "pet_happiness skipped; the engine does not use it.",
+      "line": 60,
+      "field": "pet_happiness"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "pet_abilities skipped; the engine does not use it.",
+      "line": 61,
+      "field": "pet_abilities"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Rotation not in the export. Using the upstream default for Hunter.",
+      "field": "rotation"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Consumables not in the export. The spec preset will be applied.",
+      "field": "consumables"
+    }
+  ]
+}

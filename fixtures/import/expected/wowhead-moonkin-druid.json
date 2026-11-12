@@ -1,0 +1,72 @@
+{
+  "format": "wowhead-url",
+  "character": {
+    "class": "druid",
+    "spec": "balance-druid",
+    "race": "windshaperskyborne",
+    "level": 60,
+    "gear": {
+      "head": {
+        "itemId": 21353
+      },
+      "neck": {
+        "itemId": 18814
+      },
+      "chest": {
+        "itemId": 21357
+      },
+      "mainHand": {
+        "itemId": 21407,
+        "enchantId": 2504
+      }
+    },
+    "talents": "5232220115501351--5053",
+    "professions": [],
+    "consumables": {},
+    "specOptions": {},
+    "buffs": "full-raid",
+    "rotation": {
+      "kind": "preset",
+      "presetId": "default"
+    },
+    "encounter": {
+      "durationSec": 180,
+      "durationVariationSec": 36,
+      "targetCount": 1,
+      "targetLevel": 63,
+      "executePhase": true
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "SPEC-04",
+      "severity": "info",
+      "message": "Spec not in the export. Balance Druid picked from talents (38/0/13).",
+      "field": "spec"
+    },
+    {
+      "code": "DATA-03",
+      "severity": "warning",
+      "message": "Shoulder 99999 is not in data build upstream-b2047bf. It will be left empty.",
+      "field": "shoulder"
+    },
+    {
+      "code": "DATA-03",
+      "severity": "warning",
+      "message": "Chest enchant (spell 33997) is not in data build upstream-b2047bf. The item is kept without it.",
+      "field": "chest"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Rotation not in the export. Using the upstream default for Balance Druid.",
+      "field": "rotation"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Consumables not in the export. The spec preset will be applied.",
+      "field": "consumables"
+    }
+  ]
+}

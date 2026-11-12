@@ -1,0 +1,121 @@
+{
+  "format": "wowhead-url",
+  "character": {
+    "class": "hunter",
+    "spec": "hunter",
+    "race": "orc",
+    "level": 60,
+    "gear": {
+      "head": {
+        "itemId": 16677
+      },
+      "neck": {
+        "itemId": 19620,
+        "enchantId": 904
+      },
+      "shoulder": {
+        "itemId": 16679
+      },
+      "back": {
+        "itemId": 18511,
+        "enchantId": 849
+      },
+      "chest": {
+        "itemId": 16674,
+        "enchantId": 1891
+      },
+      "wrist": {
+        "itemId": 16681
+      },
+      "hands": {
+        "itemId": 16676,
+        "enchantId": 2564
+      },
+      "waist": {
+        "itemId": 16680
+      },
+      "legs": {
+        "itemId": 16678
+      },
+      "feet": {
+        "itemId": 16675,
+        "enchantId": 1887
+      },
+      "finger1": {
+        "itemId": 272408
+      },
+      "finger2": {
+        "itemId": 11990,
+        "randomSuffix": 12728
+      },
+      "trinket1": {
+        "itemId": 272437
+      },
+      "trinket2": {
+        "itemId": 19120
+      },
+      "mainHand": {
+        "itemId": 250619,
+        "enchantId": 2646
+      },
+      "ranged": {
+        "itemId": 22347,
+        "enchantId": 2523
+      }
+    },
+    "talents": "1-00530501114-52225303000021005",
+    "professions": [],
+    "consumables": {},
+    "specOptions": {},
+    "buffs": "full-raid",
+    "rotation": {
+      "kind": "preset",
+      "presetId": "default"
+    },
+    "encounter": {
+      "durationSec": 180,
+      "durationVariationSec": 36,
+      "targetCount": 1,
+      "targetLevel": 63,
+      "executePhase": true
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "SPEC-04",
+      "severity": "info",
+      "message": "Spec not in the export. Hunter picked from talents (1/20/30).",
+      "field": "spec"
+    },
+    {
+      "code": "DATA-03",
+      "severity": "warning",
+      "message": "Wrist enchant (spell 37555) is not in data build upstream-b2047bf. The item is kept without it.",
+      "field": "wrist"
+    },
+    {
+      "code": "DATA-03",
+      "severity": "warning",
+      "message": "Legs enchant (spell 9588) is not in data build upstream-b2047bf. The item is kept without it.",
+      "field": "legs"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "Wowhead slot 4 (item 6125) is not an engine slot; skipped.",
+      "field": "gear"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Rotation not in the export. Using the upstream default for Hunter.",
+      "field": "rotation"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Consumables not in the export. The spec preset will be applied.",
+      "field": "consumables"
+    }
+  ]
+}

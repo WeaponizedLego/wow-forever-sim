@@ -1,0 +1,166 @@
+{
+  "format": "simc",
+  "character": {
+    "name": "Kargath",
+    "realm": "ashbringer",
+    "region": "eu",
+    "class": "warrior",
+    "spec": "dps-warrior",
+    "race": "orc",
+    "level": 60,
+    "gear": {
+      "head": {
+        "itemId": 12620
+      },
+      "neck": {
+        "itemId": 18404
+      },
+      "back": {
+        "itemId": 10148,
+        "enchantId": 849
+      },
+      "chest": {
+        "itemId": 11604,
+        "enchantId": 1891
+      },
+      "wrist": {
+        "itemId": 16735,
+        "enchantId": 1885
+      },
+      "hands": {
+        "itemId": 13072,
+        "enchantId": 927
+      },
+      "waist": {
+        "itemId": 13077
+      },
+      "legs": {
+        "itemId": 12619,
+        "enchantId": 8491
+      },
+      "feet": {
+        "itemId": 13070,
+        "enchantId": 911
+      },
+      "finger1": {
+        "itemId": 18821
+      },
+      "finger2": {
+        "itemId": 15855
+      },
+      "trinket1": {
+        "itemId": 10659
+      },
+      "trinket2": {
+        "itemId": 10779
+      },
+      "mainHand": {
+        "itemId": 12774,
+        "enchantId": 1900
+      },
+      "offHand": {
+        "itemId": 17016,
+        "enchantId": 1900
+      },
+      "ranged": {
+        "itemId": 16996
+      }
+    },
+    "talents": "",
+    "professions": [
+      "blacksmithing",
+      "mining"
+    ],
+    "consumables": {},
+    "specOptions": {},
+    "buffs": "full-raid",
+    "rotation": {
+      "kind": "preset",
+      "presetId": "default"
+    },
+    "encounter": {
+      "durationSec": 180,
+      "durationVariationSec": 36,
+      "targetCount": 1,
+      "targetLevel": 63,
+      "executePhase": true
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "SPEC-04",
+      "severity": "warning",
+      "message": "Spec not in the export. Picked DPS Warrior; change it if that is wrong.",
+      "line": 13,
+      "field": "spec"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "warning",
+      "message": "Talents are a WoW client loadout string, which cannot be converted yet. The spec preset will be used; set talents in the workbench.",
+      "line": 15,
+      "field": "talents"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "legacy_talents skipped; the engine does not use it.",
+      "line": 20,
+      "field": "legacy_talents"
+    },
+    {
+      "code": "DATA-03",
+      "severity": "warning",
+      "message": "Shoulder 99412 is not in data build upstream-b2047bf. It will be left empty.",
+      "line": 27,
+      "field": "shoulder"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "shirt slot skipped; the engine does not use it.",
+      "line": 33,
+      "field": "shirt"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "bag1 skipped; the engine does not use it.",
+      "line": 59,
+      "field": "bag1"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "bag2 skipped; the engine does not use it.",
+      "line": 60,
+      "field": "bag2"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "bag3 skipped; the engine does not use it.",
+      "line": 61,
+      "field": "bag3"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "bag4 skipped; the engine does not use it.",
+      "line": 62,
+      "field": "bag4"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Rotation not in the export. Using the upstream default for DPS Warrior.",
+      "field": "rotation"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Consumables not in the export. The spec preset will be applied.",
+      "field": "consumables"
+    }
+  ]
+}

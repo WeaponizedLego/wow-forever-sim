@@ -1,0 +1,53 @@
+# Aeryn of the High Order - 2026-11-11 21:04 - eu/Ashbringer
+# SimC Addon 12.1.5-04
+# WoW 1.60.1.70425, TOC 16001
+# Requires SimulationCraft 1000-01 or newer
+
+mage="Aeryn of the High Order"
+level=60
+race=skyborne_alliance
+region=eu
+server=ashbringer
+role=
+professions=tailoring=300/enchanting=300
+spec=unknown
+
+talents=CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiEJJJSikkEJJJJA
+
+
+# Magister's Crown (58)
+head=,id=16686,enchant_id=2588
+# Gem of Trapped Innocents (88)
+neck=,id=23057
+# Thuzadin Mantle (61)
+shoulder=,id=22412,enchant_id=2605
+# Drape of Vaulted Secrets (66)
+back=,id=21415,enchant_id=2621
+# Magister's Robes (60)
+chest=,id=16688,enchant_id=1893
+# Magister's Bindings (56)
+wrist=,id=16683,enchant_id=1883
+# Magister's Gloves (58)
+hands=,id=16684,enchant_id=2650
+# Belt of the Archmage (62)
+waist=,id=18405
+# Skyshroud Leggings (63)
+legs=,id=13170
+# Omnicast Boots (54)
+feet=,id=11822,enchant_id=911
+# Warden's Signet of Brilliance (60)
+finger1=,id=275982
+# Ring of Entropy (66)
+finger2=,id=18543
+# Talisman of Ephemeral Power (66)
+trinket1=,id=18820
+# Neltharion's Tear (83)
+trinket2=,id=19379
+# Grand Marshal's Mageblade (78)
+main_hand=,id=23451,enchant_id=2504
+# Master Dragonslayer's Orb (83)
+off_hand=,id=19366
+# Torch of Light (60)
+ranged=,id=279246
+
+# Checksum: a21e8694
