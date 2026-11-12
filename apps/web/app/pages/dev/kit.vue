@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// The kit draws its own AppChrome examples, so it skips the app layout.
+definePageMeta({ layout: false });
 // /dev/kit: every UI primitive and chart with the v2 mockups' sample data, laid out like the
 // mockups (Analysis, Workbench, Top gear, Start) so the two can be compared side by side, then a
 // sheet of primitive variants and states.
