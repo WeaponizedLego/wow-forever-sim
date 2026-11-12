@@ -20,3 +20,12 @@ Item and enchant ids come from upstream presets (`ui/specs/*/gear_sets`) and the
 engine fixture. The SimC checksums are real adler32 values over the text before them. The
 `talents=` loadout strings are syntactically valid base64 (version byte 2) but do not encode real
 builds. The Wowhead hashes were written with a port of upstream's planner exporter (`writeHash`).
+
+## Real exports
+
+`real/` holds exports captured from real WoW Forever clients (SimC addon 12.1.5-04, client
+1.60.1.70888). Character name and realm are replaced; everything else is as exported.
+
+| File                          | What it exercises                                                                                                                                                                                                                                                                                      |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `real/simc-shaman-lvl42.simc` | Level 42 Dwarf Shaman. `spec=unknown`, client loadout talents, random suffixes as `bonus_id`, `content_tuning`, a shirt, bags and commented bag gear, Forever-only items (ids 263412–280766), Forever enchant 8487. Tested against the real data build in `packages/gamedata/src/real-import.test.ts`. |

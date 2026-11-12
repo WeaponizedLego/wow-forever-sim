@@ -30,7 +30,7 @@ export type BuffsPreset = z.infer<typeof BuffsPresetSchema>;
 export const EncounterSchema = z.object({
   durationSec: z.number().positive().default(180),
   /** ± seconds; the engine draws each fight's length from duration ± variation. */
-  durationVariationSec: z.number().nonnegative().default(36),
+  durationVariationSec: z.number().nonnegative().default(5),
   targetCount: z.number().int().min(1).max(5).default(1),
   targetLevel: z
     .number()
@@ -79,7 +79,7 @@ export const CharacterSchema = z.object({
   rotation: RotationSchema,
   encounter: EncounterSchema.default({
     durationSec: 180,
-    durationVariationSec: 36,
+    durationVariationSec: 5,
     targetCount: 1,
     targetLevel: MAX_LEVEL + 3,
     executePhase: true,

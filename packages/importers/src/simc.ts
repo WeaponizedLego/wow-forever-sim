@@ -14,6 +14,7 @@
 //
 // Lines starting with "#" are comments. Everything is optional except the class line.
 import type { ClassId, Gear, ImportContext, ImportResult, Importer, ItemSlotId } from '@fsim/contracts';
+import { MAX_LEVEL } from '@fsim/contracts';
 import { Diags, checkItem, finish, parseRegion, resolveRace, resolveSpec, slotLabel } from './build';
 import type { RawItem } from './build';
 import {
@@ -47,7 +48,7 @@ const IGNORED_KEYS = new Set([
 const BAG_KEY = /^bag\d+$/;
 
 /** Item option keys the engine reads. Everything else on an item line is noted and skipped. */
-const ITEM_KEYS = new Set(['id', 'enchant_id', 'suffix']);
+const ITEM_KEYS = new Set(['id', 'enchant_id', 'suffix', 'bonus_id']);
 
 /** Blizzard loadout export alphabet (ExportUtil.lua). A header alone is 152 bits = 26 characters. */
 const LOADOUT_STRING = /^[A-Za-z0-9+/]{26,}$/;
@@ -198,6 +199,14 @@ function parseSimc(input: string, ctx: ImportContext): ImportResult {
       });
       level = undefined;
     }
+    if (level !== undefined && level < MAX_LEVEL) {
+      diags.add(
+        'LEVEL-07',
+        'warning',
+        `Level ${level} character. The engine always sims level ${MAX_LEVEL}, so the result shows this gear on a level ${MAX_LEVEL} ${cls.value}, not this character as played today.`,
+        { line: levelOpt.line, field: 'level' },
+      );
+    }
   }
 
   const professions: string[] = [];
@@ -278,6 +287,17 @@ function parseItem(value: string, slot: ItemSlotId, line: number, diags: Diags):
     if (/^-?\d+$/.test(suffix)) item.randomSuffix = Number(suffix);
     else
       diags.add('PARSE-02', 'warning', `${slotLabel(slot)}: suffix "${suffix}" is not a number.`, {
+        line,
+        field: slot,
+      });
+  }
+
+  const bonus = fields.get('bonus_id');
+  if (bonus !== undefined && bonus !== '') {
+    const ids = bonus.split(/[/:]/).map(Number);
+    if (ids.every((n) => Number.isInteger(n) && n > 0)) item.bonusIds = ids;
+    else
+      diags.add('PARSE-02', 'warning', `${slotLabel(slot)}: bonus_id "${bonus}" is not a list of numbers.`, {
         line,
         field: slot,
       });

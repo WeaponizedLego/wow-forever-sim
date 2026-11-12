@@ -132,6 +132,8 @@ export interface RawItem {
   itemId: number;
   enchantId?: number | undefined;
   randomSuffix?: number | undefined;
+  /** SimC `bonus_id` values; one of them may be the item's random suffix. */
+  bonusIds?: number[] | undefined;
 }
 
 /** Checks one item against the data build. Unknown item → slot left empty; unknown enchant → enchant dropped. */
@@ -173,6 +175,22 @@ export function checkItem(
   }
   if (raw.randomSuffix !== undefined && raw.randomSuffix !== 0 && Number.isInteger(raw.randomSuffix)) {
     item.randomSuffix = raw.randomSuffix;
+  } else if (raw.bonusIds && raw.bonusIds.length > 0) {
+    const suffix = ctx.isRandomSuffixFor
+      ? raw.bonusIds.find((id) => ctx.isRandomSuffixFor!(raw.itemId, id))
+      : undefined;
+    if (suffix !== undefined) {
+      item.randomSuffix = suffix;
+    } else {
+      diags.add(
+        'PARSE-02',
+        'info',
+        ctx.isRandomSuffixFor
+          ? `${slotLabel(slot)}: bonus_id ${raw.bonusIds.join('/')} is not a random suffix of this item; skipped.`
+          : `${slotLabel(slot)}: bonus_id ${raw.bonusIds.join('/')} not checked (no suffix data); skipped.`,
+        { line: where?.line, field: slot },
+      );
+    }
   }
   return item;
 }

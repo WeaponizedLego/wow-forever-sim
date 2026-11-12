@@ -1,0 +1,77 @@
+# Testshaman - 2026-11-12 15:16 - EU/Realm
+# SimC Addon 12.1.5-04
+# WoW 1.60.1.70888, TOC 16001
+# Requires SimulationCraft 1000-01 or newer
+
+shaman="Testshaman"
+level=42
+race=dwarf
+region=eu
+server=realm
+role=
+professions=leatherworking=196/skinning=280
+spec=unknown
+
+talents=CEdBzT2eoXLGqEykspPS/k8VfDGYAMzMuAzYGzHAAAA
+
+# Primary Talents
+# talents=CEdBzT2eoXLGqEykspPS/k8VfDGYAMzMuAzYGzHAAAA
+
+legacy_talents=136855:2
+
+# Captain's Circlet of the Boar (42)
+head=,id=7488,bonus_id=12725
+# Spectral Necklace of the Bandit (30)
+neck=,id=12047,bonus_id=12751
+# Brigade Pauldrons of Strength (44)
+shoulder=,id=9934,bonus_id=12732
+# Regal Cloak of the Wolf (40)
+back=,id=7474,bonus_id=12726,content_tuning=4522
+# Archer's Jerkin of Strength (38)
+chest=,id=9854,enchant_id=8487,bonus_id=12732,content_tuning=5247
+# Red Linen Shirt (10)
+shirt=,id=2575
+# Golden Scale Bracers (37)
+wrist=,id=6040
+# Scarlet Gauntlets (38)
+hands=,id=10331,enchant_id=8487,content_tuning=5247
+# Scarlet Belt (37)
+waist=,id=10329,content_tuning=5247
+# Triprunner Dungarees (37)
+legs=,id=9624,enchant_id=8487
+# Blackforge Greaves (45)
+feet=,id=6423,enchant_id=8487
+# Basalt Ring of the Gorilla (34)
+finger1=,id=11996,bonus_id=12723,content_tuning=5247
+# Seal of Wrynn (31)
+finger2=,id=2933
+# Satchel of Potions (33)
+trinket1=,id=280766
+# Worgenbane Talisman (26)
+trinket2=,id=273643,content_tuning=5249
+# Rage of the Storm (40)
+main_hand=,id=280604
+# Totem of Charged Flames (10)
+ranged=,id=263412
+
+bag1=,id=19291
+bag2=,id=221498
+bag3=,id=5765
+bag4=,id=5765
+
+### Gear from Bags
+#
+# Rawhide Shoulderpads (25)
+# shoulder=,id=1801,content_tuning=5249
+#
+# Hook Dagger of the Monkey (20)
+# main_hand=,id=3184,bonus_id=12721,content_tuning=5249
+#
+# Shoddy Blunderbuss (22)
+# ranged=,id=2783,content_tuning=5249
+
+### Additional Character Info
+#
+# skills=54:58:0:210/95:204:0:210/98:300:0:300/111:300:0:300/136:69:0:210/160:207:0:210/162:101:0:210/165:196:0:225/172:1:0:210/185:5:0:75/373:1:0:1/374:1:0:1/375:1:0:1/393:280:0:300/413:1:0:1/414:1:0:1/415:1:0:1/433:1:0:1/2939:5:0:75/2945:196:0:225/2947:280:0:300
+
+# Checksum: 3e26c8dd

@@ -139,7 +139,7 @@ export function characterToPlayer(
     equipment: EquipmentSpec.create({ items }),
     consumables: ConsumesSpec.fromJson(character.consumables as never),
     buffs:
-      character.buffs === 'full-raid'
+      character.buffs === 'full-raid' || character.buffs === 'five-man'
         ? IndividualBuffs.fromJson(setup.individualBuffs as never)
         : IndividualBuffs.create(),
     spec,

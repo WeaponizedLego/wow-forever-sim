@@ -30,7 +30,9 @@ export type DiagnosticCode =
   /** Spec not stated in the export; inferred (from talents, role or class default). */
   | 'SPEC-06'
   /** Value filled from the spec preset because the export did not include it. */
-  | 'DEFAULT-05';
+  | 'DEFAULT-05'
+  /** Character is below the level the engine sims at (it always sims level 60). */
+  | 'LEVEL-07';
 
 export interface ImportResult {
   format: ImportFormat | null;
@@ -55,5 +57,10 @@ export interface ImportContext {
    * Optional: without it, Wowhead enchants come back as DATA-03.
    */
   enchantIdForSpell?(spellId: number): number | undefined;
+  /**
+   * True when `suffixId` is one of the item's random suffixes ("of the Boar"). The SimC addon writes
+   * an item's suffix as a `bonus_id`, so importers use this to pick it out of the bonus ids.
+   */
+  isRandomSuffixFor?(itemId: number, suffixId: number): boolean;
   dataBuild: string;
 }

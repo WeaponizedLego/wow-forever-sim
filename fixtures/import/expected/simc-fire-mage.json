@@ -83,7 +83,7 @@
     },
     "encounter": {
       "durationSec": 180,
-      "durationVariationSec": 36,
+      "durationVariationSec": 5,
       "targetCount": 1,
       "targetLevel": 63,
       "executePhase": true

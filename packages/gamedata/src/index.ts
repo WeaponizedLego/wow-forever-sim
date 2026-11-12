@@ -37,3 +37,4 @@ export {
   professionFromName,
   type CharacterToPlayerOptions,
 } from './character';
+export { buildRaidSimRequest, fillFromPreset, DEFAULT_TARGET_JSON, type SimRequestOptions } from './request';
