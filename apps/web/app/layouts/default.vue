@@ -7,7 +7,7 @@ const session = useSession();
 const nav = computed(() => [
   {
     label: 'Runs',
-    to: session.latest.value ? `/runs/${encodeURIComponent(session.latest.value.record.id)}` : '/runs',
+    to: session.latest.value ? `/runs/${session.latest.value.record.id.replace(/^#/, '')}` : '/runs',
   },
   { label: 'Workbench', to: '/workbench' },
   { label: 'Top gear', to: '/top-gear' },
