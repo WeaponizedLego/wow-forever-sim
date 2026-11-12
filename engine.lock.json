@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "committedAt": "2026-11-12T13:25:40+01:00"
+  },
+  "engineId": "b2047bf",
+  "dataBuild": null,
+  "goVersion": "1.27.3",
+  "artifacts": null,
+  "syncedAt": "2026-11-12T14:30:00+01:00"
+}

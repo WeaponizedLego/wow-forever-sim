@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "corepack",
+      "runtimeArgs": ["pnpm@12.18.0", "--filter", "@fsim/web", "exec", "nuxt", "dev", "--port", "3000"],
+      "port": 3000
+    }
+  ]
+}

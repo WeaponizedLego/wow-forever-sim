@@ -1,0 +1,5 @@
+pnpm-lock.yaml
+.nuxt
+.output
+packages/proto/src/generated
+fixtures/**/*.json

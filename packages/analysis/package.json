@@ -1,0 +1,21 @@
+{
+  "name": "@fsim/analysis",
+  "private": true,
+  "type": "module",
+  "description": "Lane L4. Pure statistics and derived metrics over engine results, plus run-note rules.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@fsim/contracts": "workspace:*",
+    "@fsim/proto": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
+  }
+}

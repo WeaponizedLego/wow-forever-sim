@@ -1,0 +1,14 @@
+node_modules/
+.nuxt/
+.output/
+.data/
+dist/
+coverage/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Engine artifacts are downloaded per engine.lock.json, never committed.
+packages/engine/vendor/

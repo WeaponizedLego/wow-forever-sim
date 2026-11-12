@@ -1,0 +1,6 @@
+package cmd
+
+import "github.com/wowsims/forever/sim/core/proto"
+
+// SpikeRequest exposes the CLI's request builder to the forever-sim spike.
+func SpikeRequest(path string) (*proto.RaidSimRequest, []string, error) { return readSimRequest(path) }
