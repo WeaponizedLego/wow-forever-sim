@@ -4,3 +4,4 @@ pnpm-lock.yaml
 packages/proto/src/generated
 fixtures/**/*.json
 .claude
+packages/engine/vendor
