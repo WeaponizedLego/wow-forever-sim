@@ -83,7 +83,7 @@ export function resolveSpec(input: SpecInput, diags: Diags): SpecId {
     const inferred = specFromTalents(cls, input.talents, role?.role);
     if (inferred) {
       diags.add(
-        'SPEC-04',
+        'SPEC-06',
         'info',
         `Spec not in the export. ${specName(inferred.spec)} picked from talents (${inferred.points.join('/')}).`,
         { line: input.specWhere?.line, field: 'spec' },
@@ -94,7 +94,7 @@ export function resolveSpec(input: SpecInput, diags: Diags): SpecId {
   const spec = defaultSpec(cls, role);
   const single = specsOfClass(cls).length === 1;
   diags.add(
-    'SPEC-04',
+    'SPEC-06',
     single ? 'info' : 'warning',
     single
       ? `Spec not in the export. ${specName(spec)} is the only ${cls} spec.`

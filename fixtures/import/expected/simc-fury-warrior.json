@@ -88,7 +88,7 @@
   },
   "diagnostics": [
     {
-      "code": "SPEC-04",
+      "code": "SPEC-06",
       "severity": "warning",
       "message": "Spec not in the export. Picked DPS Warrior; change it if that is wrong.",
       "line": 13,

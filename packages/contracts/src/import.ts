@@ -27,6 +27,8 @@ export type DiagnosticCode =
   | 'DATA-03'
   /** Class, spec or race not supported by the engine. */
   | 'SPEC-04'
+  /** Spec not stated in the export; inferred (from talents, role or class default). */
+  | 'SPEC-06'
   /** Value filled from the spec preset because the export did not include it. */
   | 'DEFAULT-05';
 
@@ -48,5 +50,10 @@ export interface Importer {
 export interface ImportContext {
   hasItem(itemId: number): boolean;
   hasEnchant(enchantId: number): boolean;
+  /**
+   * Enchant effect id for an enchant *spell* id. Wowhead planner links store spells, not effects.
+   * Optional: without it, Wowhead enchants come back as DATA-03.
+   */
+  enchantIdForSpell?(spellId: number): number | undefined;
   dataBuild: string;
 }

@@ -39,7 +39,7 @@
   },
   "diagnostics": [
     {
-      "code": "SPEC-04",
+      "code": "SPEC-06",
       "severity": "info",
       "message": "Spec not in the export. Balance Druid picked from talents (38/0/13).",
       "field": "spec"

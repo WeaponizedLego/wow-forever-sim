@@ -91,7 +91,7 @@ describe('SimC', () => {
   it('infers the spec from engine-format talents when spec is unknown', () => {
     const r = parse('warrior="X"\nspec=unknown\ntalents=0500-0-55305301302110331');
     expect(r.character?.spec).toBe('protection-warrior');
-    expect(r.diagnostics.find((d) => d.code === 'SPEC-04')).toMatchObject({ severity: 'info', line: 2 });
+    expect(r.diagnostics.find((d) => d.code === 'SPEC-06')).toMatchObject({ severity: 'info', line: 2 });
   });
 
   it('reads item names, suffix and unknown keys on gear lines', () => {
