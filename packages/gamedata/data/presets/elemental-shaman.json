@@ -1,0 +1,754 @@
+{
+  "specId": "elemental-shaman",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "dir": "ui/specs/shaman/elemental",
+    "files": ["builds/testing.build.json", "presets.ts"]
+  },
+  "status": "complete",
+  "defaultBuildId": null,
+  "missing": [],
+  "notes": [
+    "Upstream defaults to the TypeAuto rotation, which the site builds into an APL in the browser; the defaults here use the APL preset \"default\" instead."
+  ],
+  "defaults": {
+    "race": "troll",
+    "professions": ["Leatherworking", "Enchanting"],
+    "talents": "5500331023001351-05500001-053",
+    "gearSetId": "testing",
+    "rotationId": "default",
+    "consumables": {
+      "flaskId": 13512,
+      "foodId": 13931,
+      "conjuredId": 12662,
+      "mhImbueId": 20749,
+      "offensivePotId": 250937
+    },
+    "specOptions": {
+      "classOptions": {}
+    },
+    "individualBuffs": {
+      "greaterBlessingOfKings": true,
+      "greaterBlessingOfWisdom": 1
+    },
+    "partyBuffs": {},
+    "raidBuffs": {
+      "arcaneIntellect": true,
+      "prayerOfSpirit": true,
+      "markOfTheWild": true,
+      "powerWordFortitude": true,
+      "moonkinAura": true
+    },
+    "debuffs": {
+      "judgementOfWisdom": true,
+      "curseOfElements": true,
+      "curseOfRecklessness": true,
+      "faerieFire": true,
+      "exposeArmor": true,
+      "sunderArmor": true,
+      "giftOfArthas": true
+    },
+    "playerOptions": {
+      "distanceFromTarget": 20,
+      "channelClipDelayMs": 0,
+      "reactionTimeMs": 100,
+      "reactionTimeMaxMs": 0,
+      "inFrontOfTarget": false
+    }
+  },
+  "builds": [
+    {
+      "id": "testing",
+      "name": "Testing",
+      "setup": {
+        "race": "windshaperskyborne",
+        "professions": ["Leatherworking", "Enchanting"],
+        "talents": "5500331023001351-05500001-053",
+        "gearSetId": "testing",
+        "rotationId": "default",
+        "consumables": {
+          "flaskId": 13512,
+          "foodId": 13935,
+          "conjuredId": 12662,
+          "mhImbueId": 20749,
+          "extraIds": [8423],
+          "elixirIds": [250343, 9155, 250338, 250341, 250337],
+          "resourcePotId": 13444
+        },
+        "specOptions": {
+          "classOptions": {}
+        },
+        "individualBuffs": {
+          "greaterBlessingOfKings": true,
+          "greaterBlessingOfWisdom": 1
+        },
+        "partyBuffs": {},
+        "raidBuffs": {
+          "arcaneIntellect": true,
+          "prayerOfSpirit": true,
+          "markOfTheWild": true,
+          "powerWordFortitude": true,
+          "moonkinAura": true
+        },
+        "debuffs": {
+          "judgementOfWisdom": true,
+          "curseOfElements": true,
+          "curseOfRecklessness": true,
+          "faerieFire": true,
+          "exposeArmor": true,
+          "sunderArmor": true,
+          "giftOfArthas": true
+        },
+        "playerOptions": {
+          "distanceFromTarget": 5,
+          "channelClipDelayMs": 0,
+          "reactionTimeMs": 100,
+          "reactionTimeMaxMs": 0,
+          "inFrontOfTarget": false
+        },
+        "encounter": {
+          "apiVersion": 2,
+          "duration": 60,
+          "durationVariation": 5,
+          "executeProportion20": 0.2,
+          "executeProportion35": 0.35,
+          "targets": [
+            {
+              "id": 31146,
+              "name": "Raid Target",
+              "level": 63,
+              "mobType": "MobTypeMechanical",
+              "stats": [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+                1428900, 0, 0, 0, 0, 0, 0, 0, 0
+              ],
+              "minBaseDamage": 15113,
+              "damageSpread": 0.5,
+              "swingSpeed": 2,
+              "parryHaste": true,
+              "canCrush": true
+            },
+            {
+              "id": 31146,
+              "name": "Raid Target",
+              "level": 63,
+              "mobType": "MobTypeMechanical",
+              "stats": [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+                1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
+              ],
+              "minBaseDamage": 2601,
+              "damageSpread": 0.5,
+              "swingSpeed": 2,
+              "parryHaste": true,
+              "canCrush": true
+            },
+            {
+              "id": 31146,
+              "name": "Raid Target",
+              "level": 63,
+              "mobType": "MobTypeMechanical",
+              "stats": [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+                1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
+              ],
+              "minBaseDamage": 2601,
+              "damageSpread": 0.5,
+              "swingSpeed": 2,
+              "parryHaste": true,
+              "canCrush": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "gearSets": [
+    {
+      "id": "testing",
+      "name": "Testing",
+      "gear": {
+        "head": {
+          "itemId": 252604,
+          "enchantId": 1509
+        },
+        "neck": {
+          "itemId": 23125,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 19050
+        },
+        "back": {
+          "itemId": 279270,
+          "enchantId": 2621
+        },
+        "chest": {
+          "itemId": 10143,
+          "enchantId": 1893,
+          "randomSuffix": 12734
+        },
+        "wrist": {
+          "itemId": 10248,
+          "enchantId": 1901,
+          "randomSuffix": 12734
+        },
+        "hands": {
+          "itemId": 21178,
+          "enchantId": 8213
+        },
+        "waist": {
+          "itemId": 20047
+        },
+        "legs": {
+          "itemId": 252486,
+          "enchantId": 1509
+        },
+        "feet": {
+          "itemId": 254129,
+          "enchantId": 8492
+        },
+        "finger1": {
+          "itemId": 272407
+        },
+        "finger2": {
+          "itemId": 19147
+        },
+        "trinket1": {
+          "itemId": 272438
+        },
+        "trinket2": {
+          "itemId": 270225
+        },
+        "mainHand": {
+          "itemId": 22688,
+          "enchantId": 8217
+        },
+        "offHand": {
+          "itemId": 15968
+        },
+        "ranged": {
+          "itemId": 23199
+        }
+      }
+    }
+  ],
+  "talents": [
+    {
+      "id": "standard",
+      "name": "Standard",
+      "talents": "5500331023001351-05500001-053"
+    },
+    {
+      "id": "mana-tide",
+      "name": "Mana Tide",
+      "talents": "5500331013001351-04-053150001001"
+    }
+  ],
+  "rotations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "kind": "apl",
+      "rotation": {
+        "type": "TypeAPL",
+        "prepullActions": [
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 408510
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-5.5s"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10442,
+                  "rank": 4
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-4s"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10614
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-3s"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10497
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-2s"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "Single Target"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10438
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1s"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "Multi Target"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10587
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1s"
+              }
+            }
+          }
+        ],
+        "priorityList": [
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpLt",
+                  "lhs": {
+                    "currentManaPercent": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "80%"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "otherId": "OtherActionResourcePotion"
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpLt",
+                  "lhs": {
+                    "currentManaPercent": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "70%"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "itemId": 12662
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpLt",
+                  "lhs": {
+                    "currentManaPercent": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "50%"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 1325256
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "not": {
+                  "val": {
+                    "auraIsActive": {
+                      "auraId": {
+                        "spellId": 408510
+                      },
+                      "includeReactionTime": true
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 408510
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "autocastOtherCooldowns": {}
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "variableRef": {
+                        "name": "Single Target"
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "totemRemainingTime": {
+                            "totemType": "Fire"
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0s"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10438
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "variableRef": {
+                        "name": "Multi Target"
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "totemRemainingTime": {
+                            "totemType": "Fire"
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0s"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10587
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "dotIsActive": {
+                  "spellId": {
+                    "spellId": 10448,
+                    "rank": 5
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 16166
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "dotIsActive": {
+                  "spellId": {
+                    "spellId": 10448,
+                    "rank": 5
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20572
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "dotIsActive": {
+                  "spellId": {
+                    "spellId": 10448,
+                    "rank": 5
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20554
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "or": {
+                  "vals": [
+                    {
+                      "variableRef": {
+                        "name": "Multi Target"
+                      }
+                    },
+                    {
+                      "and": {
+                        "vals": [
+                          {
+                            "cmp": {
+                              "op": "OpGe",
+                              "lhs": {
+                                "currentManaPercent": {}
+                              },
+                              "rhs": {
+                                "const": {
+                                  "val": "40%"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "not": {
+                              "val": {
+                                "auraIsActive": {
+                                  "auraId": {
+                                    "spellId": 16166
+                                  },
+                                  "includeReactionTime": true
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10605
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "Multi Target"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 408345
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "multidot": {
+                "spellId": {
+                  "spellId": 10448,
+                  "rank": 5
+                },
+                "maxDots": 3,
+                "maxOverlap": {
+                  "const": {
+                    "val": "0ms"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "variableRef": {
+                        "name": "Single Target"
+                      }
+                    },
+                    {
+                      "auraIsKnown": {
+                        "auraId": {
+                          "spellId": 1323418
+                        }
+                      }
+                    },
+                    {
+                      "auraIsActive": {
+                        "auraId": {
+                          "spellId": 1323418
+                        },
+                        "includeReactionTime": true
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10414,
+                  "rank": 7
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpLt",
+                  "lhs": {
+                    "currentManaPercent": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "20%"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10392,
+                  "rank": 8
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 15208
+                }
+              }
+            }
+          }
+        ],
+        "valueVariables": [
+          {
+            "name": "Single Target",
+            "value": {
+              "cmp": {
+                "op": "OpEq",
+                "lhs": {
+                  "numberTargets": {}
+                },
+                "rhs": {
+                  "const": {
+                    "val": "1"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "Multi Target",
+            "value": {
+              "cmp": {
+                "op": "OpGt",
+                "lhs": {
+                  "numberTargets": {}
+                },
+                "rhs": {
+                  "const": {
+                    "val": "1"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

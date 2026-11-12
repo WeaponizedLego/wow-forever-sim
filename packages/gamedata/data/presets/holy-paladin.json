@@ -1,0 +1,100 @@
+{
+  "specId": "holy-paladin",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "dir": "ui/specs/paladin/holy",
+    "files": ["gear_sets/default.gear.json", "presets.ts"]
+  },
+  "status": "partial",
+  "defaultBuildId": null,
+  "missing": ["talents", "rotation", "builds", "apl-rotation"],
+  "notes": ["No default race upstream; the class's first race (human) is used, as the site does."],
+  "defaults": {
+    "race": "human",
+    "professions": ["Enchanting"],
+    "talents": "",
+    "gearSetId": "default",
+    "rotationId": null,
+    "consumables": {
+      "foodId": 250066,
+      "resourcePotId": 13444
+    },
+    "specOptions": {
+      "classOptions": {}
+    },
+    "individualBuffs": {},
+    "partyBuffs": {},
+    "raidBuffs": {},
+    "debuffs": {},
+    "playerOptions": {
+      "distanceFromTarget": 20,
+      "channelClipDelayMs": 0,
+      "reactionTimeMs": 100,
+      "reactionTimeMaxMs": 0,
+      "inFrontOfTarget": false
+    }
+  },
+  "builds": [],
+  "gearSets": [
+    {
+      "id": "default",
+      "name": "Default",
+      "gear": {
+        "head": {
+          "itemId": 12633
+        },
+        "neck": {
+          "itemId": 15856
+        },
+        "shoulder": {
+          "itemId": 12625
+        },
+        "back": {
+          "itemId": 272413
+        },
+        "chest": {
+          "itemId": 16726
+        },
+        "wrist": {
+          "itemId": 16722
+        },
+        "hands": {
+          "itemId": 250554
+        },
+        "waist": {
+          "itemId": 250574
+        },
+        "legs": {
+          "itemId": 16728
+        },
+        "feet": {
+          "itemId": 16725
+        },
+        "finger1": {
+          "itemId": 22681
+        },
+        "finger2": {
+          "itemId": 272406
+        },
+        "trinket1": {
+          "itemId": 272439
+        },
+        "trinket2": {
+          "itemId": 11811
+        },
+        "mainHand": {
+          "itemId": 20648
+        },
+        "offHand": {
+          "itemId": 276754
+        },
+        "ranged": {
+          "itemId": 272436
+        }
+      }
+    }
+  ],
+  "talents": [],
+  "rotations": []
+}
