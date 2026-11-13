@@ -76,7 +76,7 @@ const gear = computed(() => {
     const item = db.value?.item(g.itemId);
     return {
       slot: SLOT_LABELS[slot],
-      name: item?.name ?? `Item ${g.itemId}`,
+      name: itemName(db.value ?? null, g),
       quality: qualityOf(item),
       missing: !!db.value && !item,
     };

@@ -20,9 +20,9 @@ test('top gear: 3 candidates across 2 slots rank with verdicts', async ({ page }
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Top gear' }).click();
   await expect(page.getByRole('heading', { level: 1, name: /Top gear/ })).toBeVisible();
 
-  await addCandidate(page, 'Head', 'Gemburst Circlet');
-  await addCandidate(page, 'Head', 'Spellpower Goggles Xtreme Plus');
-  await addCandidate(page, 'Neck', 'Vision of Voodress');
+  await addCandidate(page, 'Head', "Cassandra's Grace");
+  await addCandidate(page, 'Head', 'Black Mageweave Headband');
+  await addCandidate(page, 'Neck', "Jarkal's Enhancing Necklace");
 
   // (equipped + 2) heads × (equipped + 1) necks.
   await page.getByRole('group', { name: 'Iterations' }).getByRole('button', { name: '1k' }).click();

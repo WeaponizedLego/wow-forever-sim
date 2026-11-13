@@ -105,6 +105,7 @@ async function computeWeights() {
     await session.runStatWeights(w.stats, w.reference, {
       runId: runId.value,
       iterations: weightIterations.value,
+      pseudoStats: w.pseudoStats,
     });
   } catch (e) {
     if (!(e instanceof DOMException && e.name === 'AbortError'))

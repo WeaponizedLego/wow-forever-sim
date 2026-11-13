@@ -14,16 +14,16 @@ test('swap an item in the workbench, see the pending diff, sim again and compare
   // Item picker: search, pick, equip.
   await page.getByRole('button', { name: /^Head: Captain's Circlet of the Boar/ }).click();
   const picker = page.getByRole('dialog', { name: 'Pick head item' });
-  await picker.getByRole('searchbox', { name: /Search items/ }).fill('Glacial Headdress');
+  await picker.getByRole('searchbox', { name: /Search items/ }).fill("Cassandra's Grace");
   await picker
     .getByRole('list', { name: 'Items' })
-    .getByRole('button', { name: /^Glacial Headdress/ })
+    .getByRole('button', { name: /^Cassandra's Grace/ })
     .click();
   await picker.getByRole('button', { name: 'Equip', exact: true }).click();
   await expect(picker).toBeHidden();
 
-  await expect(page.getByRole('button', { name: /^Head: Glacial Headdress/ })).toBeVisible();
-  await expect(pending.getByText(/Glacial Headdress/)).toBeVisible();
+  await expect(page.getByRole('button', { name: /^Head: Cassandra's Grace/ })).toBeVisible();
+  await expect(pending.getByText(/Cassandra's Grace/)).toBeVisible();
   await expect(pending.getByRole('button', { name: 'Discard' })).toBeEnabled();
 
   await simDraft(page, '0002');
