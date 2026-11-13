@@ -1,9 +1,11 @@
 import { createHash } from 'node:crypto';
-import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 // The sim runs entirely in the browser (WASM in Web Workers), so the app is a
 // client-rendered SPA served as static files. See docs/plan.md §0.
+const publicDirForSpaFallback = join(import.meta.dirname, '.output/public');
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-01',
   ssr: false,
@@ -35,6 +37,12 @@ export default defineNuxtConfig({
       compiled(nitro) {
         if (nitro.options.dev) return;
         writeServiceWorker(join(nitro.options.rootDir, 'public/sw.js'), nitro.options.output.publicDir);
+      },
+      // Cloudflare Pages serves a site as a single-page app only when there is no top-level 404.html;
+      // with one, deep links such as /runs/0004 or /s#… come back as 404. Every route here renders
+      // client-side from the shell, so drop it and let Pages fall back to index.html (status 200).
+      'prerender:done'() {
+        rmSync(join(publicDirForSpaFallback, '404.html'), { force: true });
       },
     },
   },
