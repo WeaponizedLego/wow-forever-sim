@@ -37,6 +37,8 @@ const QUALITIES = [
 const qualities = reactive<Record<number, boolean>>({});
 const minIlvl = ref('');
 const maxIlvl = ref('');
+/** Hide items above the character's level (required level estimated where the data lacks it). */
+const levelCap = ref(true);
 
 const SOURCE_LABELS: Record<SourceKind, string> = {
   raid: 'Raid',
@@ -72,6 +74,7 @@ const results = computed<UIItem[]>(() => {
     sources: SOURCE_KINDS.filter((k) => sources[k]),
     minIlvl: num(minIlvl.value),
     maxIlvl: num(maxIlvl.value),
+    ...(levelCap.value && { maxRequiredLevel: c.level }),
     limit: LIMIT,
   });
 });
@@ -339,6 +342,9 @@ const estTone = (e: LinearEstimate) => (Math.abs(e.delta) < 0.05 ? 'flat' : e.de
               x.label
             }}</UiFilterChip>
           </div>
+          <UiFilterChip v-if="wb.draft.value" v-model="levelCap"
+            >Level ≤ {{ wb.draft.value.level }}</UiFilterChip
+          >
           <span class="grow" />
           <div class="ilvl">
             <UiTextInput

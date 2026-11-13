@@ -14,7 +14,14 @@ import {
   type ItemSlotId,
   type SpecId,
 } from '@fsim/contracts';
-import { itemLevel, loadSpecPresets, type GameDatabase, type SpecPresets } from '@fsim/gamedata';
+import {
+  itemLevel,
+  loadSpecPresets,
+  weightStatsFor,
+  type GameDatabase,
+  type SpecPresets,
+  type WeightStats,
+} from '@fsim/gamedata';
 import {
   linearEstimate,
   statWeightRows,
@@ -131,55 +138,12 @@ export function enchantName(db: GameDatabase | null, g: GearItem | undefined): s
   return e ? shortEnchant(e.name) : `Enchant ${g.enchantId}`;
 }
 
-/** What to weigh for a spec, and the metric the estimates use. */
-export function weightPlan(spec: SpecId): { stats: Stat[]; reference: Stat; metric: 'dps' | 'hps' } {
-  const info = specInfo(spec);
-  if (info.role === 'healer') {
-    return {
-      stats: [Stat.StatIntellect, Stat.StatSpirit, Stat.StatHealingPower, Stat.StatCritRating, Stat.StatMP5],
-      reference: Stat.StatHealingPower,
-      metric: 'hps',
-    };
-  }
-  if (spec === 'hunter') {
-    return {
-      stats: [
-        Stat.StatAgility,
-        Stat.StatAttackPower,
-        Stat.StatRangedAttackPower,
-        Stat.StatHitRating,
-        Stat.StatCritRating,
-      ],
-      reference: Stat.StatRangedAttackPower,
-      metric: 'dps',
-    };
-  }
-  const casters: SpecId[] = ['balance-druid', 'mage', 'dps-priest', 'elemental-shaman', 'warlock'];
-  if (casters.includes(spec)) {
-    return {
-      stats: [
-        Stat.StatIntellect,
-        Stat.StatSpirit,
-        Stat.StatSpellDamage,
-        Stat.StatHitRating,
-        Stat.StatCritRating,
-      ],
-      reference: Stat.StatSpellDamage,
-      metric: 'dps',
-    };
-  }
-  return {
-    stats: [
-      Stat.StatStrength,
-      Stat.StatAgility,
-      Stat.StatAttackPower,
-      Stat.StatHitRating,
-      Stat.StatCritRating,
-    ],
-    reference: Stat.StatAttackPower,
-    metric: 'dps',
-  };
-}
+/**
+ * What to weigh for a spec, and the metric the estimates use: the same list as the run page's stat
+ * weights button (@fsim/gamedata `weightStatsFor`, upstream's default EP stats). Weapon users weigh weapon
+ * DPS, so weapon swaps get a value.
+ */
+export const weightPlan = (spec: SpecId): WeightStats => weightStatsFor(spec);
 
 export interface ChangeGroup {
   key: string;

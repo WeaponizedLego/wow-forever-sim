@@ -49,7 +49,7 @@ async function run() {
   if (withWeights.value) {
     const plan = weightPlan(c.spec);
     try {
-      await session.runStatWeights(plan.stats, plan.reference);
+      await session.runStatWeights(plan.stats, plan.reference, { pseudoStats: plan.pseudoStats });
     } catch {
       // The run itself finished; the run page shows it without weights.
     }

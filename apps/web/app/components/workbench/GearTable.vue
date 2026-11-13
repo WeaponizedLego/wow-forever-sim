@@ -67,6 +67,10 @@ const rows = computed<Row[]>(() => {
   });
 });
 
+/** Whether this run's weights price weapon damage (weapon DPS weighed, non-zero). */
+const weighsWeapons = computed(
+  () => wb.weights.value?.rows.some((r) => r.ref.kind === 'pseudo' && r.weight !== 0) ?? false,
+);
 const maxValue = computed(() => Math.max(1, ...rows.value.map((r) => r.value ?? 0)));
 const metric = computed(() =>
   wb.draft.value ? weightPlan(wb.draft.value.spec).metric.toUpperCase() : 'DPS',
@@ -135,8 +139,14 @@ const rowState = (r: Row): RowState | undefined =>
     </UiDataTable>
     <p class="foot">
       <template v-if="wb.weights.value">
-        Linear in the item's stats. Weapon damage, procs and set bonuses carry no weight here, so weapons and
-        proc trinkets read low; only a sim prices them.
+        <template v-if="weighsWeapons"
+          >Linear in the item's stats and weapon damage. Procs and set bonuses carry no weight here, so proc
+          trinkets read low; only a sim prices them.</template
+        >
+        <template v-else
+          >Linear in the item's stats. Weapon damage, procs and set bonuses carry no weight here (this spec's
+          weights leave weapon damage out), so proc trinkets read low; only a sim prices them.</template
+        >
       </template>
       <template v-else>
         Tick <strong>Stat weights</strong> in the sim bar and run once: values and estimated gains then fill
