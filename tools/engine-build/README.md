@@ -117,12 +117,15 @@ workflow with `commit: <sha>` (and `force: true`). The next hourly run moves for
 
 ## Repo setup the workflow needs
 
-- **Auto-merge.** Turn on Settings → General → "Allow auto-merge", and add branch protection on
-  `main` that requires `ci`. Without protection, `gh pr merge --auto` either errors (the workflow
-  only warns) or merges immediately.
-- **`ENGINE_SYNC_TOKEN` secret.** Use a fine-grained PAT or GitHub App token with contents and
-  pull-requests read/write. PRs pushed with the default `GITHUB_TOKEN` don't trigger `ci.yml`, so
-  the required check would never report and auto-merge would hang. Without the secret the workflow
-  falls back to `GITHUB_TOKEN`.
-- **Permissions.** The release and the issue use the job's `GITHUB_TOKEN` with
-  `contents: write` and `issues: write`. The workflow default is `permissions: {}`.
+All set on 2026-11-13 (via `gh api`):
+
+- **Auto-merge.** "Allow auto-merge" is on, and `main` is protected, requiring the ci `check` job
+  (admins can bypass; force pushes and deletion blocked). Merged sync branches are deleted.
+- **Actions may open PRs.** Settings → Actions → "Allow GitHub Actions to create and approve pull
+  requests" is on, so the built-in `GITHUB_TOKEN` can open the sync PR.
+- **No personal token.** PRs pushed with `GITHUB_TOKEN` don't start `pull_request` workflows, so the
+  workflow dispatches `ci.yml` on the sync branch right after pushing it (`workflow_dispatch` is the
+  exception GitHub allows from `GITHUB_TOKEN`). Its `check` result lands on the PR's head commit,
+  which is what branch protection and auto-merge read.
+- **Permissions.** The job's `GITHUB_TOKEN` has `contents`, `pull-requests`, `issues` and `actions`
+  write. The workflow default is `permissions: {}`.

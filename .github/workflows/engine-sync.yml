@@ -6,12 +6,12 @@ name: engine-sync
 # protos and smoke baseline. A failed build or smoke test publishes nothing and opens (or updates)
 # an issue instead. Scripts and failure modes: tools/engine-build/README.md.
 #
-# Repo setup this needs:
-#   - Settings → General → "Allow auto-merge", and branch protection on main that requires ci.
-#   - Secret ENGINE_SYNC_TOKEN (fine-grained PAT or GitHub App token with contents, pull-requests
-#     and workflows: read/write on this repo). PRs pushed with the default GITHUB_TOKEN do not
-#     trigger ci.yml, so their required checks would never run. Without the secret the workflow
-#     falls back to GITHUB_TOKEN and the PR needs a manual CI kick (close/reopen) before it merges.
+# Repo setup this needs (done 2026-11-13 via gh):
+#   - "Allow auto-merge" on, and branch protection on main that requires the ci `check` job.
+#   - Actions → "Allow GitHub Actions to create and approve pull requests" on.
+# No personal token: PRs pushed with GITHUB_TOKEN do not start pull_request workflows, so after
+# pushing the sync branch this workflow dispatches ci.yml on it (workflow_dispatch is allowed from
+# GITHUB_TOKEN); the `check` result lands on the PR's head commit and auto-merge proceeds.
 
 on:
   schedule:
@@ -46,6 +46,7 @@ jobs:
       contents: write # release + push the engine-sync/<id> branch
       pull-requests: write # open the PR and enable auto-merge
       issues: write # report failures
+      actions: write # dispatch ci.yml on the sync branch
     steps:
       - uses: actions/checkout@v5
 
@@ -181,7 +182,7 @@ jobs:
       - name: Open PR
         if: steps.gate.outputs.run == 'true'
         env:
-          GH_TOKEN: ${{ secrets.ENGINE_SYNC_TOKEN || github.token }}
+          GH_TOKEN: ${{ github.token }}
           ENGINE_ID: ${{ steps.check.outputs.engineId }}
           COMMIT: ${{ steps.check.outputs.commit }}
         run: |
@@ -204,6 +205,8 @@ jobs:
           git commit -m "Engine sync: wowsims/forever@$ENGINE_ID"
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin "$branch"
+          # The push itself starts no workflow (GITHUB_TOKEN); run ci on the branch so the PR gets its check.
+          gh workflow run ci.yml --ref "$branch"
           if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')" ]; then
             gh pr edit "$branch" --body-file "$body"
           else

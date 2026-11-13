@@ -54,5 +54,4 @@ corepack pnpm@12.18.0 exec vitest run
 - Plan and status: `docs/plan.md`; features: `docs/features.md`; engine findings: `packages/engine/README.md`.
 - UI design (v2 is the approved direction): https://claude.ai/artifact/UpvfYeTSiM5oUmsncPjxYn
 - Open items: SimC talent strings are not converted; weapon damage not weighed by default; Phase 3 (share links,
-  IndexedDB history, offline, deploy) not started; GitHub settings for engine sync (auto-merge, branch protection,
-  `ENGINE_SYNC_TOKEN`) not set up.
+  IndexedDB history, offline, deploy) not started. Engine sync only runs once its workflow is on `main`.
