@@ -169,7 +169,10 @@ const rowState = (r: Row): RowState | undefined =>
   text-decoration-color: currentColor;
   text-underline-offset: 3px;
 }
-.empty,
+/* "Empty" is the label of a button that opens the picker, so it needs body-text contrast (4.5:1). */
+.empty {
+  color: var(--text-3);
+}
 .none {
   color: var(--text-disabled);
 }

@@ -7,11 +7,8 @@ import { expect, openShamanInWorkbench, simDraft, test, type Page } from './help
 // left unfixed here (this lane does not edit components). A known violation is skipped so the smoke still
 // catches new ones; when it is fixed, the test fails until its entry is deleted, so the list cannot go stale.
 const KNOWN: Record<string, { id: string; why: string }[]> = {
-  // Histogram/LineBand `.hit` and AuraLanes `.lane__track`: focusable <div tabindex=0 aria-label=…> with no
-  // role, so the label is not exposed. Needs a role (e.g. role="img" or "group") on those elements.
-  '/runs/0001': [{ id: 'aria-prohibited-attr', why: 'aria-label on role-less chart hit areas / aura lanes' }],
-  // GearTable: the "Empty" text inside an empty slot's button uses --text-disabled, below 4.5:1 contrast.
-  '/workbench': [{ id: 'color-contrast', why: 'GearTable "Empty" slot label (--text-disabled)' }],
+  // Empty: the two found when this suite was written (role-less chart hit areas, the GearTable "Empty"
+  // label's contrast) are fixed. Add an entry here only for a violation that is reported and tracked.
 };
 
 async function check(page: Page, path: string) {

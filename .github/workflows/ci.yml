@@ -27,6 +27,8 @@ jobs:
       - run: pnpm format:check
       - run: pnpm test
       - run: pnpm build
+      - name: Performance budget (first-load JS before the engine)
+        run: node apps/web/scripts/check-budget.mjs
 
   # Browser end-to-end tests (apps/web/e2e) against the production build with the real engine.
   # Separate from `check` so the required check stays fast; see apps/web/playwright.config.ts.
