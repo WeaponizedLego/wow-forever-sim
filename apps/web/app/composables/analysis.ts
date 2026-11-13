@@ -21,8 +21,9 @@ import {
   type RunNote,
   type StatRef,
 } from '@fsim/analysis';
-import { SPECS, type SpecId } from '@fsim/contracts';
-import { Stat } from '@fsim/proto/common';
+import type { SpecId } from '@fsim/contracts';
+import { weightStatsFor as sharedWeightStats, type WeightStats } from '@fsim/gamedata';
+import { PseudoStat, Stat } from '@fsim/proto/common';
 import type { StatWeightsResult } from '@fsim/proto/api';
 import type { RunEntry } from './session';
 
@@ -43,63 +44,13 @@ export const runSlug = (id: string) => id.replace(/^#/, '');
 // ------------------------------------------------------------------------------------ stat weights
 
 const S = Stat;
+
 /**
- * Stats weighed by default, per spec. Primary stats plus hit/crit/haste and the spec's power stat;
- * the reference stat (EP = 1) is the power stat.
+ * What the stat weights button weighs for a spec: upstream's default EP stats (shared with the Workbench,
+ * see @fsim/gamedata weight-stats.ts).
  */
-const CASTER: Stat[] = [
-  S.StatIntellect,
-  S.StatSpirit,
-  S.StatSpellDamage,
-  S.StatHitRating,
-  S.StatCritRating,
-  S.StatHasteRating,
-];
-const MELEE: Stat[] = [
-  S.StatStrength,
-  S.StatAgility,
-  S.StatAttackPower,
-  S.StatHitRating,
-  S.StatCritRating,
-  S.StatHasteRating,
-  S.StatExpertiseRating,
-];
-const HUNTER: Stat[] = [
-  S.StatAgility,
-  S.StatIntellect,
-  S.StatRangedAttackPower,
-  S.StatHitRating,
-  S.StatCritRating,
-  S.StatHasteRating,
-];
-const HEALER: Stat[] = [
-  S.StatIntellect,
-  S.StatSpirit,
-  S.StatHealingPower,
-  S.StatCritRating,
-  S.StatHasteRating,
-];
-const TANK: Stat[] = [
-  S.StatStrength,
-  S.StatAgility,
-  S.StatStamina,
-  S.StatAttackPower,
-  S.StatHitRating,
-  S.StatExpertiseRating,
-  S.StatDefenseRating,
-  S.StatDodgeRating,
-  S.StatArmor,
-];
-
-const CASTER_SPECS: SpecId[] = ['balance-druid', 'mage', 'dps-priest', 'elemental-shaman', 'warlock'];
-
-export function weightStatsFor(spec: SpecId): { stats: Stat[]; reference: Stat } {
-  const role = SPECS.find((s) => s.id === spec)?.role;
-  if (CASTER_SPECS.includes(spec)) return { stats: CASTER, reference: S.StatSpellDamage };
-  if (spec === 'hunter') return { stats: HUNTER, reference: S.StatRangedAttackPower };
-  if (role === 'healer') return { stats: HEALER, reference: S.StatHealingPower };
-  if (role === 'tank') return { stats: TANK, reference: S.StatAttackPower };
-  return { stats: MELEE, reference: S.StatAttackPower };
+export function weightStatsFor(spec: SpecId): WeightStats {
+  return sharedWeightStats(spec);
 }
 
 const STAT_LABELS: Partial<Record<Stat, string>> = {
@@ -119,8 +70,24 @@ const STAT_LABELS: Partial<Record<Stat, string>> = {
   [S.StatDefenseRating]: 'Defense rating',
   [S.StatDodgeRating]: 'Dodge rating',
   [S.StatArmor]: 'Armor',
+  [S.StatMP5]: 'MP5',
+  [S.StatSpellPiercing]: 'Spell penetration',
 };
-export const statLabel = (s: Stat) => STAT_LABELS[s] ?? Stat[s]?.replace(/^Stat/, '') ?? `Stat ${s}`;
+/** "StatFireDamage" → "Fire damage", "PseudoStatSchoolHitPercentFire" → "School hit percent fire". */
+const enumLabel = (name: string, prefix: string) => {
+  const words = name.replace(prefix, '').replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+  return words.charAt(0) + words.slice(1).toLowerCase();
+};
+export const statLabel = (s: Stat) => STAT_LABELS[s] ?? (Stat[s] ? enumLabel(Stat[s], 'Stat') : `Stat ${s}`);
+
+const PSEUDO_LABELS: Partial<Record<PseudoStat, string>> = {
+  [PseudoStat.PseudoStatMainHandDps]: 'Main-hand DPS',
+  [PseudoStat.PseudoStatOffHandDps]: 'Off-hand DPS',
+  [PseudoStat.PseudoStatRangedDps]: 'Ranged weapon DPS',
+};
+export const pseudoStatLabel = (p: PseudoStat) =>
+  PSEUDO_LABELS[p] ?? (PseudoStat[p] ? enumLabel(PseudoStat[p], 'PseudoStat') : `Pseudo stat ${p}`);
+export const statRefLabel = (r: StatRef) => (r.kind === 'stat' ? statLabel(r.stat) : pseudoStatLabel(r.stat));
 
 // ------------------------------------------------------------------------------------ the analysis
 
@@ -324,14 +291,23 @@ export function useRunAnalysis(
     });
   });
 
+  // Every stat the spec weighs. The engine skips a stat that has no effect for this character (sampleCounts
+  // 0, weight 0 ± 0); those rows stay and the panel lists them as having no effect. A pseudo stat with no
+  // samples is dropped instead: the request may simply not have asked for it (weapon DPS from a caller
+  // that only passes the stats).
   const weights = computed(() => {
     const sw = statWeights.value;
     if (!sw || !entry.value) return null;
-    const { stats, reference } = weightStatsFor(entry.value.record.character.spec);
-    const refs: StatRef[] = stats.map((stat) => ({ kind: 'stat', stat }));
-    return statWeightRows(sw, refs, 'dps', entry.value.record.iterations).map((r) => ({
+    const { stats, pseudoStats, reference, metric } = weightStatsFor(entry.value.record.character.spec);
+    const refs: StatRef[] = [
+      ...stats.map((stat) => ({ kind: 'stat', stat }) as const),
+      ...pseudoStats.map((stat) => ({ kind: 'pseudo', stat }) as const),
+    ];
+    const counted = (r: StatRef) =>
+      r.kind === 'stat' || !sw.sampleCounts || (sw.sampleCounts.pseudoStats[r.stat] ?? 0) > 0;
+    return statWeightRows(sw, refs.filter(counted), metric, entry.value.record.iterations).map((r) => ({
       ...r,
-      label: statLabel(r.ref.stat as Stat),
+      label: statRefLabel(r.ref),
       isReference: r.ref.kind === 'stat' && r.ref.stat === reference,
     }));
   });

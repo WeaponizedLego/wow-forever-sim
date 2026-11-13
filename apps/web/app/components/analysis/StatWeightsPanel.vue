@@ -2,7 +2,7 @@
 // Stat weights of the run, or a button to compute them.
 import type { StatWeightRow } from '@fsim/analysis';
 import type { TableColumn } from '~/composables/ui-types';
-import { Stat } from '@fsim/proto/common';
+import { PseudoStat, Stat } from '@fsim/proto/common';
 
 type Row = StatWeightRow & { label: string; isReference: boolean };
 const props = defineProps<{
@@ -21,14 +21,22 @@ const cols: TableColumn<Row>[] = [
   { key: 'ci', label: '±', srLabel: '95% CI (±)', numeric: true, tone: '3' },
   { key: 'whisker', label: 'CI as % of weight', width: '34%' },
 ];
+/** Weighed with exactly 0 ± 0: the stat does nothing in the engine for this character (e.g. haste rating at a low level). */
+const noEffect = (r: Row) => r.weight === 0 && r.stdev === 0;
+const shown = computed(() => props.rows?.filter((r) => !noEffect(r)) ?? null);
+const hidden = computed(() => props.rows?.filter(noEffect).map((r) => r.label) ?? []);
 const fmt = (v: number) => formatNumber(v, 2);
 const rel = (r: Row) => (r.relError === null ? 0 : (r.ci95 / Math.abs(r.weight)) * 100);
 const copied = ref(false);
 
 /** Pawn import string from the EP values (reference stat = 1). */
 async function copyPawn() {
-  if (!props.rows) return;
-  const parts = props.rows.map((r) => `${Stat[r.ref.stat as Stat].replace(/^Stat/, '')}=${r.ep.toFixed(2)}`);
+  if (!shown.value) return;
+  const name = (r: Row) =>
+    r.ref.kind === 'stat'
+      ? Stat[r.ref.stat].replace(/^Stat/, '')
+      : PseudoStat[r.ref.stat].replace(/^PseudoStat/, '');
+  const parts = shown.value.map((r) => `${name(r)}=${r.ep.toFixed(2)}`);
   await navigator.clipboard.writeText(`( Pawn: v1: "forever/sim": ${parts.join(', ')} )`);
   copied.value = true;
   setTimeout(() => (copied.value = false), 1500);
@@ -40,7 +48,7 @@ async function copyPawn() {
     <template v-if="rows">
       <UiDataTable
         :columns="cols"
-        :rows="rows"
+        :rows="shown!"
         :row-key="(r) => r.label"
         hide-header
         density="sm"
@@ -61,6 +69,9 @@ async function copyPawn() {
           />
         </template>
       </UiDataTable>
+      <p v-if="hidden.length" class="note hidden-stats">
+        Not weighed: no effect in the engine ({{ hidden.join(', ').toLowerCase() }})
+      </p>
       <div class="foot">
         <span class="note">Whisker: CI as % of the weight</span>
         <UiButton size="sm" @click="copyPawn">{{ copied ? 'Copied' : 'Copy Pawn' }}</UiButton>
@@ -97,6 +108,9 @@ async function copyPawn() {
   margin: 0;
   font-size: var(--text-xs);
   color: var(--text-3);
+}
+.hidden-stats {
+  padding: 10px var(--space-4) 0;
 }
 .empty {
   display: flex;

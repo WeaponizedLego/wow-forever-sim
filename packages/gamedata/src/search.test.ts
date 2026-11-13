@@ -1,7 +1,7 @@
 import { ArmorType, ItemQuality, ItemType } from '@fsim/proto/common';
 import { describe, expect, it } from 'vitest';
 import { itemLevel } from './database';
-import { ItemSearchIndex } from './search';
+import { ItemSearchIndex, requiredLevel } from './search';
 import { sourceKind } from './sources';
 import { fixtureDb } from './test-db';
 
@@ -89,5 +89,80 @@ describe('ItemSearchIndex', () => {
     const hits = index.search({ text: 'cap beaststalker' });
     expect(hits.some((i) => i.id === 16677)).toBe(true);
     expect(index.search({ text: 'zzzz-no-such-item' })).toHaveLength(0);
+  });
+
+  describe('required level', () => {
+    // Seal of Ascension: a level-60 quest reward (ilvl 61) whose reqLvl is 0 in the data.
+    const SEAL_OF_ASCENSION = 12344;
+
+    it('estimates a missing reqLvl from the item level', () => {
+      const seal = db.item(SEAL_OF_ASCENSION)!;
+      expect(seal.reqLvl).toBe(0);
+      expect(requiredLevel(seal)).toBe(56);
+      const listed = [...db.items.values()].find((i) => i.reqLvl === 42)!;
+      expect(requiredLevel(listed)).toBe(42);
+      // Crystal-Infused Cleaver: one of Forever's own ilvl 62 items, with reqLvl 1 in the data.
+      expect(requiredLevel(db.item(279908)!)).toBe(57);
+    });
+
+    it('matches the listed reqLvl for nearly every item that has one', () => {
+      const listed = [...db.items.values()].filter((i) => i.reqLvl > 1 && i.reqLvl < 60);
+      const estimate = (i: (typeof listed)[number]) => requiredLevel({ ...i, reqLvl: 0 });
+      const exact = listed.filter((i) => estimate(i) === i.reqLvl).length;
+      const tooHigh = listed.filter((i) => estimate(i) > i.reqLvl + 2).length;
+      expect(exact / listed.length).toBeGreaterThan(0.95);
+      expect(tooHigh / listed.length).toBeLessThan(0.005);
+    });
+
+    it('keeps high-level items away from a level-42 character', () => {
+      const hits = index.search({
+        class: 'shaman',
+        spec: 'elemental-shaman',
+        maxRequiredLevel: 42,
+        limit: 100_000,
+      });
+      expect(hits.length).toBeGreaterThan(1000);
+      expect(hits.some((i) => i.id === SEAL_OF_ASCENSION)).toBe(false);
+      for (const i of hits) expect(requiredLevel(i)).toBeLessThanOrEqual(42);
+      // Listed items at reqLvl 42 go up to ilvl 47; nothing far above that should show.
+      expect(Math.max(...hits.map(itemLevel))).toBeLessThanOrEqual(50);
+      const at60 = index.search({
+        class: 'shaman',
+        spec: 'elemental-shaman',
+        maxRequiredLevel: 60,
+        limit: 100_000,
+      });
+      expect(at60.some((i) => i.id === SEAL_OF_ASCENSION)).toBe(true);
+    });
+  });
+
+  describe('duplicate items', () => {
+    const ids = (name: string) =>
+      index
+        .search({ text: name, limit: 1000 })
+        .filter((i) => i.name.toLowerCase() === name)
+        .map((i) => i.id);
+
+    it('lists an item that the data has under several ids once', () => {
+      // Sergeant's Cloak: 16341 (vendor + PvP) and Forever's re-add 272451 (PvP), otherwise identical.
+      expect(ids("sergeant's cloak")).toContain(16341);
+      expect(ids("sergeant's cloak")).not.toContain(272451);
+      // Insignia of the Horde: 8 class versions, each also re-added by Forever (16 ids).
+      expect(ids('insignia of the horde')).toHaveLength(8);
+      // The kept row carries the duplicates' sources too.
+      const pvp = index.search({ text: "sergeant's cloak", sources: ['pvp'] });
+      expect(pvp.filter((i) => i.name === "Sergeant's Cloak").map((i) => i.id)).toContain(16341);
+    });
+
+    it('keeps quality tiers and faction variants apart', () => {
+      expect(ids('vision of voodress').sort()).toEqual([19606, 19607, 19608]);
+      expect(ids('ironbark staff').sort()).toEqual([20069, 20220]);
+    });
+
+    it('returns no two results that are the same item', () => {
+      const all = index.search({ limit: 100_000 });
+      expect(new Set(all.map((i) => i.id)).size).toBe(all.length);
+      expect(all.length).toBeLessThan(db.items.size);
+    });
   });
 });
