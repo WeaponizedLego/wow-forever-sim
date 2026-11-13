@@ -1,0 +1,20 @@
+node_modules/
+.nuxt/
+.output/
+.data/
+dist/
+coverage/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Engine artifacts are downloaded per engine.lock.json, never committed.
+packages/engine/vendor/
+
+# Agent worktrees
+.claude/worktrees/
+
+# Engine files staged for the browser by apps/web/scripts/stage-engine.mjs
+apps/web/public/engine/

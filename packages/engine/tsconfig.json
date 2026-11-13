@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // The workers import './x.ts' so Node can run them with native type stripping.
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src"]
+}

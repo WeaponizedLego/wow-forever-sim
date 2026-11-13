@@ -1,0 +1,21 @@
+{
+  "name": "@fsim/contracts",
+  "private": true,
+  "type": "module",
+  "description": "Shared types and schemas every lane codes against. Owned by the lead: lanes propose changes, they do not edit this package.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@fsim/proto": "workspace:*",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
+  }
+}

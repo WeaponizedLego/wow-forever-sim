@@ -1,0 +1,7 @@
+//go:build !fsim_smoke
+
+// Injected into the upstream clone as sim/core/zz_fsim_smoke_stub.go by tools/engine-build/smoke.mjs
+// (forever-sim engine-sync pipeline). Without the fsim_smoke tag, RunTestSuite runs as upstream wrote it.
+package core
+
+func fsimSmokeHook(string, []TestGenerator) bool { return false }

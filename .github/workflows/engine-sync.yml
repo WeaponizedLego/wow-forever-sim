@@ -1,0 +1,263 @@
+name: engine-sync
+
+# Keeps engine.lock.json on the engine wowsims.com/forever serves (wowsims/pages-deploy
+# forever/version.json): build the WASM at that commit, smoke-sim every spec in Node, publish the
+# artifacts as release engine-<id>, and open an auto-merging PR with the new lock, regenerated
+# protos and smoke baseline. A failed build or smoke test publishes nothing and opens (or updates)
+# an issue instead. Scripts and failure modes: tools/engine-build/README.md.
+#
+# Repo setup this needs (done 2026-11-13 via gh):
+#   - "Allow auto-merge" on, and branch protection on main that requires the ci `check` job.
+#   - Actions → "Allow GitHub Actions to create and approve pull requests" on.
+# No personal token: PRs pushed with GITHUB_TOKEN do not start pull_request workflows, so after
+# pushing the sync branch this workflow dispatches ci.yml on it (workflow_dispatch is allowed from
+# GITHUB_TOKEN); the `check` result lands on the PR's head commit and auto-merge proceeds.
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Upstream wowsims/forever commit or ref to build (default: what version.json serves)'
+        required: false
+        type: string
+      force:
+        description: 'Rebuild even if the lock already has this commit, and retry a commit with an open failure issue'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: engine-sync
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  ENGINE_BUILD_WORK: ${{ github.workspace }}/../engine-build-work
+  PROTOC_VERSION: '34.1'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write # release + push the engine-sync/<id> branch
+      pull-requests: write # open the PR and enable auto-merge
+      issues: write # report failures
+      actions: write # dispatch ci.yml on the sync branch
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Check upstream version
+        id: check
+        env:
+          INPUT_COMMIT: ${{ inputs.commit }}
+          INPUT_FORCE: ${{ inputs.force }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          args=()
+          [ -n "$INPUT_COMMIT" ] && args+=(--commit "$INPUT_COMMIT")
+          [ "$INPUT_FORCE" = "true" ] && args+=(--force)
+          node tools/engine-build/check.mjs "${args[@]}"
+
+      # Hourly runs skip a commit that already has an open PR (waiting to merge) or an open failure
+      # issue (a human has to look). workflow_dispatch with force=true retries either way.
+      - name: Gate
+        id: gate
+        if: steps.check.outputs.update == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_ID: ${{ steps.check.outputs.engineId }}
+          INPUT_FORCE: ${{ inputs.force }}
+        run: |
+          if [ "$INPUT_FORCE" != "true" ]; then
+            pr=$(gh pr list --head "engine-sync/$ENGINE_ID" --state open --json number --jq '.[0].number // empty')
+            issue=$(gh issue list --state open --search "in:title \"engine-sync failed: $ENGINE_ID\"" --json number --jq '.[0].number // empty')
+            if [ -n "$pr" ] || [ -n "$issue" ]; then
+              echo "::notice::$ENGINE_ID already has open PR '${pr}' / failure issue '${issue}'; skipping."
+              echo "run=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          echo "run=true" >> "$GITHUB_OUTPUT"
+
+      # Installs the pnpm version pinned in package.json "packageManager".
+      - uses: pnpm/action-setup@v4
+        if: steps.gate.outputs.run == 'true'
+
+      - uses: actions/setup-node@v5
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install npm dependencies
+        if: steps.gate.outputs.run == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - uses: actions/setup-go@v6
+        if: steps.gate.outputs.run == 'true'
+        with:
+          go-version: 1.27.x
+          cache: false # upstream's go.sum is only there after the clone; cached below instead
+
+      - name: Cache Go modules and build cache
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: engine-go-${{ runner.os }}-${{ steps.check.outputs.engineId }}
+          restore-keys: engine-go-${{ runner.os }}-
+
+      - name: Install protoc and binaryen
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          curl -fsSL --retry 5 --retry-all-errors -o "$RUNNER_TEMP/protoc.zip" \
+            "https://github.com/protocolbuffers/protobuf/releases/download/v$PROTOC_VERSION/protoc-$PROTOC_VERSION-linux-x86_64.zip"
+          python3 -m zipfile -e "$RUNNER_TEMP/protoc.zip" "$RUNNER_TEMP/protoc"
+          chmod +x "$RUNNER_TEMP/protoc/bin/protoc"
+          echo "$RUNNER_TEMP/protoc/bin" >> "$GITHUB_PATH"
+          sudo apt-get update && sudo apt-get install -y binaryen
+
+      - name: Build
+        id: build
+        if: steps.gate.outputs.run == 'true'
+        env:
+          COMMIT: ${{ steps.check.outputs.commit }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -o pipefail
+          mkdir -p "$ENGINE_BUILD_WORK"
+          node tools/engine-build/build.mjs "$COMMIT" --require-wasm-opt 2>&1 | tee "$ENGINE_BUILD_WORK/build.log"
+
+      - name: Smoke test
+        id: smoke
+        if: steps.gate.outputs.run == 'true'
+        env:
+          COMMIT: ${{ steps.check.outputs.commit }}
+        run: |
+          set -o pipefail
+          node tools/engine-build/smoke.mjs "$COMMIT" 2>&1 | tee "$ENGINE_BUILD_WORK/smoke.log"
+
+      - name: Promote lock and check the regenerated protos
+        if: steps.gate.outputs.run == 'true'
+        env:
+          COMMIT: ${{ steps.check.outputs.commit }}
+        run: |
+          node tools/engine-build/promote.mjs "$COMMIT"
+          pnpm --filter @fsim/proto exec tsc -p tsconfig.json
+          pnpm exec vitest run --project proto
+
+      - name: Publish release engine-${{ steps.check.outputs.engineId }}
+        if: steps.gate.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_ID: ${{ steps.check.outputs.engineId }}
+          COMMIT: ${{ steps.check.outputs.commit }}
+        run: |
+          out="$ENGINE_BUILD_WORK/out/$ENGINE_ID"
+          files=("$out/lib.wasm.gz" "$out/wasm_exec.js" "$out/db.bin" "$out/leftover_db.bin")
+          tag="engine-$ENGINE_ID"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            # A lock on main may already point at this release; never swap its bytes under it.
+            if [ "$(git show HEAD:engine.lock.json | jq -r .engineId)" = "$ENGINE_ID" ]; then
+              echo "::error::release $tag is referenced by main's engine.lock.json; refusing to overwrite its assets"
+              exit 1
+            fi
+            gh release upload "$tag" "${files[@]}" --clobber
+          else
+            gh release create "$tag" "${files[@]}" --latest=false \
+              --title "Engine $ENGINE_ID" \
+              --notes "Built from wowsims/forever@$COMMIT by engine-sync run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
+          fi
+
+      - name: Open PR
+        if: steps.gate.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_ID: ${{ steps.check.outputs.engineId }}
+          COMMIT: ${{ steps.check.outputs.commit }}
+        run: |
+          branch="engine-sync/$ENGINE_ID"
+          body="$ENGINE_BUILD_WORK/pr-body.md"
+          {
+            echo "Engine sync to [wowsims/forever@$ENGINE_ID](https://github.com/wowsims/forever/commit/$COMMIT)" \
+                 "([release](https://github.com/$GITHUB_REPOSITORY/releases/tag/engine-$ENGINE_ID))."
+            echo
+            cat "$ENGINE_BUILD_WORK/out/$ENGINE_ID/smoke-report.md"
+          } > "$body"
+          git add engine.lock.json tools/engine-build/smoke-baseline.json packages/proto/proto packages/proto/src/generated
+          if git diff --cached --quiet; then
+            echo "::notice::nothing changed; no PR"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git commit -m "Engine sync: wowsims/forever@$ENGINE_ID"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin "$branch"
+          # The push itself starts no workflow (GITHUB_TOKEN); run ci on the branch so the PR gets its check.
+          gh workflow run ci.yml --ref "$branch"
+          if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')" ]; then
+            gh pr edit "$branch" --body-file "$body"
+          else
+            gh pr create --base main --head "$branch" --title "Engine sync: wowsims/forever@$ENGINE_ID" --body-file "$body"
+          fi
+          # Needs "Allow auto-merge" in the repo settings and a protected main; warn instead of failing.
+          gh pr merge "$branch" --auto --squash || echo "::warning::could not enable auto-merge (repo setting off?)"
+
+      - name: Report failure
+        if: failure() && steps.gate.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_ID: ${{ steps.check.outputs.engineId }}
+          COMMIT: ${{ steps.check.outputs.commit }}
+        run: |
+          title="engine-sync failed: $ENGINE_ID"
+          body="$ENGINE_BUILD_WORK/issue-body.md"
+          {
+            echo "Engine sync for [wowsims/forever@$ENGINE_ID](https://github.com/wowsims/forever/commit/$COMMIT) failed."
+            echo "Nothing was merged; the lock stays on the previous engine."
+            echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo
+            report="$ENGINE_BUILD_WORK/out/$ENGINE_ID/smoke-report.md"
+            [ -f "$report" ] && cat "$report" && echo
+            for f in build smoke; do
+              if [ -f "$ENGINE_BUILD_WORK/$f.log" ]; then
+                echo "<details><summary>$f log (last 150 lines)</summary>"
+                echo
+                echo '```'
+                tail -n 150 "$ENGINE_BUILD_WORK/$f.log" | cut -c1-500
+                echo '```'
+                echo "</details>"
+              fi
+            done
+          } > "$body"
+          issue=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number // empty')
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --body-file "$body"
+          else
+            gh issue create --title "$title" --body-file "$body"
+          fi
+
+      - name: Upload logs and reports
+        if: always() && steps.gate.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-sync-${{ steps.check.outputs.engineId }}
+          path: |
+            ${{ env.ENGINE_BUILD_WORK }}/*.log
+            ${{ env.ENGINE_BUILD_WORK }}/out/*/smoke-report.md
+            ${{ env.ENGINE_BUILD_WORK }}/out/*/smoke-results.json
+            ${{ env.ENGINE_BUILD_WORK }}/out/*/build-info.json
+            ${{ env.ENGINE_BUILD_WORK }}/out/*/engine.lock.json
+          if-no-files-found: ignore

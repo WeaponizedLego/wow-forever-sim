@@ -1,0 +1,2823 @@
+{
+  "specId": "retribution-paladin",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "dir": "ui/specs/paladin/retribution",
+    "files": [
+      "apls/default.apl.siml",
+      "apls/holy_shock.apl.siml",
+      "buffs.siml",
+      "builds/holy_shock.siml",
+      "builds/unsealed_wrath.siml",
+      "defaults.siml",
+      "gear_sets/default.gear.siml",
+      "gear_sets/holy_shock.gear.siml",
+      "gear_sets/holy_shock_item_swap.gear.siml",
+      "presets.ts"
+    ]
+  },
+  "status": "complete",
+  "defaultBuildId": null,
+  "missing": [],
+  "notes": [
+    "Upstream defaults to the TypeSimple rotation, which the site builds into an APL in the browser; the defaults here use the APL preset \"default\" instead.",
+    "Build \"Unsealed Wrath\" uses a simple/auto rotation upstream; here it uses the APL preset \"default\".",
+    "Build \"Holy Shock\" uses a simple/auto rotation upstream; here it uses the APL preset \"holy-shock\".",
+    "Gear file holy_shock_item_swap.gear.siml is listed by no preset upstream; kept as gear set \"file-holy-shock-item-swap\"."
+  ],
+  "defaults": {
+    "race": "human",
+    "professions": ["Engineering", "Blacksmithing"],
+    "talents": "050250002-501-05233011201301351",
+    "gearSetId": "default",
+    "rotationId": "default",
+    "consumables": {
+      "flaskId": 13512,
+      "foodId": 13933,
+      "conjuredId": 12662,
+      "mhImbueId": 3824,
+      "extraIds": [8410, 10646, 12217, 18269],
+      "elixirIds": [21546, 250338, 13452, 250337, 250351, 250329, 13454, 250341, 12460],
+      "resourcePotId": 13444,
+      "offensivePotId": 250937
+    },
+    "specOptions": {
+      "classOptions": {}
+    },
+    "individualBuffs": {
+      "greaterBlessingOfKings": true,
+      "greaterBlessingOfMight": 1,
+      "greaterBlessingOfWisdom": 1
+    },
+    "partyBuffs": {
+      "manaSpringTotem": "TristateEffectRegular"
+    },
+    "raidBuffs": {
+      "arcaneIntellect": true,
+      "prayerOfSpirit": true,
+      "markOfTheWild": true,
+      "powerWordFortitude": true,
+      "strengthOfEarthTotem": 1,
+      "graceOfAirTotem": 1,
+      "windfuryTotem": true,
+      "battleShout": 1,
+      "leaderOfThePack": true
+    },
+    "debuffs": {
+      "judgementOfLight": true,
+      "judgementOfWisdom": true,
+      "curseOfElements": true,
+      "curseOfRecklessness": true,
+      "faerieFire": true,
+      "exposeArmor": true,
+      "sunderArmor": true
+    },
+    "playerOptions": {
+      "distanceFromTarget": 25,
+      "channelClipDelayMs": 0,
+      "reactionTimeMs": 100,
+      "reactionTimeMaxMs": 0,
+      "inFrontOfTarget": false
+    },
+    "encounter": {
+      "duration": 180,
+      "durationVariation": 5,
+      "executeProportion20": 0.2,
+      "executeProportion35": 0.35,
+      "targets": [
+        {
+          "id": 31146,
+          "name": "Raid Target",
+          "level": 63,
+          "mobType": "MobTypeMechanical",
+          "stats": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+            1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
+          ],
+          "minBaseDamage": 2601,
+          "damageSpread": 0.5,
+          "swingSpeed": 2,
+          "parryHaste": true,
+          "canCrush": true
+        }
+      ]
+    }
+  },
+  "builds": [
+    {
+      "id": "unsealed-wrath",
+      "name": "Unsealed Wrath",
+      "setup": {
+        "race": "human",
+        "professions": ["Engineering", "Blacksmithing"],
+        "talents": "050250002-501-05233011201301351",
+        "gearSetId": "default",
+        "rotationId": "default",
+        "consumables": {
+          "flaskId": 13512,
+          "foodId": 13933,
+          "conjuredId": 12662,
+          "mhImbueId": 3824,
+          "extraIds": [8410, 10646, 12217, 18269],
+          "elixirIds": [21546, 250338, 13452, 250337, 250351, 250329, 13454, 250341, 12460],
+          "resourcePotId": 13444,
+          "offensivePotId": 250937
+        },
+        "specOptions": {
+          "classOptions": {}
+        },
+        "individualBuffs": {
+          "greaterBlessingOfKings": true,
+          "greaterBlessingOfMight": 1,
+          "greaterBlessingOfWisdom": 1
+        },
+        "partyBuffs": {
+          "manaSpringTotem": "TristateEffectRegular"
+        },
+        "raidBuffs": {
+          "arcaneIntellect": true,
+          "prayerOfSpirit": true,
+          "markOfTheWild": true,
+          "powerWordFortitude": true,
+          "strengthOfEarthTotem": 1,
+          "graceOfAirTotem": 1,
+          "windfuryTotem": true,
+          "battleShout": 1,
+          "leaderOfThePack": true
+        },
+        "debuffs": {
+          "judgementOfLight": true,
+          "judgementOfWisdom": true,
+          "curseOfElements": true,
+          "curseOfRecklessness": true,
+          "faerieFire": true,
+          "exposeArmor": true,
+          "sunderArmor": true
+        },
+        "playerOptions": {
+          "distanceFromTarget": 25,
+          "channelClipDelayMs": 0,
+          "reactionTimeMs": 100,
+          "reactionTimeMaxMs": 0,
+          "inFrontOfTarget": false
+        },
+        "encounter": {
+          "duration": 180,
+          "durationVariation": 5,
+          "executeProportion20": 0.2,
+          "executeProportion35": 0.35,
+          "targets": [
+            {
+              "id": 31146,
+              "name": "Raid Target",
+              "level": 63,
+              "mobType": "MobTypeMechanical",
+              "stats": [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+                1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
+              ],
+              "minBaseDamage": 2601,
+              "damageSpread": 0.5,
+              "swingSpeed": 2,
+              "parryHaste": true,
+              "canCrush": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "holy-shock",
+      "name": "Holy Shock",
+      "setup": {
+        "race": "human",
+        "professions": ["Engineering", "Blacksmithing"],
+        "talents": "05025210221021--0523330110130033",
+        "gearSetId": "holy-shock",
+        "rotationId": "holy-shock",
+        "consumables": {
+          "flaskId": 13512,
+          "foodId": 13933,
+          "conjuredId": 12662,
+          "mhImbueId": 3824,
+          "extraIds": [8423, 10646, 12217, 18269],
+          "elixirIds": [21546, 250338, 13452, 250337, 250351, 250329, 13454, 250341, 12460],
+          "swapMhImbueId": 3829,
+          "resourcePotId": 13444,
+          "offensivePotId": 250937
+        },
+        "specOptions": {
+          "classOptions": {}
+        },
+        "individualBuffs": {
+          "greaterBlessingOfKings": true,
+          "greaterBlessingOfMight": 1,
+          "greaterBlessingOfWisdom": 1
+        },
+        "partyBuffs": {
+          "manaSpringTotem": "TristateEffectRegular"
+        },
+        "raidBuffs": {
+          "arcaneIntellect": true,
+          "prayerOfSpirit": true,
+          "markOfTheWild": true,
+          "powerWordFortitude": true,
+          "strengthOfEarthTotem": 1,
+          "graceOfAirTotem": 1,
+          "windfuryTotem": true,
+          "battleShout": 1,
+          "leaderOfThePack": true
+        },
+        "debuffs": {
+          "judgementOfLight": true,
+          "judgementOfWisdom": true,
+          "curseOfElements": true,
+          "curseOfRecklessness": true,
+          "faerieFire": true,
+          "exposeArmor": true,
+          "sunderArmor": true
+        },
+        "playerOptions": {
+          "distanceFromTarget": 25,
+          "channelClipDelayMs": 0,
+          "reactionTimeMs": 100,
+          "reactionTimeMaxMs": 0,
+          "inFrontOfTarget": false
+        },
+        "encounter": {
+          "duration": 180,
+          "durationVariation": 5,
+          "executeProportion20": 0.2,
+          "executeProportion35": 0.35,
+          "targets": [
+            {
+              "id": 31146,
+              "name": "Raid Target",
+              "level": 63,
+              "mobType": "MobTypeMechanical",
+              "stats": [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+                1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
+              ],
+              "minBaseDamage": 2601,
+              "damageSpread": 0.5,
+              "swingSpeed": 2,
+              "parryHaste": true,
+              "canCrush": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "gearSets": [
+    {
+      "id": "default",
+      "name": "Default",
+      "gear": {
+        "head": {
+          "itemId": 12640,
+          "enchantId": 2543
+        },
+        "neck": {
+          "itemId": 22150,
+          "enchantId": 904
+        },
+        "shoulder": {
+          "itemId": 14503
+        },
+        "back": {
+          "itemId": 279269,
+          "enchantId": 849
+        },
+        "chest": {
+          "itemId": 252484,
+          "enchantId": 1891
+        },
+        "wrist": {
+          "itemId": 21184,
+          "enchantId": 2566
+        },
+        "hands": {
+          "itemId": 19049,
+          "enchantId": 8206
+        },
+        "waist": {
+          "itemId": 19044
+        },
+        "legs": {
+          "itemId": 22385,
+          "enchantId": 2543
+        },
+        "feet": {
+          "itemId": 275618,
+          "enchantId": 1887
+        },
+        "finger1": {
+          "itemId": 21182
+        },
+        "finger2": {
+          "itemId": 19325
+        },
+        "trinket1": {
+          "itemId": 274759
+        },
+        "trinket2": {
+          "itemId": 272437
+        },
+        "mainHand": {
+          "itemId": 12784,
+          "enchantId": 1900
+        },
+        "ranged": {
+          "itemId": 272435
+        }
+      }
+    },
+    {
+      "id": "holy-shock",
+      "name": "Holy Shock",
+      "gear": {
+        "head": {
+          "itemId": 16686
+        },
+        "neck": {
+          "itemId": 15856,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 16729
+        },
+        "back": {
+          "itemId": 18510,
+          "enchantId": 849
+        },
+        "chest": {
+          "itemId": 16666,
+          "enchantId": 1891
+        },
+        "wrist": {
+          "itemId": 16722,
+          "enchantId": 2566
+        },
+        "hands": {
+          "itemId": 16672,
+          "enchantId": 2617
+        },
+        "waist": {
+          "itemId": 16723
+        },
+        "legs": {
+          "itemId": 16687,
+          "enchantId": 8492
+        },
+        "feet": {
+          "itemId": 16682,
+          "enchantId": 8492
+        },
+        "finger1": {
+          "itemId": 272407
+        },
+        "finger2": {
+          "itemId": 272406
+        },
+        "trinket1": {
+          "itemId": 270225
+        },
+        "trinket2": {
+          "itemId": 272437
+        },
+        "mainHand": {
+          "itemId": 15257,
+          "enchantId": 8211,
+          "randomSuffix": 12759
+        },
+        "ranged": {
+          "itemId": 272435
+        }
+      }
+    },
+    {
+      "id": "file-holy-shock-item-swap",
+      "name": "holy_shock_item_swap.gear.siml",
+      "unlisted": true,
+      "gear": {
+        "mainHand": {
+          "itemId": 9449,
+          "enchantId": 8211
+        }
+      }
+    }
+  ],
+  "talents": [
+    {
+      "id": "unsealed-wrath",
+      "name": "Unsealed Wrath",
+      "talents": "050250002-501-05233011201301351"
+    },
+    {
+      "id": "holy-shock",
+      "name": "Holy Shock",
+      "talents": "05025210221021--0523330110130033"
+    }
+  ],
+  "rotations": [
+    {
+      "id": "simple",
+      "name": "Simple",
+      "kind": "simple"
+    },
+    {
+      "id": "default",
+      "name": "Default",
+      "kind": "apl",
+      "rotation": {
+        "type": "TypeAPL",
+        "prepullActions": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Activate assigned aura"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-20s"
+              }
+            }
+          },
+          {
+            "action": {
+              "move": {
+                "rangeFromTarget": {
+                  "variableRef": {
+                    "name": "Pull range"
+                  }
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-20s"
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Prep Seal of Command"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-3s"
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Prep Seal of Righteousness"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1.5s"
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Cast assigned judgement"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1.5s"
+              }
+            }
+          }
+        ],
+        "priorityList": [
+          {
+            "action": {
+              "condition": {
+                "not": {
+                  "val": {
+                    "spellInRange": {
+                      "spellId": {
+                        "spellId": 10333,
+                        "rank": 8
+                      }
+                    }
+                  }
+                }
+              },
+              "groupReference": {
+                "groupName": "Move to melee"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "WF guard"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20271
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpGe",
+                  "lhs": {
+                    "currentTime": {}
+                  },
+                  "rhs": {
+                    "variableRef": {
+                      "name": "Delay Major CDs"
+                    }
+                  }
+                }
+              },
+              "autocastOtherCooldowns": {}
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "or": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpEq",
+                        "lhs": {
+                          "spellCastTime": {
+                            "spellId": {
+                              "spellId": 24239,
+                              "rank": 3
+                            }
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0s"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLt",
+                        "lhs": {
+                          "autoTimeSinceLast": {
+                            "autoType": "MainHandAuto"
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0.2s"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 24239,
+                  "rank": 3
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "variableRef": {
+                        "name": "WF guard"
+                      }
+                    },
+                    {
+                      "not": {
+                        "val": {
+                          "spellIsReady": {
+                            "spellId": {
+                              "spellId": 20271
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "variableRef": {
+                        "name": "Judge realism protection"
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10333,
+                  "rank": 8
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "Should refresh SoC"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20920,
+                  "rank": 5
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "Should refresh SoR"
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20293,
+                  "rank": 8
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Consecration"
+              }
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Exorcism"
+              }
+            }
+          }
+        ],
+        "groups": [
+          {
+            "name": "Activate assigned aura",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 10301,
+                      "rank": 5
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Cast assigned judgement",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "variableRef": {
+                      "name": "Has assigned judgement"
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20308,
+                      "rank": 6
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Prep Seal of Command",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Has assigned judgement"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "variableRef": {
+                            "name": "Use Seal of Command"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20920,
+                      "rank": 5
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Prep Seal of Righteousness",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Has assigned judgement"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "variableRef": {
+                            "name": "Use Seal of Righteousness"
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "not": {
+                                  "val": {
+                                    "variableRef": {
+                                      "name": "Use Seal of Command"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "not": {
+                                  "val": {
+                                    "talentIsKnown": {
+                                      "talentId": {
+                                        "spellId": 20375,
+                                        "rank": 1
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20293,
+                      "rank": 8
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Move to melee",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Has assigned judgement"
+                          }
+                        },
+                        {
+                          "talentIsKnown": {
+                            "talentId": {
+                              "spellId": 20375,
+                              "rank": 1
+                            }
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "variableRef": {
+                                  "name": "Use Seal of Command"
+                                }
+                              },
+                              {
+                                "not": {
+                                  "val": {
+                                    "variableRef": {
+                                      "name": "Use Seal of Righteousness"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "talentIsKnown": {
+                                  "talentId": {
+                                    "spellId": 1310735
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "sequenceIsComplete": {
+                                "sequenceName": "move1"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "sequence": {
+                    "name": "move1",
+                    "actions": [
+                      {
+                        "move": {
+                          "rangeFromTarget": {
+                            "variableRef": {
+                              "name": "Melee range"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 20271
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 20271
+                          }
+                        }
+                      },
+                      {
+                        "wait": {
+                          "duration": {
+                            "inputDelay": {}
+                          }
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 20920,
+                            "rank": 5
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 10333,
+                                "rank": 8
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Has assigned judgement"
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "not": {
+                                  "val": {
+                                    "talentIsKnown": {
+                                      "talentId": {
+                                        "spellId": 1310735
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "not": {
+                                  "val": {
+                                    "talentIsKnown": {
+                                      "talentId": {
+                                        "spellId": 20375,
+                                        "rank": 1
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "not": {
+                                  "val": {
+                                    "variableRef": {
+                                      "name": "Use Seal of Command"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "sequenceIsComplete": {
+                                "sequenceName": "move2"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "sequence": {
+                    "name": "move2",
+                    "actions": [
+                      {
+                        "move": {
+                          "rangeFromTarget": {
+                            "variableRef": {
+                              "name": "Melee range"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 20271
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 20271
+                          }
+                        }
+                      },
+                      {
+                        "wait": {
+                          "duration": {
+                            "inputDelay": {}
+                          }
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 20293,
+                            "rank": 8
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 10333,
+                                "rank": 8
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Has assigned judgement"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "sequenceIsComplete": {
+                                "sequenceName": "move3"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "sequence": {
+                    "name": "move3",
+                    "actions": [
+                      {
+                        "move": {
+                          "rangeFromTarget": {
+                            "variableRef": {
+                              "name": "Melee range"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 20271
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 20271
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 10333,
+                                "rank": 8
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Exorcism",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "cmp": {
+                            "op": "OpGt",
+                            "lhs": {
+                              "autoTimeToNext": {
+                                "autoType": "MainHandAuto"
+                              }
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "1.5s"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "currentManaPercent": {}
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "10%"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "spellIsReady": {
+                                "spellId": {
+                                  "spellId": 20271
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "spellIsReady": {
+                                "spellId": {
+                                  "spellId": 10333,
+                                  "rank": 8
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 10314,
+                      "rank": 6
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Consecration",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "cmp": {
+                            "op": "OpGt",
+                            "lhs": {
+                              "autoTimeToNext": {
+                                "autoType": "MainHandAuto"
+                              }
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "1.5s"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "currentManaPercent": {}
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "10%"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "spellIsReady": {
+                                "spellId": {
+                                  "spellId": 20271
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "spellIsReady": {
+                                "spellId": {
+                                  "spellId": 10333,
+                                  "rank": 8
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20924,
+                      "rank": 5
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "valueVariables": [
+          {
+            "name": "Has assigned judgement",
+            "value": {
+              "const": {
+                "val": "true"
+              }
+            }
+          },
+          {
+            "name": "Use Seal of Command",
+            "value": {
+              "const": {
+                "val": "true"
+              }
+            }
+          },
+          {
+            "name": "Use Seal of Righteousness",
+            "value": {
+              "const": {
+                "val": "true"
+              }
+            }
+          },
+          {
+            "name": "Delay Major CDs",
+            "value": {
+              "const": {
+                "val": "0s"
+              }
+            }
+          },
+          {
+            "name": "Pull range",
+            "value": {
+              "const": {
+                "val": "25"
+              }
+            }
+          },
+          {
+            "name": "Melee range",
+            "value": {
+              "const": {
+                "val": "5"
+              }
+            }
+          },
+          {
+            "name": "WF guard",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "cmp": {
+                      "op": "OpGe",
+                      "lhs": {
+                        "autoTimeSinceLast": {
+                          "autoType": "MainHandAuto"
+                        }
+                      },
+                      "rhs": {
+                        "const": {
+                          "val": "0.1s"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "cmp": {
+                      "op": "OpGe",
+                      "lhs": {
+                        "autoTimeToNext": {
+                          "autoType": "MainHandAuto"
+                        }
+                      },
+                      "rhs": {
+                        "const": {
+                          "val": "0.1s"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Should refresh SoC",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "or": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Use Seal of Command"
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Use Seal of Righteousness"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "talentIsKnown": {
+                            "talentId": {
+                              "spellId": 1310735
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "or": {
+                      "vals": [
+                        {
+                          "auraIsInactive": {
+                            "auraId": {
+                              "spellId": 20920
+                            }
+                          }
+                        },
+                        {
+                          "and": {
+                            "vals": [
+                              {
+                                "auraIsActive": {
+                                  "auraId": {
+                                    "spellId": 20920
+                                  }
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpLe",
+                                  "lhs": {
+                                    "auraRemainingTime": {
+                                      "auraId": {
+                                        "spellId": 20920
+                                      }
+                                    }
+                                  },
+                                  "rhs": {
+                                    "autoTimeToNext": {
+                                      "autoType": "MainHandAuto"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "or": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "talentIsKnown": {
+                                "talentId": {
+                                  "spellId": 1310735
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "and": {
+                            "vals": [
+                              {
+                                "auraIsInactive": {
+                                  "auraId": {
+                                    "spellId": 20920
+                                  },
+                                  "includeReactionTime": true
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpGe",
+                                  "lhs": {
+                                    "auraNumStacks": {
+                                      "auraId": {
+                                        "spellId": 1311704
+                                      },
+                                      "includeReactionTime": true
+                                    }
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "1"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "variableRef": {
+                      "name": "Judge realism protection"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Should refresh SoR",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "or": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Use Seal of Righteousness"
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "talentIsKnown": {
+                                "talentId": {
+                                  "spellId": 20375,
+                                  "rank": 1
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "talentIsKnown": {
+                            "talentId": {
+                              "spellId": 1310735
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "or": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Use Seal of Command"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "talentIsKnown": {
+                                "talentId": {
+                                  "spellId": 20375,
+                                  "rank": 1
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "talentIsKnown": {
+                            "talentId": {
+                              "spellId": 1310735
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "or": {
+                      "vals": [
+                        {
+                          "auraIsInactive": {
+                            "auraId": {
+                              "spellId": 20293
+                            }
+                          }
+                        },
+                        {
+                          "and": {
+                            "vals": [
+                              {
+                                "auraIsActive": {
+                                  "auraId": {
+                                    "spellId": 20293
+                                  }
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpLe",
+                                  "lhs": {
+                                    "auraRemainingTime": {
+                                      "auraId": {
+                                        "spellId": 20293
+                                      }
+                                    }
+                                  },
+                                  "rhs": {
+                                    "autoTimeToNext": {
+                                      "autoType": "MainHandAuto"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "or": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "talentIsKnown": {
+                                "talentId": {
+                                  "spellId": 1310735
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "talentIsKnown": {
+                                "talentId": {
+                                  "spellId": 20375,
+                                  "rank": 1
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "and": {
+                            "vals": [
+                              {
+                                "auraIsInactive": {
+                                  "auraId": {
+                                    "spellId": 20293
+                                  },
+                                  "includeReactionTime": true
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpEq",
+                                  "lhs": {
+                                    "auraNumStacks": {
+                                      "auraId": {
+                                        "spellId": 1311703
+                                      },
+                                      "includeReactionTime": true
+                                    }
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "3"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "variableRef": {
+                      "name": "Judge realism protection"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Judge realism protection",
+            "value": {
+              "cmp": {
+                "op": "OpLe",
+                "lhs": {
+                  "spellTimeToReady": {
+                    "spellId": {
+                      "spellId": 20271
+                    }
+                  }
+                },
+                "rhs": {
+                  "math": {
+                    "op": "OpSub",
+                    "lhs": {
+                      "spellFullCooldown": {
+                        "spellId": {
+                          "spellId": 20271
+                        }
+                      }
+                    },
+                    "rhs": {
+                      "inputDelay": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "holy-shock",
+      "name": "Holy Shock",
+      "kind": "apl",
+      "rotation": {
+        "type": "TypeAPL",
+        "prepullActions": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Activate assigned aura"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-20s"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "spellIsKnown": {
+                  "spellId": {
+                    "itemId": 9449
+                  }
+                }
+              },
+              "itemSwap": {
+                "swapSet": "Swap1"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-30s"
+              }
+            }
+          },
+          {
+            "action": {
+              "move": {
+                "rangeFromTarget": {
+                  "variableRef": {
+                    "name": "Pull range"
+                  }
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-20s"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "not": {
+                  "val": {
+                    "variableRef": {
+                      "name": "Has assigned judgement"
+                    }
+                  }
+                }
+              },
+              "groupReference": {
+                "groupName": "Cast selected seal"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1.5s"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "Has assigned judgement"
+                }
+              },
+              "groupReference": {
+                "groupName": "Cast assigned judgement"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1.5s"
+              }
+            }
+          }
+        ],
+        "priorityList": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Move to melee"
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpGe",
+                  "lhs": {
+                    "currentTime": {}
+                  },
+                  "rhs": {
+                    "variableRef": {
+                      "name": "Delay Major CDs"
+                    }
+                  }
+                }
+              },
+              "autocastOtherCooldowns": {}
+            }
+          },
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "MCP swap"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20271
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20924,
+                  "rank": 5
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "variableRef": {
+                  "name": "Should refresh seal"
+                }
+              },
+              "groupReference": {
+                "groupName": "Cast selected seal"
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10333,
+                  "rank": 8
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "spellIsReady": {
+                  "spellId": {
+                    "spellId": 25902,
+                    "rank": 4
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 20216
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 25902,
+                  "rank": 4
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "or": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpEq",
+                        "lhs": {
+                          "spellCastTime": {
+                            "spellId": {
+                              "spellId": 24239,
+                              "rank": 3
+                            }
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0s"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLt",
+                        "lhs": {
+                          "autoTimeSinceLast": {
+                            "autoType": "MainHandAuto"
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0.2s"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 24239,
+                  "rank": 3
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 10314,
+                  "rank": 6
+                }
+              }
+            }
+          }
+        ],
+        "groups": [
+          {
+            "name": "Activate assigned aura",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 10301,
+                      "rank": 5
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Cast assigned judgement",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20308,
+                      "rank": 6
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Cast selected seal",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "variableRef": {
+                      "name": "Is using Seal of Righteousness"
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20293,
+                      "rank": 8
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "variableRef": {
+                      "name": "Is using Seal of Command"
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 20920,
+                      "rank": 5
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Move to melee",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Has assigned judgement"
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "sequenceIsComplete": {
+                                "sequenceName": "move to melee"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "sequence": {
+                    "name": "move to melee",
+                    "actions": [
+                      {
+                        "move": {
+                          "rangeFromTarget": {
+                            "variableRef": {
+                              "name": "Melee range"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 20271
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 20271
+                          }
+                        }
+                      },
+                      {
+                        "groupReference": {
+                          "groupName": "Cast selected seal"
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 10333,
+                                "rank": 8
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Has assigned judgement"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "sequenceIsComplete": {
+                                "sequenceName": "move to melee 2"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "sequence": {
+                    "name": "move to melee 2",
+                    "actions": [
+                      {
+                        "move": {
+                          "rangeFromTarget": {
+                            "variableRef": {
+                              "name": "Melee range"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 20924,
+                                "rank": 5
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "castSpell": {
+                          "spellId": {
+                            "spellId": 20924,
+                            "rank": 5
+                          }
+                        }
+                      },
+                      {
+                        "waitUntil": {
+                          "condition": {
+                            "spellInRange": {
+                              "spellId": {
+                                "spellId": 10333,
+                                "rank": 8
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "MCP swap",
+            "actions": [
+              {
+                "action": {
+                  "condition": {
+                    "variableRef": {
+                      "name": "Should swap from MCP"
+                    }
+                  },
+                  "itemSwap": {
+                    "swapSet": "Main"
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "variableRef": {
+                      "name": "Should swap to MCP"
+                    }
+                  },
+                  "itemSwap": {
+                    "swapSet": "Swap1"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "valueVariables": [
+          {
+            "name": "Has assigned judgement",
+            "value": {
+              "const": {
+                "val": "true"
+              }
+            }
+          },
+          {
+            "name": "Use Seal of Righteousness",
+            "value": {
+              "const": {
+                "val": "true"
+              }
+            }
+          },
+          {
+            "name": "Use Seal of Command",
+            "value": {
+              "const": {
+                "val": "true"
+              }
+            }
+          },
+          {
+            "name": "Delay Major CDs",
+            "value": {
+              "const": {
+                "val": "0s"
+              }
+            }
+          },
+          {
+            "name": "Pull range",
+            "value": {
+              "const": {
+                "val": "25"
+              }
+            }
+          },
+          {
+            "name": "Melee range",
+            "value": {
+              "const": {
+                "val": "5"
+              }
+            }
+          },
+          {
+            "name": "Should swap",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "spellIsKnown": {
+                      "spellId": {
+                        "itemId": 9449
+                      }
+                    }
+                  },
+                  {
+                    "auraIsInactive": {
+                      "auraId": {
+                        "spellId": 13494
+                      },
+                      "includeReactionTime": true
+                    }
+                  },
+                  {
+                    "cmp": {
+                      "op": "OpLe",
+                      "lhs": {
+                        "autoTimeSinceLast": {
+                          "autoType": "MainHandAuto"
+                        }
+                      },
+                      "rhs": {
+                        "const": {
+                          "val": "0.1s"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Should swap from MCP",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "variableRef": {
+                      "name": "Should swap"
+                    }
+                  },
+                  {
+                    "activeItemSwapSet": {
+                      "swapSet": "Swap1"
+                    }
+                  },
+                  {
+                    "cmp": {
+                      "op": "OpGt",
+                      "lhs": {
+                        "spellTimeToReady": {
+                          "spellId": {
+                            "itemId": 9449
+                          }
+                        }
+                      },
+                      "rhs": {
+                        "const": {
+                          "val": "40s"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Should swap to MCP",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "variableRef": {
+                      "name": "Should swap"
+                    }
+                  },
+                  {
+                    "activeItemSwapSet": {
+                      "swapSet": "Main"
+                    }
+                  },
+                  {
+                    "cmp": {
+                      "op": "OpLe",
+                      "lhs": {
+                        "spellTimeToReady": {
+                          "spellId": {
+                            "itemId": 9449
+                          }
+                        }
+                      },
+                      "rhs": {
+                        "const": {
+                          "val": "32s"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "cmp": {
+                      "op": "OpGt",
+                      "lhs": {
+                        "remainingTime": {}
+                      },
+                      "rhs": {
+                        "const": {
+                          "val": "35s"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Should refresh SoR",
+            "value": {
+              "or": {
+                "vals": [
+                  {
+                    "auraIsInactive": {
+                      "auraId": {
+                        "spellId": 20293
+                      }
+                    }
+                  },
+                  {
+                    "and": {
+                      "vals": [
+                        {
+                          "cmp": {
+                            "op": "OpLe",
+                            "lhs": {
+                              "auraRemainingTime": {
+                                "auraId": {
+                                  "spellId": 20293
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "10s"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "spellTimeToReady": {
+                                "spellId": {
+                                  "spellId": 20924,
+                                  "rank": 5
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "spellGcdHastedDuration": {
+                                "spellId": {
+                                  "spellId": 20293,
+                                  "rank": 8
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "spellTimeToReady": {
+                                "spellId": {
+                                  "spellId": 25902,
+                                  "rank": 4
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "spellGcdHastedDuration": {
+                                "spellId": {
+                                  "spellId": 20293,
+                                  "rank": 8
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "spellTimeToReady": {
+                                "spellId": {
+                                  "spellId": 10333,
+                                  "rank": 8
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "spellGcdHastedDuration": {
+                                "spellId": {
+                                  "spellId": 20293,
+                                  "rank": 8
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "and": {
+                                  "vals": [
+                                    {
+                                      "not": {
+                                        "val": {
+                                          "targetIsMobType": {
+                                            "mobType": "MobTypeUndead"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "not": {
+                                        "val": {
+                                          "targetIsMobType": {
+                                            "mobType": "MobTypeDemon"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpGe",
+                                  "lhs": {
+                                    "spellTimeToReady": {
+                                      "spellId": {
+                                        "spellId": 10314,
+                                        "rank": 6
+                                      }
+                                    }
+                                  },
+                                  "rhs": {
+                                    "spellGcdHastedDuration": {
+                                      "spellId": {
+                                        "spellId": 20293,
+                                        "rank": 8
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Should refresh SoC",
+            "value": {
+              "or": {
+                "vals": [
+                  {
+                    "auraIsInactive": {
+                      "auraId": {
+                        "spellId": 20920
+                      }
+                    }
+                  },
+                  {
+                    "and": {
+                      "vals": [
+                        {
+                          "cmp": {
+                            "op": "OpLe",
+                            "lhs": {
+                              "auraRemainingTime": {
+                                "auraId": {
+                                  "spellId": 20920
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "10s"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "spellTimeToReady": {
+                                "spellId": {
+                                  "spellId": 20924,
+                                  "rank": 5
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "spellGcdHastedDuration": {
+                                "spellId": {
+                                  "spellId": 20920,
+                                  "rank": 5
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "spellTimeToReady": {
+                                "spellId": {
+                                  "spellId": 25902,
+                                  "rank": 4
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "spellGcdHastedDuration": {
+                                "spellId": {
+                                  "spellId": 20920,
+                                  "rank": 5
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGe",
+                            "lhs": {
+                              "spellTimeToReady": {
+                                "spellId": {
+                                  "spellId": 10333,
+                                  "rank": 8
+                                }
+                              }
+                            },
+                            "rhs": {
+                              "spellGcdHastedDuration": {
+                                "spellId": {
+                                  "spellId": 20920,
+                                  "rank": 5
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "and": {
+                                  "vals": [
+                                    {
+                                      "not": {
+                                        "val": {
+                                          "targetIsMobType": {
+                                            "mobType": "MobTypeUndead"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "not": {
+                                        "val": {
+                                          "targetIsMobType": {
+                                            "mobType": "MobTypeDemon"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpGe",
+                                  "lhs": {
+                                    "spellTimeToReady": {
+                                      "spellId": {
+                                        "spellId": 10314,
+                                        "rank": 6
+                                      }
+                                    }
+                                  },
+                                  "rhs": {
+                                    "spellGcdHastedDuration": {
+                                      "spellId": {
+                                        "spellId": 20920,
+                                        "rank": 5
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Should refresh seal",
+            "value": {
+              "or": {
+                "vals": [
+                  {
+                    "and": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Is using Seal of Righteousness"
+                          }
+                        },
+                        {
+                          "variableRef": {
+                            "name": "Should refresh SoR"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "and": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Is using Seal of Command"
+                          }
+                        },
+                        {
+                          "variableRef": {
+                            "name": "Should refresh SoC"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Is using Seal of Righteousness",
+            "value": {
+              "or": {
+                "vals": [
+                  {
+                    "not": {
+                      "val": {
+                        "talentIsKnown": {
+                          "talentId": {
+                            "spellId": 20375,
+                            "rank": 1
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "variableRef": {
+                      "name": "Use Seal of Righteousness"
+                    }
+                  },
+                  {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Use Seal of Righteousness"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Use Seal of Command"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Is using Seal of Command",
+            "value": {
+              "and": {
+                "vals": [
+                  {
+                    "talentIsKnown": {
+                      "talentId": {
+                        "spellId": 20375,
+                        "rank": 1
+                      }
+                    }
+                  },
+                  {
+                    "variableRef": {
+                      "name": "Use Seal of Command"
+                    }
+                  },
+                  {
+                    "not": {
+                      "val": {
+                        "variableRef": {
+                          "name": "Use Seal of Righteousness"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  # engine-sync dispatches this on its PR branch: PRs pushed with the built-in GITHUB_TOKEN do not
+  # trigger pull_request runs, but a workflow_dispatch from that token does, and its `check` result
+  # lands on the same commit, which is what branch protection reads.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # Installs the pnpm version pinned in package.json "packageManager".
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      # --frozen-lockfile also re-checks every locked version against minimumReleaseAge.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm test
+      - run: pnpm build

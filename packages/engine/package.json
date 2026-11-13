@@ -1,0 +1,26 @@
+{
+  "name": "@fsim/engine",
+  "private": true,
+  "type": "module",
+  "description": "Lane L2. Loads the engine WASM in Web Workers and exposes EngineClient. Also turns a Character into a RaidSimRequest.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node.ts",
+    "./worker": "./src/worker.browser.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "build:local": "node scripts/build-local.mjs"
+  },
+  "dependencies": {
+    "@fsim/contracts": "workspace:*",
+    "@fsim/proto": "workspace:*"
+  },
+  "devDependencies": {
+    "@fsim/gamedata": "workspace:*",
+    "@fsim/importers": "workspace:*",
+    "@types/node": "^24.19.2",
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "specId": "healer-priest",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "dir": "ui/specs/priest/healer",
+    "files": ["gear_sets/preraid.gear.json", "presets.ts"]
+  },
+  "status": "partial",
+  "defaultBuildId": null,
+  "missing": ["rotation", "builds", "apl-rotation"],
+  "notes": ["No default race upstream; the class's first race (human) is used, as the site does."],
+  "defaults": {
+    "race": "human",
+    "professions": ["Tailoring", "Enchanting"],
+    "talents": "00520101133-33505003030121531",
+    "gearSetId": "default",
+    "rotationId": null,
+    "consumables": {
+      "foodId": 249869,
+      "conjuredId": 12662,
+      "mhImbueId": 20748,
+      "elixirIds": [250351, 250328, 250337, 250338, 250341, 250333],
+      "resourcePotId": 13444
+    },
+    "specOptions": {
+      "classOptions": {
+        "armor": "InnerFire"
+      },
+      "prayerOfMendingJumps": 5,
+      "prayerOfMendingDelay": 2.5,
+      "holyNovaHealTargets": 5
+    },
+    "individualBuffs": {},
+    "partyBuffs": {},
+    "raidBuffs": {},
+    "debuffs": {},
+    "playerOptions": {
+      "distanceFromTarget": 20,
+      "channelClipDelayMs": 0,
+      "reactionTimeMs": 100,
+      "reactionTimeMaxMs": 0,
+      "inFrontOfTarget": false
+    }
+  },
+  "builds": [],
+  "gearSets": [
+    {
+      "id": "default",
+      "name": "Default",
+      "gear": {
+        "head": {
+          "itemId": 14140
+        },
+        "neck": {
+          "itemId": 22149
+        },
+        "shoulder": {
+          "itemId": 14139
+        },
+        "back": {
+          "itemId": 19527
+        },
+        "chest": {
+          "itemId": 10020
+        },
+        "wrist": {
+          "itemId": 254061
+        },
+        "hands": {
+          "itemId": 254095
+        },
+        "waist": {
+          "itemId": 19047
+        },
+        "legs": {
+          "itemId": 14137
+        },
+        "feet": {
+          "itemId": 275609
+        },
+        "finger1": {
+          "itemId": 275740
+        },
+        "finger2": {
+          "itemId": 275738
+        },
+        "trinket1": {
+          "itemId": 10659
+        },
+        "trinket2": {
+          "itemId": 272439
+        },
+        "mainHand": {
+          "itemId": 249454
+        },
+        "ranged": {
+          "itemId": 249385
+        }
+      }
+    }
+  ],
+  "talents": [
+    {
+      "id": "disc",
+      "name": "Disc",
+      "talents": "005025021330011531-335001030301"
+    },
+    {
+      "id": "holy",
+      "name": "Holy",
+      "talents": "00520101133-33505003030121531"
+    }
+  ],
+  "rotations": []
+}

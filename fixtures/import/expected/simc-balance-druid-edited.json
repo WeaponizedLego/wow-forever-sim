@@ -1,0 +1,121 @@
+{
+  "format": "simc",
+  "character": {
+    "name": "Thalwyn",
+    "realm": "whitemane",
+    "region": "us",
+    "class": "druid",
+    "spec": "balance-druid",
+    "race": "nightelf",
+    "level": 60,
+    "gear": {
+      "head": {
+        "itemId": 21353
+      },
+      "neck": {
+        "itemId": 18814
+      },
+      "shoulder": {
+        "itemId": 21354
+      },
+      "back": {
+        "itemId": 21409
+      },
+      "chest": {
+        "itemId": 21357
+      },
+      "wrist": {
+        "itemId": 21594
+      },
+      "hands": {
+        "itemId": 21585
+      },
+      "waist": {
+        "itemId": 19162
+      },
+      "legs": {
+        "itemId": 21356
+      },
+      "feet": {
+        "itemId": 21355
+      },
+      "finger1": {
+        "itemId": 21709
+      },
+      "finger2": {
+        "itemId": 23031
+      },
+      "trinket1": {
+        "itemId": 19379
+      },
+      "trinket2": {
+        "itemId": 23046
+      },
+      "mainHand": {
+        "itemId": 21407,
+        "enchantId": 2504
+      },
+      "offHand": {
+        "itemId": 19366
+      },
+      "ranged": {
+        "itemId": 23197
+      }
+    },
+    "talents": "5232220115501351--5053",
+    "professions": [
+      "herbalism",
+      "alchemy"
+    ],
+    "consumables": {},
+    "specOptions": {},
+    "playerOptions": {},
+    "buffs": "full-raid",
+    "rotation": {
+      "kind": "preset",
+      "presetId": "default"
+    },
+    "encounter": {
+      "durationSec": 180,
+      "durationVariationSec": 5,
+      "targetCount": 1,
+      "targetLevel": 63,
+      "executePhase": true
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "Unknown option \"potion\" skipped.",
+      "line": 12,
+      "field": "potion"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "Head: gem_id skipped; the engine does not use it.",
+      "line": 14,
+      "field": "head"
+    },
+    {
+      "code": "PARSE-02",
+      "severity": "info",
+      "message": "Head: bonus_id 1234 not checked (no suffix data); skipped.",
+      "line": 14,
+      "field": "head"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Rotation not in the export. Using the upstream default for Balance Druid.",
+      "field": "rotation"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Consumables not in the export. The spec preset will be applied.",
+      "field": "consumables"
+    }
+  ]
+}

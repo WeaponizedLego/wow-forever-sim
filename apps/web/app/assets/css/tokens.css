@@ -1,0 +1,104 @@
+/*
+ * Design tokens from the v2 design (canvas row "v2 — an instrument, not a landing page").
+ * Dark is the primary theme. Every color has one job; see the comments.
+ * Chart series colors were run through the dataviz palette validator (dark mode): all checks pass.
+ */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg-app: #0e0f11;
+  --bg-chrome: #0b0c0e; /* top bar, sticky sim bar */
+  --bg-panel: #141518;
+  --bg-raised: #1c1e22; /* tooltips, active nav, pressed segments */
+  --bg-input: #191b1e;
+  --bg-pressed: #24262a; /* pressed segment, empty meter cells, bar tracks */
+  --bg-row-changed: #121a26; /* table row changed in the draft (with a --series-1 inset marker) */
+  --bg-row-reference: #1a1714; /* table row that is the reference, e.g. "currently equipped" */
+
+  /* Lines */
+  --line-seam: #1e2024; /* gaps between tiled panels, panel header rule */
+  --line-row: #1a1c1f; /* table row separators */
+  --line-control: #2e3136; /* control borders */
+  --line-axis: #3a3d43;
+  --line-subtle: #24262a; /* search field, whisker track */
+  --line-chip: #2a2d32; /* static chips */
+
+  /* Text (all ≥ 4.5:1 on --bg-panel) */
+  --text-1: #ecedee;
+  --text-2: #a9adb4;
+  --text-3: #868b93;
+  --text-disabled: #5c6068;
+  --text-code: #c9ccd1; /* pasted text in the code input */
+  --text-gutter: #4e525a; /* line numbers (decorative; the line itself carries the meaning) */
+
+  /* Primary action: inverted, no brand color */
+  --action-bg: #ecedee;
+  --action-fg: #0e0f11;
+
+  /* Chart categorical slots (fixed order, never cycled) */
+  --series-1: #3987e5; /* blue: the current run / hit */
+  --series-2: #d95926; /* orange: crit / losses */
+  --series-3: #199e70; /* aqua: glance */
+  --series-muted: #4a4e56; /* miss / dodge / "other" */
+  --series-neutral: #6b7180; /* magnitude bars with no identity */
+  --series-baseline: #a9adb4; /* baseline run, drawn dashed */
+  --series-lane: #5b6170; /* aura lane segments */
+  --chart-region: rgb(236 237 238 / 3.5%); /* shaded x-range, e.g. execute phase */
+  --chart-hover: rgb(236 237 238 / 6%); /* hovered bin / column */
+
+  /* Deltas: blue/orange, not green/red, and always with a ▲ ▼ ≈ glyph */
+  --delta-up: #6fa8f0;
+  --delta-down: #e58a6b;
+  --delta-up-bg: #122033;
+  --delta-down-bg: #2a1714;
+
+  /* Status: reserved, always paired with an icon and a label */
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-info: #6fa8f0;
+  --status-warning-bg: #1d1712;
+
+  /* Game colors: item quality (text only) */
+  --quality-common: #ecedee;
+  --quality-uncommon: #3fd15a;
+  --quality-rare: #3d8ff0;
+  --quality-epic: #b65cf2;
+  --quality-legendary: #ff8a1f;
+
+  /* Game colors: class (identity marker only: a 3–4px bar or swatch, never fills) */
+  --class-druid: #ff7c0a;
+  --class-hunter: #aad372;
+  --class-mage: #3fc7eb;
+  --class-paladin: #f48cba;
+  --class-priest: #ffffff;
+  --class-rogue: #fff468;
+  --class-shaman: #0070dd;
+  --class-warlock: #8788ee;
+  --class-warrior: #c69b6d;
+
+  /* Type */
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --text-xs: 11px; /* labels, axis ticks, meta */
+  --text-sm: 12px; /* tables, panel headers */
+  --text-md: 13px; /* body */
+  --text-lg: 18px; /* page title */
+  --text-kpi: 34px; /* headline number */
+  --label-tracking: 0.04em;
+
+  /* Space (4px ramp) and shape */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 14px; /* panel padding */
+  --space-5: 16px;
+  --space-6: 24px; /* page gutter */
+  --radius-control: 3px;
+  --radius-tooltip: 4px;
+  --radius-mark: 1px; /* bars, swatches */
+  --shadow-tooltip: 0 8px 24px rgb(0 0 0 / 50%);
+
+  --page-max: 1440px;
+  --chrome-height: 40px;
+}

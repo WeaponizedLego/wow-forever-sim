@@ -1,0 +1,44 @@
+{
+  "specId": "restoration-druid",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "dir": "ui/specs/druid/restoration",
+    "files": ["presets.ts"]
+  },
+  "status": "none",
+  "defaultBuildId": null,
+  "missing": ["gear", "talents", "rotation", "builds", "apl-rotation"],
+  "notes": ["No default race upstream; the class's first race (nightelf) is used, as the site does."],
+  "defaults": {
+    "race": "nightelf",
+    "professions": ["Tailoring", "Enchanting"],
+    "talents": "",
+    "gearSetId": null,
+    "rotationId": null,
+    "consumables": {
+      "foodId": 250066,
+      "resourcePotId": 13444
+    },
+    "specOptions": {
+      "classOptions": {
+        "innervateTarget": {}
+      }
+    },
+    "individualBuffs": {},
+    "partyBuffs": {},
+    "raidBuffs": {},
+    "debuffs": {},
+    "playerOptions": {
+      "distanceFromTarget": 20,
+      "channelClipDelayMs": 0,
+      "reactionTimeMs": 100,
+      "reactionTimeMaxMs": 0,
+      "inFrontOfTarget": false
+    }
+  },
+  "builds": [],
+  "gearSets": [],
+  "talents": [],
+  "rotations": []
+}

@@ -1,0 +1,103 @@
+{
+  "format": "wowsims-json",
+  "character": {
+    "name": "Brannoc",
+    "realm": "Ashbringer",
+    "class": "warrior",
+    "spec": "dps-warrior",
+    "race": "dwarf",
+    "level": 60,
+    "gear": {
+      "head": {
+        "itemId": 12620
+      },
+      "neck": {
+        "itemId": 18404
+      },
+      "shoulder": {
+        "itemId": 12625
+      },
+      "back": {
+        "itemId": 10148,
+        "enchantId": 849
+      },
+      "chest": {
+        "itemId": 11604,
+        "enchantId": 1891
+      },
+      "wrist": {
+        "itemId": 16735,
+        "enchantId": 1885
+      },
+      "hands": {
+        "itemId": 13072,
+        "enchantId": 927
+      },
+      "waist": {
+        "itemId": 13077
+      },
+      "legs": {
+        "itemId": 12619,
+        "enchantId": 8491
+      },
+      "feet": {
+        "itemId": 13070,
+        "enchantId": 911
+      },
+      "finger1": {
+        "itemId": 18821
+      },
+      "finger2": {
+        "itemId": 11990,
+        "randomSuffix": 12727
+      },
+      "trinket1": {
+        "itemId": 10659
+      },
+      "trinket2": {
+        "itemId": 10779
+      },
+      "mainHand": {
+        "itemId": 12784,
+        "enchantId": 1900
+      },
+      "ranged": {
+        "itemId": 16996
+      }
+    },
+    "talents": "30303213132215201-55050000002-2",
+    "professions": [
+      "blacksmithing",
+      "mining"
+    ],
+    "consumables": {},
+    "specOptions": {},
+    "playerOptions": {},
+    "buffs": "full-raid",
+    "rotation": {
+      "kind": "preset",
+      "presetId": "default"
+    },
+    "encounter": {
+      "durationSec": 180,
+      "durationVariationSec": 5,
+      "targetCount": 1,
+      "targetLevel": 63,
+      "executePhase": true
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Rotation not in the export. Using the upstream default for DPS Warrior.",
+      "field": "rotation"
+    },
+    {
+      "code": "DEFAULT-05",
+      "severity": "info",
+      "message": "Consumables not in the export. The spec preset will be applied.",
+      "field": "consumables"
+    }
+  ]
+}

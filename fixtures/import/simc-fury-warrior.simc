@@ -1,0 +1,70 @@
+# Kargath - 2026-11-11 21:04 - eu/Ashbringer
+# SimC Addon 12.1.5-04
+# WoW 1.60.1.70425, TOC 16001
+# Requires SimulationCraft 1000-01 or newer
+
+warrior="Kargath"
+level=60
+race=orc
+region=eu
+server=ashbringer
+role=
+professions=blacksmithing=300/mining=300
+spec=unknown
+
+talents=CQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgkIJSkEJJJRSSSiQAAAAAAgkkAJBA
+
+# Primary Talents
+# talents=CQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgkIJSkEJJJRSSSiQAAAAAAgkkAJBA
+
+legacy_talents=101012:1/101015:3
+
+# Enchanted Thorium Helm (60)
+head=,id=12620
+# Onyxia Tooth Pendant (60)
+neck=,id=18404
+# Spaulders of the Unseen (60)
+shoulder=,id=99412
+# Mighty Cloak (60)
+back=,id=10148,enchant_id=849
+# Dark Iron Plate (59)
+chest=,id=11604,enchant_id=1891
+# Brawler's Harness (1)
+shirt=,id=6125
+# Bracers of Valor (58)
+wrist=,id=16735,enchant_id=1885
+# Stonegrip Gauntlets (59)
+hands=,id=13072,enchant_id=927
+# Girdle of Uther (60)
+waist=,id=13077
+# Enchanted Thorium Leggings (60)
+legs=,id=12619,enchant_id=8491
+# Sapphiron's Scale Boots (60)
+feet=,id=13070,enchant_id=911
+# Quick Strike Ring (67)
+finger1=,id=18821
+# Ring of Protection (60)
+finger2=,id=15855
+# Shard of the Splithooves (60)
+trinket1=,id=10659
+# Demon's Blood (60)
+trinket2=,id=10779
+# Dawn's Edge (60)
+main_hand=,id=12774,enchant_id=1900
+# Dark Iron Destroyer (60)
+off_hand=,id=17016,enchant_id=1900
+# Gorewood Bow (60)
+ranged=,id=16996
+
+bag1=,id=14156
+bag2=,id=14156
+bag3=,id=14156
+bag4=,id=14156
+
+### Additional Character Info
+#
+# skills=26:300:0:300/164:300:0:300/186:300:0:300
+#
+# buffs=25289:0
+
+# Checksum: ebe0c704

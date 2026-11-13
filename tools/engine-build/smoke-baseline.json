@@ -1,0 +1,170 @@
+{
+  "engineId": "b2047bf",
+  "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+  "generatedAt": "2026-11-12T13:51:06Z",
+  "tolerance": 0.25,
+  "specs": {
+    "TestAffliction": {
+      "spec": "SpecWarlock",
+      "dps": 677.4683178065467,
+      "stdev": 40.75105152366142,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestAfflictionWrack": {
+      "spec": "SpecWarlock",
+      "dps": 941.058579419132,
+      "stdev": 31.49837880956259,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestArcane": {
+      "spec": "SpecMage",
+      "dps": 766.539907561346,
+      "stdev": 41.96159753506607,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestBalance": {
+      "spec": "SpecBalanceDruid",
+      "dps": 928.8227666958591,
+      "stdev": 42.29309924269424,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestDemonologyFireBrand": {
+      "spec": "SpecWarlock",
+      "dps": 778.0721709182567,
+      "stdev": 31.42313900357426,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestDemonologyShadowBrand": {
+      "spec": "SpecWarlock",
+      "dps": 780.2915448034998,
+      "stdev": 44.90000428490176,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestDestruction": {
+      "spec": "SpecWarlock",
+      "dps": 924.7888976134093,
+      "stdev": 41.62808888287501,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestDpsWarrior": {
+      "spec": "SpecDpsWarrior",
+      "dps": 500.6422033920079,
+      "stdev": 31.072651653647696,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestElemental": {
+      "spec": "SpecElementalShaman",
+      "dps": 736.3687839727243,
+      "stdev": 36.455390164037524,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestEnhancement": {
+      "spec": "SpecEnhancementShaman",
+      "dps": 870.8867293823461,
+      "stdev": 36.37017715477895,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestFeralBear": {
+      "spec": "SpecFeralBearDruid",
+      "dps": 461.68311245585545,
+      "stdev": 29.020212225090184,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestFeralCat": {
+      "spec": "SpecFeralCatDruid",
+      "dps": 777.1492152255677,
+      "stdev": 25.859076746539408,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestFFB": {
+      "spec": "SpecMage",
+      "dps": 815.6553692894506,
+      "stdev": 62.04627810403552,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestFire": {
+      "spec": "SpecMage",
+      "dps": 864.816056069513,
+      "stdev": 55.0420546595683,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestFrost": {
+      "spec": "SpecMage",
+      "dps": 776.4981565325216,
+      "stdev": 59.6305369583464,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestHunter": {
+      "spec": "SpecHunter",
+      "dps": 780.7471487223568,
+      "stdev": 27.720322671678257,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestHunterPets": {
+      "spec": "SpecHunter",
+      "dps": 705.0155771647204,
+      "stdev": 17.897983662441796,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestProtection": {
+      "spec": "SpecProtectionPaladin",
+      "dps": 395.92871442660527,
+      "stdev": 18.000401506396848,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestProtectionWarrior": {
+      "spec": "SpecProtectionWarrior",
+      "dps": 447.9404975389971,
+      "stdev": 29.966175811689155,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestRetribution": {
+      "spec": "SpecRetributionPaladin",
+      "dps": 838.0232324747659,
+      "stdev": 48.93288631928638,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestRogue": {
+      "spec": "SpecRogue",
+      "dps": 596.3268428907817,
+      "stdev": 22.12811871703639,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    },
+    "TestShadowPriest": {
+      "spec": "SpecDpsPriest",
+      "dps": 765.5100785447107,
+      "stdev": 27.971704798490862,
+      "iterations": 2000,
+      "engineId": "b2047bf"
+    }
+  },
+  "skipped": {
+    "TestFeralBearCoverage": "no Average-Default raid sim in this suite (stats-only or coverage suite)",
+    "TestFeralCatCoverage": "no Average-Default raid sim in this suite (stats-only or coverage suite)",
+    "TestHealerPriest": "no Average-Default raid sim in this suite (stats-only or coverage suite)",
+    "TestHolyPaladin": "no Average-Default raid sim in this suite (stats-only or coverage suite)",
+    "TestRestorationDruid": "suite did not reach RunTestSuite (no export written)",
+    "TestRestorationShaman": "suite did not reach RunTestSuite (no export written)"
+  }
+}

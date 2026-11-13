@@ -1,0 +1,64 @@
+# Sylvaen Windrunner - 2026-11-11 21:04 - eu/Ashbringer
+# SimC Addon 12.1.5-04
+# WoW 1.60.1.70425, TOC 16001
+# Requires SimulationCraft 1000-01 or newer
+
+hunter="Sylvaen Windrunner"
+level=60
+race=orc
+region=eu
+server=ashbringer
+role=
+professions=engineering=300/blacksmithing=300
+spec=unknown
+
+talents=CwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgSkEJJSSkkIBJJiEJA
+
+
+# Beaststalker's Cap (58)
+head=,id=16677
+# Maelstrom's Tendril (60)
+neck=,id=19620,enchant_id=904
+# Beaststalker's Mantle (59)
+shoulder=,id=16679
+# Shifting Cloak (60)
+back=,id=18511,enchant_id=849
+# Beaststalker's Tunic (60)
+chest=,id=16674,enchant_id=1891
+# Beaststalker's Bindings (55)
+wrist=,id=16681,enchant_id=7656
+# Beaststalker's Gloves (59)
+hands=,id=16676,enchant_id=2564
+# Beaststalker's Belt (58)
+waist,id=16680
+# Beaststalker's Pants (60)
+legs=,id=16678,enchant_id=8491
+# Beaststalker's Boots (57)
+feet=,id=16675,enchant_id=1887
+# Cutthroat's Signet (60)
+finger1=,id=272408
+# Selenium Loop of Agility (51)
+finger2=,id=11990,suffix=12728
+# Adaptive Combat Assistant (60)
+trinket1=,id=272437
+# Rune of the Guard Captain (60)
+trinket2=,id=19120
+# Legionite Glaive (60)
+main_hand=,id=250619,enchant_id=2646
+# Thorium Headed Arrow (57)
+ammo=,id=15997
+# ammo_count=1800
+# Fahrad's Reloading Repeater (60)
+ranged=,id=22347,enchant_id=2523
+
+bag1=,id=18714
+
+# Broken Tooth - Cat (60)
+pet_family=cat
+pet_creature_id=1559
+pet_level=60
+pet_happiness=3
+pet_abilities=17261/24453/24599
+# pet_training_points=250/300
+
+# Checksum: 7b07cb06
