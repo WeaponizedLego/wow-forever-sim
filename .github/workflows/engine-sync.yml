@@ -9,9 +9,9 @@ name: engine-sync
 # Repo setup this needs (done 2026-11-13 via gh):
 #   - "Allow auto-merge" on, and branch protection on main that requires the ci `check` job.
 #   - Actions → "Allow GitHub Actions to create and approve pull requests" on.
-# No personal token: PRs pushed with GITHUB_TOKEN do not start pull_request workflows, so after
-# pushing the sync branch this workflow dispatches ci.yml on it (workflow_dispatch is allowed from
-# GITHUB_TOKEN); the `check` result lands on the PR's head commit and auto-merge proceeds.
+# No personal token: the sync PR (opened with GITHUB_TOKEN) gets its ci `check` from ci.yml's own
+# pull_request run. The repo's "approve first-time contributors" policy held the very first sync
+# PR's run for approval; once the Actions bot has a merged PR, its runs start on their own.
 
 on:
   schedule:
@@ -35,7 +35,8 @@ concurrency:
 permissions: {}
 
 env:
-  ENGINE_BUILD_WORK: ${{ github.workspace }}/../engine-build-work
+  # Outside the checkout (so prettier and git ignore it), and without '..': upload-artifact rejects relative segments.
+  ENGINE_BUILD_WORK: ${{ github.workspace }}-engine-build-work
   PROTOC_VERSION: '34.1'
 
 jobs:
@@ -46,7 +47,6 @@ jobs:
       contents: write # release + push the engine-sync/<id> branch
       pull-requests: write # open the PR and enable auto-merge
       issues: write # report failures
-      actions: write # dispatch ci.yml on the sync branch
     steps:
       - uses: actions/checkout@v5
 
@@ -208,8 +208,6 @@ jobs:
           git commit -m "Engine sync: wowsims/forever@$ENGINE_ID"
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin "$branch"
-          # The push itself starts no workflow (GITHUB_TOKEN); run ci on the branch so the PR gets its check.
-          gh workflow run ci.yml --ref "$branch"
           if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')" ]; then
             gh pr edit "$branch" --body-file "$body"
           else
