@@ -123,9 +123,9 @@ All set on 2026-11-13 (via `gh api`):
   (admins can bypass; force pushes and deletion blocked). Merged sync branches are deleted.
 - **Actions may open PRs.** Settings → Actions → "Allow GitHub Actions to create and approve pull
   requests" is on, so the built-in `GITHUB_TOKEN` can open the sync PR.
-- **No personal token.** PRs pushed with `GITHUB_TOKEN` don't start `pull_request` workflows, so the
-  workflow dispatches `ci.yml` on the sync branch right after pushing it (`workflow_dispatch` is the
-  exception GitHub allows from `GITHUB_TOKEN`). Its `check` result lands on the PR's head commit,
-  which is what branch protection and auto-merge read.
-- **Permissions.** The job's `GITHUB_TOKEN` has `contents`, `pull-requests`, `issues` and `actions`
-  write. The workflow default is `permissions: {}`.
+- **No personal token.** The sync PR, opened with `GITHUB_TOKEN`, gets its `check` from `ci.yml`'s own
+  `pull_request` run. (A run dispatched by hand does not count toward a PR's required checks.) The
+  repo's default "require approval for first-time contributors" policy held the first sync PR's run
+  (#3) until someone approved it; once the Actions bot has a merged PR, its runs start on their own.
+- **Permissions.** The job's `GITHUB_TOKEN` has `contents`, `pull-requests` and `issues` write. The
+  workflow default is `permissions: {}`.
