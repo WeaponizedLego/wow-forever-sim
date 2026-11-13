@@ -35,7 +35,8 @@ concurrency:
 permissions: {}
 
 env:
-  ENGINE_BUILD_WORK: ${{ github.workspace }}/../engine-build-work
+  # Outside the checkout (so prettier and git ignore it), and without '..': upload-artifact rejects relative segments.
+  ENGINE_BUILD_WORK: ${{ github.workspace }}-engine-build-work
   PROTOC_VERSION: '34.1'
 
 jobs:
