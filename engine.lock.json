@@ -2,33 +2,33 @@
   "schema": 1,
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
-    "committedAt": "2026-11-12T13:25:40+01:00"
+    "commit": "80ef86793788ca527d4a51d0e1a659a928ccc4b9",
+    "committedAt": "2026-11-13T12:33:27+01:00"
   },
-  "engineId": "b2047bf",
+  "engineId": "80ef867",
   "dataBuild": "1.60.1.70888",
-  "goVersion": "1.27.3",
+  "goVersion": "1.27.4",
   "artifacts": {
     "wasm": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-b2047bf/lib.wasm.gz",
-      "sha256": "a0a8b06317edd22824d7cb3356bd983a3d1176642d8375865a075ac7080a3cfe",
-      "bytes": 5682099
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/lib.wasm.gz",
+      "sha256": "afe785e98034a15aab31b65169a51c211f9deb15493ce5efd8097b0279011dc0",
+      "bytes": 5728850
     },
     "wasmExec": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-b2047bf/wasm_exec.js",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/wasm_exec.js",
       "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
       "bytes": 16992
     },
     "db": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-b2047bf/db.bin",
-      "sha256": "ae359165a955a8dad982390a9fe8bd3f445b6204e9bbf97535f334252d6fec2f",
-      "bytes": 1615943
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/db.bin",
+      "sha256": "43bbf8f618b5ccd14f61b2ca8521e3c5cf716bf8079430623ee8eac85eadb33f",
+      "bytes": 1620760
     },
     "leftoverDb": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-b2047bf/leftover_db.bin",
-      "sha256": "9ed595c48319de03401447e4f8556f449708e009d6c555c7b31b113a18a0e9b2",
-      "bytes": 527065
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/leftover_db.bin",
+      "sha256": "f81dc5813430af9bfeed44c1ca98c499534bb2d55db322c085cb908fd48aa75a",
+      "bytes": 527077
     }
   },
-  "syncedAt": "2026-11-12T13:49:59Z"
+  "syncedAt": "2026-11-13T12:24:47Z"
 }
