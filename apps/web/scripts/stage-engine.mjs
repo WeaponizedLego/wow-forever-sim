@@ -53,7 +53,9 @@ async function main() {
         // A sha256 mismatch below is an integrity error and always fails.
         const msg = `${art.url}: HTTP ${res.status}`;
         if (optional) {
-          console.warn(`stage-engine: ${msg}. Building without an engine; the app will show it as unavailable.`);
+          console.warn(
+            `stage-engine: ${msg}. Building without an engine; the app will show it as unavailable.`,
+          );
           rmSync(join(outRoot, 'current.json'), { force: true });
           return;
         }
