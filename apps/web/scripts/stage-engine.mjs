@@ -47,8 +47,18 @@ async function main() {
     };
     for (const [file, key] of Object.entries(named)) {
       const art = lock.artifacts[key];
-      const res = await fetch(art.url);
-      if (!res.ok) throw new Error(`${art.url}: HTTP ${res.status}`);
+      const res = await fetch(art.url).catch((e) => ({ ok: false, status: e.message }));
+      if (!res.ok) {
+        // A release that isn't published yet (or a network failure) is "no engine" for an optional build.
+        // A sha256 mismatch below is an integrity error and always fails.
+        const msg = `${art.url}: HTTP ${res.status}`;
+        if (optional) {
+          console.warn(`stage-engine: ${msg}. Building without an engine; the app will show it as unavailable.`);
+          rmSync(join(outRoot, 'current.json'), { force: true });
+          return;
+        }
+        throw new Error(msg);
+      }
       const buf = Buffer.from(await res.arrayBuffer());
       if (sha256(buf) !== art.sha256) throw new Error(`${file}: sha256 does not match engine.lock.json`);
       bytes[file] = buf;
