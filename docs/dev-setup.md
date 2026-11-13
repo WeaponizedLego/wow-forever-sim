@@ -26,6 +26,9 @@ node packages/engine/scripts/build-local.mjs --src ../forever-upstream
 node apps/web/scripts/stage-engine.mjs
 ```
 
+The lock is at upstream `80ef867` as of 2026-11-13 (engine sync keeps it current). Alternatively skip the local
+build: `node apps/web/scripts/stage-engine.mjs` then downloads the release named in the lock.
+
 This fills `packages/engine/vendor/` and stages the browser copy in `apps/web/public/engine/` (both gitignored).
 Without it the app shows "engine unavailable" and the real-engine tests skip.
 
