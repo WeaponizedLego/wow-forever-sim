@@ -144,6 +144,8 @@ const tableRows = computed(() =>
     <ChartsFrame v-if="!showTable" ref="frame" :height="height" :y-ticks="yTicks" :x-ticks="xTickList">
       <div
         class="hit"
+        role="group"
+        aria-roledescription="chart"
         tabindex="0"
         :aria-label="`${label} Arrow keys step through bins.`"
         @pointermove="onMove"

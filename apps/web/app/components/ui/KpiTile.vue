@@ -20,7 +20,7 @@ const style = computed(() => gridCellStyle(props.span));
 </script>
 
 <template>
-  <div class="tile" :style="style">
+  <div class="tile" :style="style" role="group" :aria-label="label">
     <div class="label">
       <slot name="label">{{ label }}</slot>
     </div>

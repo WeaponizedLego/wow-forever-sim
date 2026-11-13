@@ -4,6 +4,37 @@ Build the v2 design ([canvas](https://claude.ai/artifact/UpvfYeTSiM5oUmsncPjxYn)
 [wowsims/forever](https://github.com/wowsims/forever). Feature scope: [features.md](features.md).
 Work is split into lanes that subagents run in parallel, each in its own git worktree.
 
+## Status (2026-11-13)
+
+| Phase                 | State                                     | Where                                                                     |
+| --------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
+| 0 Foundations         | Done                                      | merged to `main` (PR #1)                                                  |
+| 1 Packages (6 lanes)  | Done                                      | merged to `main` (PR #1)                                                  |
+| 2 Screens (3 lanes)   | Done                                      | merged to `main` (PR #1)                                                  |
+| Engine sync live      | Done                                      | hourly on `main`; first sync PR #3 auto-merged, engine `80ef867` released |
+| 3 Whole-app (4 lanes) | Done, **PR #6 open** (`phase-3` → `main`) | CI `check` + `e2e` green; Cloudflare build failing (below)                |
+
+**Open right now**
+
+1. **Cloudflare Workers Builds fails in 0 s** on every commit (also `main`): it stops before cloning, so it is
+   a project/account setting, not code. Needs the build log (dashboard → Workers → `wow-forever-sim` → Builds).
+   Check: Git app access to the repo, root dir = repo root, build `pnpm build`, deploy `npx wrangler deploy`,
+   production branch `main`. `wrangler.jsonc` (static assets, SPA fallback) is in PR #6 and dry-run validated.
+2. **Merge PR #6** once the above is understood (it does not depend on it; our CI is green).
+3. **Local engine**: `packages/engine/vendor/` is gitignored. Rebuild at the lock's commit (`80ef867`) per
+   `docs/dev-setup.md`, or delete it so dev stages the release.
+
+**Next (proposed, not started)**
+
+- SimC talent conversion (client loadout string → engine talent string). Riskiest item: SimC's talent data
+  and the engine's trees disagree; needs its own spike.
+- Interactive talent tree in the Workbench (today: engine string + presets).
+- From "Later" below: Droptimizer first (drop sources are in `db.bin`).
+- Product name / domain (user decides later).
+
+**Repo setup done via `gh`**: auto-merge on, merged branches deleted, Actions may open PRs, `main` protected
+(requires `check`), default "approve first-time contributors" (the Actions bot is past it now).
+
 ## 0. Decisions (defaults; change before Phase 0 ends if you disagree)
 
 | Topic            | Decision                                                                                                                                                | Why                                                                                                     |
@@ -162,6 +193,6 @@ Droptimizer, armory lookup (after a spike on Blizzard's Forever profile namespac
 
 ## 6. Open questions
 
-1. Hosting: Cloudflare Pages ok?
-2. Product name / domain.
+1. Hosting: Cloudflare (Workers Builds, set up by the user). Build currently fails before cloning; see Status.
+2. Product name / domain: user decides later.
 3. Do we want a lightweight backend later (short links, stored reports)? Affects nothing in v1.

@@ -13,6 +13,8 @@ export interface StagedEngine {
   dataBuild: string | null;
   base: string;
   sha256: Record<'lib.wasm.gz' | 'wasm_exec.js' | 'db.bin' | 'leftover_db.bin', string>;
+  /** sha256 of the unzipped lib.wasm (absent in current.json files staged before it was added). */
+  wasmRawSha256?: string;
 }
 
 export type EngineStatus = 'idle' | 'loading' | 'ready' | 'unavailable' | 'error';
@@ -56,11 +58,13 @@ function engineClient(): Promise<WasmEngineClient> {
       sources: {
         wasm: `${s.base}lib.wasm.gz`,
         wasmExec: `${s.base}wasm_exec.js`,
-        // Verify release artifacts only. A local build is ours, and dev servers (sirv) may serve the .gz with
-        // Content-Encoding: gzip, so the browser hands over different bytes than were hashed.
-        ...(s.source === 'release' && {
-          sha256: { wasm: s.sha256['lib.wasm.gz'], wasmExec: s.sha256['wasm_exec.js'] },
-        }),
+        // Every staged engine is verified. wasmRaw covers servers that unzip lib.wasm.gz on the way
+        // (Content-Encoding: gzip), as the Nuxt dev server does.
+        sha256: {
+          wasm: s.sha256['lib.wasm.gz'],
+          wasmRaw: s.wasmRawSha256,
+          wasmExec: s.sha256['wasm_exec.js'],
+        },
       },
     });
     status.value = 'ready';

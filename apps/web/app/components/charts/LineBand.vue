@@ -139,6 +139,8 @@ const tableRows = computed(() =>
     >
       <div
         class="hit"
+        role="group"
+        aria-roledescription="chart"
         tabindex="0"
         :aria-label="`${label} Arrow keys step through points.`"
         @pointermove="onMove"

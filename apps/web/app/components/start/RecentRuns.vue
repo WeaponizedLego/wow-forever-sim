@@ -2,10 +2,24 @@
 import type { ClassId } from '@fsim/contracts';
 import type { TableColumn } from '~/composables/ui-types';
 
-// Runs from this page load, newest first. Runs made on another engine than the staged one are marked.
+// Stored runs, newest first. Runs made on another engine than the staged one are marked.
+import { HISTORY_MAX_RUNS } from '~/composables/history';
+
 defineProps<{ span: number }>();
 const session = useSession();
 const engine = useEngine();
+const unavailable = computed(() => session.historyStatus.value === 'unavailable');
+
+async function clear() {
+  const n = session.runs.value.length;
+  if (
+    !window.confirm(
+      `Delete ${n} stored ${n === 1 ? 'run' : 'runs'} from this browser? This cannot be undone.`,
+    )
+  )
+    return;
+  await session.clearHistory();
+}
 
 const now = ref(Date.now());
 let tick: ReturnType<typeof setInterval> | undefined;
@@ -51,7 +65,9 @@ const columns: TableColumn<Row>[] = [
 
 <template>
   <UiPanel title="Recent runs" :span="span">
-    <template #meta><span>this tab</span></template>
+    <template #meta
+      ><span>{{ unavailable ? 'this tab' : `${rows.length} stored` }}</span></template
+    >
     <UiEmptyState
       v-if="!rows.length"
       title="No runs yet"
@@ -90,9 +106,15 @@ const columns: TableColumn<Row>[] = [
       </UiDataTable>
     </template>
     <template #footer>
-      <p class="note">
-        Kept in memory for this tab only; reloading clears them. Runs on an older engine are marked.
-      </p>
+      <div class="foot">
+        <p v-if="unavailable" class="note">
+          This browser blocks local storage (private mode?), so runs are kept for this tab only.
+        </p>
+        <p v-else class="note">
+          Kept in this browser: the newest {{ HISTORY_MAX_RUNS }} runs. Runs on an older engine are marked.
+        </p>
+        <UiButton v-if="rows.length" size="sm" variant="quiet" @click="clear">Clear history</UiButton>
+      </div>
     </template>
   </UiPanel>
 </template>
@@ -121,9 +143,16 @@ const columns: TableColumn<Row>[] = [
   font-size: var(--text-xs);
   color: var(--text-3);
 }
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 6px var(--space-4);
+}
 .note {
   margin: 0;
-  padding: 10px var(--space-4);
+  padding: 4px 0;
   font-size: var(--text-xs);
   color: var(--text-3);
 }
