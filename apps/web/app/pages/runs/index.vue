@@ -1,14 +1,21 @@
 <script setup lang="ts">
 // /runs: the latest run, or an empty state when nothing has run yet.
 const session = useSession();
-const latest = session.latest.value;
-if (latest) await navigateTo(`/runs/${runSlug(latest.record.id)}`, { replace: true });
+// Stored runs load after the page does; follow the latest one as soon as it is there.
+watch(
+  session.latest,
+  (latest) => {
+    if (latest) void navigateTo(`/runs/${runSlug(latest.record.id)}`, { replace: true });
+  },
+  { immediate: true },
+);
 useHead({ title: 'Runs · forever/sim' });
 </script>
 
 <template>
   <main class="page">
     <UiEmptyState
+      v-if="session.hydrated.value && !session.latest.value"
       title="No runs yet"
       body="Import a character or pick a spec, then run a sim to analyse it here."
     >

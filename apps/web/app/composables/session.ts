@@ -2,7 +2,7 @@
 //
 // - character: the character being worked on (the "draft")
 // - baseline: the character as it was at the last run; the Workbench diff is draft vs baseline
-// - runs: finished runs this page load (Phase 3 persists them in IndexedDB), newest first
+// - runs: finished runs, newest first; stored in IndexedDB (composables/history.ts) and loaded on start
 // - runSim / runStatWeights: build the request, run it in the engine, record the run
 //
 // Screens read and change state only through useSession(); they never build engine requests themselves.
@@ -38,14 +38,33 @@ const progress = ref<SimProgress | null>(null);
 const lastError = ref<string | null>(null);
 let runCounter = 0;
 let abort: AbortController | null = null;
+/** Stored runs loaded into `runs`; resolves once, also when IndexedDB is unavailable. */
+let hydrating: Promise<void> | null = null;
+const hydrated = ref(false);
 
 /** Stat weights default: each EP to ±0.05 (90%), at most 8× the engine's first pass. */
 export const DEFAULT_WEIGHT_PRECISION = { epCi: 0.05, maxIterationMultiplier: 8 } as const;
 
-const nextRunId = () => `#${String(++runCounter).padStart(4, '0')}`;
-
 export function useSession() {
   const engine = useEngine();
+  const history = useHistory();
+
+  hydrating ??= history.load().then(({ runs: stored, counter }) => {
+    const here = new Set(runs.value.map((r) => r.record.id));
+    const loaded: RunEntry[] = stored
+      .filter((s) => !here.has(s.record.id))
+      .map(({ record, result, statWeights }) => ({ record, result, ...(statWeights && { statWeights }) }));
+    runs.value = [...runs.value, ...loaded];
+    runCounter = Math.max(runCounter, counter);
+    hydrated.value = true;
+  });
+
+  /** Next run id; numbered through IndexedDB when it is there, so reloads and other tabs never reuse one. */
+  async function nextRunId(): Promise<string> {
+    await hydrating;
+    runCounter = Math.max(runCounter, await history.nextSeq(runCounter));
+    return `#${String(runCounter).padStart(4, '0')}`;
+  }
 
   /** Parse pasted text (SimC, WoWSims JSON, Wowhead link) against the staged data build. Does not change state. */
   async function parseImport(text: string): Promise<ImportResult> {
@@ -116,9 +135,10 @@ export function useSession() {
       });
       if (result.error) throw new Error(result.error.message.split('\n')[0]);
       const s = summarize(result.raidMetrics!.dps!, result.iterationsDone);
+      const id = await nextRunId();
       const previous = runs.value[0];
       const record: RunRecord = {
-        id: nextRunId(),
+        id,
         createdAt: new Date().toISOString(),
         kind: opts.label ?? 'single',
         character: structuredClone(toRaw(c)),
@@ -129,6 +149,7 @@ export function useSession() {
         summary: { dpsMean: s.mean, dpsStdev: s.stdev, dpsCi95: s.ci95, wallMs: performance.now() - t0 },
       };
       runs.value = [{ record, result }, ...runs.value];
+      void history.save({ record, result });
       if (!opts.character) baseline.value = structuredClone(toRaw(c));
       return runs.value[0]!;
     } catch (e) {
@@ -206,6 +227,7 @@ export function useSession() {
       // Replace the entry rather than mutate it, so computeds over run(id) see the weights arrive.
       const updated: RunEntry = { ...entry, statWeights: result };
       runs.value = runs.value.map((r) => (r === entry ? updated : r));
+      void history.save(updated);
       return result;
     } catch (e) {
       if (!abort?.signal.aborted) lastError.value = e instanceof Error ? e.message : String(e);
@@ -220,6 +242,13 @@ export function useSession() {
     abort?.abort();
   }
 
+  /** Forget every run, in memory and in IndexedDB. Run numbers keep counting up. */
+  async function clearHistory(): Promise<void> {
+    await hydrating;
+    await history.clear();
+    runs.value = [];
+  }
+
   const latest = computed(() => runs.value[0] ?? null);
   const run = (id: string) => runs.value.find((r) => r.record.id === id) ?? null;
 
@@ -228,6 +257,11 @@ export function useSession() {
     baseline: readonly(baseline),
     importDiagnostics: readonly(importDiagnostics),
     runs: readonly(runs),
+    /** False until stored runs have been loaded (or found unavailable); /runs/<n> waits for it. */
+    hydrated: readonly(hydrated),
+    /** 'unavailable' when IndexedDB cannot be used: runs are then kept for this tab only. */
+    historyStatus: history.status,
+    clearHistory,
     latest,
     run,
     progress: readonly(progress),

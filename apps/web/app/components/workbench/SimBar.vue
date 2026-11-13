@@ -57,6 +57,23 @@ async function run() {
   await navigateTo(`/runs/${id.replace(/^#/, '')}`);
 }
 
+// Share the draft as it is now, with the selected iterations and a fixed seed so whoever opens it gets one
+// reproducible result.
+const engine = useEngine();
+const shareButton = useShareButton('Share draft');
+function shareDraft() {
+  const c = wb.draft.value;
+  const engineId = engine.version.value?.engineId;
+  if (!c || !engineId) return;
+  void shareButton.share({
+    character: c,
+    iterations: n.value,
+    seed: Math.floor(Math.random() * 2 ** 31),
+    engineId,
+    kind: 'draft',
+  });
+}
+
 function onKey(e: KeyboardEvent) {
   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
     e.preventDefault();
@@ -95,6 +112,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
           ><UiStatusGlyph status="warning" hide-label />{{ error }}</span
         >
         <span class="grow" />
+        <UiButton :disabled="!wb.draft.value" @click="shareDraft">{{ shareButton.label.value }}</UiButton>
         <UiButton variant="primary" size="lg" kbd="⌘↵" :disabled="!wb.draft.value" @click="run">{{
           label
         }}</UiButton>
