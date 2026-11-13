@@ -64,6 +64,12 @@ export interface ScalingItemProperties {
      * @generated from protobuf field: repeated proto.AreaStats area_stats = 7
      */
     areaStats: AreaStats[];
+    /**
+     * The weapon skill the item adds; each value is the bonus on top of the level-based skill, not the full skill.
+     *
+     * @generated from protobuf field: repeated proto.WeaponSkillValue weapon_skills = 10
+     */
+    weaponSkills: WeaponSkillValue[];
 }
 /**
  * @generated from protobuf message proto.ReducedCasterWeaponDamage
@@ -2453,7 +2459,8 @@ class ScalingItemProperties$Type extends MessageType<ScalingItemProperties> {
             { no: 4, name: "stats", kind: "map", K: 5 /*ScalarType.INT32*/, V: { kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ } },
             { no: 6, name: "ilvl", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 9, name: "reduced_caster_weapon_damage", kind: "message", T: () => ReducedCasterWeaponDamage },
-            { no: 7, name: "area_stats", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => AreaStats }
+            { no: 7, name: "area_stats", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => AreaStats },
+            { no: 10, name: "weapon_skills", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => WeaponSkillValue }
         ]);
     }
     create(value?: PartialMessage<ScalingItemProperties>): ScalingItemProperties {
@@ -2465,6 +2472,7 @@ class ScalingItemProperties$Type extends MessageType<ScalingItemProperties> {
         message.stats = {};
         message.ilvl = 0;
         message.areaStats = [];
+        message.weaponSkills = [];
         if (value !== undefined)
             reflectionMergePartial<ScalingItemProperties>(this, message, value);
         return message;
@@ -2497,6 +2505,9 @@ class ScalingItemProperties$Type extends MessageType<ScalingItemProperties> {
                     break;
                 case /* repeated proto.AreaStats area_stats */ 7:
                     message.areaStats.push(AreaStats.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated proto.WeaponSkillValue weapon_skills */ 10:
+                    message.weaponSkills.push(WeaponSkillValue.internalBinaryRead(reader, reader.uint32(), options));
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -2550,6 +2561,9 @@ class ScalingItemProperties$Type extends MessageType<ScalingItemProperties> {
         /* proto.ReducedCasterWeaponDamage reduced_caster_weapon_damage = 9; */
         if (message.reducedCasterWeaponDamage)
             ReducedCasterWeaponDamage.internalBinaryWrite(message.reducedCasterWeaponDamage, writer.tag(9, WireType.LengthDelimited).fork(), options).join();
+        /* repeated proto.WeaponSkillValue weapon_skills = 10; */
+        for (let i = 0; i < message.weaponSkills.length; i++)
+            WeaponSkillValue.internalBinaryWrite(message.weaponSkills[i], writer.tag(10, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
