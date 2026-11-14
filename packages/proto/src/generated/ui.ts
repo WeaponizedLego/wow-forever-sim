@@ -1688,6 +1688,26 @@ export interface SimlPrintResult {
     error: string;
 }
 /**
+ * The phase of an item or enchant (UIItem.phase, UIEnchant.phase) and of the gear picker's choice: phase 1 is what can
+ * be had now, and Unknown holds the rest until their phases are known.
+ *
+ * @generated from protobuf enum proto.ContentPhase
+ */
+export enum ContentPhase {
+    /**
+     * @generated from protobuf enum value: ContentPhaseNone = 0;
+     */
+    ContentPhaseNone = 0,
+    /**
+     * @generated from protobuf enum value: ContentPhase1 = 1;
+     */
+    ContentPhase1 = 1,
+    /**
+     * @generated from protobuf enum value: ContentPhaseUnknown = 2;
+     */
+    ContentPhaseUnknown = 2
+}
+/**
  * @generated from protobuf enum proto.Expansion
  */
 export enum Expansion {
