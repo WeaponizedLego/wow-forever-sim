@@ -2,33 +2,33 @@
   "schema": 1,
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "80ef86793788ca527d4a51d0e1a659a928ccc4b9",
-    "committedAt": "2026-11-13T12:33:27+01:00"
+    "commit": "2c365b072e9a3108ccff6e5c10ca689cb4a48c35",
+    "committedAt": "2026-11-15T22:43:21+01:00"
   },
-  "engineId": "80ef867",
-  "dataBuild": "1.60.1.70888",
+  "engineId": "2c365b0",
+  "dataBuild": "1.60.1.70938",
   "goVersion": "1.27.4",
   "artifacts": {
     "wasm": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/lib.wasm.gz",
-      "sha256": "afe785e98034a15aab31b65169a51c211f9deb15493ce5efd8097b0279011dc0",
-      "bytes": 5728850
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-2c365b0/lib.wasm.gz",
+      "sha256": "bb3741cae5010cc93eda91a432f4af8731c7b7a24a9f5352558f60a2d8f4d795",
+      "bytes": 5760787
     },
     "wasmExec": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/wasm_exec.js",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-2c365b0/wasm_exec.js",
       "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
       "bytes": 16992
     },
     "db": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/db.bin",
-      "sha256": "43bbf8f618b5ccd14f61b2ca8521e3c5cf716bf8079430623ee8eac85eadb33f",
-      "bytes": 1620760
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-2c365b0/db.bin",
+      "sha256": "ad41d8521dc1b17099828a89ff73c5020608f2f8c67ced8cac544c6b58e33bb4",
+      "bytes": 1669128
     },
     "leftoverDb": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-80ef867/leftover_db.bin",
-      "sha256": "f81dc5813430af9bfeed44c1ca98c499534bb2d55db322c085cb908fd48aa75a",
-      "bytes": 527077
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-2c365b0/leftover_db.bin",
+      "sha256": "cb57592ec76e6fd2ec8ed2d05926b6e571c4345427c4baad416a6f5fbaccfdfb",
+      "bytes": 540114
     }
   },
-  "syncedAt": "2026-11-13T12:24:47Z"
+  "syncedAt": "2026-11-15T22:21:56Z"
 }
