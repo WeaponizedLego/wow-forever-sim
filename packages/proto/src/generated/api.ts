@@ -13,6 +13,9 @@ import { reflectionMergePartial } from "@protobuf-ts/runtime";
 import { MessageType } from "@protobuf-ts/runtime";
 import { WeaponType } from "./common";
 import { ItemSpec } from "./common";
+import { CreatureFamily } from "./common";
+import { MobType } from "./common";
+import { AreaStats } from "./common";
 import { UUID } from "./common";
 import { LogLevel } from "./common";
 import { PseudoStat } from "./common";
@@ -1625,6 +1628,83 @@ export interface PlayerStats {
      * @generated from protobuf field: proto.MeleeCritCapInfo melee_crit_cap = 14
      */
     meleeCritCap?: MeleeCritCapInfo; // Unset before the attack tables exist and without a main-hand auto attack.
+    /**
+     * One entry for each mob type the player has a bonus against, whatever mob types the encounter's targets are.
+     *
+     * @generated from protobuf field: repeated proto.MobTypeBonus mob_type_bonuses = 5
+     */
+    mobTypeBonuses: MobTypeBonus[];
+    /**
+     * The stats the gear adds only while the encounter is in an area of the type, one entry for each area type.
+     * final_stats holds none of them; the sim adds those of the encounter's own area types when the fight starts.
+     *
+     * @generated from protobuf field: repeated proto.AreaStats area_stats = 15
+     */
+    areaStats: AreaStats[];
+    /**
+     * The factors the worn items' spells deal or restore against the mob types and creature families their
+     * tooltips name, one entry for each item.
+     *
+     * @generated from protobuf field: repeated proto.VersusEffect versus_effects = 16
+     */
+    versusEffects: VersusEffect[];
+}
+/**
+ * What the player has against a target of one mob type alone.
+ *
+ * @generated from protobuf message proto.MobTypeBonus
+ */
+export interface MobTypeBonus {
+    /**
+     * @generated from protobuf field: proto.MobType mob_type = 1
+     */
+    mobType: MobType;
+    /**
+     * @generated from protobuf field: map<int32, double> stats = 2
+     */
+    stats: {
+        [key: number]: number;
+    }; // keys are the numeric values of Stat
+    /**
+     * @generated from protobuf field: double damage_multiplier = 3
+     */
+    damageMultiplier: number;
+    /**
+     * @generated from protobuf field: double crit_damage_multiplier = 4
+     */
+    critDamageMultiplier: number; // On top of damage_multiplier, for a critical strike alone.
+}
+/**
+ * The factor one item's spell deals or restores against a target of any of the mob types or creature
+ * families, once however many of them the target is.
+ *
+ * @generated from protobuf message proto.VersusEffect
+ */
+export interface VersusEffect {
+    /**
+     * @generated from protobuf field: int32 item_id = 1
+     */
+    itemId: number;
+    /**
+     * @generated from protobuf field: string item_name = 2
+     */
+    itemName: string;
+    /**
+     * @generated from protobuf field: repeated proto.MobType mob_types = 3
+     */
+    mobTypes: MobType[];
+    /**
+     * @generated from protobuf field: repeated proto.CreatureFamily creature_families = 4
+     */
+    creatureFamilies: CreatureFamily[];
+    /**
+     * @generated from protobuf field: double multiplier = 5
+     */
+    multiplier: number;
+    /**
+     * @generated from protobuf field: proto.VersusEffectKind kind = 6
+     */
+    kind: VersusEffectKind;
 }
 /**
  * @generated from protobuf message proto.PartyStats
@@ -2573,6 +2653,21 @@ export enum ActionCategory {
      * @generated from protobuf enum value: ActionCategoryExternalDebuff = 9;
      */
     ActionCategoryExternalDebuff = 9
+}
+/**
+ * @generated from protobuf enum proto.VersusEffectKind
+ */
+export enum VersusEffectKind {
+    /**
+     * @generated from protobuf enum value: VersusEffectKindDamage = 0;
+     */
+    VersusEffectKindDamage = 0,
+    /**
+     * The mana, rage or energy the spell restores.
+     *
+     * @generated from protobuf enum value: VersusEffectKindRestore = 1;
+     */
+    VersusEffectKindRestore = 1
 }
 /**
  * @generated from protobuf enum proto.StatWeightsTargetMetric
@@ -6329,7 +6424,10 @@ class PlayerStats$Type extends MessageType<PlayerStats> {
             { no: 12, name: "rotation_stats", kind: "message", T: () => APLStats },
             { no: 11, name: "pets", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => PetStats },
             { no: 13, name: "weapon_skills", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => WeaponSkillValue },
-            { no: 14, name: "melee_crit_cap", kind: "message", T: () => MeleeCritCapInfo }
+            { no: 14, name: "melee_crit_cap", kind: "message", T: () => MeleeCritCapInfo },
+            { no: 5, name: "mob_type_bonuses", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => MobTypeBonus },
+            { no: 15, name: "area_stats", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => AreaStats },
+            { no: 16, name: "versus_effects", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => VersusEffect }
         ]);
     }
     create(value?: PartialMessage<PlayerStats>): PlayerStats {
@@ -6337,6 +6435,9 @@ class PlayerStats$Type extends MessageType<PlayerStats> {
         message.sets = [];
         message.pets = [];
         message.weaponSkills = [];
+        message.mobTypeBonuses = [];
+        message.areaStats = [];
+        message.versusEffects = [];
         if (value !== undefined)
             reflectionMergePartial<PlayerStats>(this, message, value);
         return message;
@@ -6385,6 +6486,15 @@ class PlayerStats$Type extends MessageType<PlayerStats> {
                 case /* proto.MeleeCritCapInfo melee_crit_cap */ 14:
                     message.meleeCritCap = MeleeCritCapInfo.internalBinaryRead(reader, reader.uint32(), options, message.meleeCritCap);
                     break;
+                case /* repeated proto.MobTypeBonus mob_type_bonuses */ 5:
+                    message.mobTypeBonuses.push(MobTypeBonus.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated proto.AreaStats area_stats */ 15:
+                    message.areaStats.push(AreaStats.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated proto.VersusEffect versus_effects */ 16:
+                    message.versusEffects.push(VersusEffect.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -6409,6 +6519,9 @@ class PlayerStats$Type extends MessageType<PlayerStats> {
         /* proto.IndividualBuffs buffs = 4; */
         if (message.buffs)
             IndividualBuffs.internalBinaryWrite(message.buffs, writer.tag(4, WireType.LengthDelimited).fork(), options).join();
+        /* repeated proto.MobTypeBonus mob_type_bonuses = 5; */
+        for (let i = 0; i < message.mobTypeBonuses.length; i++)
+            MobTypeBonus.internalBinaryWrite(message.mobTypeBonuses[i], writer.tag(5, WireType.LengthDelimited).fork(), options).join();
         /* proto.UnitStats base_stats = 6; */
         if (message.baseStats)
             UnitStats.internalBinaryWrite(message.baseStats, writer.tag(6, WireType.LengthDelimited).fork(), options).join();
@@ -6436,6 +6549,12 @@ class PlayerStats$Type extends MessageType<PlayerStats> {
         /* proto.MeleeCritCapInfo melee_crit_cap = 14; */
         if (message.meleeCritCap)
             MeleeCritCapInfo.internalBinaryWrite(message.meleeCritCap, writer.tag(14, WireType.LengthDelimited).fork(), options).join();
+        /* repeated proto.AreaStats area_stats = 15; */
+        for (let i = 0; i < message.areaStats.length; i++)
+            AreaStats.internalBinaryWrite(message.areaStats[i], writer.tag(15, WireType.LengthDelimited).fork(), options).join();
+        /* repeated proto.VersusEffect versus_effects = 16; */
+        for (let i = 0; i < message.versusEffects.length; i++)
+            VersusEffect.internalBinaryWrite(message.versusEffects[i], writer.tag(16, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -6446,6 +6565,196 @@ class PlayerStats$Type extends MessageType<PlayerStats> {
  * @generated MessageType for protobuf message proto.PlayerStats
  */
 export const PlayerStats = new PlayerStats$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class MobTypeBonus$Type extends MessageType<MobTypeBonus> {
+    constructor() {
+        super("proto.MobTypeBonus", [
+            { no: 1, name: "mob_type", kind: "enum", T: () => ["proto.MobType", MobType] },
+            { no: 2, name: "stats", kind: "map", K: 5 /*ScalarType.INT32*/, V: { kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ } },
+            { no: 3, name: "damage_multiplier", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 4, name: "crit_damage_multiplier", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
+        ]);
+    }
+    create(value?: PartialMessage<MobTypeBonus>): MobTypeBonus {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.mobType = 0;
+        message.stats = {};
+        message.damageMultiplier = 0;
+        message.critDamageMultiplier = 0;
+        if (value !== undefined)
+            reflectionMergePartial<MobTypeBonus>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: MobTypeBonus): MobTypeBonus {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* proto.MobType mob_type */ 1:
+                    message.mobType = reader.int32();
+                    break;
+                case /* map<int32, double> stats */ 2:
+                    this.binaryReadMap2(message.stats, reader, options);
+                    break;
+                case /* double damage_multiplier */ 3:
+                    message.damageMultiplier = reader.double();
+                    break;
+                case /* double crit_damage_multiplier */ 4:
+                    message.critDamageMultiplier = reader.double();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    private binaryReadMap2(map: MobTypeBonus["stats"], reader: IBinaryReader, options: BinaryReadOptions): void {
+        let len = reader.uint32(), end = reader.pos + len, key: keyof MobTypeBonus["stats"] | undefined, val: MobTypeBonus["stats"][any] | undefined;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case 1:
+                    key = reader.int32();
+                    break;
+                case 2:
+                    val = reader.double();
+                    break;
+                default: throw new globalThis.Error("unknown map entry field for proto.MobTypeBonus.stats");
+            }
+        }
+        map[key ?? 0] = val ?? 0;
+    }
+    internalBinaryWrite(message: MobTypeBonus, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* proto.MobType mob_type = 1; */
+        if (message.mobType !== 0)
+            writer.tag(1, WireType.Varint).int32(message.mobType);
+        /* map<int32, double> stats = 2; */
+        for (let k of globalThis.Object.keys(message.stats))
+            writer.tag(2, WireType.LengthDelimited).fork().tag(1, WireType.Varint).int32(parseInt(k)).tag(2, WireType.Bit64).double(message.stats[k as any]).join();
+        /* double damage_multiplier = 3; */
+        if (message.damageMultiplier !== 0)
+            writer.tag(3, WireType.Bit64).double(message.damageMultiplier);
+        /* double crit_damage_multiplier = 4; */
+        if (message.critDamageMultiplier !== 0)
+            writer.tag(4, WireType.Bit64).double(message.critDamageMultiplier);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.MobTypeBonus
+ */
+export const MobTypeBonus = new MobTypeBonus$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class VersusEffect$Type extends MessageType<VersusEffect> {
+    constructor() {
+        super("proto.VersusEffect", [
+            { no: 1, name: "item_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "item_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "mob_types", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.MobType", MobType] },
+            { no: 4, name: "creature_families", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.CreatureFamily", CreatureFamily] },
+            { no: 5, name: "multiplier", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "kind", kind: "enum", T: () => ["proto.VersusEffectKind", VersusEffectKind] }
+        ]);
+    }
+    create(value?: PartialMessage<VersusEffect>): VersusEffect {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.itemId = 0;
+        message.itemName = "";
+        message.mobTypes = [];
+        message.creatureFamilies = [];
+        message.multiplier = 0;
+        message.kind = 0;
+        if (value !== undefined)
+            reflectionMergePartial<VersusEffect>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: VersusEffect): VersusEffect {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int32 item_id */ 1:
+                    message.itemId = reader.int32();
+                    break;
+                case /* string item_name */ 2:
+                    message.itemName = reader.string();
+                    break;
+                case /* repeated proto.MobType mob_types */ 3:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e;)
+                            message.mobTypes.push(reader.int32());
+                    else
+                        message.mobTypes.push(reader.int32());
+                    break;
+                case /* repeated proto.CreatureFamily creature_families */ 4:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e;)
+                            message.creatureFamilies.push(reader.int32());
+                    else
+                        message.creatureFamilies.push(reader.int32());
+                    break;
+                case /* double multiplier */ 5:
+                    message.multiplier = reader.double();
+                    break;
+                case /* proto.VersusEffectKind kind */ 6:
+                    message.kind = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: VersusEffect, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int32 item_id = 1; */
+        if (message.itemId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.itemId);
+        /* string item_name = 2; */
+        if (message.itemName !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.itemName);
+        /* repeated proto.MobType mob_types = 3; */
+        if (message.mobTypes.length) {
+            writer.tag(3, WireType.LengthDelimited).fork();
+            for (let i = 0; i < message.mobTypes.length; i++)
+                writer.int32(message.mobTypes[i]);
+            writer.join();
+        }
+        /* repeated proto.CreatureFamily creature_families = 4; */
+        if (message.creatureFamilies.length) {
+            writer.tag(4, WireType.LengthDelimited).fork();
+            for (let i = 0; i < message.creatureFamilies.length; i++)
+                writer.int32(message.creatureFamilies[i]);
+            writer.join();
+        }
+        /* double multiplier = 5; */
+        if (message.multiplier !== 0)
+            writer.tag(5, WireType.Bit64).double(message.multiplier);
+        /* proto.VersusEffectKind kind = 6; */
+        if (message.kind !== 0)
+            writer.tag(6, WireType.Varint).int32(message.kind);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.VersusEffect
+ */
+export const VersusEffect = new VersusEffect$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class PartyStats$Type extends MessageType<PartyStats> {
     constructor() {
