@@ -1415,6 +1415,12 @@ export interface BulkBuildBundle {
      * @generated from protobuf field: bool checked = 5
      */
     checked: boolean;
+    /**
+     * The name the user gave the bundle, trimmed; empty labels it by its four parts.
+     *
+     * @generated from protobuf field: string name = 6
+     */
+    name: string;
 }
 /**
  * Local storage data for the bundles the bulk sim runs in Builds mode, in list order. The Current bundle is not stored
@@ -1686,6 +1692,26 @@ export interface SimlPrintResult {
      * @generated from protobuf field: string error = 3
      */
     error: string;
+}
+/**
+ * The phase of an item or enchant (UIItem.phase, UIEnchant.phase) and of the gear picker's choice: phase 1 is what can
+ * be had now, and Unknown holds the rest until their phases are known.
+ *
+ * @generated from protobuf enum proto.ContentPhase
+ */
+export enum ContentPhase {
+    /**
+     * @generated from protobuf enum value: ContentPhaseNone = 0;
+     */
+    ContentPhaseNone = 0,
+    /**
+     * @generated from protobuf enum value: ContentPhase1 = 1;
+     */
+    ContentPhase1 = 1,
+    /**
+     * @generated from protobuf enum value: ContentPhaseUnknown = 2;
+     */
+    ContentPhaseUnknown = 2
 }
 /**
  * @generated from protobuf enum proto.Expansion
@@ -5471,12 +5497,14 @@ class BulkBuildBundle$Type extends MessageType<BulkBuildBundle> {
             { no: 2, name: "talents", kind: "message", T: () => BulkTalentRef },
             { no: 3, name: "rotation", kind: "message", T: () => BulkRotationRef },
             { no: 4, name: "settings", kind: "message", T: () => BulkSettingsRef },
-            { no: 5, name: "checked", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 5, name: "checked", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 6, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<BulkBuildBundle>): BulkBuildBundle {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.checked = false;
+        message.name = "";
         if (value !== undefined)
             reflectionMergePartial<BulkBuildBundle>(this, message, value);
         return message;
@@ -5500,6 +5528,9 @@ class BulkBuildBundle$Type extends MessageType<BulkBuildBundle> {
                     break;
                 case /* bool checked */ 5:
                     message.checked = reader.bool();
+                    break;
+                case /* string name */ 6:
+                    message.name = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -5528,6 +5559,9 @@ class BulkBuildBundle$Type extends MessageType<BulkBuildBundle> {
         /* bool checked = 5; */
         if (message.checked !== false)
             writer.tag(5, WireType.Varint).bool(message.checked);
+        /* string name = 6; */
+        if (message.name !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.name);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
