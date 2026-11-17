@@ -102,7 +102,7 @@ const skipped = Object.keys(baseline.skipped ?? {}).length;
 }
 .kv__row {
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
+  grid-template-columns: 7em minmax(0, 1fr);
   gap: 10px;
   padding: 7px var(--space-4);
   font-size: var(--text-sm);

@@ -44,7 +44,7 @@ const id = useId();
   min-width: 0;
 }
 .input {
-  height: 30px;
+  height: var(--control-md);
   padding: 0 var(--space-2);
   border: 1px solid var(--line-control);
   border-radius: var(--radius-control);

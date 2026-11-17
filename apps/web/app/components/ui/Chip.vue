@@ -24,7 +24,7 @@ withDefaults(defineProps<{ tag?: string; quality?: Quality | 'muted' }>(), {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 22px;
+  height: 1.75rem;
   padding: 0 var(--space-2);
   border: 1px solid var(--line-chip);
   border-radius: var(--radius-control);
@@ -33,7 +33,7 @@ withDefaults(defineProps<{ tag?: string; quality?: Quality | 'muted' }>(), {
   white-space: nowrap;
 }
 .chip__tag {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--text-3);
 }
 </style>

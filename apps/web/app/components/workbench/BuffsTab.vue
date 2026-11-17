@@ -103,7 +103,7 @@ const current = computed(() => BUFF_PRESETS.find((p) => p.id === preset.value));
 }
 .presets {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
   gap: 1px;
   margin: 0;
   background: var(--line-seam);

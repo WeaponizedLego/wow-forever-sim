@@ -4,8 +4,26 @@
     {
       "name": "web",
       "runtimeExecutable": "corepack",
-      "runtimeArgs": ["pnpm@12.18.0", "--filter", "@fsim/web", "exec", "nuxt", "dev", "--port", "3000"],
+      "runtimeArgs": [
+        "pnpm@12.18.0",
+        "--filter",
+        "@fsim/web",
+        "exec",
+        "nuxt",
+        "dev",
+        "--port",
+        "3000"
+      ],
       "port": 3000
+    },
+    {
+      "name": "web-static",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "apps/web/e2e/serve.mjs",
+        "4510"
+      ],
+      "port": 4510
     }
   ]
 }

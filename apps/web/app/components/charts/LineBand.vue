@@ -304,7 +304,7 @@ const tableRows = computed(() =>
 }
 .lbl {
   position: absolute;
-  font-size: 10px;
+  font-size: var(--text-tick);
   color: var(--text-2);
   white-space: nowrap;
   pointer-events: none;

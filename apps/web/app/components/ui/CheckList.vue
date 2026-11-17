@@ -37,8 +37,8 @@ withDefaults(defineProps<{ items: CheckItem[]; dense?: boolean }>(), { dense: fa
   border-bottom: 1px solid var(--line-row);
 }
 .check--code {
-  /* 76px fits the longest code, "DEFAULT-05", without wrapping. */
-  grid-template-columns: 22px 76px minmax(0, 1fr) auto;
+  /* 7.5em fits the longest code, "DEFAULT-05", without wrapping, at any text size. */
+  grid-template-columns: 22px 7.5em minmax(0, 1fr) auto;
 }
 .checks--dense {
   padding: 6px 0;
@@ -49,6 +49,9 @@ withDefaults(defineProps<{ items: CheckItem[]; dense?: boolean }>(), { dense: fa
   padding: 6px var(--space-4);
   border-bottom: 0;
   align-items: start;
+}
+.check__code {
+  white-space: nowrap;
 }
 .check__code,
 .check__where {

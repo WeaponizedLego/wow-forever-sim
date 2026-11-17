@@ -78,13 +78,18 @@
   --class-warrior: #c69b6d;
 
   /* Type */
-  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --text-xs: 11px; /* labels, axis ticks, meta */
-  --text-sm: 12px; /* tables, panel headers */
-  --text-md: 13px; /* body */
-  --text-lg: 18px; /* page title */
-  --text-kpi: 34px; /* headline number */
+  /* Inter: a UI face built for screen legibility; numbers use its tabular figures (see .num in base.css).
+     Sizes are rem so browser zoom and the reader's own font-size setting scale the whole UI. Body, tables,
+     controls, labels and meta are all at least 16px (hierarchy comes from colour and weight, not size);
+     only chart axis tick numbers use --text-tick (14px). */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; /* pasted code only */
+  --text-tick: 0.875rem; /* 14px: chart axis tick numbers only */
+  --text-xs: 1rem; /* 16px: field labels, meta (muted colour) */
+  --text-sm: 1rem; /* 16px: tables, panel headers, controls */
+  --text-md: 1rem; /* 16px: body */
+  --text-lg: 1.5rem; /* 24px: page title */
+  --text-kpi: 2.5rem; /* 40px: headline number */
   --label-tracking: 0.04em;
 
   /* Space (4px ramp) and shape */
@@ -100,5 +105,9 @@
   --shadow-tooltip: 0 8px 24px rgb(0 0 0 / 50%);
 
   --page-max: 1440px;
-  --chrome-height: 40px;
+  --chrome-height: 3.5rem; /* 56px */
+  /* Control heights scale with the type (rem): 32 / 36 / 40px at the default 16px. */
+  --control-sm: 2rem;
+  --control-md: 2.25rem;
+  --control-lg: 2.5rem;
 }

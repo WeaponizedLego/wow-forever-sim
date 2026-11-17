@@ -556,7 +556,7 @@ onBeforeUnmount(() => document.removeEventListener('focusin', onFocusIn));
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  min-height: 30px;
+  min-height: var(--control-md);
   padding: 4px var(--space-4);
   border-top: 1px solid var(--line-seam);
   font-size: var(--text-xs);

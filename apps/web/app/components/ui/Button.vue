@@ -42,15 +42,15 @@ withDefaults(
   cursor: pointer;
 }
 .btn--sm {
-  height: 26px;
+  height: var(--control-sm);
   padding: 0 10px;
   font-size: var(--text-sm);
 }
 .btn--md {
-  height: 30px;
+  height: var(--control-md);
 }
 .btn--lg {
-  height: 32px;
+  height: var(--control-lg);
   padding: 0 16px;
 }
 .btn--secondary:hover:not(:disabled) {

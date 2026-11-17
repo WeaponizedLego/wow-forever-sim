@@ -205,8 +205,8 @@ td:last-child {
 }
 .sort__glyph {
   display: inline-block;
-  width: 8px;
-  font-size: 8px;
+  width: 0.75em;
+  font-size: 0.75em;
 }
 tr.is-changed {
   background: var(--bg-row-changed);

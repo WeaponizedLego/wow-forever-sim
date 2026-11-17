@@ -63,7 +63,7 @@ const style = computed(() => gridCellStyle(props.span));
   letter-spacing: -0.03em;
 }
 .value--md {
-  font-size: 22px;
+  font-size: 1.75rem; /* 28px */
 }
 .secondary {
   color: var(--text-2);
@@ -95,7 +95,7 @@ const style = computed(() => gridCellStyle(props.span));
     grid-column: 1 / -1;
   }
   .value--lg {
-    font-size: 28px;
+    font-size: 2rem; /* 32px on narrow screens */
   }
 }
 </style>

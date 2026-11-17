@@ -51,6 +51,7 @@ const query = defineModel<string>('query', { default: '' });
         :href="status.to"
         class="num status"
         :class="`status--${status.tone}`"
+        :title="status.text"
       >
         <span class="status__dot" aria-hidden="true" />
         <span class="visually-hidden">Data status {{ status.tone }}:</span>
@@ -73,7 +74,7 @@ const query = defineModel<string>('query', { default: '' });
   padding: 0 var(--space-6);
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: var(--space-5);
 }
 .wordmark {
   font-size: var(--text-sm);
@@ -133,6 +134,17 @@ const query = defineModel<string>('query', { default: '' });
 @media (max-width: 900px) {
   .search {
     display: none;
+  }
+}
+/* Keep every nav link visible: below 1440px the status shows as its dot (text in the tooltip and for screen readers). */
+@media (max-width: 1440px) {
+  .status__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 }
 @media (max-width: 640px) {

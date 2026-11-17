@@ -291,7 +291,7 @@ const STATE_WORDS: Record<State, string> = {
   border: 1px solid var(--line-control);
   border-radius: 2px;
   background: var(--bg-app);
-  font-size: 10px;
+  font-size: var(--text-xs);
   line-height: 13px;
   color: var(--text-2);
 }

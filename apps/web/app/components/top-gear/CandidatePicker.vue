@@ -109,17 +109,16 @@ const taken = (slot: ItemSlotId, id: number) =>
 }
 .slot__row {
   display: grid;
-  grid-template-columns: 78px minmax(0, 1.2fr) minmax(0, 2fr) auto;
+  grid-template-columns: 6em minmax(0, 1.2fr) minmax(0, 2fr) auto;
   gap: var(--space-3);
   align-items: center;
   padding: 5px var(--space-4);
-  min-height: 34px;
+  min-height: var(--control-lg);
 }
 .slot__name {
   font-size: var(--text-xs);
   color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-weight: 500;
 }
 .slot__equipped {
   min-width: 0;
@@ -162,7 +161,7 @@ const taken = (slot: ItemSlotId, id: number) =>
 }
 .result {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 56px;
+  grid-template-columns: minmax(0, 1fr) auto 4.25em;
   gap: var(--space-3);
   width: 100%;
   padding: 5px var(--space-3);
@@ -190,7 +189,7 @@ const taken = (slot: ItemSlotId, id: number) =>
 }
 @media (max-width: 640px) {
   .slot__row {
-    grid-template-columns: 64px minmax(0, 1fr) auto;
+    grid-template-columns: 5em minmax(0, 1fr) auto;
   }
   .slot__cands {
     grid-column: 2 / -1;

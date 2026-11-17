@@ -59,7 +59,7 @@ const infos = computed(() => session.importDiagnostics.value.filter((d) => d.sev
 }
 .diag__row {
   display: grid;
-  grid-template-columns: 14px 76px minmax(0, 1fr);
+  grid-template-columns: 14px 7.5em minmax(0, 1fr);
   gap: var(--space-2);
   align-items: baseline;
   padding: 2px 0;

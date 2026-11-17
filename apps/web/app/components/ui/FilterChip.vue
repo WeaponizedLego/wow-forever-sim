@@ -18,7 +18,7 @@ const on = defineModel<boolean>({ default: false });
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  height: 26px;
+  height: var(--control-sm);
   padding: 0 10px;
   border: 1px solid var(--line-control);
   border-radius: var(--radius-control);

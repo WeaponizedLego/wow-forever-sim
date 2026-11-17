@@ -502,7 +502,7 @@ const estTone = (e: LinearEstimate) => (Math.abs(e.delta) < 0.05 ? 'flat' : e.de
 }
 .close {
   width: 28px;
-  height: 28px;
+  height: var(--control-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -538,7 +538,7 @@ const estTone = (e: LinearEstimate) => (Math.abs(e.delta) < 0.05 ? 'flat' : e.de
 .cols,
 .item {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 40px 64px;
+  grid-template-columns: minmax(0, 1fr) 3em 5em;
   gap: var(--space-3);
 }
 .cols {
@@ -651,7 +651,7 @@ const estTone = (e: LinearEstimate) => (Math.abs(e.delta) < 0.05 ? 'flat' : e.de
   min-width: 0;
 }
 .sel select {
-  height: 30px;
+  height: var(--control-md);
   padding: 0 8px;
   border: 1px solid var(--line-control);
   border-radius: var(--radius-control);

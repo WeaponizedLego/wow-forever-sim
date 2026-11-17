@@ -25,7 +25,7 @@ function xAlign(f: number) {
   position: relative;
   display: block;
   height: 1.45em;
-  font-size: var(--text-xs);
+  font-size: var(--text-tick);
   color: var(--text-3);
   text-transform: none;
   letter-spacing: 0;

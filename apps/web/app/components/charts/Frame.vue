@@ -92,12 +92,12 @@ function xAlign(at: number) {
 /* Wide label columns (lane names) shrink on phones so the plot keeps most of the width. */
 @media (max-width: 640px) {
   .frame {
-    grid-template-columns: min(var(--axis-w), 92px) minmax(0, 1fr);
+    grid-template-columns: min(var(--axis-w), 9em) minmax(0, 1fr);
   }
 }
 .yaxis {
   position: relative;
-  font-size: 10px;
+  font-size: var(--text-tick);
   color: var(--text-3);
 }
 .yaxis--right {
@@ -123,9 +123,9 @@ function xAlign(at: number) {
 }
 .xaxis {
   position: relative;
-  height: 20px;
+  height: 1.5rem;
   margin-top: var(--space-1);
-  font-size: 10px;
+  font-size: var(--text-tick);
   color: var(--text-3);
 }
 .xaxis__tick {

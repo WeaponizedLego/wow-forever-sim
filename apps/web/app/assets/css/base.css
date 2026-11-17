@@ -11,7 +11,8 @@ body {
   color: var(--text-1);
   font-family: var(--font-sans);
   font-size: var(--text-md);
-  line-height: 1.45;
+  line-height: 1.5;
+  font-feature-settings: 'cv11' 1; /* Inter: single-storey a, easier to tell from o at small sizes */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -37,16 +38,14 @@ textarea {
   color: inherit;
 }
 
-/* Every number is monospaced and tabular. */
+/* Every number uses tabular (fixed-width) figures so columns line up, in the same readable face as the text. */
 .num {
-  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
 .label {
   font-size: var(--text-xs);
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
+  font-weight: 500;
   color: var(--text-3);
 }
 

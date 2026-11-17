@@ -22,15 +22,15 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
     class="trigger"
     aria-haspopup="dialog"
     :aria-expanded="palette.open.value"
+    aria-label="Search or run a command"
     aria-keyshortcuts="Meta+K Control+K"
     @click="palette.show()"
   >
-    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 12 12" aria-hidden="true">
       <circle cx="5" cy="5" r="3.6" fill="none" stroke="currentColor" stroke-width="1.3" />
       <path d="M7.8 7.8L11 11" stroke="currentColor" stroke-width="1.3" />
     </svg>
-    <span class="trigger__text">Search or run a command</span>
-    <span class="visually-hidden trigger__sr">Search</span>
+    <span class="trigger__text">Search…</span>
     <UiKbd class="trigger__kbd" aria-hidden="true" :keys="mac ? '⌘K' : 'Ctrl K'" />
   </button>
 </template>
@@ -40,8 +40,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  width: 260px;
-  height: 26px;
+  width: 15rem;
+  height: var(--control-sm);
   padding: 0 var(--space-2);
   border: 1px solid var(--line-subtle);
   border-radius: var(--radius-control);
@@ -61,21 +61,15 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.trigger__sr {
-  display: none;
-}
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .trigger {
-    width: 28px;
+    width: var(--control-sm);
     justify-content: center;
     padding: 0;
   }
   .trigger__text,
   .trigger__kbd {
     display: none;
-  }
-  .trigger__sr {
-    display: inline;
   }
 }
 </style>
