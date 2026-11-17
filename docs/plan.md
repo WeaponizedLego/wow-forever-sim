@@ -33,7 +33,8 @@ Work is split into lanes that subagents run in parallel, each in its own git wor
 - Product name / domain (user decides later).
 
 **Repo setup done via `gh`**: auto-merge on, merged branches deleted, Actions may open PRs, `main` protected
-(requires `check`), default "approve first-time contributors" (the Actions bot is past it now).
+(requires a `check` status from any source). GitHub holds `pull_request` runs on PRs opened with `GITHUB_TOKEN`
+for approval every time, so engine-sync runs the `check` commands itself and posts the `check` status (PR #54).
 
 ## 0. Decisions (defaults; change before Phase 0 ends if you disagree)
 
