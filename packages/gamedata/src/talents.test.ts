@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { loadSpecPresets, PRESET_INDEX } from './presets';
 import {
   MAX_TALENT_POINTS,
+  addPointBlocker,
   brokenTalents,
   canAddPoint,
   canRemovePoint,
@@ -227,5 +228,52 @@ describe('why a point cannot come out', () => {
     expect(removePointBlocker('shaman', shaman, 1, at('Improved Stormstrike'))).toBeNull();
     expect(removePointBlocker('shaman', shaman, 1, at('Toughness'))).toBeNull();
     expect(canRemovePoint('shaman', shaman, 1, at('Improved Stormstrike'))).toBe(true);
+  });
+});
+
+describe('why a point cannot go in', () => {
+  const arms = classTalents('warrior').trees[0]!.talents;
+  const row1 = arms.findIndex((t) => t.row === 1);
+  const empty = parseTalents('warrior', '');
+
+  it('is null when the point can go in', () => {
+    expect(addPointBlocker('warrior', empty, 0, 0)).toBeNull();
+  });
+
+  it('names the tier and the points it still needs', () => {
+    const three = fill('warrior', [[0, 0, 3]]);
+    expect(addPointBlocker('warrior', three, 0, row1)).toBe(
+      "Can't add: tier 2 needs 5 points in Arms above it (3 so far)",
+    );
+  });
+
+  it('names the prerequisite that is not at its maximum', () => {
+    const child = arms.findIndex((t) => t.prereq !== undefined);
+    const pre = arms[arms[child]!.prereq!]!;
+    // Every point the child's tier needs, but none in the prerequisite.
+    let q = parseTalents('warrior', '');
+    for (let i = 0; i < arms.length; i++)
+      if (i !== arms[child]!.prereq && arms[i]!.row < arms[child]!.row)
+        while (canAddPoint('warrior', q, 0, i) && treePoints(q, 0) < arms[child]!.row * 5)
+          q = stepTalent('warrior', q, 0, i, 1);
+    expect(treePoints(q, 0)).toBe(arms[child]!.row * 5);
+    expect(addPointBlocker('warrior', q, 0, child)).toBe(
+      `Can't add: needs ${pre.maxPoints}/${pre.maxPoints} in ${pre.name}`,
+    );
+  });
+
+  it('says when the talent is maxed or every point is spent', () => {
+    const maxed = fill('warrior', [[0, 0, arms[0]!.maxPoints]]);
+    expect(addPointBlocker('warrior', maxed, 0, 0)).toBe(
+      `Can't add: ${arms[0]!.name} is at its maximum rank`,
+    );
+    const full = parseTalents('warrior', '30303213132215201-55050000002-2');
+    expect(totalPoints(full)).toBe(MAX_TALENT_POINTS);
+    const open = full[2]!.findIndex(
+      (v, i) => v === 0 && classTalents('warrior').trees[2]!.talents[i]!.row === 0,
+    );
+    expect(addPointBlocker('warrior', full, 2, open)).toBe(
+      `Can't add: all ${MAX_TALENT_POINTS} talent points are spent`,
+    );
   });
 });

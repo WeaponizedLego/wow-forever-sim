@@ -40,7 +40,8 @@ export async function openShamanInWorkbench(page: Page): Promise<void> {
 
 /**
  * Sims the workbench draft at 1k iterations without stat weights and waits for the run page.
- * The sim bar resets to its defaults (5k, stat weights on) each time the workbench mounts, so set both every time.
+ * The sim bar remembers both choices (localStorage) and a fresh browser starts at 5k with stat weights on, so set
+ * both every time.
  */
 export async function simDraft(page: Page, runId: string): Promise<void> {
   const bar = page.getByRole('region', { name: 'Sim' });

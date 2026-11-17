@@ -34,6 +34,13 @@ test('the SimC loadout talents arrive converted, build a tree by clicking, sim i
     }),
   );
   await expect(rowTwo).toHaveAccessibleName(/, 0 of \d, locked$/);
+  // Adding to it is refused with the reason, under the tree and in its tooltip.
+  const locked = "Can't add: tier 2 needs 5 points in Elemental above it (0 so far)";
+  await rowTwo.click({ force: true }); // aria-disabled: it cannot take a point now, but says why
+  await expect(elemental.getByRole('status')).toHaveText(locked);
+  await expect(elemental.getByLabel(/points in Elemental/)).toHaveText('0');
+  await expect(elemental.getByRole('tooltip').filter({ hasText: locked })).toBeVisible();
+  await page.mouse.move(0, 0);
 
   // Fill the first row: click every talent in it until it is maxed (extra clicks are no-ops).
   const first = talents.first();

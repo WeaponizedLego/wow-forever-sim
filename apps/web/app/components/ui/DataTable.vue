@@ -3,8 +3,10 @@ import type { RowState, TableColumn, TableSort } from '~/composables/ui-types';
 
 // Dense data table. Numeric columns are mono and right-aligned. Sortable headers are buttons
 // (aria-sort on the th). Row states paint the row and an inset 2px marker on the first cell.
-// The table sits in its own horizontal scroll box; with `maxHeight` it also scrolls vertically and
-// the header sticks.
+// The table sits in its own horizontal scroll box (never the page); a shadow at an edge says there is more
+// to scroll to. With `maxHeight` it also scrolls vertically and the header sticks.
+// With `stack`, a panel narrower than 560px shows each row as a stacked card instead: one line per cell,
+// its column label on the left (columns with `stackLabel: false` are full-width title lines).
 // Cells: #cell-<key>="{ row, value }", headers: #head-<key>="{ column }".
 // With `rowTo`, clicking anywhere on a row opens its page; keep a real link in one cell for keyboard users.
 const props = withDefaults(
@@ -22,6 +24,8 @@ const props = withDefaults(
     density?: 'sm' | 'md' | 'lg';
     /** Where a click on the row goes. */
     rowTo?: (row: Row) => string | undefined;
+    /** Stacked cards instead of sideways scrolling in a narrow panel. */
+    stack?: boolean;
   }>(),
   {
     rowState: undefined,
@@ -31,6 +35,7 @@ const props = withDefaults(
     maxHeight: undefined,
     density: 'md',
     rowTo: undefined,
+    stack: false,
   },
 );
 
@@ -83,11 +88,18 @@ function alignOf(col: TableColumn<Row>) {
 <template>
   <div
     class="scroll"
+    :class="{ 'scroll--stack': stack }"
     :style="{ maxHeight }"
     :tabindex="minWidth || maxHeight ? 0 : undefined"
     :aria-label="caption"
   >
-    <table class="table" :class="`table--${density}`" :style="{ minWidth }">
+    <!-- Explicit roles keep the table a table for screen readers while stacked (display: block). -->
+    <table
+      class="table"
+      :class="[`table--${density}`, { 'table--stack': stack }]"
+      :style="{ minWidth }"
+      :role="stack ? 'table' : undefined"
+    >
       <caption v-if="caption" class="visually-hidden">
         {{
           caption
@@ -96,12 +108,13 @@ function alignOf(col: TableColumn<Row>) {
       <colgroup>
         <col v-for="col in columns" :key="col.key" :style="{ width: col.width }" />
       </colgroup>
-      <thead :class="{ 'visually-hidden': hideHeader }">
-        <tr>
+      <thead :class="{ 'visually-hidden': hideHeader }" :role="stack ? 'rowgroup' : undefined">
+        <tr :role="stack ? 'row' : undefined">
           <th
             v-for="col in columns"
             :key="col.key"
             scope="col"
+            :role="stack ? 'columnheader' : undefined"
             class="label th"
             :class="`al-${alignOf(col)}`"
             :aria-sort="ariaSort(col)"
@@ -122,17 +135,24 @@ function alignOf(col: TableColumn<Row>) {
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody :role="stack ? 'rowgroup' : undefined">
         <tr
           v-for="(row, i) in sorted"
           :key="rowKey(row, i)"
           :class="[rowState?.(row) && `is-${rowState(row)}`, { 'is-link': !!rowTo }]"
+          :role="stack ? 'row' : undefined"
           @click="onRowClick(row, $event)"
         >
           <td
             v-for="col in columns"
             :key="col.key"
-            :class="[`al-${alignOf(col)}`, { num: col.numeric }, col.tone && `tone-${col.tone}`]"
+            :class="[
+              `al-${alignOf(col)}`,
+              { num: col.numeric, 'is-title': col.stackLabel === false },
+              col.tone && `tone-${col.tone}`,
+            ]"
+            :role="stack ? 'cell' : undefined"
+            :data-label="stack && col.stackLabel !== false ? (col.srLabel ?? col.label) : undefined"
           >
             <slot :name="`cell-${col.key}`" :row="row" :value="cellValue(row, col.key)">{{
               cellValue(row, col.key)
@@ -149,6 +169,16 @@ function alignOf(col: TableColumn<Row>) {
   /* Contains the absolutely positioned visually-hidden labels, which otherwise widen the page on phones. */
   position: relative;
   overflow: auto;
+  /* Scroll shadows: an edge with more table past it shows a soft shade. The panel-coloured covers scroll with
+     the content (local) and hide the shades (scroll) at whichever end is reached. */
+  background:
+    linear-gradient(to right, var(--bg-panel) 40%, transparent) left / 32px 100% no-repeat local,
+    linear-gradient(to left, var(--bg-panel) 40%, transparent) right / 32px 100% no-repeat local,
+    linear-gradient(to right, rgb(236 237 238 / 12%), transparent) left / 12px 100% no-repeat scroll,
+    linear-gradient(to left, rgb(236 237 238 / 12%), transparent) right / 12px 100% no-repeat scroll;
+}
+.scroll--stack {
+  container-type: inline-size;
 }
 .table {
   width: 100%;
@@ -248,5 +278,77 @@ tr.is-warning > td:first-child {
 }
 tr.is-selected > td:first-child {
   box-shadow: inset 2px 0 0 var(--text-1);
+}
+
+/* Stacked cards in a narrow panel (`stack`). */
+@container (max-width: 560px) {
+  .table--stack {
+    /* Beats the inline min-width that makes the wide layout scroll. */
+    min-width: 0 !important;
+  }
+  .table--stack colgroup {
+    display: none;
+  }
+  .table--stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .table--stack,
+  .table--stack tbody,
+  .table--stack tr {
+    display: block;
+  }
+  .table--stack tr {
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--line-row);
+  }
+  .table--stack td,
+  .table--stack td:first-child,
+  .table--stack td:last-child {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: 1px 0;
+    border: 0;
+    text-align: right;
+  }
+  .table--stack td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--text-3);
+    text-align: left;
+  }
+  .table--stack td.is-title {
+    display: block;
+    text-align: left;
+  }
+  .table--stack td.is-title::before {
+    content: none;
+  }
+  /* Cell contents (bars, chips) take the rest of the line. */
+  .table--stack td > :deep(*) {
+    min-width: 0;
+  }
+  .table--stack td > :deep(.ib) {
+    flex: 1 1 auto;
+    max-width: 70%;
+  }
+  /* The row-state marker moves from the first cell to the card. */
+  .table--stack tr > td:first-child {
+    box-shadow: none;
+  }
+  .table--stack tr.is-changed {
+    box-shadow: inset 2px 0 0 var(--series-1);
+  }
+  .table--stack tr.is-warning {
+    box-shadow: inset 2px 0 0 var(--status-warning);
+  }
+  .table--stack tr.is-selected {
+    box-shadow: inset 2px 0 0 var(--text-1);
+  }
 }
 </style>

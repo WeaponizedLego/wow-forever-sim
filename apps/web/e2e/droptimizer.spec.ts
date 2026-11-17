@@ -3,8 +3,9 @@ import { expect, openShamanInWorkbench, test } from './helpers';
 test('droptimizer: pick bosses, ranked drops, re-run the top, equip the best into the draft', async ({
   page,
 }) => {
-  // Eleven drops, a fast pass and a 10k re-run of the top eight.
-  test.setTimeout(180_000);
+  // Eleven drops, a fast pass and a 10k re-run of the top eight: nine 10k sims, which take minutes on CI's
+  // two-core runners, so the re-run gets generous room.
+  test.setTimeout(420_000);
   await openShamanInWorkbench(page);
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Droptimizer' }).click();
   // The header names who the drops are simmed on, and links back to the Workbench.
@@ -83,7 +84,7 @@ test('droptimizer: pick bosses, ranked drops, re-run the top, equip the best int
     timeout: 150_000,
   });
   await expect(ranking.getByRole('columnheader', { name: /^Quick pass change vs equipped/ })).toBeVisible();
-  await expect(page.getByRole('progressbar')).toHaveCount(0, { timeout: 150_000 });
+  await expect(page.getByRole('progressbar')).toHaveCount(0, { timeout: 360_000 });
   await expect(page.getByText(/Final Δ\s*are the numbers to go by/)).toBeVisible();
   // Each pass's verdicts against its own noise floor, in the note and the header.
   await expect(page.getByTestId('rerun-note')).toContainText(/250 it noise floor ±[\d.]+/);

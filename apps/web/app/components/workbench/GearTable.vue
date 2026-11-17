@@ -77,8 +77,9 @@ const metric = computed(() =>
 );
 
 const columns: TableColumn<Row>[] = [
-  { key: 'label', label: 'Slot', tone: '3', width: '84px' },
-  { key: 'name', label: 'Item' },
+  // On a phone the table stacks: slot and item as the card's title lines, the rest labelled below.
+  { key: 'label', label: 'Slot', tone: '3', width: '84px', stackLabel: false },
+  { key: 'name', label: 'Item', stackLabel: false },
   { key: 'ilvl', label: 'ilvl', numeric: true, tone: '2', width: '52px' },
   { key: 'source', label: 'Source', tone: '2' },
   { key: 'enchant', label: 'Enchant' },
@@ -104,6 +105,7 @@ const rowState = (r: Row): RowState | undefined =>
       :row-state="rowState"
       caption="Equipped gear"
       min-width="780px"
+      stack
     >
       <template #cell-name="{ row }">
         <div v-if="row.was" class="was"><span class="visually-hidden">Replaces </span>{{ row.was }}</div>

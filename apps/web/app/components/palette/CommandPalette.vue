@@ -28,6 +28,7 @@ const listId = useId();
 // ---------------------------------------------------------------- built-in commands
 
 const draft = computed(() => session.character.value);
+const simPrefs = useSimPrefs();
 const needsDraft = computed(() => (draft.value ? null : 'Start a character first'));
 const busy = computed(() => (session.progress.value ? 'A sim is running' : null));
 
@@ -62,8 +63,9 @@ const actionCommands = computed<Command[]>(() => {
     {
       id: 'sim.run',
       section: 'Actions',
-      label: 'Run sim',
-      detail: 'in the workbench',
+      // Named like the sim bar's own command: it runs that bar's sim, with stat weights when the box is ticked.
+      label: simPrefs.withWeights.value ? 'Run sim + stat weights' : 'Run sim',
+      detail: `${simPrefs.preset.value} iterations, in the workbench`,
       keywords: ['simulate', 'dps', 'start sim'],
       kbd: '⌘↵',
       suggested: true,
@@ -114,8 +116,8 @@ const actionCommands = computed<Command[]>(() => {
       keywords: ['share', 'link', 'url', 'copy'],
       suggested: true,
       disabled: onRun || draft.value ? null : 'Nothing to share yet',
-      feedback: true,
-      run: () => copyShareLink(onRun?.record ?? null),
+      // The palette closes; the toast confirms (or shows the link when the clipboard refuses).
+      run: () => shareRunOrDraft(onRun?.record ?? null),
     },
     {
       id: 'runs',
@@ -129,8 +131,11 @@ const actionCommands = computed<Command[]>(() => {
   ];
 });
 
-/** Copies a /s#… link for the run, else for the draft (5,000 iterations, fixed seed), like the Share buttons. */
-async function copyShareLink(run: RunRecord | null): Promise<string> {
+/**
+ * Copies a /s#… link for the run, else for the draft (the remembered iterations, fixed seed), like the Share
+ * buttons, with their confirmation toast.
+ */
+async function shareRunOrDraft(run: RunRecord | null): Promise<void> {
   const engineId = engine.version.value?.engineId;
   const c = draft.value as Character | null;
   const payload = run
@@ -138,21 +143,14 @@ async function copyShareLink(run: RunRecord | null): Promise<string> {
     : c && engineId
       ? {
           character: c,
-          iterations: 5000,
+          iterations: simPrefs.iterations.value,
           seed: Math.floor(Math.random() * 2 ** 31),
           engineId,
           kind: 'draft' as const,
         }
       : null;
-  if (!payload) return 'Nothing to share yet';
-  const url = await shareUrl(payload);
-  try {
-    await navigator.clipboard.writeText(url);
-    return 'Share link copied';
-  } catch {
-    window.prompt('Copy this share link', url);
-    return '';
-  }
+  if (!payload) useToast().show('Nothing to share yet');
+  else await copyShareLink(payload);
 }
 
 const specCommands = computed<Command[]>(() =>
