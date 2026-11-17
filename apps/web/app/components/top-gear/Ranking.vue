@@ -2,7 +2,9 @@
 // Combinations ranked by mean, each against the equipped set on one shared forest axis.
 // After a re-run at more iterations, the Δ column splits in two: "Quick pass Δ" (muted, the first pass, against the
 // first-pass equipped set) and "Final Δ (10k)" (the re-run rows only), so it is plain which number to go by.
-import type { ComboResult, RankedRow, GearChange } from '~/composables/topGear';
+// Every verdict is a Welch test at the row's own pass (utils/ranking.ts): rows that were not re-run keep their
+// quick-pass verdict and say "not re-run" in the final column, and the note above gives each pass's noise floor.
+import { iterationsLabel, passNoiseFloors, type RankedRow, type GearChange } from '~/utils/ranking';
 import type { TableColumn, TableSort } from '~/composables/ui-types';
 
 const props = withDefaults(
@@ -18,31 +20,19 @@ const props = withDefaults(
     classColor: string;
     /** The table's accessible name. */
     caption?: string;
-    /** First-pass results of re-run rows (`Batch.quick`), the equipped set under ''. */
-    quick?: Record<string, ComboResult>;
   }>(),
-  { caption: 'Top gear ranking', quick: () => ({}) },
+  { caption: 'Top gear ranking' },
 );
 // #detail (optional): extra line under a row's change chips, e.g. where a drop comes from.
 const emit = defineEmits<{ equip: [row: RankedRow] }>();
 const names = useActionNames();
 
-const isRerun = (r: RankedRow) => !r.equipped && r.n !== props.baseIterations;
 /** Iterations of the re-run, when any row was re-run. */
-const rerunN = computed(() => props.rows.find(isRerun)?.n ?? null);
-const rerunLabel = computed(() =>
-  rerunN.value === null
-    ? ''
-    : rerunN.value >= 1000
-      ? `${formatNumber(rerunN.value / 1000, 0)}k`
-      : formatNumber(rerunN.value, 0),
-);
-/** The first-pass Δ: a re-run row's stored first pass, else the row itself, against the first-pass equipped set. */
-function quickDelta(r: RankedRow): number {
-  const ref = props.quick[''];
-  const own = props.quick[r.key] ?? r;
-  return ref ? own.mean - ref.mean : r.delta;
-}
+const rerunN = computed(() => props.rows.find((r) => r.rerun)?.n ?? null);
+const rerunLabel = computed(() => (rerunN.value === null ? '' : iterationsLabel(rerunN.value)));
+const floors = computed(() => passNoiseFloors(props.rows));
+const verdictTip = (r: RankedRow) =>
+  `${r.rerun || rerunN.value === null ? '' : `Quick pass, ${formatNumber(r.n, 0)} it: `}|Δ| ${formatNumber(Math.abs(r.delta), 1)} vs noise floor ${formatNumber(r.noise, 1)}${r.p === null ? '' : ` · Welch p ${r.p < 0.001 ? '< 0.001' : `= ${r.p.toFixed(3)}`}`}`;
 
 const cols = computed<TableColumn<RankedRow>[]>(() => [
   { key: 'rank', label: '#', numeric: true, tone: '3', width: '28px' },
@@ -58,7 +48,7 @@ const cols = computed<TableColumn<RankedRow>[]>(() => [
           numeric: true,
           tone: '3' as const,
           sortable: true,
-          sortValue: quickDelta,
+          sortValue: (r: RankedRow) => r.quickDelta,
         },
         {
           key: 'delta',
@@ -66,7 +56,7 @@ const cols = computed<TableColumn<RankedRow>[]>(() => [
           srLabel: `Final change vs equipped, ${formatNumber(rerunN.value, 0)} iterations`,
           numeric: true,
           sortable: true,
-          sortValue: (r: RankedRow) => (isRerun(r) ? r.delta : -Infinity),
+          sortValue: (r: RankedRow) => (r.rerun ? r.delta : -Infinity),
         },
       ]),
   { key: 'forest', label: 'Mean and 95% CI', width: '32%' },
@@ -80,10 +70,19 @@ const rowLabel = (r: RankedRow) =>
 
 <template>
   <!-- position + overflow: keeps the table's visually-hidden labels from widening the page on phones -->
-  <p v-if="rerunN !== null" class="rerun-note">
+  <p v-if="rerunN !== null" class="rerun-note" data-testid="rerun-note">
     Rows tagged {{ rerunLabel }} were re-run at {{ formatNumber(rerunN, 0) }} iterations: their mean and
     <strong>Final Δ</strong> are the numbers to go by. Quick pass Δ is the first pass at
-    {{ formatNumber(baseIterations, 0) }} iterations, kept for comparison.
+    {{ formatNumber(baseIterations, 0) }} iterations, kept for comparison; rows not re-run keep only that.
+    Verdicts are a Welch test at each pass's own iterations, against the equipped set simmed the same way:
+    <span class="num"
+      >{{ formatNumber(baseIterations, 0) }} it noise floor ±{{
+        floors.quick === null ? '—' : formatNumber(floors.quick, 1)
+      }}</span
+    >,
+    <span class="num"
+      >{{ rerunLabel }} noise floor ±{{ floors.final ? formatNumber(floors.final.noise, 1) : '—' }}</span
+    >.
   </p>
   <div class="clip">
     <UiDataTable
@@ -121,12 +120,11 @@ const rowLabel = (r: RankedRow) =>
       </template>
       <template #cell-quick="{ row }">
         <span v-if="row.equipped" class="text-3">—</span>
-        <span v-else class="num text-3">{{ formatSigned(quickDelta(row)) }}</span>
+        <span v-else class="num text-3">{{ formatSigned(row.quickDelta) }}</span>
       </template>
       <template #cell-delta="{ row }">
-        <span v-if="row.equipped || (rerunN !== null && !isRerun(row))" class="text-3"
-          >—<span v-if="!row.equipped" class="visually-hidden"> not re-run</span></span
-        >
+        <span v-if="row.equipped" class="text-3">—</span>
+        <span v-else-if="rerunN !== null && !row.rerun" class="text-3 not-rerun">not re-run</span>
         <UiDeltaValue v-else :value="row.delta" :verdict="row.verdict" :glyph="false" />
       </template>
       <template #cell-forest="{ row }">
@@ -145,10 +143,7 @@ const rowLabel = (r: RankedRow) =>
         <span v-if="row.equipped" class="equipped"
           ><span class="equipped__dot" aria-hidden="true">●</span>Equipped</span
         >
-        <UiTooltip
-          v-else
-          :text="`|Δ| ${formatNumber(Math.abs(row.delta), 1)} vs noise floor ${formatNumber(row.noise, 1)}${row.p === null ? '' : ` · Welch p ${row.p < 0.001 ? '< 0.001' : `= ${row.p.toFixed(3)}`}`}`"
-        >
+        <UiTooltip v-else :text="verdictTip(row)">
           <UiDeltaValue :value="row.delta" :verdict="row.verdict" show-verdict hide-value />
         </UiTooltip>
       </template>
@@ -198,7 +193,8 @@ const rowLabel = (r: RankedRow) =>
   font-weight: 500;
   color: var(--text-1);
 }
-.mean {
+.mean,
+.not-rerun {
   white-space: nowrap;
 }
 .it {

@@ -59,6 +59,17 @@ test('fight styles: pick, sim, and the run is labelled with its fight', async ({
   expect(await scheduleRows(page)).toEqual(['Raid boss']);
   await simDraft(page, '0002');
   await expect(runFight(page)).toHaveText('Patchwerk 5 min');
+  // Its baseline fought Patchwerk 3 min: the Δ says the fight changed instead of claiming significance.
+  const delta = page.getByRole('group', { name: 'Δ vs baseline #0001' });
+  await expect(delta.getByTestId('fight-change-note')).toHaveText(
+    'Different fight than #0001 (Patchwerk 3 min → Patchwerk 5 min): not a like-for-like comparison.',
+  );
+  await expect(delta).toContainText('Fight changed');
+  await expect(delta).not.toContainText('Significant');
+  await expect(delta).not.toContainText('Within noise');
+  await expect(page.getByTestId('summary-fight-change')).toHaveText(
+    'Different fight than #0001 (Patchwerk 3 min → Patchwerk 5 min): not a like-for-like comparison.',
+  );
 
   // Dungeon slice: four packs and a boss on the schedule, 15 mobs in one sim.
   await pick(page, 'Dungeon slice 5 min');
@@ -70,6 +81,7 @@ test('fight styles: pick, sim, and the run is labelled with its fight', async ({
     'Pack 4 · 2 mobs',
   ]);
   await expect(page.getByText('15 mobs, up to 5 at once')).toBeVisible();
+  await expect(page.getByTestId('slice-dps-note')).toContainText('DPS counts the whole 5 minutes');
   await expect(page.getByLabel('Duration')).toHaveCount(0);
   await simDraft(page, '0003');
   const slice = runFight(page);

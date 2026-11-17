@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Per boss (or trash): how many of its drops are significant upgrades, and its best one. Answers "which
 // boss is worth killing" at a glance.
-import type { RankedRow } from '~/composables/topGear';
+import type { RankedRow } from '~/utils/ranking';
 import type { TableColumn } from '~/composables/ui-types';
 
 interface Row {

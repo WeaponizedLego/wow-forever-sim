@@ -1,38 +1,10 @@
 // Top gear: candidate items per slot, every combination simmed with one shared seed, ranked against the
 // equipped set. State lives for the page load (like the run list) so leaving the screen keeps the batch.
 import { ITEM_SLOTS, type Character, type ItemSlotId } from '@fsim/contracts';
-import { noiseFloor, welchTTest, summarize, type Verdict as WelchVerdict } from '@fsim/analysis';
+import { summarize } from '@fsim/analysis';
 import { enchantAppliesToItem, type GameDatabase } from '@fsim/gamedata';
 import { engineErrorText } from '@fsim/engine';
-import type { Verdict } from './ui-types';
-
-export interface GearChange {
-  slot: ItemSlotId;
-  itemId: number;
-}
-
-export interface Combo {
-  /** "" for the equipped set, else "slot:item|slot:item". */
-  key: string;
-  changes: GearChange[];
-}
-
-export interface ComboResult extends Combo {
-  mean: number;
-  stdev: number;
-  n: number;
-  ci95: number;
-}
-
-export interface RankedRow extends ComboResult {
-  rank: number;
-  equipped: boolean;
-  delta: number;
-  /** z·√(se² + se_ref²): |Δ| below this is within noise. */
-  noise: number;
-  p: number | null;
-  verdict: Verdict;
-}
+import { rankResults, type Combo, type ComboResult, type GearChange, type RankedRow } from '~/utils/ranking';
 
 export const TOP_GEAR_SLOT_LABELS: Record<ItemSlotId, string> = {
   head: 'Head',
@@ -214,30 +186,6 @@ export function batchRunner() {
   return { guarded, cancel: () => abort?.abort() };
 }
 
-/** Results sorted by mean, each tested against the reference (Welch, with the noise floor). */
-export function rankResults(
-  results: Record<string, ComboResult>,
-  ref: ComboResult,
-  refKey = '',
-): RankedRow[] {
-  return Object.values(results)
-    .sort((x, y) => y.mean - x.mean)
-    .map((r, i) => {
-      const equipped = r.key === refKey;
-      const noise = noiseFloor(r, ref);
-      let verdict: Verdict = 'reference';
-      let p: number | null = null;
-      if (!equipped && r.n >= 2 && ref.n >= 2) {
-        const w = welchTTest(r, ref, { minDelta: noise });
-        p = w.p;
-        verdict = ({ better: 'up', worse: 'down', noise: 'noise' } as Record<WelchVerdict, Verdict>)[
-          w.verdict
-        ];
-      }
-      return { ...r, rank: i + 1, equipped, delta: r.mean - ref.mean, noise, p, verdict };
-    });
-}
-
 export function useTopGear() {
   const session = useSession();
   const engine = useEngine();
@@ -290,12 +238,12 @@ export function useTopGear() {
 
   const reference = computed(() => batch.value?.results[''] ?? null);
 
-  /** Results sorted by mean, each tested against the equipped set (Welch, with the noise floor). */
+  /** Results sorted by Δ, each tested against the equipped set of its own pass (Welch, with the noise floor). */
   const ranking = computed<RankedRow[]>(() => {
     const b = batch.value;
     const ref = reference.value;
     if (!b || !ref) return [];
-    return rankResults(b.results, ref);
+    return rankResults(b.results, ref, { quick: b.quick, baseIterations: b.iterations });
   });
 
   /** How often each item appears among the significant wins. */

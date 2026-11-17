@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Per slot, the best candidate on its own (the single-change combinations).
 import type { ItemSlotId } from '@fsim/contracts';
-import type { RankedRow } from '~/composables/topGear';
+import type { RankedRow } from '~/utils/ranking';
 import type { TableColumn } from '~/composables/ui-types';
 
 const props = defineProps<{

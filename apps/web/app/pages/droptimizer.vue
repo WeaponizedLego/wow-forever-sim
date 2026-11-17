@@ -1,15 +1,22 @@
 <script setup lang="ts">
 // Droptimizer (docs/features.md §3): pick a dungeon or raid and its bosses, sim every drop the character
 // could wear as a one-item swap, and rank them by DPS gain over the equipped item.
-import { ITEM_SLOTS, type ItemSlotId } from '@fsim/contracts';
+import { ITEM_SLOTS, RACES, type ItemSlotId } from '@fsim/contracts';
 import { classColorVar } from '@fsim/gamedata';
-import type { RankedRow } from '~/composables/topGear';
+import { noiseFloorText, type RankedRow } from '~/utils/ranking';
+import { specInfo } from '~/composables/workbench';
 
 useHead({ title: 'Droptimizer · forever/sim' });
 
 const session = useSession();
 const dt = useDroptimizer();
 const char = computed(() => session.character.value);
+// Who the drops are simmed on, as the Workbench header names them.
+const subtitle = computed(() => {
+  const c = char.value;
+  if (!c) return '';
+  return `· ${c.name ? `${c.name} · ` : ''}${RACES[c.race].name} ${specInfo(c.spec).name} · ${c.level}`;
+});
 
 const ITERATION_OPTIONS = [
   { value: '250', label: '250', mono: true },
@@ -40,14 +47,7 @@ function onZone(e: Event) {
   dt.setZone(v ? Number(v) : null);
 }
 const sources = computed(() => dt.instance.value?.sources ?? []);
-const allSources = computed(() => dt.selectedKeys.value.length === sources.value.length);
 const sourceOn = (key: string) => dt.selectedKeys.value.includes(key);
-function toggleSource(key: string, on: boolean) {
-  const next = new Set(dt.selectedKeys.value);
-  if (on) next.add(key);
-  else next.delete(key);
-  dt.setSources(next.size === sources.value.length ? null : [...next]);
-}
 
 /** Slot groups: rings and trinkets as one chip. */
 const SLOT_GROUPS: { label: string; slots: ItemSlotId[] }[] = ITEM_SLOTS.filter(
@@ -124,12 +124,9 @@ const forest = computed(() => {
   };
 });
 const ref0 = computed(() => dt.reference.value);
-const typicalNoise = computed(() => {
-  const rows = dt.ranking.value.filter((r) => !r.equipped);
-  if (!rows.length) return null;
-  const sorted = rows.map((r) => r.noise).sort((a, b) => a - b);
-  return sorted[Math.floor(sorted.length / 2)]!;
-});
+const noiseFloor = computed(() =>
+  batch.value ? noiseFloorText(dt.ranking.value, batch.value.iterations) : null,
+);
 const upgrades = computed(() => dt.ranking.value.filter((r) => r.verdict === 'up').length);
 
 const headerItems = computed(() => {
@@ -137,7 +134,7 @@ const headerItems = computed(() => {
   if (!b || !ref0.value) return [];
   const rows = dt.ranking.value;
   const atBase = rows.find((r) => r.n === b.iterations);
-  const rerun = rows.filter((r) => !r.equipped && r.n !== b.iterations);
+  const rerun = rows.filter((r) => r.rerun);
   const perDrop = [
     `${formatNumber(b.iterations, 0)} it`,
     ...(atBase ? [`CI ±${formatNumber(atBase.ci95, 1)}`] : []),
@@ -147,9 +144,7 @@ const headerItems = computed(() => {
     { label: 'Upgrades', value: `${upgrades.value} of ${rows.length - 1}` },
     { label: 'Fights simmed', value: formatNumber(b.fights, 0) },
     { label: 'Per drop', value: perDrop.join(' · ') },
-    ...(typicalNoise.value === null
-      ? []
-      : [{ label: 'Noise floor', value: `|Δ| < ${formatNumber(typicalNoise.value, 1)}` }]),
+    ...(noiseFloor.value === null ? [] : [{ label: 'Noise floor', value: noiseFloor.value }]),
     { label: 'Seed', value: String(b.seed) },
     { label: 'Wall', value: formatDuration(b.wallMs) },
   ];
@@ -221,12 +216,13 @@ async function equip(row: RankedRow) {
     <template v-else>
       <UiPageHeader
         title="Droptimizer"
-        :subtitle="`· ${char.name || 'Character'}`"
+        :subtitle="subtitle"
         :meta="meta"
         :marker="char.class"
         :items="editing ? [] : headerItems"
       >
         <template #actions>
+          <UiButton variant="quiet" to="/workbench">Edit in Workbench</UiButton>
           <UiButton v-if="batch && !editing" :disabled="running" @click="editing = true"
             >Change bosses</UiButton
           >
@@ -258,20 +254,27 @@ async function equip(row: RankedRow) {
               </label>
               <div v-if="sources.length" class="chips" role="group" aria-label="Bosses">
                 <span class="label">Bosses</span>
-                <UiFilterChip
-                  :model-value="allSources"
-                  @update:model-value="(v: boolean) => dt.setSources(v ? null : [])"
+                <UiFilterChip :model-value="dt.allSources.value" @update:model-value="dt.selectAllSources()"
                   >All</UiFilterChip
                 >
                 <UiFilterChip
                   v-for="s in sources"
                   :key="s.key"
-                  :model-value="sourceOn(s.key)"
+                  :model-value="dt.sourcePressed(s.key)"
                   :count="dt.usablePerSource.value.get(s.key) ?? 0"
-                  @update:model-value="(v: boolean) => toggleSource(s.key, v)"
+                  @update:model-value="dt.toggleSource(s.key)"
                   >{{ s.name }}</UiFilterChip
                 >
               </div>
+              <p v-if="sources.length > 1" class="note" data-testid="boss-hint">
+                <template v-if="dt.allSources.value"
+                  >Every boss is included. Click a boss to sim only its drops.</template
+                >
+                <template v-else
+                  >{{ dt.selectedKeys.value.length }} of {{ sources.length }} bosses. Click more to add them,
+                  or All for every boss.</template
+                >
+              </p>
               <div v-if="planSlots.length" class="chips" role="group" aria-label="Slots">
                 <span class="label">Slots</span>
                 <UiFilterChip
@@ -372,7 +375,7 @@ async function equip(row: RankedRow) {
           <UiCheckbox v-model="hideNoise">Hide results within noise</UiCheckbox>
           <span class="grow" />
           <span class="num note"
-            >showing {{ visible.length }} of {{ dt.ranking.value.length }} · sorted by mean</span
+            >showing {{ visible.length }} of {{ dt.ranking.value.length }} · sorted by Δ</span
           >
         </div>
 
@@ -394,7 +397,6 @@ async function equip(row: RankedRow) {
               :ticks="forest.ticks"
               :slot-tag="slotTag"
               :base-iterations="batch!.iterations"
-              :quick="batch!.quick"
               :equipping="equipping"
               :class-color="classColorVar(char.class)"
               caption="Droptimizer ranking"
@@ -415,9 +417,10 @@ async function equip(row: RankedRow) {
             </TopGearRanking>
             <p class="note pad">
               Each row swaps one drop into the draft; rings, trinkets and dual-wield weapons show their better
-              slot. Verdict: Welch's t-test against the equipped set, counted only when |Δ| also clears the
-              noise floor (1.96 × the combined standard error). With a shared seed the runs are not
-              independent, so the test errs on the side of "within noise".
+              slot. Verdict: Welch's t-test against the equipped set simmed at the row's own iterations (fast
+              pass or re-run), counted only when |Δ| also clears the noise floor (1.96 × the combined standard
+              error). With a shared seed the runs are not independent, so the test errs on the side of "within
+              noise".
             </p>
           </UiPanel>
 
