@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ImportResult } from '@fsim/contracts';
+import { parseWowheadLink } from '@fsim/importers';
 
 // Parse report: who was read, how much of the gear mapped, every diagnostic with its code and line,
 // and the two ways on: open in the workbench, or sim as is.
@@ -15,7 +16,23 @@ const session = useSession();
 const engine = useEngine();
 
 const character = computed(() => props.result?.character ?? null);
-const formatLabel = computed(() => (props.result ? startFormatLabel(props.input, props.result) : ''));
+// "Wowhead planner link · WoW Forever": which planner a link came from matters (Classic Era, TBC… read with notes).
+const PLANNERS: Record<string, string> = {
+  forever: 'WoW Forever',
+  classic: 'Classic Era',
+  tbc: 'TBC Classic',
+  wotlk: 'Wrath Classic',
+  cata: 'Cataclysm Classic',
+  'mop-classic': 'MoP Classic',
+  retail: 'retail',
+};
+const formatLabel = computed(() => {
+  const r = props.result;
+  if (!r) return '';
+  if (r.format !== 'wowhead-url') return startFormatLabel(props.input, r);
+  const game = parseWowheadLink(props.input)?.game;
+  return game ? `Wowhead planner link · ${PLANNERS[game] ?? game}` : 'Wowhead link, not the gear planner';
+});
 const items = computed(() => {
   const r = props.result;
   if (!r) return [];

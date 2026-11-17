@@ -40,6 +40,17 @@ test('a11y: start, workbench, run, top gear, droptimizer and compare pages have 
   await expect(page.getByRole('heading', { name: 'New run', level: 1 })).toBeVisible();
   await check(page, '/');
 
+  // The command palette, open with its suggestions, then with search results across sections.
+  const palette = page.getByRole('dialog', { name: 'Command palette' });
+  await page.keyboard.press('ControlOrMeta+k');
+  await expect(palette.getByRole('group', { name: 'Navigation' })).toBeVisible();
+  await check(page, '/ (command palette)');
+  await palette.getByRole('combobox').fill('hunter');
+  await expect(palette.getByRole('group', { name: 'Specs' })).toBeVisible();
+  await check(page, '/ (command palette search)');
+  await page.keyboard.press('Escape');
+  await expect(palette).toBeHidden();
+
   await openShamanInWorkbench(page);
   await check(page, '/workbench');
 

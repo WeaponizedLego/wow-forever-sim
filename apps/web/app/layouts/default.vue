@@ -1,8 +1,11 @@
 <script setup lang="ts">
-// Shared frame for every product screen: top bar with main nav and live engine/data status.
+// Shared frame for every product screen: top bar with main nav, the command palette (⌘K) and live
+// engine/data status. `nav` is the one list of pages: the top bar and the palette's Navigation section
+// both read it, so a page added here shows up in both.
 const route = useRoute();
 const engine = useEngine();
 const session = useSession();
+const palette = usePalette();
 
 const nav = computed(() => [
   {
@@ -29,8 +32,11 @@ const status = computed(() => {
 </script>
 
 <template>
-  <UiAppChrome :nav="nav" :current="current" :status="status" />
+  <UiAppChrome :nav="nav" :current="current" :status="status">
+    <template #search><PaletteTrigger /></template>
+  </UiAppChrome>
   <slot />
+  <LazyPaletteCommandPalette v-if="palette.open.value" :nav="nav" />
   <footer class="footer">
     Simulation engine:
     <a href="https://github.com/wowsims/forever">WoWSims Forever</a> (MIT). Not affiliated with Blizzard

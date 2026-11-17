@@ -2,6 +2,7 @@
 import type { NavItem, Status } from '~/composables/ui-types';
 
 // Top bar: wordmark, main nav, optional search, data/engine status.
+// The `search` slot replaces the built-in search field (the app layout puts the command palette button there).
 const props = withDefaults(
   defineProps<{
     nav: NavItem[];
@@ -33,15 +34,17 @@ const query = defineModel<string>('query', { default: '' });
           {{ item.label }}
         </NuxtLink>
       </nav>
-      <UiSearchInput
-        v-if="search"
-        v-model="query"
-        class="search"
-        label="Search"
-        placeholder="Items, specs, runs"
-        kbd="⌘K"
-        bind-shortcut
-      />
+      <slot name="search">
+        <UiSearchInput
+          v-if="search"
+          v-model="query"
+          class="search"
+          label="Search"
+          placeholder="Items, specs, runs"
+          kbd="⌘K"
+          bind-shortcut
+        />
+      </slot>
       <component
         :is="status.to ? 'a' : 'span'"
         v-if="status"

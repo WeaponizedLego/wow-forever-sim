@@ -5,6 +5,7 @@ import {
   enchantAppliesToItem,
   itemLevel,
   primarySourceLabel,
+  requiredLevel,
 } from '@fsim/gamedata';
 import type { SourceKind } from '@fsim/gamedata';
 import type { GearItem, ItemSlotId } from '@fsim/contracts';
@@ -16,7 +17,8 @@ import { SLOT_LABELS, itemName, qualityOf, shortEnchant, specInfo } from '~/comp
 // Item picker sheet for one slot: search, filters, items this spec can equip, estimated change per item
 // (when stat weights exist), then random suffix and enchant for the chosen item, and Equip.
 // Keys: "/" focuses the search, Esc closes.
-const props = defineProps<{ slotId: ItemSlotId }>();
+// `itemId` (from the command palette) opens the picker searched for that item and selected, ready to equip.
+const props = defineProps<{ slotId: ItemSlotId; itemId?: number }>();
 const emit = defineEmits<{ close: [] }>();
 
 const wb = useWorkbench();
@@ -55,6 +57,12 @@ const equipped = computed(() => wb.draft.value?.gear[props.slotId]);
 const index = shallowRef<Awaited<ReturnType<typeof engine.itemSearch>> | null>(null);
 onMounted(async () => {
   index.value = await engine.itemSearch();
+  const item = props.itemId ? (await engine.gameDatabase()).item(props.itemId) : undefined;
+  if (!item) return;
+  text.value = item.name;
+  const c = wb.draft.value;
+  if (c && requiredLevel(item) > c.level) levelCap.value = false;
+  choose(item);
 });
 
 const LIMIT = 100;

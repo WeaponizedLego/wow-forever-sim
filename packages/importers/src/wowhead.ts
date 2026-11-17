@@ -1,8 +1,19 @@
 // Wowhead gear planner link: https://www.wowhead.com/forever/gear-planner/<class>/<race>/<hash>
 //
-// The hash decoder is ported from wowsims/forever ui/features/import-export/importers/
-// wowhead_gear_planner.ts (MIT, © wowsims contributors), which in turn notes it is "taken from
-// Wowhead". Hash layout (all bytes, base64url):
+// Shapes accepted (checked against wowhead.com in November 2026):
+//   www.wowhead.com/forever/gear-planner/…      the WoW Forever planner: what Forever players share
+//   www.wowhead.com/forever/de/gear-planner/…   localized (de fr es ru pt it ko cn): locale after the game
+//   www.wowhead.com/classic/gear-planner/…      the Classic Era planner: read, with a note
+//   classic.wowhead.com/gear-planner/…          old subdomain form (redirects to the one above)
+//   www.wowhead.com/de/forever/gear-planner/…   locale first: Wowhead 404s it, accepted anyway
+//   …/gear-planner/<class>[/<race>]             no gear: the preset fills it
+// Other games' planners (tbc, wotlk, cata, mop-classic) are read with a warning; retail's gear is skipped.
+//
+// Hash formats. The Forever planner writes the packed format (version 5, the hash starts with "F";
+// wowhead-packed.ts). The Classic Era planner writes byte format version 4 (readV4Items). Older
+// links use byte versions 0–3, whose decoder is ported from
+// wowsims/forever ui/features/import-export/importers/wowhead_gear_planner.ts (MIT, © wowsims
+// contributors), which in turn notes it is "taken from Wowhead". Byte layout (base64url):
 //   version (0–3) · level (v≥1) · talent byte count + talent nibbles (v≥2, 15 = tree separator) ·
 //   then per item: slot byte (bit 7 = has enchant, bit 6 = has random suffix) ·
 //   [v≥3: gem count (top 3 bits) | item id bits 16–20] · item id bits 8–15 · bits 0–7 ·
@@ -13,9 +24,51 @@ import type { Gear, ImportContext, ImportResult, Importer, ItemSlotId } from '@f
 import { Diags, checkItem, finish, resolveRace, resolveSpec, slotLabel } from './build';
 import type { WowheadImportContext } from './build';
 import { ENGINE_TALENTS, isOtherGameClass, parseClass } from './vocab';
+import {
+  FOREVER_DATA_ENV,
+  PACKED_FROM_VERSION,
+  PACKED_MAX_VERSION,
+  hashVersion,
+  readPackedHash,
+} from './wowhead-packed';
 
+// Optional subdomains · up to two path segments (game, locale) · gear-planner/<class>[/<race>][/<hash>]
 const URL_RE =
-  /wowhead\.com\/(?:[a-z]{2}\/)?([a-z-]+)\/gear-planner\/([a-z-]+)\/([a-z-]+)(?:\/([A-Za-z0-9_-]*))?/i;
+  /(?:([a-z.-]+)\.)?wowhead\.com\/((?:[a-z-]+\/){0,2})gear-planner\/([a-z-]+)(?:\/([a-z-]+))?(?:\/([A-Za-z0-9_-]*))?/i;
+
+/** Wowhead's locale segments (path or subdomain), and `www`. */
+const NOT_A_GAME = new Set(['www', 'de', 'es', 'fr', 'it', 'pt', 'ru', 'ko', 'cn', 'tw', 'mx']);
+
+/** Planner games by path segment, for messages. */
+const GAME_NAMES: Record<string, string> = {
+  forever: 'WoW Forever',
+  classic: 'Classic Era',
+  tbc: 'Burning Crusade Classic',
+  wotlk: 'Wrath Classic',
+  cata: 'Cataclysm Classic',
+  'mop-classic': 'Mists of Pandaria Classic',
+  retail: 'retail WoW',
+};
+
+export interface WowheadLink {
+  /** Planner game from the path or subdomain: "forever", "classic", "tbc", …; "retail" when none. */
+  game: string;
+  className: string;
+  /** Empty when the link names only a class. */
+  raceName: string;
+  hash: string;
+}
+
+/** The parts of the first planner link in the text, or null when there is none. */
+export function parseWowheadLink(input: string): WowheadLink | null {
+  const m = URL_RE.exec(input);
+  if (!m) return null;
+  const [, host = '', path = '', className = '', raceName = '', hash = ''] = m;
+  const game = [...host.split('.'), ...path.split('/')]
+    .map((s) => s.toLowerCase())
+    .find((s) => s !== '' && !NOT_A_GAME.has(s));
+  return { game: game ?? 'retail', className, raceName, hash };
+}
 
 /** Wowhead slot ids (inventory slot ids) → engine slots. Upstream WOWHEAD_SLOT_IDS. */
 const WOWHEAD_SLOTS: Record<number, ItemSlotId> = {
@@ -40,15 +93,25 @@ const WOWHEAD_SLOTS: Record<number, ItemSlotId> = {
 
 export interface WowheadHash {
   version: number;
+  /** Wowhead data environment the link was made in (packed format only; 16 = WoW Forever). */
+  dataEnv?: number;
   level?: number;
   talents: string;
   items: { slotId: number; itemId: number; enchantSpellId?: number; randomSuffix?: number }[];
 }
 
-/** Decodes the part after class/race. Throws on input that is not base64url. */
+/** True for the hash versions readWowheadHash understands: byte format 0–4, packed format 5. */
+export const knownHashVersion = (v: number): boolean =>
+  v <= 4 || (v >= PACKED_FROM_VERSION && v <= PACKED_MAX_VERSION);
+
+/** Decodes the part after class/race, in either format. Throws on input that is not base64url. */
 export function readWowheadHash(hash: string): WowheadHash {
   const out: WowheadHash = { version: 0, talents: '', items: [] };
   if (hash === '') return out;
+  if (hashVersion(hash) >= PACKED_FROM_VERSION) {
+    const { version, dataEnv, level, talents, items } = readPackedHash(hash);
+    return { version, dataEnv, ...(level !== undefined && { level }), talents, items };
+  }
   const binary = atob(hash.replace(/-/g, '+').replace(/_/g, '/'));
   const bytes = Array.from(binary, (c) => c.charCodeAt(0));
   let pos = 0;
@@ -56,7 +119,7 @@ export function readWowheadHash(hash: string): WowheadHash {
 
   const version = next();
   out.version = version;
-  if (version >= 4) return out;
+  if (version > 4) return out;
   if (version > 0) out.level = next();
   if (version > 1) {
     const count = next();
@@ -77,6 +140,10 @@ export function readWowheadHash(hash: string): WowheadHash {
       }
     }
     out.talents = talents.replace(/-+$/, '');
+  }
+  if (version === 4) {
+    readV4Items(next, () => bytes.length - pos, out.items);
+    return out;
   }
   while (bytes.length - pos >= 3) {
     let slotByte = next();
@@ -105,10 +172,34 @@ export function readWowheadHash(hash: string): WowheadHash {
   return out;
 }
 
+/**
+ * Byte format version 4, what Wowhead's Classic Era planner writes (November 2026; read from its
+ * planner code and checked against links it rewrote). After the talents: a count byte and that many
+ * talent-version characters (skipped); then per item: slot byte (bit 7 enchant, bit 6 random suffix,
+ * bit 5 second enchant) · item id in 3 bytes · each present value in 3 bytes; no gems.
+ */
+function readV4Items(next: () => number, left: () => number, items: WowheadHash['items']): void {
+  for (let n = next(); n > 0; n--) next();
+  const three = (): number => (next() << 16) | (next() << 8) | next();
+  while (left() >= 3) {
+    const slotByte = next();
+    const item: WowheadHash['items'][number] = { slotId: slotByte & 31, itemId: three() };
+    if (slotByte & 128) item.enchantSpellId = three();
+    if (slotByte & 64) item.randomSuffix = three();
+    if (slotByte & 32) three(); // second enchant
+    items.push(item);
+  }
+}
+
 export const wowheadImporter: Importer = {
   format: 'wowhead-url',
   detect(input: string): boolean {
-    return /wowhead\.com\/(?:[a-z]{2}\/)?[a-z-]+\/gear-planner\//i.test(input);
+    // A planner link anywhere in the text, or a lone Wowhead link of another kind (answered with an error
+    // that says to use the planner, rather than "format not recognised").
+    return (
+      /wowhead\.com\/(?:[a-z-]+\/){0,2}gear-planner\/[a-z]/i.test(input) ||
+      /^\S*wowhead\.com\/\S*$/i.test(input.trim())
+    );
   },
   parse(input: string, ctx: ImportContext): ImportResult {
     try {
@@ -126,11 +217,39 @@ const fail = (message: string): ImportResult => ({
 });
 
 function parseWowhead(input: string, ctx: WowheadImportContext): ImportResult {
-  const m = URL_RE.exec(input.trim());
-  if (!m) return fail('Not a Wowhead gear planner link (…/gear-planner/<class>/<race>/<hash>).');
-  const [, , className = '', raceName = '', hash = ''] = m;
+  const link = parseWowheadLink(input);
+  if (!link)
+    return fail(
+      'This Wowhead link is not a gear planner link. Open your build in the planner (https://www.wowhead.com/forever/gear-planner) and copy the address from there: …/gear-planner/<class>/<race>/<code>.',
+    );
+  const { game, className, raceName } = link;
+  let { hash } = link;
 
   const diags = new Diags();
+  const gameName = GAME_NAMES[game] ?? `"${game}"`;
+  if (game === 'classic') {
+    diags.add(
+      'PARSE-02',
+      'info',
+      'Link is from the Classic Era planner, not the WoW Forever one. Items are read by id; Forever changed some of them, so check the gear.',
+      { field: 'gear' },
+    );
+  } else if (game === 'retail') {
+    diags.add(
+      'PARSE-02',
+      'warning',
+      'Link is from the retail WoW planner, whose gear code cannot be read here. Gear and talents skipped; use the WoW Forever planner (wowhead.com/forever/gear-planner).',
+      { field: 'gear' },
+    );
+    hash = '';
+  } else if (game !== 'forever') {
+    diags.add(
+      'PARSE-02',
+      'warning',
+      `Link is from the ${gameName} planner, not the WoW Forever one. Items that Forever does not have are skipped.`,
+      { field: 'gear' },
+    );
+  }
   const classWord = className.replace(/-/g, '');
   const cls = parseClass(classWord);
   if (!cls) {
@@ -159,14 +278,21 @@ function parseWowhead(input: string, ctx: WowheadImportContext): ImportResult {
     );
     decoded = { version: 0, talents: '', items: [] };
   }
-  if (decoded.version >= 4) {
+  if (!knownHashVersion(decoded.version)) {
     diags.add(
       'PARSE-02',
       'warning',
-      `Link format version ${decoded.version} is newer than this importer knows.`,
+      `Link format version ${decoded.version} is newer than this importer knows; gear and talents skipped.`,
       {
         field: 'gear',
       },
+    );
+  } else if (game === 'forever' && decoded.dataEnv !== undefined && decoded.dataEnv !== FOREVER_DATA_ENV) {
+    diags.add(
+      'PARSE-02',
+      'info',
+      `Link was made in Wowhead data set ${decoded.dataEnv}, not WoW Forever's (${FOREVER_DATA_ENV}). Check the gear.`,
+      { field: 'gear' },
     );
   }
 
