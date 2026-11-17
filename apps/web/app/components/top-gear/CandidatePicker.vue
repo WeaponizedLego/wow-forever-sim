@@ -84,7 +84,7 @@ const taken = (slot: ItemSlotId, id: number) =>
               @click="emit('add', s.slot, item.id)"
             >
               <UiQualityName :quality="qualityFromEnum(item.quality)">{{ item.name }}</UiQualityName>
-              <span class="num muted">ilvl {{ itemLevel(item) }}</span>
+              <span class="num muted">ilvl {{ itemLevel(item) }} · {{ qualityFromEnum(item.quality) }}</span>
               <span class="num muted">{{ taken(s.slot, item.id) ? 'added' : '+ add' }}</span>
             </button>
           </li>

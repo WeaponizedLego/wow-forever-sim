@@ -10,7 +10,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { gzipSync } from 'node:zlib';
+import { gunzipSync, gzipSync } from 'node:zlib';
 
 const web = join(dirname(fileURLToPath(import.meta.url)), '..');
 const root = join(web, '../..');
@@ -85,6 +85,8 @@ async function main() {
     dataBuild: lock.dataBuild,
     base: `/engine/${engineId}/`,
     sha256: Object.fromEntries(files.map((f) => [f, sha256(bytes[f])])),
+    // For servers that send lib.wasm.gz with Content-Encoding: gzip (the browser then hands over lib.wasm).
+    wasmRawSha256: sha256(gunzipSync(bytes['lib.wasm.gz'])),
   };
   writeFileSync(join(outRoot, 'current.json'), JSON.stringify(current, null, 2) + '\n');
   console.log(`stage-engine: ${source} engine ${engineId} → public/engine/${engineId}/`);

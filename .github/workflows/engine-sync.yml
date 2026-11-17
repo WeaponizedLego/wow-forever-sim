@@ -171,6 +171,7 @@ jobs:
           pnpm format:check
           pnpm test
           pnpm build
+          node apps/web/scripts/check-budget.mjs
 
       - name: Publish release engine-${{ steps.check.outputs.engineId }}
         if: steps.gate.outputs.run == 'true'

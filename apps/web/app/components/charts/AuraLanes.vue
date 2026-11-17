@@ -64,6 +64,8 @@ const tableCols = [
         <div
           ref="track"
           class="lane__track"
+          role="group"
+          aria-roledescription="aura lane"
           tabindex="0"
           :aria-label="`${lane.name}: active ${formatPercent(lane.uptime)} of the fight, ${windows(lane)}.`"
           @mouseenter="open = i"

@@ -1,7 +1,8 @@
 // Lane L6: game data. Decodes db.bin, item search, spec presets, Character -> Player, class and quality colors.
 export { GameDatabase, loadDatabase, maxScaling, itemLevel } from './database';
 export { toImportContext } from './import-context';
-export { ItemSearchIndex, type ItemQuery } from './search';
+export { ItemSearchIndex, requiredLevel, type ItemQuery } from './search';
+export { weightStatsFor, type WeightStats } from './weight-stats';
 export {
   SOURCE_KINDS,
   RAID_ZONES,

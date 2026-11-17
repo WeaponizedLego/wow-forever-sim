@@ -16,8 +16,12 @@ export interface EngineAssetSources {
   wasm: string | URL | Bytes;
   /** `wasm_exec.js` from the Go version that built the WASM: a URL, or its bytes. */
   wasmExec: string | URL | Bytes;
-  /** Expected sha256 (hex) of the bytes as fetched, i.e. of the `.gz` when the WASM is gzipped. */
-  sha256?: { wasm?: string | undefined; wasmExec?: string | undefined };
+  /**
+   * Expected sha256 (hex). `wasm` is of the file as published (the `.gz`); `wasmRaw` is of the unzipped
+   * `lib.wasm`. Some servers send `lib.wasm.gz` with `Content-Encoding: gzip`, so the browser hands over the
+   * unzipped bytes: those are checked against `wasmRaw` instead (and fail closed when it is missing).
+   */
+  sha256?: { wasm?: string | undefined; wasmRaw?: string | undefined; wasmExec?: string | undefined };
   /** How to read a URL. Defaults to `fetch`; the Node entry passes one that also reads files. */
   fetchBytes?: (url: string) => Promise<Uint8Array>;
 }
@@ -71,8 +75,11 @@ export async function loadEngineAssets(src: EngineAssetSources): Promise<EngineA
     typeof s === 'string' || s instanceof URL ? fetchBytes(String(s)) : toU8(s);
 
   const [wasmRaw, execRaw] = await Promise.all([read(src.wasm), read(src.wasmExec)]);
+  // Gzip bytes are checked as published; bytes a server already unzipped are checked as lib.wasm. When only
+  // the .gz hash is known, unzipped bytes cannot be checked and fail with an integrity error.
+  const wasmExpected = isGzip(wasmRaw) ? src.sha256?.wasm : (src.sha256?.wasmRaw ?? src.sha256?.wasm);
   await Promise.all([
-    verify('engine wasm', wasmRaw, src.sha256?.wasm),
+    verify(isGzip(wasmRaw) ? 'engine wasm' : 'engine wasm (unzipped by the server)', wasmRaw, wasmExpected),
     verify('wasm_exec.js', execRaw, src.sha256?.wasmExec),
   ]);
   const module = await WebAssembly.compile((await gunzipIfNeeded(wasmRaw)) as Uint8Array<ArrayBuffer>);

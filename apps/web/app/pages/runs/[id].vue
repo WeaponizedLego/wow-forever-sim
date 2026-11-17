@@ -65,12 +65,8 @@ const headerItems = computed(() => {
 
 // ---- actions
 const actionError = ref<string | null>(null);
-const shared = ref(false);
-async function share() {
-  await navigator.clipboard.writeText(window.location.href);
-  shared.value = true;
-  setTimeout(() => (shared.value = false), 1500);
-}
+const shareButton = useShareButton();
+const share = () => shareButton.share(sharePayloadForRun(record.value!));
 function exportJson() {
   const e = entry.value!;
   const json = JSON.stringify(RaidSimResult.toJson(e.result), null, 2);
@@ -109,6 +105,7 @@ async function computeWeights() {
     await session.runStatWeights(w.stats, w.reference, {
       runId: runId.value,
       iterations: weightIterations.value,
+      pseudoStats: w.pseudoStats,
     });
   } catch (e) {
     if (!(e instanceof DOMException && e.name === 'AbortError'))
@@ -121,10 +118,11 @@ const hit = computed(() => hitScaling.state(runId.value));
 
 <template>
   <main class="page">
+    <p v-if="!entry && !session.hydrated.value" class="loading">Loading run {{ runId }}…</p>
     <UiEmptyState
-      v-if="!entry || !record || !char"
-      :title="`Run ${runId} is not in this session`"
-      body="Runs live in this browser tab until history lands. Start a new run, or open the latest one."
+      v-else-if="!entry || !record || !char"
+      :title="`Run ${runId} is not in this browser`"
+      body="It is not in this browser's run history; it may have been cleared or made in another browser. Start a new run, or open the latest one."
     >
       <UiButton variant="primary" to="/">New run</UiButton>
       <UiButton v-if="session.latest.value" :to="`/runs/${runSlug(session.latest.value.record.id)}`"
@@ -142,7 +140,7 @@ const hit = computed(() => hitScaling.state(runId.value));
       >
         <template #actions>
           <UiButton @click="exportJson">Export JSON</UiButton>
-          <UiButton @click="share">{{ shared ? 'Link copied' : 'Share' }}</UiButton>
+          <UiButton @click="share">{{ shareButton.label.value }}</UiButton>
           <UiButton to="/workbench">Add variant</UiButton>
           <UiButton variant="primary" :disabled="busy" @click="rerun">Re-run</UiButton>
         </template>
@@ -228,6 +226,10 @@ const hit = computed(() => hitScaling.state(runId.value));
 </template>
 
 <style scoped>
+.loading {
+  margin: 0;
+  color: var(--text-3);
+}
 .page {
   max-width: var(--page-max);
   margin: 0 auto;
