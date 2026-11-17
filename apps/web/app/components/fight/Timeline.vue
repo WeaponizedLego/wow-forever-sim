@@ -37,7 +37,7 @@ const summary = computed(() => {
     :lanes="lanes"
     :duration="duration"
     :x-ticks="ticks"
-    :label-width="120"
+    :label-width="168"
     :label="summary"
     :show-table="showTable"
   />
