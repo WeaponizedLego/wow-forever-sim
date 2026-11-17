@@ -1,8 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { CLASS_IDS, SPECS } from '@fsim/contracts';
+import type { ClassId } from '@fsim/contracts';
 import { describe, expect, it } from 'vitest';
+import realLoadouts from '../../../fixtures/import/real/loadouts.json';
+import wowheadNodes from '../../../fixtures/import/real/wowhead-forever-trait-nodes.json';
+import { importAny } from './index';
 import { ENGINE_TREES, loadoutNodes, loadoutToTalents, talentsToLoadout, VERIFIED_TREES } from './loadout';
 import simcNodes from './loadout-nodes.json';
+import { readFixture, testContext } from './test-context';
 
 const REAL_SHAMAN = 'CEdBzT2eoXLGqEykspPS/k8VfDGYAMzMuAzYGzHAAAA';
 const SHAMAN_HASH = 'f3647be8b5182a21936cfa483fc957df';
@@ -117,6 +122,69 @@ describe('client loadout string → engine talents', () => {
   });
 });
 
+interface RealExport {
+  file: string;
+  class: ClassId;
+  level: number;
+  loadout: string;
+  spec: number;
+  hash: string;
+  /** What it converts to; null when the importer refuses it, with `decoded` the build the string holds. */
+  talents: string | null;
+  decoded?: string;
+}
+const REAL = realLoadouts.exports as RealExport[];
+
+describe('real client exports (fixtures/import/real/loadouts.json)', () => {
+  it.each(REAL)('$file: the export’s talents= is the listed string', ({ file, loadout }) => {
+    const line = readFixture(`real/${file}`).match(/^talents=(.*)$/m)?.[1];
+    expect(line).toBe(loadout);
+  });
+
+  it.each(REAL.filter((x) => x.talents !== null))(
+    '$file decodes to $talents, verified, and encodes back to the exact string',
+    ({ class: cls, loadout, spec, hash, talents }) => {
+      expect(loadoutToTalents(cls, loadout)).toEqual({
+        ok: true,
+        talents,
+        verified: true,
+        header: { version: 2, spec, hash },
+        notes: [],
+      });
+      expect(talentsToLoadout(cls, talents!, { spec, hash })).toBe(loadout);
+    },
+  );
+
+  it.each(REAL.filter((x) => x.talents === null))(
+    '$file holds $decoded, which today’s tree forbids: refused, and the reason says why',
+    ({ class: cls, loadout, spec, hash, decoded }) => {
+      expect(talentsToLoadout(cls, decoded!, { spec, hash })).toBe(loadout);
+      expect(loadoutToTalents(cls, loadout)).toMatchObject({
+        ok: false,
+        header: { spec, hash },
+        reason: /current tree rules forbid .*moved since this export/,
+      });
+    },
+  );
+
+  it.each(REAL.filter((x) => x.talents !== null))(
+    '$file imports through SimC without TALENT-08',
+    ({ file, class: cls, talents }) => {
+      const r = importAny(readFixture(`real/${file}`), testContext());
+      expect(r.character).toMatchObject({ class: cls, talents });
+      expect(r.diagnostics.filter((d) => d.field === 'talents')).toEqual([]);
+    },
+  );
+
+  it('pins one tree per class with a real export, and only those', () => {
+    const pinned = Object.entries(VERIFIED_TREES).flatMap(([cls, trees]) =>
+      trees.map((t) => `${cls} ${t.spec} ${t.hash}`),
+    );
+    const seen = [...new Set(REAL.map((x) => `${x.class} ${x.spec} ${x.hash}`))];
+    expect(pinned.sort()).toEqual(seen.sort());
+  });
+});
+
 describe('node table', () => {
   const table = simcNodes.classes as unknown as Record<string, [number, number, number, string][]>;
 
@@ -135,9 +203,29 @@ describe('node table', () => {
     }
   });
 
-  it('knows which trees a real export has verified', () => {
-    expect(Object.keys(VERIFIED_TREES)).toEqual(['shaman']);
-    // The shaman tree: SimC's nodes and the engine's talents are the same 50 definitions.
-    expect(loadoutNodes('shaman').every((n) => n.node !== null && n.tree !== undefined)).toBe(true);
+  it('has a node id for every engine talent; the only parked nodes are hunter 2 and priest 1', () => {
+    for (const cls of CLASS_IDS) {
+      const nodes = loadoutNodes(cls);
+      expect(
+        nodes.filter((n) => n.node === null).map((n) => n.name),
+        cls,
+      ).toEqual([]);
+      const parked = nodes.filter((n) => n.tree === undefined).map((n) => n.name);
+      expect(parked, cls).toEqual(
+        { hunter: ['Lightning Reflexes', 'Improved Serpent Sting'], priest: ['Holy Specialization'] }[
+          cls as string
+        ] ?? [],
+      );
+    }
+  });
+
+  it('agrees with the node ids in Wowhead’s Forever talent calculator, for every class', () => {
+    const wh = wowheadNodes.classes as Record<string, number[][]>;
+    for (const cls of CLASS_IDS) {
+      const ours = loadoutNodes(cls)
+        .filter((n) => n.tree !== undefined)
+        .map((n) => [n.node, n.definitionId]);
+      expect(ours, cls).toEqual(wh[cls]);
+    }
   });
 });

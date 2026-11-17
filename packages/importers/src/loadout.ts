@@ -8,12 +8,13 @@
 //   choice node (1) [+ choice index (2)].
 // A fully ranked node is at the game's maximum rank, which we take from the engine's tree (same data build).
 //
-// The node list per class: SimC's trait data (loadout-nodes.json) gives node and definition ids, including the
-// "parked" retired talents the engine's trees leave out; talents the engine has and SimC lacks (newer than SimC's
-// build) are slotted in by definition id, since node id order equals definition id order in every class in SimC's
-// table (checked by a test). Nothing proves the list matches the client a string came from except a real export,
-// so a class is `verified` only when its tree hash is one we have checked; otherwise the result is validated and
-// returned as `unverified`.
+// The node list per class: SimC's trait data (loadout-nodes.json, from simulationcraft/simc-forever's client data)
+// gives node and definition ids, including the "parked" retired talents the engine's trees leave out (hunter 2,
+// priest 1). Should the engine ever have a talent the table lacks (newer than its build), it is slotted in by
+// definition id, since node id order equals definition id order in every class (checked by a test, and against
+// Wowhead's node ids in fixtures/import/real/wowhead-forever-trait-nodes.json). A class is `verified` only when the
+// string's tree hash is one a real export has confirmed; otherwise the result is validated and returned as
+// `unverified`.
 import type { ClassId } from '@fsim/contracts';
 import druid from '../../gamedata/data/talents/druid.json';
 import hunter from '../../gamedata/data/talents/hunter.json';
@@ -52,11 +53,34 @@ export const ENGINE_TREES: Record<ClassId, Trees> = {
  * Add one per real export that decodes to a build the player recognises.
  */
 export const VERIFIED_TREES: Partial<Record<ClassId, { hash: string; spec: number; source: string }[]>> = {
+  warrior: [
+    {
+      hash: 'f6417747ed078fbcc4249206e22f07b8',
+      spec: 1491,
+      source:
+        'fixtures/import/real/simc-warrior-lvl11.simc (client 1.60.1.70338, the 52-node tree before 70790)',
+    },
+  ],
+  hunter: [
+    {
+      hash: '1977b07a281e41b90b6c7a876fe4df91',
+      spec: 1485,
+      source: 'fixtures/import/real/simc-hunter-lvl11.simc (client 1.60.1.70450)',
+    },
+  ],
   shaman: [
     {
       hash: 'f3647be8b5182a21936cfa483fc957df',
       spec: 1489,
-      source: 'fixtures/import/real/simc-shaman-lvl42.simc (client 1.60.1.70888)',
+      source:
+        'fixtures/import/real/simc-shaman-lvl42.simc (client 1.60.1.70888) and simc-shaman-lvl20.simc (1.60.1.70374)',
+    },
+  ],
+  warlock: [
+    {
+      hash: '1aadfcfa379630fa406798e1f713b714',
+      spec: 1490,
+      source: 'fixtures/import/real/simc-warlock-lvl10.simc (client 1.60.1.70291)',
     },
   ],
 };
@@ -172,22 +196,26 @@ export function loadoutToTalents(cls: ClassId, loadout: string): LoadoutResult {
   const total = points.flat().reduce((a, b) => a + b, 0);
   if (total > MAX_POINTS)
     return { ok: false, header, reason: `It reads as ${total} points; the most is ${MAX_POINTS}.` };
+  const verified =
+    hash !== '0'.repeat(32) &&
+    rest.length < 6 &&
+    (VERIFIED_TREES[cls] ?? []).some((v) => v.hash === hash && v.spec === spec);
   const broken = brokenTalentNames(trees, points);
   if (broken.length)
     return {
       ok: false,
       header,
-      reason: `It reads as a build the tree rules forbid (${broken.join(', ')}), so the node table does not match this client.`,
+      reason: verified
+        ? // The layout is right (a checked tree), so the build is one the client allowed when it was exported but
+          // the current tree forbids: a talent moved rows since (shaman Improved Ghost Wolf, 70374 → 70938).
+          `It reads as a build the current tree rules forbid (${broken.join(', ')}); talents have moved since this export.`
+        : `It reads as a build the tree rules forbid (${broken.join(', ')}), so the node table does not match this client.`,
     };
 
   const talents = points
     .map((tree) => tree.join('').replace(/0+$/, ''))
     .join('-')
     .replace(/-+$/, '');
-  const verified =
-    hash !== '0'.repeat(32) &&
-    rest.length < 6 &&
-    (VERIFIED_TREES[cls] ?? []).some((v) => v.hash === hash && v.spec === spec);
   return { ok: true, talents, verified, header, notes };
 }
 

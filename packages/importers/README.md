@@ -44,7 +44,8 @@ Verified against the source, not guessed:
   `core.lua` `GetSimcProfile`, `extras.lua` (slot names; `ranged` added on Forever),
   `forever/legacytalents.lua`, `forever/pet.lua`, `forever/stats.lua`.
 - **SimC itself**: `simulationcraft/simc` branch `forever` (`engine/util/util.cpp`,
-  `engine/player/player.cpp`, `engine/dbc/generated/trait_data.inc`, build 1.60.1.70425).
+  `engine/player/player.cpp`) and its Forever fork `simulationcraft/simc-forever`
+  (`engine/dbc/generated/trait_data.inc`, build 1.60.1.70938; `profiles/LowLevel/*.simc`).
 
 Findings:
 
@@ -72,37 +73,65 @@ trinket1 trinket2 main_hand off_hand ammo ranged`.
 
 ## Client loadout strings (talents)
 
-What we found (spike, November 2026), and what `src/loadout.ts` does with it.
+What we found (November 2026), and what `src/loadout.ts` does with it.
 
 **Format.** Blizzard's `ExportUtil` / `ClassTalentImportExportMixin`: base64 (`A–Z a–z 0–9 + /`), 6 bits
 per character, least significant bit first, and values read least significant bit first. Header:
 version (8 bits), spec id (16), tree hash (16 × 8). Then one entry per node of the class's trait tree,
 in node id order: `selected` (1); if selected, `purchased` (1, version 2 only); if purchased,
 `partially ranked` (1) plus `ranks` (6) when set, then `choice node` (1) plus `choice index` (2). A
-fully ranked node is at the game's maximum rank. The Forever client writes version 2; the shaman's
-spec id is 1489 (a class-level "spec").
+fully ranked node is at the game's maximum rank. The last character is padded with zero bits. The
+Forever client writes version 2 and a class-level "spec": warrior 1491, hunter 1485, shaman 1489,
+warlock 1490 (seen in real exports; the other five are unknown). SimC's own reader
+(`parse_traits_hash` in `engine/player/player.cpp`) reads it the same way.
 
-**Node order.** Forever has one trait tree per class holding all three tabs. Its nodes include
-retired talents the game "parks" off the canvas (upstream drops those from the engine's trees, see
-upstream `tools/database/tables.go` `parkedTraitNodes`), so the engine's trees alone cannot give the
-bit order. SimC's `trait_data.inc` (forever branch, build 70425; committed as `src/loadout-nodes.json`
-by `packages/gamedata/scripts/extract-simc-trait-nodes.ts`) lists every node with its TraitDefinition
-id, parked ones included. Joining on `definitionId` with the engine's trees
-(`packages/gamedata/data/talents`) places each node. Talents the engine has and SimC's older build
-lacks (warrior 1, paladin 3, rogue 2; all with definition ids above every SimC id) are slotted in by
-definition id, because node id order equals definition id order for all 469 SimC rows (tested).
+**Node order.** Forever has one trait tree per class holding all three tabs, plus retired talents the
+game "parks" off the canvas (upstream drops those from the engine's trees, see upstream
+`tools/database/tables.go` `parkedTraitNodes`), so the engine's trees alone cannot give the bit order.
+SimC's `trait_data.inc` lists every node with its TraitDefinition id, parked ones included. It is
+committed as `src/loadout-nodes.json` by `packages/gamedata/scripts/extract-simc-trait-nodes.ts`, from
+`simulationcraft/simc-forever` at build 1.60.1.70938. Joining on `definitionId` with the engine's trees
+(`packages/gamedata/data/talents`) places each node. At this build every engine talent has a node, the
+max ranks agree, and the only parked nodes are hunter Lightning Reflexes and Improved Serpent Sting and
+priest Holy Specialization. Node id order equals definition id order in every class (tested), so a
+talent the engine gains before the table is regenerated is slotted in by definition id.
 
-**What is proven.** The real level 42 shaman export (`fixtures/import/real/simc-shaman-lvl42.simc`)
-decodes to exactly 33 points (42 − 9), Enhancement 25 / Restoration 8, a valid tree, with nothing but
-padding left over; re-encoding that build gives the exact same string. The shaman's SimC nodes and the
-engine's talents are the same 50 definitions. So the shaman tree (hash `f3647be8…`, spec 1489) is
-**verified** (`VERIFIED_TREES`).
+Independent check: the data behind Wowhead's WoW Forever talent calculator gives each talent's node id
+(`fixtures/import/real/wowhead-forever-trait-nodes.json`). For all nine classes it matches the table
+node for node (tested). The calculator has no client-string export (only its own URL format, a
+plain-text copy and saved builds), so it cannot give tree hashes or golden strings.
 
-**What is not.** No other class has a real export yet. SimC's build disagrees with the engine's on max
-ranks for ~25 talents (harmless: a fully ranked node takes the engine's maximum) and on a few nodes
-(paladin and rogue talents were replaced since 70425; the old nodes are assumed parked, not deleted).
-One node too many or too few shifts every later bit. The tree hash would prove the list, but its
-algorithm is not public, so we can only recognise hashes we have checked.
+**Bug fixed by the 70938 table.** The table was from SimC build 70425, which kept nodes the client has
+since deleted outright, not parked: mage Piercing Ice (gone in 70450) and Arcane Focus (70707), paladin
+One-Handed Weapon Specialization and Instrument of Law (70707), rogue Improved Distract (70790). Each
+extra node shifted every later bit, so current mage, paladin and rogue strings were misread (most then
+failed the tree rules and were refused). In SimC's data history, warrior gained Reckless Swings in
+70790; the hunter, warlock, shaman, druid and priest node sets are unchanged since 70450.
+
+**What is verified.** Real SimC addon exports, all in `fixtures/import/real/` and listed with their
+sources and evidence in `fixtures/import/real/loadouts.json`. Each decodes to a legal build, ends within
+the padding of the last node, and re-encodes to the identical string (golden tests in
+`src/loadout.test.ts`). Their tree hash and spec are pinned in `VERIFIED_TREES`, so those conversions
+carry no `TALENT-08`.
+
+| Class                               | Verdict        | Export (client)                | Decodes to              | Further evidence                                                                                                       |
+| ----------------------------------- | -------------- | ------------------------------ | ----------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Shaman                              | verified       | level 42 (70888), a player     | `-0530303100212122-053` | 33 points; a level 20 export (70374) has the same hash and a subset of the same nodes                                  |
+| Hunter                              | verified       | level 11 (70450), simc-forever | `051`                   | its stats show Focused Fire's +1% damage (rank 1 of 2); no one-node shift of the table gives another legal build       |
+| Warrior                             | verified (old) | level 11 (70338), simc-forever | `20301`                 | two partial ranks; the tree then had 52 nodes, so today's 53-node tree likely has a new hash (`TALENT-08` till pinned) |
+| Warlock                             | verified       | level 10 (70291), simc-forever | `005`                   | Improved Corruption 5/5 only; a shifted table would read its row-0 neighbour, so this rests on the node ids above      |
+| Paladin, rogue, priest, mage, druid | evidence only  | none found                     |                         | node ids match Wowhead's; no real string, so no hash: conversions carry `TALENT-08`                                    |
+
+The simc-forever exports are beta characters in
+`https://github.com/simulationcraft/simc-forever/tree/3ff3afc994662cb924aa09e5ca2c4a13fd48c4da/profiles/LowLevel`
+(names and realms replaced here). Searched without finding more: GitHub code and issues (`"TOC 16001"`,
+`legacy_talents=`, `talents=` in simc-forever and wowsims/forever), simc-forever issues and PRs, and the
+web (`"SimC Addon" "WoW 1.60.1"`).
+
+**The tree hash.** Its algorithm is not public. The shaman exports show it does not cover rows: between
+70374 and 70888 Improved Ghost Wolf moved from Enhancement's second row to its fourth and the hash
+stayed `f3647be8…`. Whether it changes when a node is added is unknown (no export on both sides of
+one), so a class may need pinning again after a patch.
 
 **What the importer does.**
 
@@ -110,17 +139,19 @@ algorithm is not public, so we can only recognise hashes we have checked.
   base64; the version is not 1 or 2; the string ends before the node list does; a bit is set past the
   last known node; a selected node is one the engine's trees lack (parked/retired) or a choice node; a
   rank is above the engine's maximum; the result is over 51 points or breaks the tree rules (5 points
-  per row, prerequisites at their maximum). A misaligned read almost always trips one of these.
+  per row, prerequisites at their maximum). A misaligned read almost always trips one of these. When
+  the hash is a verified one, a rules failure is reported as a build the current tree forbids
+  (talents moved since the export), not as a table mismatch; the level 20 shaman export is such a case.
 - Converts silently when the class's tree hash and spec are in `VERIFIED_TREES`.
 - Otherwise converts and emits a `TALENT-08` warning on `talents`: the layout is unconfirmed and the
   build should be checked in the Talents tab (which shows the converted tree).
 
-**To verify another class:** paste a real export, check the Talents tab against the character in game,
-then add its hash and spec (`loadoutToTalents(...).header`) to `VERIFIED_TREES` with a golden test.
-**To refresh the SimC table:** download `engine/dbc/generated/trait_data.inc` at a newer
-`simulationcraft/simc` forever commit and rerun the script. A better source would be the game's own
-`TraitNode` table for the current build (upstream's `tools/db2tool --cdn` can read it off Blizzard's
-CDN); not done here.
+**To verify another class:** add the real export to `fixtures/import/real/` (names and realm
+replaced) and to `loadouts.json`, check the decoded build against the character in game (or its
+stats), then add its hash and spec (`loadoutToTalents(...).header`) to `VERIFIED_TREES`; the tests
+require the two lists to match. **To refresh the node table:** download
+`engine/dbc/generated/trait_data.inc` at a newer `simulationcraft/simc-forever` commit and rerun the
+script (`--trait-data <file> --commit <sha>`), then refresh the Wowhead fixture if the trees changed.
 
 ## WoWSims addon JSON
 
