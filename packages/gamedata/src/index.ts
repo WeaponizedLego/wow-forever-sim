@@ -73,6 +73,7 @@ export {
   actionTagLabel,
   actionNameSources,
   distinctActionNames,
+  enchantProcNames,
   shownAuraKeys,
   AURA_SHOWN_BY,
   type ActionRef,

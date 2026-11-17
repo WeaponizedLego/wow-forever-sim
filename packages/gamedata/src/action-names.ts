@@ -3,7 +3,8 @@
 // The tag tells apart actions that share an id. Its meaning is mirrored from upstream's UI at the engine
 // lock commit (ui/sim/proto/action_id/index.ts, ActionId constructor and fill()):
 // - a weapon hand's item slot (14 main hand, 15 off hand): the hand that swung or whose weapon procced,
-//   on auto attacks, on strikes made with each hand (Whirlwind) and on weapon procs (Holy Strength);
+//   on auto attacks, on strikes made with each hand (Whirlwind) and on weapon procs. A weapon proc that is
+//   the aura of exactly one enchant also names the enchant: "Holy Strength (Crusader, main hand)";
 // - on an auto attack, any other tag is the spell that granted an extra attack ("Melee (Hand of Justice)");
 // - -1: a buff or debuff provided from outside the player (raid buffs, external debuffs);
 // - on an item (a consumable): 1 is its damage to the user, 2 its damage over time;
@@ -24,6 +25,8 @@ export interface ActionRef {
 export interface ActionNameSources {
   spell(id: number): SpellName | undefined;
   item(id: number): string | undefined;
+  /** The enchant whose proc aura this spell is ("Crusader" for Holy Strength), when exactly one enchant has it. */
+  enchantProc?(spellId: number): string | undefined;
 }
 
 const OTHER: Partial<Record<OtherAction, string>> = {
@@ -175,7 +178,10 @@ export function actionTagLabel(a: ActionRef, src: ActionNameSources, base?: stri
   if (special) return special;
   if (!tag) return null;
   if (tag === -1) return 'external';
-  if (HAND[tag]) return HAND[tag];
+  if (HAND[tag]) {
+    const enchant = a.kind === 'spell' ? src.enchantProc?.(a.id) : undefined;
+    return enchant ? `${enchant}, ${HAND[tag]}` : HAND[tag];
+  }
   if (a.kind === 'item') {
     // A consumable's damage to its user is tagged 1 and its cloud's ticks 2 (sim/common/shared/consumable_explosives.go).
     if (tag === 1) return 'self';
@@ -227,15 +233,37 @@ export function distinctActionNames(
   });
 }
 
+/** "Enchant Weapon - Crusader" → "Crusader". */
+const enchantShortName = (name: string) => name.replace(/^Enchant [^-]*- /, '');
+
+/**
+ * Proc aura id → the one enchant that grants it (from each enchant's `enchantEffects[].buffId`). An aura two
+ * enchants share is left out, so a proc is only ever credited to an enchant when the data says which.
+ */
+export function enchantProcNames(
+  enchants: readonly { name: string; enchantEffects: readonly { buffId: number }[] }[],
+): Map<number, string> {
+  const names = new Map<number, string | null>();
+  for (const e of enchants)
+    for (const id of new Set(e.enchantEffects.map((fx) => fx.buffId).filter(Boolean))) {
+      const name = enchantShortName(e.name);
+      names.set(id, names.has(id) && names.get(id) !== name ? null : name);
+    }
+  return new Map([...names].filter((x): x is [number, string] => x[1] !== null));
+}
+
 /** Name sources over a game database and the spell-name table (`buildSpellNames`). */
 export function actionNameSources(
   db: {
     item(id: number): { name: string } | undefined;
     consumables: ReadonlyMap<number, { name: string }>;
+    raw?: { enchants: readonly { name: string; enchantEffects: readonly { buffId: number }[] }[] };
   } | null,
   spells: ReadonlyMap<number, SpellName> | null,
 ): ActionNameSources {
+  const procs = db?.raw ? enchantProcNames(db.raw.enchants) : undefined;
   return {
+    enchantProc: (id) => procs?.get(id),
     spell: (id) => spells?.get(id),
     // Consumables (bombs, potions, runes) are not in the item table. Item and spell ids are separate
     // number spaces (item 13442 Mighty Rage Potion, spell 13442 Firebolt), so an item never takes a spell's name.

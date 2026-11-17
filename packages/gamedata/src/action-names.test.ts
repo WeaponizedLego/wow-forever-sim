@@ -3,6 +3,7 @@ import { OtherAction } from '@fsim/proto/common';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
   actionName,
+  enchantProcNames,
   actionNameSources,
   distinctActionNames,
   shownAuraKeys,
@@ -51,8 +52,23 @@ describe('action names', () => {
   it('names strikes and procs by the hand that made them', () => {
     expect(actionName(spell(1680, 14), src)).toBe('Whirlwind (main hand)');
     expect(actionName(spell(1680, 15), src)).toBe('Whirlwind (off hand)');
-    expect(actionName(spell(20007, 14), src)).toBe('Holy Strength (main hand)');
-    expect(actionName(spell(20007, 15), src)).toBe('Holy Strength (off hand)');
+    // An enchant's proc aura names the enchant too (Crusader's is Holy Strength, 20007, in db.bin).
+    expect(actionName(spell(20007, 14), src)).toBe('Holy Strength (Crusader, main hand)');
+    expect(actionName(spell(20007, 15), src)).toBe('Holy Strength (Crusader, off hand)');
+    // A hand-tagged strike that is no enchant's aura stays just the hand.
+    expect(actionName(spell(1680, 14), src)).toBe('Whirlwind (main hand)');
+  });
+
+  it('credits a proc to an enchant only when exactly one enchant grants that aura', () => {
+    const procs = enchantProcNames([
+      { name: 'Enchant Weapon - Crusader', enchantEffects: [{ buffId: 20007 }] },
+      { name: 'Enchant 2H Weapon - Agility', enchantEffects: [{ buffId: 0 }] },
+      { name: 'Enchant Weapon - Shared A', enchantEffects: [{ buffId: 555 }] },
+      { name: 'Enchant Weapon - Shared B', enchantEffects: [{ buffId: 555 }] },
+    ]);
+    expect(procs.get(20007)).toBe('Crusader');
+    expect(procs.has(0)).toBe(false);
+    expect(procs.has(555)).toBe(false);
   });
 
   it("applies upstream's per-spell tags", () => {
