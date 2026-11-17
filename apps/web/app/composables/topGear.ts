@@ -57,7 +57,8 @@ export const TOP_GEAR_SLOT_LABELS: Record<ItemSlotId, string> = {
 export const TOP_GEAR_MAX_COMBOS = 200;
 export const TOP_GEAR_RERUN_ITERATIONS = 25_000;
 
-interface Batch {
+/** One batch of combinations simmed against the equipped set (top gear, droptimizer). */
+export interface Batch {
   character: Character;
   seed: number;
   iterations: number;
@@ -77,7 +78,7 @@ interface Batch {
 
 const candidates = ref<Partial<Record<ItemSlotId, number[]>>>({});
 const batch = ref<Batch | null>(null);
-let abort: AbortController | null = null;
+const runner = batchRunner();
 
 const comboKey = (changes: GearChange[]) => changes.map((c) => `${c.slot}:${c.itemId}`).join('|');
 
@@ -121,6 +122,112 @@ export function applyChanges(
   return next;
 }
 
+/** A fresh batch for `character`, with a new shared seed. */
+export function newBatch(character: Character, combos: Combo[], iterations: number): Batch {
+  return {
+    character: structuredClone(toRaw(character)) as Character,
+    seed: Math.floor(Math.random() * 2 ** 31),
+    iterations,
+    combos,
+    results: {},
+    status: 'running',
+    done: 0,
+    total: combos.length,
+    progress: 0,
+    wallMs: 0,
+    fights: 0,
+    error: null,
+  };
+}
+
+/**
+ * Sim `combos` one after another at `iterations` with the batch's seed, filling `b.results` and the batch's
+ * progress. `toCharacter` builds each combination's character (default: `applyChanges`).
+ */
+export async function simCombos(
+  b: Batch,
+  combos: Combo[],
+  iterations: number,
+  signal: AbortSignal,
+  toCharacter: (base: Character, combo: Combo, db: GameDatabase) => Character = (base, combo, db) =>
+    applyChanges(base, combo.changes, db),
+) {
+  const db = await useEngine().gameDatabase();
+  b.done = 0;
+  b.total = combos.length;
+  b.progress = 0;
+  // Wall time is elapsed time across passes (first run plus any re-runs), overhead included.
+  const before = b.wallMs;
+  const t0 = performance.now();
+  const tick = () => (b.wallMs = before + performance.now() - t0);
+  for (const [i, combo] of combos.entries()) {
+    const result = await simVariant(toCharacter(b.character, combo, db), {
+      iterations,
+      seed: b.seed,
+      signal,
+      onProgress: (f) => {
+        b.progress = (i + f) / combos.length;
+        tick();
+      },
+    });
+    tick();
+    const s = summarize(result.raidMetrics!.dps!, result.iterationsDone);
+    b.results[combo.key] = { ...combo, mean: s.mean, stdev: s.stdev, n: s.n, ci95: s.ci95 };
+    b.fights += result.iterationsDone;
+    b.done = i + 1;
+    b.progress = (i + 1) / combos.length;
+  }
+}
+
+/** Runs batch passes one at a time: starting one aborts the last; `cancel` aborts the current one. */
+export function batchRunner() {
+  let abort: AbortController | null = null;
+  async function guarded(b: Batch, work: (signal: AbortSignal) => Promise<void>) {
+    abort?.abort();
+    const ctl = new AbortController();
+    abort = ctl;
+    b.status = 'running';
+    b.error = null;
+    try {
+      await work(ctl.signal);
+      b.status = 'done';
+    } catch (e) {
+      if (ctl.signal.aborted) b.status = 'cancelled';
+      else {
+        b.status = 'error';
+        b.error = e instanceof Error ? e.message : String(e);
+      }
+    } finally {
+      if (abort === ctl) abort = null;
+    }
+  }
+  return { guarded, cancel: () => abort?.abort() };
+}
+
+/** Results sorted by mean, each tested against the reference (Welch, with the noise floor). */
+export function rankResults(
+  results: Record<string, ComboResult>,
+  ref: ComboResult,
+  refKey = '',
+): RankedRow[] {
+  return Object.values(results)
+    .sort((x, y) => y.mean - x.mean)
+    .map((r, i) => {
+      const equipped = r.key === refKey;
+      const noise = noiseFloor(r, ref);
+      let verdict: Verdict = 'reference';
+      let p: number | null = null;
+      if (!equipped && r.n >= 2 && ref.n >= 2) {
+        const w = welchTTest(r, ref, { minDelta: noise });
+        p = w.p;
+        verdict = ({ better: 'up', worse: 'down', noise: 'noise' } as Record<WelchVerdict, Verdict>)[
+          w.verdict
+        ];
+      }
+      return { ...r, rank: i + 1, equipped, delta: r.mean - ref.mean, noise, p, verdict };
+    });
+}
+
 export function useTopGear() {
   const session = useSession();
   const engine = useEngine();
@@ -146,76 +253,15 @@ export function useTopGear() {
     candidates.value = {};
   }
 
-  async function simCombos(b: Batch, combos: Combo[], iterations: number, signal: AbortSignal) {
-    const db = await engine.gameDatabase();
-    b.done = 0;
-    b.total = combos.length;
-    b.progress = 0;
-    // Wall time is elapsed time across passes (first run plus any re-runs), overhead included.
-    const before = b.wallMs;
-    const t0 = performance.now();
-    const tick = () => (b.wallMs = before + performance.now() - t0);
-    for (const [i, combo] of combos.entries()) {
-      const result = await simVariant(applyChanges(b.character, combo.changes, db), {
-        iterations,
-        seed: b.seed,
-        signal,
-        onProgress: (f) => {
-          b.progress = (i + f) / combos.length;
-          tick();
-        },
-      });
-      tick();
-      const s = summarize(result.raidMetrics!.dps!, result.iterationsDone);
-      b.results[combo.key] = { ...combo, mean: s.mean, stdev: s.stdev, n: s.n, ci95: s.ci95 };
-      b.fights += result.iterationsDone;
-      b.done = i + 1;
-      b.progress = (i + 1) / combos.length;
-    }
-  }
-
-  async function guarded(b: Batch, work: (signal: AbortSignal) => Promise<void>) {
-    abort?.abort();
-    const ctl = new AbortController();
-    abort = ctl;
-    b.status = 'running';
-    b.error = null;
-    try {
-      await work(ctl.signal);
-      b.status = 'done';
-    } catch (e) {
-      if (ctl.signal.aborted) b.status = 'cancelled';
-      else {
-        b.status = 'error';
-        b.error = e instanceof Error ? e.message : String(e);
-      }
-    } finally {
-      if (abort === ctl) abort = null;
-    }
-  }
-
   /** Sim every combination (equipped set included) at `iterations`, one shared seed. */
   async function run(iterations: number) {
     const c = session.character.value;
     if (!c) throw new Error('No character');
     const combos = cartesian(candidates.value);
     if (combos.length > TOP_GEAR_MAX_COMBOS) throw new Error(`More than ${TOP_GEAR_MAX_COMBOS} combinations`);
-    batch.value = {
-      character: structuredClone(toRaw(c)) as Character,
-      seed: Math.floor(Math.random() * 2 ** 31),
-      iterations,
-      combos,
-      results: {},
-      status: 'running',
-      done: 0,
-      total: combos.length,
-      progress: 0,
-      wallMs: 0,
-      fights: 0,
-      error: null,
-    };
+    batch.value = newBatch(c as Character, combos, iterations);
     const b = batch.value;
-    await guarded(b, (signal) => simCombos(b, combos, iterations, signal));
+    await runner.guarded(b, (signal) => simCombos(b, combos, iterations, signal));
   }
 
   /** Re-sim the five best combinations and the equipped set at 25k, same seed. */
@@ -225,11 +271,11 @@ export function useTopGear() {
     const top = ranking.value.filter((r) => !r.equipped).slice(0, 5);
     const ref = b.combos.find((x) => x.key === '');
     const combos = [...(ref ? [ref] : []), ...top.map((r) => ({ key: r.key, changes: r.changes }))];
-    await guarded(b, (signal) => simCombos(b, combos, TOP_GEAR_RERUN_ITERATIONS, signal));
+    await runner.guarded(b, (signal) => simCombos(b, combos, TOP_GEAR_RERUN_ITERATIONS, signal));
   }
 
   function cancel() {
-    abort?.abort();
+    runner.cancel();
   }
 
   const reference = computed(() => batch.value?.results[''] ?? null);
@@ -239,22 +285,7 @@ export function useTopGear() {
     const b = batch.value;
     const ref = reference.value;
     if (!b || !ref) return [];
-    return Object.values(b.results)
-      .sort((x, y) => y.mean - x.mean)
-      .map((r, i) => {
-        const equipped = r.key === '';
-        const noise = noiseFloor(r, ref);
-        let verdict: Verdict = 'reference';
-        let p: number | null = null;
-        if (!equipped && r.n >= 2 && ref.n >= 2) {
-          const w = welchTTest(r, ref, { minDelta: noise });
-          p = w.p;
-          verdict = ({ better: 'up', worse: 'down', noise: 'noise' } as Record<WelchVerdict, Verdict>)[
-            w.verdict
-          ];
-        }
-        return { ...r, rank: i + 1, equipped, delta: r.mean - ref.mean, noise, p, verdict };
-      });
+    return rankResults(b.results, ref);
   });
 
   /** How often each item appears among the significant wins. */

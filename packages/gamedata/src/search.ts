@@ -68,7 +68,7 @@ interface Row {
  * Horde twice); equal keys are listed once. Faction variants (Ironbark Staff 20069 / 20220) and quality tiers
  * (Vision of Voodress 19606 green / 19607 blue) differ in the key and stay separate.
  */
-function sameItemKey(item: UIItem): string {
+export function sameItemKey(item: UIItem): string {
   const bytes = UIItem.toBinary({ ...item, id: 0, icon: '', sources: [] });
   let key = '';
   for (let i = 0; i < bytes.length; i += 4096) key += String.fromCharCode(...bytes.subarray(i, i + 4096));
