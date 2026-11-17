@@ -1,0 +1,66 @@
+{
+  "about": "Client talent loadout strings from real WoW Forever SimC addon exports (talents=), with the engine talent string each decodes to. Used by packages/importers/src/loadout.test.ts. Character names and realms in the .simc files are replaced.",
+  "exports": [
+    {
+      "file": "simc-shaman-lvl42.simc",
+      "class": "shaman",
+      "level": 42,
+      "client": "1.60.1.70888",
+      "loadout": "CEdBzT2eoXLGqEykspPS/k8VfDGYAMzMuAzYGzHAAAA",
+      "spec": 1489,
+      "hash": "f3647be8b5182a21936cfa483fc957df",
+      "talents": "-0530303100212122-053",
+      "source": "A real export from a player's client, added in commit 0fab8b1.",
+      "evidence": "33 points, a legal Enhancement/Restoration tree, string ends at the last node. The level 20 export below (another character, older client) selects a subset of the same Enhancement nodes."
+    },
+    {
+      "file": "simc-shaman-lvl20.simc",
+      "class": "shaman",
+      "level": 20,
+      "client": "1.60.1.70374",
+      "loadout": "CEdBzT2eoXLGqEykspPS/k8VfDAAYAzYGzDAAAA",
+      "spec": 1489,
+      "hash": "f3647be8b5182a21936cfa483fc957df",
+      "talents": null,
+      "decoded": "-0510303100012",
+      "source": "https://github.com/simulationcraft/simc-forever/blob/3ff3afc994662cb924aa09e5ca2c4a13fd48c4da/profiles/LowLevel/shaman-20.simc",
+      "evidence": "16 points: what a level 20 character has with the Talented legacy perk at rank 5 (this older addon writes no legacy_talents line). Legal in that client's tree, where Improved Ghost Wolf sat in Enhancement's second row (SimC trait data for 70334 and 70450); today's tree has it in the fourth row, so the importer refuses the build (DEFAULT-05) rather than make an illegal tree. Same tree hash as the level 42 export, so the hash does not cover rows."
+    },
+    {
+      "file": "simc-hunter-lvl11.simc",
+      "class": "hunter",
+      "level": 11,
+      "client": "1.60.1.70450",
+      "loadout": "C0cBZcHs6hiHBl7Csp3hvR+3RCAwDMAAAAAA",
+      "spec": 1485,
+      "hash": "1977b07a281e41b90b6c7a876fe4df91",
+      "talents": "051",
+      "source": "https://github.com/simulationcraft/simc-forever/blob/3ff3afc994662cb924aa09e5ca2c4a13fd48c4da/profiles/LowLevel/hunter-11.simc",
+      "evidence": "Endurance Training 5/5, Focused Fire 1/2: 6 of 7 points (Talented 5). The export's own stats show the partial rank: weapon damage percent 1.01 (Focused Fire: +1% damage per rank while the pet is out). Reading it with one node more or less anywhere gives no other legal build. The string ends exactly at the last node."
+    },
+    {
+      "file": "simc-warlock-lvl10.simc",
+      "class": "warlock",
+      "level": 10,
+      "client": "1.60.1.70291",
+      "loadout": "CIdBa0K/6fjlwoPQnhZ43PxtUAAAAAAAAYA",
+      "spec": 1490,
+      "hash": "1aadfcfa379630fa406798e1f713b714",
+      "talents": "005",
+      "source": "https://github.com/simulationcraft/simc-forever/blob/3ff3afc994662cb924aa09e5ca2c4a13fd48c4da/profiles/LowLevel/warlock-10.simc",
+      "evidence": "Improved Corruption 5/5, the usual first five warlock points. Legal; nothing past it. A one-node shift would read the row-0 neighbour instead (also legal), so this one rests on the node table matching Wowhead's node ids."
+    },
+    {
+      "file": "simc-warrior-lvl11.simc",
+      "class": "warrior",
+      "level": 11,
+      "client": "1.60.1.70338",
+      "loadout": "CMdB2H0dH1+BPyLxkIpBi/yB4CAAAeAjLAAAAA",
+      "spec": 1491,
+      "hash": "f6417747ed078fbcc4249206e22f07b8",
+      "talents": "20301",
+      "source": "https://github.com/simulationcraft/simc-forever/blob/3ff3afc994662cb924aa09e5ca2c4a13fd48c4da/profiles/LowLevel/warrior-11.simc",
+      "evidence": "Improved Heroic Strike 2/3, Improved Rend 3/3, Improved Tactical Mastery 1 (row 2 after 5 in row 1): legal, two partial ranks. Exported from the 52-node tree; Reckless Swings (the 53rd node, last in order) was added in 70790, so current exports likely carry another hash."
+    }
+  ]
+}

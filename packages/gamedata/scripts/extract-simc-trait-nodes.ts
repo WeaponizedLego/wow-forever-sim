@@ -1,13 +1,15 @@
 // Extracts each class's talent tree nodes from SimulationCraft's trait data (forever branch) into
 // packages/importers/src/loadout-nodes.json, for reading the game client's talent loadout strings.
 //
-//   node packages/gamedata/scripts/extract-simc-trait-nodes.ts --trait-data <trait_data.inc> --commit <simc sha>
+//   node packages/gamedata/scripts/extract-simc-trait-nodes.ts --trait-data <trait_data.inc> --commit <sha> \
+//     [--repo simulationcraft/simc-forever]
 //
-// `trait_data.inc` is `engine/dbc/generated/trait_data.inc` in simulationcraft/simc (GPL-3.0; only ids and names
-// are taken). A loadout string has one entry per node of the class's trait tree, in node id order, and the game's
-// trees keep retired ("parked") talents as nodes; SimC's table lists those, the engine's trees do not. See
-// packages/importers/README.md (SimC, point 2) for how the importer joins the two and what it cannot prove.
-// Not part of engine-sync: SimC's data follows SimC's own releases. Rerun when simc's forever branch moves.
+// `trait_data.inc` is `engine/dbc/generated/trait_data.inc` in simulationcraft/simc-forever (the Forever fork, which
+// tracks the client's builds; the default --repo) or simulationcraft/simc's forever branch (GPL-3.0; only ids and
+// names are taken). A loadout string has one entry per node of the class's trait tree, in node id order, and the
+// game's trees keep retired ("parked") talents as nodes; SimC's table lists those, the engine's trees do not. See
+// packages/importers/README.md ("Client loadout strings") for how the importer joins the two and what is verified.
+// Not part of engine-sync: SimC's data follows SimC's own releases. Rerun when simc-forever regenerates its data.
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,6 +24,7 @@ const arg = (name: string): string | undefined => {
 };
 const file = arg('trait-data');
 const commit = arg('commit');
+const repo = arg('repo') ?? 'simulationcraft/simc-forever';
 if (!file || !commit || !/^[0-9a-f]{40}$/.test(commit)) {
   console.error(
     'Pass --trait-data <simc engine/dbc/generated/trait_data.inc> --commit <40-char simc commit>.',
@@ -57,7 +60,7 @@ writeFileSync(
   JSON.stringify(
     {
       source: {
-        repo: 'simulationcraft/simc',
+        repo,
         commit,
         file: 'engine/dbc/generated/trait_data.inc',
         build,
