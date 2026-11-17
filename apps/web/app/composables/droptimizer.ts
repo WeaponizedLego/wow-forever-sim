@@ -27,16 +27,9 @@ import {
   type GameDatabase,
   type Instance,
 } from '@fsim/gamedata';
-import {
-  applyChanges,
-  batchRunner,
-  newBatch,
-  rankResults,
-  simCombos,
-  type Batch,
-  type Combo,
-  type RankedRow,
-} from './topGear';
+import { applyChanges, batchRunner, newBatch, simCombos, type Batch } from './topGear';
+import { rankResults, type Combo, type RankedRow } from '~/utils/ranking';
+import { bossPressed, selectedBosses, toggleBoss, type BossSelection } from '~/utils/boss-selection';
 
 export type DropFlag = 'enchant-lost' | 'offhand-cleared' | 'offhand-empty';
 export type DropSkip = DropSkipReason | 'equipped' | 'two-hander';
@@ -154,8 +147,8 @@ export function candidateCharacter(base: Character, cand: Combo, db: GameDatabas
 }
 
 const zoneId = ref<number | null>(null);
-/** Loot source keys to include; null = every source of the zone. */
-const sourceKeys = ref<string[] | null>(null);
+/** Loot source keys to include; null = every source of the zone ("All", utils/boss-selection.ts). */
+const sourceKeys = ref<BossSelection>(null);
 /** Slots switched off before a run. */
 const slotsOff = ref<Partial<Record<ItemSlotId, boolean>>>({});
 const batch = ref<Batch | null>(null);
@@ -184,15 +177,21 @@ export function useDroptimizer() {
   const instance = computed(() =>
     db.value && zoneId.value !== null ? lootInstance(db.value, zoneId.value) : undefined,
   );
-  const selectedKeys = computed(() => sourceKeys.value ?? instance.value?.sources.map((s) => s.key) ?? []);
+  const allKeys = computed(() => instance.value?.sources.map((s) => s.key) ?? []);
+  const selectedKeys = computed(() => selectedBosses(sourceKeys.value, allKeys.value));
 
   function setZone(id: number | null) {
     zoneId.value = id;
     sourceKeys.value = null;
     slotsOff.value = {};
   }
-  function setSources(keys: string[] | null) {
-    sourceKeys.value = keys;
+  /** "All": every boss. */
+  function selectAllSources() {
+    sourceKeys.value = null;
+  }
+  /** A boss chip: isolates it under "All", else adds or removes it. */
+  function toggleSource(key: string) {
+    sourceKeys.value = toggleBoss(sourceKeys.value, allKeys.value, key);
   }
 
   /**
@@ -286,16 +285,16 @@ export function useDroptimizer() {
 
   const reference = computed(() => batch.value?.results[''] ?? null);
 
-  /** Every simmed candidate against the equipped set. */
+  /** Every simmed candidate against the equipped set of its own pass (quick or re-run). */
   const allRows = computed<RankedRow[]>(() => {
     const b = batch.value;
     const ref = reference.value;
-    return b && ref ? rankResults(b.results, ref) : [];
+    return b && ref ? rankResults(b.results, ref, { quick: b.quick, baseIterations: b.iterations }) : [];
   });
 
   /**
-   * One row per item: its best slot (ring 1 or 2, main or off hand). A slot simmed at more iterations wins over
-   * a fast-pass one, so a re-run result is never displaced by a noisier alternative.
+   * One row per item: its best slot (ring 1 or 2, main or off hand), sorted by Δ. A slot simmed at more
+   * iterations wins over a fast-pass one, so a re-run result is never displaced by a noisier alternative.
    */
   const ranking = computed<RankedRow[]>(() => {
     const best = new Map<number, RankedRow>();
@@ -308,10 +307,10 @@ export function useDroptimizer() {
       const cand = batchCandidates.value.get(r.key);
       if (!cand) continue;
       const kept = best.get(cand.itemId);
-      if (!kept || r.n > kept.n || (r.n === kept.n && r.mean > kept.mean)) best.set(cand.itemId, r);
+      if (!kept || r.n > kept.n || (r.n === kept.n && r.delta > kept.delta)) best.set(cand.itemId, r);
     }
     return [...best.values(), ...(equipped ? [equipped] : [])]
-      .sort((a, b) => b.mean - a.mean)
+      .sort((a, b) => b.delta - a.delta || b.mean - a.mean)
       .map((r, i) => ({ ...r, rank: i + 1 }));
   });
 
@@ -387,9 +386,13 @@ export function useDroptimizer() {
     instance,
     zoneId: computed(() => zoneId.value),
     selectedKeys,
+    /** "All" is active: every boss, with no boss chip pressed. */
+    allSources: computed(() => sourceKeys.value === null),
+    sourcePressed: (key: string) => bossPressed(sourceKeys.value, key),
     slotsOff,
     setZone,
-    setSources,
+    selectAllSources,
+    toggleSource,
     fullPlan,
     plan,
     usablePerSource,

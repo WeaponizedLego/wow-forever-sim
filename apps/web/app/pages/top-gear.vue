@@ -3,7 +3,7 @@
 // ranked against the equipped set.
 import { ITEM_SLOTS, type ItemSlotId } from '@fsim/contracts';
 import { classColorVar } from '@fsim/gamedata';
-import type { RankedRow } from '~/composables/topGear';
+import { noiseFloorText, type RankedRow } from '~/utils/ranking';
 
 useHead({ title: 'Top gear · forever/sim' });
 
@@ -97,12 +97,9 @@ const forest = computed(() => {
 });
 
 const ref0 = computed(() => tg.reference.value);
-const typicalNoise = computed(() => {
-  const rows = tg.ranking.value.filter((r) => !r.equipped);
-  if (!rows.length) return null;
-  const sorted = rows.map((r) => r.noise).sort((a, b) => a - b);
-  return sorted[Math.floor(sorted.length / 2)]!;
-});
+const noiseFloor = computed(() =>
+  batch.value ? noiseFloorText(tg.ranking.value, batch.value.iterations) : null,
+);
 
 const headerItems = computed(() => {
   const b = batch.value;
@@ -118,9 +115,7 @@ const headerItems = computed(() => {
   return [
     { label: 'Fights simmed', value: formatNumber(b.fights, 0) },
     { label: 'Per combo', value: perCombo.join(' · ') },
-    ...(typicalNoise.value === null
-      ? []
-      : [{ label: 'Noise floor', value: `|Δ| < ${formatNumber(typicalNoise.value, 1)}` }]),
+    ...(noiseFloor.value === null ? [] : [{ label: 'Noise floor', value: noiseFloor.value }]),
     { label: 'Seed', value: String(b.seed) },
     { label: 'Wall', value: formatDuration(b.wallMs) },
   ];
@@ -255,7 +250,7 @@ async function equip(row: RankedRow) {
           <UiCheckbox v-model="hideNoise">Hide results within noise</UiCheckbox>
           <span class="grow" />
           <span class="num note"
-            >showing {{ visible.length }} of {{ tg.ranking.value.length }} · sorted by mean</span
+            >showing {{ visible.length }} of {{ tg.ranking.value.length }} · sorted by Δ</span
           >
         </div>
 
@@ -277,15 +272,15 @@ async function equip(row: RankedRow) {
               :ticks="forest.ticks"
               :slot-tag="slotTag"
               :base-iterations="batch!.iterations"
-              :quick="batch!.quick"
               :equipping="equipping"
               :class-color="classColorVar(char.class)"
               @equip="equip"
             />
             <p class="note pad">
-              Verdict: Welch's t-test against the equipped set, counted only when |Δ| also clears the noise
-              floor (1.96 × the combined standard error). The test treats runs as independent; with a shared
-              seed they are not, so it errs on the side of "within noise".
+              Verdict: Welch's t-test against the equipped set simmed at the row's own iterations (quick pass
+              or re-run), counted only when |Δ| also clears the noise floor (1.96 × the combined standard
+              error). The test treats runs as independent; with a shared seed they are not, so it errs on the
+              side of "within noise".
             </p>
           </UiPanel>
 

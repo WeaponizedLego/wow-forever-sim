@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { CharacterSchema, DUNGEON_SLICE_SEGMENTS, type FightStyleId } from '@fsim/contracts';
+import { CharacterSchema, DUNGEON_SLICE_SEGMENTS, type FightStyleId, type SpecId } from '@fsim/contracts';
 import {
   buildRaidSimRequest,
   characterFromPresets,
@@ -35,8 +35,8 @@ describe.skipIf(!hasVendorEngine())('fight styles in the engine', () => {
   afterAll(() => client?.dispose());
   const db = loadDatabase(read('fixtures/gamedata/db.bin'), read('fixtures/gamedata/leftover_db.bin'));
 
-  async function sim(style: FightStyleId, iterations = 20) {
-    const presets = await loadSpecPresets('dps-warrior');
+  async function sim(style: FightStyleId, iterations = 20, spec: SpecId = 'dps-warrior') {
+    const presets = await loadSpecPresets(spec);
     const base = characterFromPresets(presets, presets.defaultBuildId);
     const character = CharacterSchema.parse({ ...base, encounter: { style } });
     const req = withDatabases(buildRaidSimRequest(character, presets, db, { iterations, seed: 7 }), db.raw);
@@ -115,5 +115,53 @@ describe.skipIf(!hasVendorEngine())('fight styles in the engine', () => {
       const last = Math.max(...hits.map((l) => Number(DAMAGE.exec(l)![1])));
       expect(last).toBeGreaterThan(style === 'patchwerk-3m' ? 170 : 290);
     }
+  }, 120_000);
+
+  // The slice is not "Patchwerk with breaks": its mobs are level 62 (Patchwerk's boss is 63) and packs of 2–5
+  // take cleave and AoE. Single-target specs lose DPS to the 40 s of downtime; cleave specs gain from the extra
+  // mobs. QA saw Fury go 950 → 1,117 DPS and read it as a gear gain, so this pins down where the gap comes from.
+  it('slice vs Patchwerk: single-target specs drop, cleave gains come from extra mobs, DPS is over 300 s', async () => {
+    const lines: string[] = [];
+    for (const spec of ['dps-warrior', 'mage', 'warlock', 'hunter'] as const) {
+      const pw = (await sim('patchwerk-3m', 60, spec)).res;
+      const slice = (await sim('dungeon-slice-5m', 60, spec)).res;
+      const player = slice.raidMetrics!.parties[0]!.players[0]!;
+      // Damage per target unit index, the player's and its pets'.
+      const byTarget = new Map<number, number>();
+      for (const unit of [player, ...player.pets])
+        for (const a of unit.actions)
+          for (const t of a.targets) byTarget.set(t.unitIndex, (byTarget.get(t.unitIndex) ?? 0) + t.damage);
+      const total = [...byTarget.values()].reduce((a, b) => a + b, 0) / slice.iterationsDone;
+      // Each pull's first mob takes the single-target damage; the rest is cleave, AoE and spread DoTs.
+      const units = slice.encounterMetrics!.targets.map((t) => t.unitIndex);
+      let first = 0;
+      let primary = 0;
+      for (const seg of DUNGEON_SLICE_SEGMENTS) {
+        primary += byTarget.get(units[first]!) ?? 0;
+        first += seg.mobs;
+      }
+      const extraShare = 1 - primary / slice.iterationsDone / total;
+      const pwDps = pw.raidMetrics!.dps!.avg;
+      const sliceDps = slice.raidMetrics!.dps!.avg;
+
+      // The whole 300 s, downtime included, is the denominator.
+      expect(slice.avgIterationDuration).toBe(300);
+      expect(sliceDps * 300).toBeGreaterThan(total * 0.97);
+      expect(sliceDps * 300).toBeLessThan(total * 1.03);
+
+      if (spec === 'mage') expect(extraShare).toBeLessThan(0.01);
+      if (spec === 'mage' || spec === 'warlock') expect(sliceDps).toBeLessThan(pwDps);
+      if (spec === 'dps-warrior') {
+        expect(extraShare).toBeGreaterThan(0.15);
+        expect(sliceDps).toBeGreaterThan(pwDps);
+        // Without the extra mobs it would be below Patchwerk.
+        expect(sliceDps * (1 - extraShare)).toBeLessThan(pwDps);
+      }
+      lines.push(
+        `${spec.padEnd(12)} PW 3m ${pwDps.toFixed(0).padStart(5)}  slice ${sliceDps.toFixed(0).padStart(5)}  ` +
+          `${(100 * extraShare).toFixed(0)}% of slice damage on extra mobs`,
+      );
+    }
+    console.info(`slice vs Patchwerk (60 iterations):\n${lines.join('\n')}`);
   }, 120_000);
 });

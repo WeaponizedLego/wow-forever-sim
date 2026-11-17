@@ -7,6 +7,7 @@ import {
   effectiveEncounter,
   encounterProto,
   fightLabel,
+  fightChange,
   fightSegments,
   SLICE_MOB_ID,
   sliceRanAsScheduled,
@@ -130,6 +131,21 @@ describe('helpers', () => {
       { kind: 'boss', label: 'Raid boss', mobs: 1, startSec: 0, endSec: 300 },
     ]);
     expect(fightSegments(enc({ style: 'dungeon-slice-5m' }))).toBe(DUNGEON_SLICE_SEGMENTS);
+  });
+
+  it('fightChange names both fights when they differ, by the values simmed', () => {
+    expect(fightChange(enc({}), enc({ style: 'dungeon-slice-5m' }))).toEqual({
+      from: 'Patchwerk 3 min',
+      to: 'Dungeon slice 5 min',
+    });
+    expect(fightChange(enc({}), enc({}))).toBeNull();
+    // A preset's stale fields are not a change; Custom's own fields are.
+    expect(
+      fightChange(enc({ style: 'patchwerk-5m', durationSec: 77 }), enc({ style: 'patchwerk-5m' })),
+    ).toBeNull();
+    expect(
+      fightChange(enc({ style: 'custom', targetCount: 1 }), enc({ style: 'custom', targetCount: 3 })),
+    ).toEqual({ from: 'Custom 180 s ±5 · 1 tgt', to: 'Custom 180 s ±5 · 3 tgt' });
   });
 });
 
