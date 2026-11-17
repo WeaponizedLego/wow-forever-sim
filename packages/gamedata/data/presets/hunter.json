@@ -2,7 +2,7 @@
   "specId": "hunter",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "193332c1a46b9b88fa7d107dc75a0cea6325c9b1",
+    "commit": "161a62003af48b186f2c18acc9d381c3dea97dd7",
     "dir": "ui/specs/hunter/dps",
     "files": [
       "apls/clean_weave.apl.siml",
@@ -50,7 +50,7 @@
       "explosiveId": 18588,
       "mhImbueId": 18262,
       "extraIds": [10646, 10310, 12460, 12217, 8412],
-      "elixirIds": [13452, 250341],
+      "elixirIds": [13452, 250341, 9179],
       "resourcePotId": 13444,
       "offensivePotId": 250943
     },
@@ -137,7 +137,7 @@
           "explosiveId": 18588,
           "mhImbueId": 18262,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341],
+          "elixirIds": [13452, 250341, 9179],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -222,9 +222,9 @@
           "foodId": 250072,
           "conjuredId": 12662,
           "explosiveId": 18588,
-          "mhImbueId": 18262,
+          "mhImbueId": 20748,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341],
+          "elixirIds": [13452, 250341, 9179],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -309,9 +309,9 @@
           "foodId": 250072,
           "conjuredId": 12662,
           "explosiveId": 18588,
-          "mhImbueId": 18262,
+          "mhImbueId": 20748,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341],
+          "elixirIds": [13452, 250341, 9179],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -397,9 +397,9 @@
           "foodId": 250072,
           "conjuredId": 12662,
           "explosiveId": 18588,
-          "mhImbueId": 18262,
+          "mhImbueId": 20748,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341],
+          "elixirIds": [13452, 250341, 9179],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -476,7 +476,7 @@
       "setup": {
         "race": "orc",
         "professions": ["Engineering", "Blacksmithing"],
-        "talents": "53200005001-004-530200230050022151",
+        "talents": "53200005001-005005-5302002300500221",
         "gearSetId": "melee-pre-bis",
         "rotationId": "melee",
         "consumables": {
@@ -485,9 +485,9 @@
           "conjuredId": 12662,
           "explosiveId": 18588,
           "mhImbueId": 18262,
-          "ohImbueId": 18262,
+          "ohImbueId": 12404,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341],
+          "elixirIds": [13452, 250341, 9179],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -614,7 +614,7 @@
           "itemId": 13965
         },
         "trinket2": {
-          "itemId": 260205
+          "itemId": 22321
         },
         "mainHand": {
           "itemId": 12784,
@@ -679,7 +679,7 @@
           "itemId": 13965
         },
         "trinket2": {
-          "itemId": 260205
+          "itemId": 22321
         },
         "mainHand": {
           "itemId": 13348,
@@ -744,7 +744,7 @@
           "itemId": 13965
         },
         "trinket2": {
-          "itemId": 280065
+          "itemId": 22321
         },
         "mainHand": {
           "itemId": 250619,
@@ -809,7 +809,7 @@
           "itemId": 13965
         },
         "trinket2": {
-          "itemId": 280065
+          "itemId": 22321
         },
         "mainHand": {
           "itemId": 250619,
@@ -829,7 +829,7 @@
       "gear": {
         "head": {
           "itemId": 252605,
-          "enchantId": 1508
+          "enchantId": 2543
         },
         "neck": {
           "itemId": 15411,
@@ -855,11 +855,11 @@
           "enchantId": 2564
         },
         "waist": {
-          "itemId": 22232
+          "itemId": 272397
         },
         "legs": {
           "itemId": 15062,
-          "enchantId": 1508
+          "enchantId": 2543
         },
         "feet": {
           "itemId": 226881,
@@ -872,21 +872,21 @@
           "itemId": 13098
         },
         "trinket1": {
-          "itemId": 260205
+          "itemId": 22321
         },
         "trinket2": {
-          "itemId": 272437
+          "itemId": 19289
         },
         "mainHand": {
           "itemId": 12798,
           "enchantId": 1900
         },
         "offHand": {
-          "itemId": 13368,
+          "itemId": 18392,
           "enchantId": 2564
         },
         "ranged": {
-          "itemId": 18680,
+          "itemId": 18323,
           "enchantId": 8720
         }
       }
@@ -898,7 +898,7 @@
       "gear": {
         "head": {
           "itemId": 252605,
-          "enchantId": 1508
+          "enchantId": 2543
         },
         "neck": {
           "itemId": 15411,
@@ -924,11 +924,11 @@
           "enchantId": 2564
         },
         "waist": {
-          "itemId": 22232
+          "itemId": 272397
         },
         "legs": {
           "itemId": 15062,
-          "enchantId": 1508
+          "enchantId": 2543
         },
         "feet": {
           "itemId": 13967,
@@ -941,17 +941,17 @@
           "itemId": 13098
         },
         "trinket1": {
-          "itemId": 260205
+          "itemId": 22321
         },
         "trinket2": {
-          "itemId": 13965
+          "itemId": 19289
         },
         "mainHand": {
-          "itemId": 12940,
+          "itemId": 13286,
           "enchantId": 1900
         },
         "offHand": {
-          "itemId": 13368,
+          "itemId": 18392,
           "enchantId": 2564
         },
         "ranged": {
@@ -985,7 +985,7 @@
     {
       "id": "sv-melee",
       "name": "SV Melee",
-      "talents": "53200005001-004-530200230050022151"
+      "talents": "53200005001-005005-5302002300500221"
     }
   ],
   "rotations": [
@@ -5676,6 +5676,16 @@
             "action": {
               "castSpell": {
                 "spellId": {
+                  "spellId": 14305,
+                  "rank": 5
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "castSpell": {
+                "spellId": {
                   "spellId": 14271,
                   "rank": 4
                 }
@@ -5688,16 +5698,6 @@
                 "spellId": {
                   "spellId": 1317257,
                   "rank": 1
-                }
-              }
-            }
-          },
-          {
-            "action": {
-              "castSpell": {
-                "spellId": {
-                  "spellId": 14305,
-                  "rank": 5
                 }
               }
             }

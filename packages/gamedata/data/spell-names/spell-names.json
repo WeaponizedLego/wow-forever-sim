@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "193332c1a46b9b88fa7d107dc75a0cea6325c9b1",
+    "commit": "161a62003af48b186f2c18acc9d381c3dea97dd7",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -3951,6 +3951,7 @@
     [27786, "Hunter Armor Energize", 0],
     [27787, "Rogue Armor Energize", 0],
     [27788, "Rogue Armor Energize", 0],
+    [27797, "Reduced Riptide Cost", 0],
     [27798, "Nature's Bounty", 0],
     [27813, "Blessed Recovery", 0],
     [27827, "Spirit of Redemption", 0],
