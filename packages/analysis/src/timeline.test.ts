@@ -57,8 +57,9 @@ describe('parseCombatLog', () => {
 
   it('reproduces iteration-1 damage from the fixture log', () => {
     const series = damageSeries(events, duration, { bucketSeconds: 5 });
-    expect(series).toHaveLength(Math.ceil(duration / 5));
+    expect(series).toHaveLength(Math.round(duration / 5));
     const last = series[series.length - 1]!;
+    expect(last.end).toBe(duration);
     // Iteration-1 DPS must be a plausible draw from the run's distribution.
     const dps = result.raidMetrics!.dps!;
     expect(last.cumulativeDps).toBeGreaterThan(dps.min);
@@ -70,6 +71,39 @@ describe('parseCombatLog', () => {
       if (m && Number(m[1]) >= 0) sum += Number(m[2]);
     }
     expect(last.cumulativeDps).toBeCloseTo(sum / duration, 6);
+  });
+
+  it('buckets a fight with distinct bucket starts and no sliver at the end', () => {
+    // One 100-damage hit a second, from 0 s to the fight's end.
+    const hits = (duration: number) =>
+      parseCombatLog(
+        Array.from(
+          { length: Math.floor(duration) + 1 },
+          (_, s) =>
+            `[${s}.00] [ (#1)] [Target 1] {OtherID: 3, Tag: 14} Hit for 100.000 damage (SpellSchool: 1).`,
+        ).join('\n'),
+      );
+    // Patchwerk 3 min ±5 s: fight 1 lasted 175.4 s. The last 0.4 s used to be a bucket of its own at 175 s,
+    // listed twice in the chart's table (its point and the line's end point).
+    const short = damageSeries(hits(175.4), 175.4);
+    expect(short.map((p) => p.t)).toEqual(Array.from({ length: 35 }, (_, i) => i * 5));
+    expect(new Set(short.map((p) => p.t)).size).toBe(short.length);
+    expect(short.at(-1)).toMatchObject({ t: 170, end: 175.4 });
+    // 170 s through 175 s: six hits over 5.4 s, not one hit over 0.4 s.
+    expect(short.at(-1)!.dps).toBeCloseTo(600 / 5.4, 9);
+    expect(short.at(-1)!.cumulativeDps).toBeCloseTo((176 * 100) / 175.4, 9);
+    for (const p of short.slice(0, -1)) expect(p.end - p.t).toBe(5);
+
+    // A whole 3 minutes ends with the 175–180 s bucket; a remainder of half a bucket or more stands alone.
+    expect(
+      damageSeries(hits(180), 180)
+        .map((p) => [p.t, p.end])
+        .at(-1),
+    ).toEqual([175, 180]);
+    const long = damageSeries(hits(177.6), 177.6);
+    expect(long).toHaveLength(36);
+    expect(long.at(-1)).toMatchObject({ t: 175, end: 177.6 });
+    expect(damageSeries([], 2)).toEqual([{ t: 0, end: 2, dps: 0, cumulativeDps: 0 }]);
   });
 
   it('builds aura lanes clipped to the fight', () => {

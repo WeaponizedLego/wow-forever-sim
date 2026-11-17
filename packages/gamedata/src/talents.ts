@@ -249,3 +249,39 @@ export function talentProblems(cls: ClassId, talents: string): string[] {
     problems.push(`Not allowed by the tree rules (row or prerequisite not met): ${broken.join(', ')}.`);
   return problems;
 }
+
+export interface TalentChange {
+  name: string;
+  maxPoints: number;
+  before: number;
+  after: number;
+}
+
+export interface TreeTalentChanges {
+  /** "Fury". */
+  tree: string;
+  /** Points in the tree before and after. */
+  before: number;
+  after: number;
+  /** The tree's talents whose points changed, in tree order. */
+  talents: TalentChange[];
+}
+
+/**
+ * Talent by talent, what changed from talent string `a` to `b` for the class: one entry per tree with a change,
+ * in tree order. Empty when the strings spend the same points.
+ */
+export function talentChanges(cls: ClassId, a: string, b: string): TreeTalentChanges[] {
+  const pa = parseTalents(cls, a);
+  const pb = parseTalents(cls, b);
+  return DATA[cls].trees.flatMap((tree, t) => {
+    const talents = tree.talents.flatMap((talent, i) => {
+      const before = pa[t]![i]!;
+      const after = pb[t]![i]!;
+      return before === after ? [] : [{ name: talent.name, maxPoints: talent.maxPoints, before, after }];
+    });
+    return talents.length
+      ? [{ tree: tree.name, before: treePoints(pa, t), after: treePoints(pb, t), talents }]
+      : [];
+  });
+}

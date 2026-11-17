@@ -12,5 +12,11 @@ instead of a live engine.
 
 All are protojson. Parse with `RaidSimResult.fromJson(...)` from `@fsim/proto`.
 
+`engine/action-ids.json` is not protojson: the action ids (`spell:1680#14`, …) that the DPS Warrior presets and the
+Wowhead-imported Hunter (`import/real/wowhead-forever-sv-hunter.url`) report in the locked engine, split into damage
+rows, player auras and everything else. `packages/gamedata/src/action-names.test.ts` names them offline;
+`packages/engine/src/action-names.test.ts` sims the runs in the staged engine and rewrites the file with
+`UPDATE_ACTION_IDS=1`.
+
 Still to add (lane L3 collects them): real SimC addon exports and a WoWSims addon export from WoW
 Forever characters.

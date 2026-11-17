@@ -204,6 +204,8 @@ export function auraLanes(events: readonly LogEvent[], duration: number): AuraLa
 export interface DamageSeriesPoint {
   /** Bucket start, seconds. */
   t: number;
+  /** Bucket end, seconds: the next bucket's start, or the fight's end for the last one. */
+  end: number;
   /** Damage dealt in the bucket divided by the bucket length. */
   dps: number;
   /** Cumulative damage / elapsed time up to the end of the bucket. */
@@ -211,8 +213,10 @@ export interface DamageSeriesPoint {
 }
 
 /**
- * Damage-over-time line for the fight: damage events from units of `kind` (default: player and
- * pets) into enemy targets, bucketed by `bucketSeconds` over [0, duration].
+ * Damage-over-time line for the fight: damage events from the player (and its pets) into enemy
+ * targets, bucketed by `bucketSeconds` over [0, duration]. Buckets start at distinct multiples of
+ * `bucketSeconds`; a remainder shorter than half a bucket (a 175.4 s fight's last 0.4 s) joins the
+ * last whole bucket rather than standing alone, where a few hits would read as a spike or a drop.
  */
 export function damageSeries(
   events: readonly LogEvent[],
@@ -220,7 +224,7 @@ export function damageSeries(
   opts: { bucketSeconds?: number; playerIndex?: number } = {},
 ): DamageSeriesPoint[] {
   const w = opts.bucketSeconds ?? 5;
-  const n = Math.max(1, Math.ceil(duration / w));
+  const n = Math.max(1, Math.round(duration / w));
   const sums = new Array<number>(n).fill(0);
   for (const e of events) {
     if (e.type !== 'damage' || e.t < 0 || e.t > duration) continue;
@@ -231,9 +235,14 @@ export function damageSeries(
   let cum = 0;
   return sums.map((s, i) => {
     const start = i * w;
-    const end = Math.min(duration, start + w);
+    const end = i === n - 1 ? duration : start + w;
     cum += s;
-    return { t: start, dps: s / (end - start), cumulativeDps: cum / end };
+    return {
+      t: start,
+      end,
+      dps: end > start ? s / (end - start) : 0,
+      cumulativeDps: end > 0 ? cum / end : 0,
+    };
   });
 }
 
