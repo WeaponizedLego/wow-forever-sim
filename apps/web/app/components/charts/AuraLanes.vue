@@ -22,7 +22,7 @@ const props = withDefaults(
     label: string;
     showTable?: boolean;
   }>(),
-  { xTicks: () => [], unit: 's', labelWidth: 136, gap: 12, showTable: false },
+  { xTicks: () => [], unit: 's', labelWidth: 168, gap: 12, showTable: false },
 );
 
 const at = (t: number) => clamp(t / props.duration, 0, 1);

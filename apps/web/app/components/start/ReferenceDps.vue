@@ -69,7 +69,7 @@ const deltaMax = computed(() => Math.max(5, ...deltas.value.map((d) => Math.ceil
 }
 .ref__row {
   display: grid;
-  grid-template-columns: 12.25em minmax(0, 1fr);
+  grid-template-columns: 14.5em minmax(0, 1fr);
   gap: 10px;
   align-items: center;
   padding: 4px 0;
