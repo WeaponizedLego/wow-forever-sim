@@ -2,7 +2,7 @@
   "specId": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
     "dir": "ui/specs/mage/dps",
     "files": [
       "apls/arcane.apl.json",
@@ -10,7 +10,7 @@
       "apls/deepFire.apl.json",
       "apls/ffb.apl.json",
       "apls/frost.apl.json",
-      "gear_sets/p1Arcane.gear.json",
+      "gear_sets/preraid.gear.json",
       "presets.ts"
     ]
   },
@@ -22,7 +22,7 @@
     "race": "human",
     "professions": ["Engineering", "Tailoring"],
     "talents": "050205223101311531-5500003-003",
-    "gearSetId": "p1-arcane",
+    "gearSetId": "preraid",
     "rotationId": "arcane",
     "consumables": {
       "flaskId": 13512,
@@ -60,7 +60,7 @@
     },
     "playerOptions": {
       "distanceFromTarget": 20,
-      "channelClipDelayMs": 0,
+      "channelClipDelayMs": 100,
       "reactionTimeMs": 100,
       "reactionTimeMaxMs": 0,
       "inFrontOfTarget": false
@@ -75,7 +75,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "050205223101311531-5500003-003",
-        "gearSetId": "p1-arcane",
+        "gearSetId": "preraid",
         "rotationId": "arcane",
         "consumables": {
           "flaskId": 13512,
@@ -113,7 +113,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -128,7 +128,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "050205203100311531-525000012001-003",
-        "gearSetId": "p1-arcane",
+        "gearSetId": "preraid",
         "rotationId": "arcane-fire",
         "consumables": {
           "flaskId": 13512,
@@ -166,7 +166,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -181,7 +181,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "-5550000123011303-2035010311013002",
-        "gearSetId": "p1-arcane",
+        "gearSetId": "preraid",
         "rotationId": "ffb",
         "consumables": {
           "flaskId": 13512,
@@ -219,7 +219,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -234,7 +234,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "0502052001001-55500001230133031-003",
-        "gearSetId": "p1-arcane",
+        "gearSetId": "preraid",
         "rotationId": "fire",
         "consumables": {
           "flaskId": 13512,
@@ -272,7 +272,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -287,7 +287,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "203205-5-053500011121331251",
-        "gearSetId": "p1-arcane",
+        "gearSetId": "preraid",
         "rotationId": "frost",
         "consumables": {
           "flaskId": 13512,
@@ -325,7 +325,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 28,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -340,7 +340,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "2032250100003--053500001121331251",
-        "gearSetId": "p1-arcane",
+        "gearSetId": "preraid",
         "rotationId": "frost",
         "consumables": {
           "flaskId": 13512,
@@ -378,7 +378,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 28,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -388,59 +388,59 @@
   ],
   "gearSets": [
     {
-      "id": "p1-arcane",
-      "name": "P1 Arcane",
+      "id": "preraid",
+      "name": "Preraid",
       "gear": {
         "head": {
-          "itemId": 16686
+          "itemId": 22267
         },
         "neck": {
-          "itemId": 23057
+          "itemId": 22403
         },
         "shoulder": {
-          "itemId": 22412
+          "itemId": 19050
         },
         "back": {
-          "itemId": 21415
+          "itemId": 272411
         },
         "chest": {
-          "itemId": 16688
+          "itemId": 14152
         },
         "wrist": {
-          "itemId": 16683
+          "itemId": 226929
         },
         "hands": {
-          "itemId": 16684
+          "itemId": 226930
         },
         "waist": {
           "itemId": 18405
         },
         "legs": {
-          "itemId": 13170
+          "itemId": 226933
         },
         "feet": {
-          "itemId": 11822
+          "itemId": 22231
         },
         "finger1": {
-          "itemId": 275982
+          "itemId": 272406
         },
         "finger2": {
-          "itemId": 18543
+          "itemId": 12543
         },
         "trinket1": {
-          "itemId": 18820
+          "itemId": 22268
         },
         "trinket2": {
-          "itemId": 19379
+          "itemId": 272438
         },
         "mainHand": {
-          "itemId": 23451
+          "itemId": 13964
         },
         "offHand": {
-          "itemId": 19366
+          "itemId": 18316
         },
         "ranged": {
-          "itemId": 279246
+          "itemId": 13938
         }
       }
     }

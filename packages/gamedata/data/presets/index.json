@@ -1,5 +1,5 @@
 {
-  "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+  "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
   "specs": [
     {
       "specId": "balance-druid",
@@ -37,14 +37,6 @@
         {
           "id": "sv-weave",
           "name": "SV Weave"
-        },
-        {
-          "id": "mm-weave",
-          "name": "MM Weave"
-        },
-        {
-          "id": "bm-weave",
-          "name": "BM Weave"
         },
         {
           "id": "mm",
@@ -180,6 +172,10 @@
         {
           "id": "combat-venom",
           "name": "Combat Venom"
+        },
+        {
+          "id": "hemo-seal-fate",
+          "name": "Hemo Seal Fate"
         }
       ],
       "missing": []
@@ -190,8 +186,8 @@
       "defaultBuildId": null,
       "builds": [
         {
-          "id": "testing",
-          "name": "Testing"
+          "id": "default",
+          "name": "Default"
         }
       ],
       "missing": []
@@ -217,7 +213,7 @@
     },
     {
       "specId": "warlock",
-      "status": "partial",
+      "status": "complete",
       "defaultBuildId": null,
       "builds": [
         {
@@ -241,7 +237,7 @@
           "name": "Aff (Wrack)"
         }
       ],
-      "missing": ["gear"]
+      "missing": []
     },
     {
       "specId": "dps-warrior",

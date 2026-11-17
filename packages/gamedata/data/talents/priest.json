@@ -1,0 +1,556 @@
+{
+  "class": "priest",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
+    "files": ["ui/sim/talents/trees/priest.json", "assets/database/db.json"]
+  },
+  "trees": [
+    {
+      "name": "Discipline",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/201.jpg",
+      "talents": [
+        {
+          "name": "Power in Light",
+          "field": "powerInLight",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 1309969,
+          "definitionId": 142599,
+          "icon": "spell_holy_searinglight"
+        },
+        {
+          "name": "Wand Specialization",
+          "field": "wandSpecialization",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 14524,
+          "definitionId": 135380,
+          "icon": "inv_wand_01"
+        },
+        {
+          "name": "Twin Disciplines",
+          "field": "twinDisciplines",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 1225132,
+          "definitionId": 135379,
+          "icon": "spell_holy_sealofvengeance"
+        },
+        {
+          "name": "Silent Resolve",
+          "field": "silentResolve",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 14523,
+          "definitionId": 135378,
+          "icon": "spell_nature_manaregentotem"
+        },
+        {
+          "name": "Holy Precision",
+          "field": "holyPrecision",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 1309957,
+          "definitionId": 142598,
+          "icon": "spell_holy_divineillumination"
+        },
+        {
+          "name": "Mental Strength",
+          "field": "mentalStrength",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 18551,
+          "definitionId": 135367,
+          "icon": "spell_nature_enchantarmor"
+        },
+        {
+          "name": "Martyrdom",
+          "field": "martyrdom",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 14531,
+          "definitionId": 135375,
+          "icon": "spell_nature_tranquility"
+        },
+        {
+          "name": "Mental Agility",
+          "field": "mentalAgility",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 14520,
+          "definitionId": 135372,
+          "icon": "ability_hibernation"
+        },
+        {
+          "name": "Inner Focus",
+          "field": "innerFocus",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 14751,
+          "definitionId": 135374,
+          "icon": "spell_frost_windwalkon"
+        },
+        {
+          "name": "Improved Power Word: Shield",
+          "field": "improvedPowerWordShield",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 14748,
+          "definitionId": 135376,
+          "icon": "spell_holy_powerwordshield"
+        },
+        {
+          "name": "Meditation",
+          "field": "meditation",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 14521,
+          "definitionId": 135373,
+          "icon": "spell_nature_sleep"
+        },
+        {
+          "name": "Improved Inner Fire",
+          "field": "improvedInnerFire",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 14747,
+          "definitionId": 135371,
+          "icon": "spell_holy_innerfire"
+        },
+        {
+          "name": "Improved Mana Burn",
+          "field": "improvedManaBurn",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 14750,
+          "definitionId": 135368,
+          "icon": "spell_shadow_manaburn"
+        },
+        {
+          "name": "Soul Warding",
+          "field": "soulWarding",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 402000,
+          "definitionId": 135369,
+          "icon": "spell_holy_pureofheart",
+          "prereq": 9
+        },
+        {
+          "name": "Penance",
+          "field": "penance",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 402174,
+          "definitionId": 135364,
+          "icon": "spell_holy_penance"
+        },
+        {
+          "name": "Renewed Hope",
+          "field": "renewedHope",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 425280,
+          "definitionId": 135365,
+          "icon": "spell_holy_holyprotection",
+          "prereq": 13
+        },
+        {
+          "name": "Divine Aegis",
+          "field": "divineAegis",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 431622,
+          "definitionId": 135370,
+          "icon": "spell_holy_devineaegis"
+        },
+        {
+          "name": "Power Infusion",
+          "field": "powerInfusion",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 10060,
+          "definitionId": 135366,
+          "icon": "spell_holy_powerinfusion",
+          "prereq": 14
+        }
+      ]
+    },
+    {
+      "name": "Holy",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/202.jpg",
+      "talents": [
+        {
+          "name": "Twilight Focus",
+          "field": "twilightFocus",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 14913,
+          "definitionId": 135397,
+          "icon": "spell_holy_healingfocus"
+        },
+        {
+          "name": "Improved Renew",
+          "field": "improvedRenew",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 14908,
+          "definitionId": 135396,
+          "icon": "spell_holy_renew"
+        },
+        {
+          "name": "Holy Specialization",
+          "field": "holySpecialization",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 14889,
+          "definitionId": 142601,
+          "icon": "spell_holy_sealofsalvation"
+        },
+        {
+          "name": "Spell Warding",
+          "field": "spellWarding",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 27900,
+          "definitionId": 135394,
+          "icon": "spell_holy_spellwarding"
+        },
+        {
+          "name": "Divine Fury",
+          "field": "divineFury",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 18530,
+          "definitionId": 135393,
+          "icon": "spell_holy_sealofwrath"
+        },
+        {
+          "name": "Holy Nova",
+          "field": "holyNova",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 1,
+          "spellId": 15237,
+          "definitionId": 135392,
+          "icon": "spell_holy_holynova"
+        },
+        {
+          "name": "Blessed Recovery",
+          "field": "blessedRecovery",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 27811,
+          "definitionId": 135391,
+          "icon": "spell_holy_blessedrecovery"
+        },
+        {
+          "name": "Inspiration",
+          "field": "inspiration",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 14892,
+          "definitionId": 135390,
+          "icon": "spell_holy_layonhands"
+        },
+        {
+          "name": "Holy Reach",
+          "field": "holyReach",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 27789,
+          "definitionId": 135389,
+          "icon": "spell_holy_purify"
+        },
+        {
+          "name": "Improved Healing",
+          "field": "improvedHealing",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 14912,
+          "definitionId": 135388,
+          "icon": "spell_holy_heal02"
+        },
+        {
+          "name": "Searing Light",
+          "field": "searingLight",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 14909,
+          "definitionId": 135387,
+          "icon": "spell_holy_searinglightpriest",
+          "prereq": 4
+        },
+        {
+          "name": "Holy Binding",
+          "field": "holyBinding",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 1,
+          "spellId": 1328569,
+          "definitionId": 135386,
+          "icon": "spell_holy_blindingheal"
+        },
+        {
+          "name": "Litany of Light",
+          "field": "litanyOfLight",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1317006,
+          "definitionId": 135385,
+          "icon": "inv_scroll_07"
+        },
+        {
+          "name": "Spirit of Redemption",
+          "field": "spiritOfRedemption",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 20711,
+          "definitionId": 135384,
+          "icon": "inv_enchant_essenceeternallarge"
+        },
+        {
+          "name": "Spiritual Guidance",
+          "field": "spiritualGuidance",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 14901,
+          "definitionId": 135383,
+          "icon": "spell_holy_spiritualguidence"
+        },
+        {
+          "name": "Spiritual Healing",
+          "field": "spiritualHealing",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 14898,
+          "definitionId": 135382,
+          "icon": "spell_nature_moonglow"
+        },
+        {
+          "name": "Prayer of Mending",
+          "field": "prayerOfMending",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 401859,
+          "definitionId": 135381,
+          "icon": "spell_holy_prayerofmendingtga",
+          "prereq": 13
+        }
+      ]
+    },
+    {
+      "name": "Shadow",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/203.jpg",
+      "talents": [
+        {
+          "name": "Shadow Focus",
+          "field": "shadowFocus",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 15260,
+          "definitionId": 142597,
+          "icon": "spell_shadow_burningspirit"
+        },
+        {
+          "name": "Blackout",
+          "field": "blackout",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 15326,
+          "definitionId": 135362,
+          "icon": "spell_shadow_gathershadows"
+        },
+        {
+          "name": "Spirit Tap",
+          "field": "spiritTap",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 15270,
+          "definitionId": 135363,
+          "icon": "spell_shadow_requiem"
+        },
+        {
+          "name": "Improved Mind Blast",
+          "field": "improvedMindBlast",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 15273,
+          "definitionId": 135361,
+          "icon": "spell_shadow_unholyfrenzy"
+        },
+        {
+          "name": "Improved Shadow Word: Pain",
+          "field": "improvedShadowWordPain",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 15275,
+          "definitionId": 135360,
+          "icon": "spell_shadow_shadowwordpain"
+        },
+        {
+          "name": "Shadow Reach",
+          "field": "shadowReach",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 17322,
+          "definitionId": 135359,
+          "icon": "spell_shadow_chilltouch"
+        },
+        {
+          "name": "Improved Psychic Scream",
+          "field": "improvedPsychicScream",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 15392,
+          "definitionId": 135358,
+          "icon": "spell_shadow_psychicscream",
+          "prereq": 1
+        },
+        {
+          "name": "Mind Flay",
+          "field": "mindFlay",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 15407,
+          "definitionId": 135356,
+          "icon": "spell_shadow_siphonmana"
+        },
+        {
+          "name": "Improved Mind Flay",
+          "field": "improvedMindFlay",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 1225139,
+          "definitionId": 135355,
+          "icon": "spell_shadow_soulleech_2",
+          "prereq": 7
+        },
+        {
+          "name": "Dark Inspiration",
+          "field": "darkInspiration",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 1326159,
+          "definitionId": 135353,
+          "icon": "spell_warlock_demonsoul"
+        },
+        {
+          "name": "Vampiric Embrace",
+          "field": "vampiricEmbrace",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 15286,
+          "definitionId": 135350,
+          "icon": "spell_shadow_unsummonbuilding"
+        },
+        {
+          "name": "Shadow Weaving",
+          "field": "shadowWeaving",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 15257,
+          "definitionId": 135351,
+          "icon": "spell_shadow_blackplague"
+        },
+        {
+          "name": "Silence",
+          "field": "silence",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 1,
+          "spellId": 15487,
+          "definitionId": 135354,
+          "icon": "spell_shadow_impphaseshift"
+        },
+        {
+          "name": "Devouring Contagion",
+          "field": "devouringContagion",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 1309950,
+          "definitionId": 135349,
+          "icon": "spell_shadow_devouringplague."
+        },
+        {
+          "name": "Early Demise",
+          "field": "earlyDemise",
+          "row": 5,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1310076,
+          "definitionId": 142600,
+          "icon": "spell_shadow_demonicfortitude"
+        },
+        {
+          "name": "Darkness",
+          "field": "darkness",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 15259,
+          "definitionId": 135348,
+          "icon": "spell_shadow_twilight"
+        },
+        {
+          "name": "Shadowform",
+          "field": "shadowform",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 15473,
+          "definitionId": 135347,
+          "icon": "spell_shadow_shadowform",
+          "prereq": 10
+        }
+      ]
+    }
+  ]
+}

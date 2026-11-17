@@ -1,0 +1,576 @@
+{
+  "class": "rogue",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
+    "files": ["ui/sim/talents/trees/rogue.json", "assets/database/db.json"]
+  },
+  "trees": [
+    {
+      "name": "Assassination",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/182.jpg",
+      "talents": [
+        {
+          "name": "Improved Gouge",
+          "field": "improvedGouge",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 13741,
+          "definitionId": 135272,
+          "icon": "ability_gouge"
+        },
+        {
+          "name": "Remorseless Attacks",
+          "field": "remorselessAttacks",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 14144,
+          "definitionId": 135253,
+          "icon": "ability_fiegndead"
+        },
+        {
+          "name": "Malice",
+          "field": "malice",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 14138,
+          "definitionId": 135252,
+          "icon": "ability_racial_bloodrage"
+        },
+        {
+          "name": "Ruthlessness",
+          "field": "ruthlessness",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 14156,
+          "definitionId": 135251,
+          "icon": "ability_druid_disembowel"
+        },
+        {
+          "name": "Improved Expose Armor",
+          "field": "improvedExposeArmor",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 14168,
+          "definitionId": 135247,
+          "icon": "ability_warrior_riposte"
+        },
+        {
+          "name": "Improved Slice and Dice",
+          "field": "improvedSliceAndDice",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 14165,
+          "definitionId": 135269,
+          "icon": "ability_rogue_slicedice"
+        },
+        {
+          "name": "Vigor",
+          "field": "vigor",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 14983,
+          "definitionId": 135250,
+          "icon": "spell_nature_earthbindtotem"
+        },
+        {
+          "name": "Blood Splatter",
+          "field": "bloodSplatter",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1329256,
+          "definitionId": 135248,
+          "icon": "ability_rogue_rupture"
+        },
+        {
+          "name": "Lethality",
+          "field": "lethality",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 14128,
+          "definitionId": 135246,
+          "icon": "ability_criticalstrike",
+          "prereq": 2
+        },
+        {
+          "name": "Vile Poisons",
+          "field": "vilePoisons",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 16513,
+          "definitionId": 135244,
+          "icon": "ability_rogue_feigndeath"
+        },
+        {
+          "name": "Cold Blood",
+          "field": "coldBlood",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 14177,
+          "definitionId": 135245,
+          "icon": "spell_ice_lament"
+        },
+        {
+          "name": "Improved Poisons",
+          "field": "improvedPoisons",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 14113,
+          "definitionId": 135243,
+          "icon": "ability_poisons"
+        },
+        {
+          "name": "Relentless Strikes",
+          "field": "relentlessStrikes",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 14179,
+          "definitionId": 145964,
+          "icon": "ability_warrior_decisivestrike"
+        },
+        {
+          "name": "Venom",
+          "field": "venom",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1329328,
+          "definitionId": 135242,
+          "icon": "inv_sword_31"
+        },
+        {
+          "name": "Improved Kidney Shot",
+          "field": "improvedKidneyShot",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 14174,
+          "definitionId": 135241,
+          "icon": "ability_rogue_kidneyshot"
+        },
+        {
+          "name": "Seal Fate",
+          "field": "sealFate",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 14186,
+          "definitionId": 135240,
+          "icon": "spell_shadow_chilltouch"
+        },
+        {
+          "name": "Mutilate",
+          "field": "mutilate",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 399956,
+          "definitionId": 135239,
+          "icon": "ability_rogue_deadlybrew",
+          "prereq": 13
+        }
+      ]
+    },
+    {
+      "name": "Combat",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/181.jpg",
+      "talents": [
+        {
+          "name": "Coup de Grace",
+          "field": "coupDeGrace",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 14162,
+          "definitionId": 135238,
+          "icon": "ability_rogue_eviscerate"
+        },
+        {
+          "name": "Efficient Strikes",
+          "field": "efficientStrikes",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 13732,
+          "definitionId": 135271,
+          "icon": "spell_shadow_ritualofsacrifice"
+        },
+        {
+          "name": "Lightning Reflexes",
+          "field": "lightningReflexes",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 13712,
+          "definitionId": 145370,
+          "icon": "spell_nature_invisibilty"
+        },
+        {
+          "name": "Puncturing Wounds",
+          "field": "puncturingWounds",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 1224716,
+          "definitionId": 135249,
+          "icon": "ability_backstab"
+        },
+        {
+          "name": "Deflection",
+          "field": "deflection",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 13713,
+          "definitionId": 135268,
+          "icon": "ability_parry"
+        },
+        {
+          "name": "Precision",
+          "field": "precision",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 13705,
+          "definitionId": 135267,
+          "icon": "ability_marksmanship"
+        },
+        {
+          "name": "Improved Sprint",
+          "field": "improvedSprint",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 13743,
+          "definitionId": 135262,
+          "icon": "ability_rogue_sprint"
+        },
+        {
+          "name": "Endurance",
+          "field": "endurance",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 13742,
+          "definitionId": 135266,
+          "icon": "spell_shadow_shadowward"
+        },
+        {
+          "name": "Riposte",
+          "field": "riposte",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 14251,
+          "definitionId": 135265,
+          "icon": "ability_warrior_challange",
+          "prereq": 4
+        },
+        {
+          "name": "Composure",
+          "field": "composure",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 1329265,
+          "definitionId": 135289,
+          "icon": "ability_rogue_fleetfooted"
+        },
+        {
+          "name": "Improved Kick",
+          "field": "improvedKick",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 13754,
+          "definitionId": 135263,
+          "icon": "ability_kick"
+        },
+        {
+          "name": "Flawless Execution",
+          "field": "flawlessExecution",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1310711,
+          "definitionId": 138268,
+          "icon": "inv_sword_35"
+        },
+        {
+          "name": "Weapon Expertise",
+          "field": "weaponExpertise",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 30919,
+          "definitionId": 135256,
+          "icon": "spell_holy_blessingofstrength",
+          "prereq": 5
+        },
+        {
+          "name": "Aggression",
+          "field": "aggression",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 18427,
+          "definitionId": 135260,
+          "icon": "ability_racial_avatar"
+        },
+        {
+          "name": "Dual Wield Specialization",
+          "field": "dualWieldSpecialization",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 13715,
+          "definitionId": 145965,
+          "icon": "ability_dualwield"
+        },
+        {
+          "name": "Blade Flurry",
+          "field": "bladeFlurry",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 13877,
+          "definitionId": 135258,
+          "icon": "ability_warrior_punishingblow"
+        },
+        {
+          "name": "Hack and Slash",
+          "field": "hackAndSlash",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 13960,
+          "definitionId": 135257,
+          "icon": "inv_sword_27"
+        },
+        {
+          "name": "Flash of Steel",
+          "field": "flashOfSteel",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 1329284,
+          "definitionId": 135270,
+          "icon": "ability_rogue_restlessblades"
+        },
+        {
+          "name": "Adrenaline Rush",
+          "field": "adrenalineRush",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 13750,
+          "definitionId": 135254,
+          "icon": "spell_shadow_shadowworddominate",
+          "prereq": 15
+        }
+      ]
+    },
+    {
+      "name": "Subtlety",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/183.jpg",
+      "talents": [
+        {
+          "name": "Setup",
+          "field": "setup",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 13983,
+          "definitionId": 135281,
+          "icon": "spell_nature_mirrorimage"
+        },
+        {
+          "name": "Master of Deception",
+          "field": "masterOfDeception",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 13958,
+          "definitionId": 135291,
+          "icon": "spell_shadow_charm"
+        },
+        {
+          "name": "Opportunity",
+          "field": "opportunity",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 14057,
+          "definitionId": 135290,
+          "icon": "ability_warrior_warcry"
+        },
+        {
+          "name": "Dirty Deeds",
+          "field": "dirtyDeeds",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 14082,
+          "definitionId": 135275,
+          "icon": "spell_shadow_summonsuccubus"
+        },
+        {
+          "name": "Camouflage",
+          "field": "camouflage",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 13975,
+          "definitionId": 135286,
+          "icon": "ability_stealth"
+        },
+        {
+          "name": "Improved Ambush",
+          "field": "improvedAmbush",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 14079,
+          "definitionId": 135279,
+          "icon": "ability_rogue_ambush"
+        },
+        {
+          "name": "Dirty Tricks",
+          "field": "dirtyTricks",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 1224782,
+          "definitionId": 135287,
+          "icon": "ability_sap"
+        },
+        {
+          "name": "Initiative",
+          "field": "initiative",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 13976,
+          "definitionId": 135285,
+          "icon": "spell_shadow_fumble"
+        },
+        {
+          "name": "Premeditation",
+          "field": "premeditation",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 14183,
+          "definitionId": 135273,
+          "icon": "spell_shadow_possession"
+        },
+        {
+          "name": "Serrated Blades",
+          "field": "serratedBlades",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 14171,
+          "definitionId": 135282,
+          "icon": "inv_sword_17"
+        },
+        {
+          "name": "Elusiveness",
+          "field": "elusiveness",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 13981,
+          "definitionId": 135283,
+          "icon": "spell_magic_lesserinvisibilty"
+        },
+        {
+          "name": "Ghostly Strike",
+          "field": "ghostlyStrike",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 14278,
+          "definitionId": 135284,
+          "icon": "spell_shadow_curse"
+        },
+        {
+          "name": "Quick Getaway",
+          "field": "quickGetaway",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 1310728,
+          "definitionId": 142619,
+          "icon": "ability_rogue_blackjack",
+          "prereq": 6
+        },
+        {
+          "name": "Heightened Senses",
+          "field": "heightenedSenses",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 30894,
+          "definitionId": 135277,
+          "icon": "ability_ambush"
+        },
+        {
+          "name": "Preparation",
+          "field": "preparation",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 14185,
+          "definitionId": 135276,
+          "icon": "spell_shadow_antishadow"
+        },
+        {
+          "name": "Hemorrhage",
+          "field": "hemorrhage",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 16511,
+          "definitionId": 135278,
+          "icon": "spell_shadow_lifedrain",
+          "prereq": 9
+        },
+        {
+          "name": "Boot Knife",
+          "field": "bootKnife",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 1329286,
+          "definitionId": 135280,
+          "icon": "inv_sword_32"
+        },
+        {
+          "name": "Death Mark",
+          "field": "deathMark",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1316709,
+          "definitionId": 142618,
+          "icon": "ability_creature_cursed_02",
+          "prereq": 14
+        }
+      ]
+    }
+  ]
+}

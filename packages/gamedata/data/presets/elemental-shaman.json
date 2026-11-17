@@ -2,28 +2,28 @@
   "specId": "elemental-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
     "dir": "ui/specs/shaman/elemental",
-    "files": ["builds/testing.build.json", "presets.ts"]
+    "files": ["builds/default.build.json", "presets.ts"]
   },
   "status": "complete",
   "defaultBuildId": null,
   "missing": [],
-  "notes": [
-    "Upstream defaults to the TypeAuto rotation, which the site builds into an APL in the browser; the defaults here use the APL preset \"default\" instead."
-  ],
+  "notes": [],
   "defaults": {
-    "race": "troll",
+    "race": "windshaperskyborne",
     "professions": ["Leatherworking", "Enchanting"],
     "talents": "5500331023001351-05500001-053",
-    "gearSetId": "testing",
+    "gearSetId": "default",
     "rotationId": "default",
     "consumables": {
       "flaskId": 13512,
-      "foodId": 13931,
+      "foodId": 13935,
       "conjuredId": 12662,
-      "mhImbueId": 20749,
-      "offensivePotId": 250937
+      "mhImbueId": 20750,
+      "extraIds": [8423],
+      "elixirIds": [250343, 9155, 250338, 250341, 250337, 250335],
+      "resourcePotId": 13444
     },
     "specOptions": {
       "classOptions": {}
@@ -42,12 +42,7 @@
     },
     "debuffs": {
       "judgementOfWisdom": true,
-      "curseOfElements": true,
-      "curseOfRecklessness": true,
-      "faerieFire": true,
-      "exposeArmor": true,
-      "sunderArmor": true,
-      "giftOfArthas": true
+      "curseOfElements": true
     },
     "playerOptions": {
       "distanceFromTarget": 20,
@@ -55,25 +50,49 @@
       "reactionTimeMs": 100,
       "reactionTimeMaxMs": 0,
       "inFrontOfTarget": false
+    },
+    "encounter": {
+      "apiVersion": 2,
+      "duration": 180,
+      "durationVariation": 5,
+      "executeProportion20": 0.2,
+      "executeProportion35": 0.35,
+      "targets": [
+        {
+          "id": 31146,
+          "name": "Raid Target",
+          "level": 63,
+          "mobType": "MobTypeMechanical",
+          "stats": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+            1428900, 0, 0, 0, 0, 0, 0, 0, 0
+          ],
+          "minBaseDamage": 15113,
+          "damageSpread": 0.5,
+          "swingSpeed": 2,
+          "parryHaste": true,
+          "canCrush": true
+        }
+      ]
     }
   },
   "builds": [
     {
-      "id": "testing",
-      "name": "Testing",
+      "id": "default",
+      "name": "Default",
       "setup": {
         "race": "windshaperskyborne",
         "professions": ["Leatherworking", "Enchanting"],
         "talents": "5500331023001351-05500001-053",
-        "gearSetId": "testing",
+        "gearSetId": "default",
         "rotationId": "default",
         "consumables": {
           "flaskId": 13512,
           "foodId": 13935,
           "conjuredId": 12662,
-          "mhImbueId": 20749,
+          "mhImbueId": 20750,
           "extraIds": [8423],
-          "elixirIds": [250343, 9155, 250338, 250341, 250337],
+          "elixirIds": [250343, 9155, 250338, 250341, 250337, 250335],
           "resourcePotId": 13444
         },
         "specOptions": {
@@ -93,15 +112,10 @@
         },
         "debuffs": {
           "judgementOfWisdom": true,
-          "curseOfElements": true,
-          "curseOfRecklessness": true,
-          "faerieFire": true,
-          "exposeArmor": true,
-          "sunderArmor": true,
-          "giftOfArthas": true
+          "curseOfElements": true
         },
         "playerOptions": {
-          "distanceFromTarget": 5,
+          "distanceFromTarget": 20,
           "channelClipDelayMs": 0,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
@@ -109,7 +123,7 @@
         },
         "encounter": {
           "apiVersion": 2,
-          "duration": 60,
+          "duration": 180,
           "durationVariation": 5,
           "executeProportion20": 0.2,
           "executeProportion35": 0.35,
@@ -128,36 +142,6 @@
               "swingSpeed": 2,
               "parryHaste": true,
               "canCrush": true
-            },
-            {
-              "id": 31146,
-              "name": "Raid Target",
-              "level": 63,
-              "mobType": "MobTypeMechanical",
-              "stats": [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
-                1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
-              ],
-              "minBaseDamage": 2601,
-              "damageSpread": 0.5,
-              "swingSpeed": 2,
-              "parryHaste": true,
-              "canCrush": true
-            },
-            {
-              "id": 31146,
-              "name": "Raid Target",
-              "level": 63,
-              "mobType": "MobTypeMechanical",
-              "stats": [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
-                1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
-              ],
-              "minBaseDamage": 2601,
-              "damageSpread": 0.5,
-              "swingSpeed": 2,
-              "parryHaste": true,
-              "canCrush": true
             }
           ]
         }
@@ -166,67 +150,67 @@
   ],
   "gearSets": [
     {
-      "id": "testing",
-      "name": "Testing",
+      "id": "default",
+      "name": "Default",
       "gear": {
         "head": {
-          "itemId": 252604,
+          "itemId": 227002,
           "enchantId": 1509
         },
         "neck": {
-          "itemId": 23125,
+          "itemId": 22403,
           "enchantId": 8218
         },
         "shoulder": {
-          "itemId": 19050
+          "itemId": 227003
         },
         "back": {
-          "itemId": 279270,
+          "itemId": 272411,
           "enchantId": 2621
         },
         "chest": {
-          "itemId": 10143,
-          "enchantId": 1893,
-          "randomSuffix": 12734
+          "itemId": 280057,
+          "enchantId": 8492
         },
         "wrist": {
-          "itemId": 10248,
-          "enchantId": 1901,
-          "randomSuffix": 12734
+          "itemId": 227001,
+          "enchantId": 7665
         },
         "hands": {
-          "itemId": 21178,
+          "itemId": 20133,
           "enchantId": 8213
         },
         "waist": {
-          "itemId": 20047
+          "itemId": 18405
         },
         "legs": {
           "itemId": 252486,
-          "enchantId": 1509
+          "enchantId": 8492
         },
         "feet": {
-          "itemId": 254129,
+          "itemId": 227007,
           "enchantId": 8492
         },
         "finger1": {
-          "itemId": 272407
+          "itemId": 272406
         },
         "finger2": {
-          "itemId": 19147
+          "itemId": 12543
         },
         "trinket1": {
           "itemId": 272438
         },
         "trinket2": {
-          "itemId": 270225
+          "itemId": 13968
         },
         "mainHand": {
-          "itemId": 22688,
+          "itemId": 13964,
           "enchantId": 8217
         },
         "offHand": {
-          "itemId": 15968
+          "itemId": 10271,
+          "enchantId": 7664,
+          "randomSuffix": 12734
         },
         "ranged": {
           "itemId": 23199
@@ -314,8 +298,16 @@
           {
             "action": {
               "condition": {
-                "variableRef": {
-                  "name": "Single Target"
+                "cmp": {
+                  "op": "OpEq",
+                  "lhs": {
+                    "numberTargets": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "1"
+                    }
+                  }
                 }
               },
               "castSpell": {
@@ -333,8 +325,16 @@
           {
             "action": {
               "condition": {
-                "variableRef": {
-                  "name": "Multi Target"
+                "cmp": {
+                  "op": "OpGt",
+                  "lhs": {
+                    "numberTargets": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "1"
+                    }
+                  }
                 }
               },
               "castSpell": {
@@ -449,8 +449,16 @@
                 "and": {
                   "vals": [
                     {
-                      "variableRef": {
-                        "name": "Single Target"
+                      "cmp": {
+                        "op": "OpEq",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "1"
+                          }
+                        }
                       }
                     },
                     {
@@ -484,8 +492,16 @@
                 "and": {
                   "vals": [
                     {
-                      "variableRef": {
-                        "name": "Multi Target"
+                      "cmp": {
+                        "op": "OpGt",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "1"
+                          }
+                        }
                       }
                     },
                     {
@@ -509,6 +525,28 @@
               "castSpell": {
                 "spellId": {
                   "spellId": 10587
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "cmp": {
+                  "op": "OpGt",
+                  "lhs": {
+                    "numberTargets": {}
+                  },
+                  "rhs": {
+                    "const": {
+                      "val": "1"
+                    }
+                  }
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 408345
                 }
               }
             }
@@ -567,42 +605,31 @@
           {
             "action": {
               "condition": {
-                "or": {
+                "and": {
                   "vals": [
                     {
-                      "variableRef": {
-                        "name": "Multi Target"
+                      "cmp": {
+                        "op": "OpGt",
+                        "lhs": {
+                          "currentManaPercent": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "40%"
+                          }
+                        }
                       }
                     },
                     {
-                      "and": {
-                        "vals": [
-                          {
-                            "cmp": {
-                              "op": "OpGe",
-                              "lhs": {
-                                "currentManaPercent": {}
-                              },
-                              "rhs": {
-                                "const": {
-                                  "val": "40%"
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "not": {
-                              "val": {
-                                "auraIsActive": {
-                                  "auraId": {
-                                    "spellId": 16166
-                                  },
-                                  "includeReactionTime": true
-                                }
-                              }
-                            }
+                      "not": {
+                        "val": {
+                          "auraIsActive": {
+                            "auraId": {
+                              "spellId": 16166
+                            },
+                            "includeReactionTime": true
                           }
-                        ]
+                        }
                       }
                     }
                   ]
@@ -611,20 +638,6 @@
               "castSpell": {
                 "spellId": {
                   "spellId": 10605
-                }
-              }
-            }
-          },
-          {
-            "action": {
-              "condition": {
-                "variableRef": {
-                  "name": "Multi Target"
-                }
-              },
-              "castSpell": {
-                "spellId": {
-                  "spellId": 408345
                 }
               }
             }
@@ -650,11 +663,6 @@
               "condition": {
                 "and": {
                   "vals": [
-                    {
-                      "variableRef": {
-                        "name": "Single Target"
-                      }
-                    },
                     {
                       "auraIsKnown": {
                         "auraId": {
@@ -709,40 +717,6 @@
               "castSpell": {
                 "spellId": {
                   "spellId": 15208
-                }
-              }
-            }
-          }
-        ],
-        "valueVariables": [
-          {
-            "name": "Single Target",
-            "value": {
-              "cmp": {
-                "op": "OpEq",
-                "lhs": {
-                  "numberTargets": {}
-                },
-                "rhs": {
-                  "const": {
-                    "val": "1"
-                  }
-                }
-              }
-            }
-          },
-          {
-            "name": "Multi Target",
-            "value": {
-              "cmp": {
-                "op": "OpGt",
-                "lhs": {
-                  "numberTargets": {}
-                },
-                "rhs": {
-                  "const": {
-                    "val": "1"
-                  }
                 }
               }
             }

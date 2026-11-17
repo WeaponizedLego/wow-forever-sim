@@ -2,7 +2,7 @@
   "specId": "warlock",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
     "dir": "ui/specs/warlock/dps",
     "files": [
       "builds/aff_wrack.build.json",
@@ -10,14 +10,19 @@
       "builds/demo_shadow_brand.build.json",
       "builds/destro.build.json",
       "builds/sm_ruin.build.json",
+      "gear_sets/aff_wrack.gear.json",
+      "gear_sets/demo_fire_brand.gear.json",
+      "gear_sets/demo_shadow_brand.gear.json",
+      "gear_sets/destro.gear.json",
       "gear_sets/preraid.gear.json",
       "gear_sets/raid.gear.json",
+      "gear_sets/sm_ruin.gear.json",
       "presets.ts"
     ]
   },
-  "status": "partial",
+  "status": "complete",
   "defaultBuildId": null,
-  "missing": ["gear"],
+  "missing": [],
   "notes": [
     "No default race upstream; the class's first race (human) is used, as the site does.",
     "Upstream defaults to the TypeAuto rotation, which the site builds into an APL in the browser; the defaults here use the APL preset \"demo-fire-brand\" instead.",
@@ -28,7 +33,7 @@
     "race": "human",
     "professions": ["Engineering", "Tailoring"],
     "talents": "011-0305003201220301351-0050055003",
-    "gearSetId": null,
+    "gearSetId": "demo-fire-brand",
     "rotationId": "demo-fire-brand",
     "consumables": {
       "flaskId": 13512,
@@ -65,7 +70,7 @@
     },
     "playerOptions": {
       "distanceFromTarget": 20,
-      "channelClipDelayMs": 0,
+      "channelClipDelayMs": 100,
       "reactionTimeMs": 100,
       "reactionTimeMaxMs": 0,
       "inFrontOfTarget": false
@@ -76,10 +81,10 @@
       "id": "demo-fire-brand",
       "name": "Demo (Fire Brand)",
       "setup": {
-        "race": "human",
+        "race": "orc",
         "professions": ["Engineering", "Tailoring"],
         "talents": "011-0305003201220301351-0050055003",
-        "gearSetId": null,
+        "gearSetId": "demo-fire-brand",
         "rotationId": "demo-fire-brand",
         "consumables": {
           "flaskId": 13512,
@@ -94,9 +99,10 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264],
           "mhWeaponImbueId": 13701,
-          "resourcePotId": 13444
+          "resourcePotId": 13444,
+          "offensivePotId": 250937
         },
         "specOptions": {
           "classOptions": {
@@ -131,7 +137,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -142,10 +148,10 @@
       "id": "demo-shadow-brand",
       "name": "Demo (Shadow Brand)",
       "setup": {
-        "race": "human",
+        "race": "orc",
         "professions": ["Engineering", "Tailoring"],
         "talents": "011-0005003231220301351-0550005003",
-        "gearSetId": null,
+        "gearSetId": "demo-shadow-brand",
         "rotationId": "demo-shadow-brand",
         "consumables": {
           "flaskId": 13512,
@@ -160,9 +166,10 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264],
           "mhWeaponImbueId": 13603,
-          "resourcePotId": 13444
+          "resourcePotId": 13444,
+          "offensivePotId": 250937
         },
         "specOptions": {
           "classOptions": {
@@ -197,7 +204,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -208,10 +215,10 @@
       "id": "destro",
       "name": "Destro",
       "setup": {
-        "race": "human",
+        "race": "orc",
         "professions": ["Engineering", "Tailoring"],
         "talents": "2550002013--0050355103101351",
-        "gearSetId": null,
+        "gearSetId": "destro",
         "rotationId": "destro",
         "consumables": {
           "flaskId": 13512,
@@ -226,7 +233,7 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264],
           "mhWeaponImbueId": 13701,
           "resourcePotId": 13444
         },
@@ -262,7 +269,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -273,10 +280,10 @@
       "id": "sm-ruin",
       "name": "SM/Ruin",
       "setup": {
-        "race": "human",
+        "race": "orc",
         "professions": ["Engineering", "Tailoring"],
         "talents": "2550002013520105--0550205003",
-        "gearSetId": null,
+        "gearSetId": "sm-ruin",
         "rotationId": "sm-ruin",
         "consumables": {
           "flaskId": 13512,
@@ -327,7 +334,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -341,7 +348,7 @@
         "race": "orc",
         "professions": ["Engineering", "Tailoring"],
         "talents": "25500020135201351-0050203001-05",
-        "gearSetId": null,
+        "gearSetId": "aff-wrack",
         "rotationId": "aff-wrack",
         "consumables": {
           "flaskId": 13512,
@@ -358,10 +365,12 @@
           "extraIds": [18269, 10309],
           "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264],
           "mhWeaponImbueId": 13603,
-          "resourcePotId": 13444
+          "resourcePotId": 13444,
+          "offensivePotId": 250937
         },
         "specOptions": {
           "classOptions": {
+            "summon": "Succubus",
             "armor": "DemonArmor",
             "sacrificedDemon": "Imp",
             "soulShards": 32
@@ -392,7 +401,7 @@
         },
         "playerOptions": {
           "distanceFromTarget": 20,
-          "channelClipDelayMs": 0,
+          "channelClipDelayMs": 100,
           "reactionTimeMs": 100,
           "reactionTimeMaxMs": 0,
           "inFrontOfTarget": false
@@ -401,6 +410,336 @@
     }
   ],
   "gearSets": [
+    {
+      "id": "demo-fire-brand",
+      "name": "Demo (Fire Brand)",
+      "gear": {
+        "head": {
+          "itemId": 22267,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 22403,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 19050
+        },
+        "back": {
+          "itemId": 272411,
+          "enchantId": 2621
+        },
+        "chest": {
+          "itemId": 280057,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 18497,
+          "enchantId": 1901
+        },
+        "hands": {
+          "itemId": 18408,
+          "enchantId": 8492
+        },
+        "waist": {
+          "itemId": 11662
+        },
+        "legs": {
+          "itemId": 13170,
+          "enchantId": 8492
+        },
+        "feet": {
+          "itemId": 11822,
+          "enchantId": 911
+        },
+        "finger1": {
+          "itemId": 272406
+        },
+        "finger2": {
+          "itemId": 12543
+        },
+        "trinket1": {
+          "itemId": 18467
+        },
+        "trinket2": {
+          "itemId": 13968
+        },
+        "mainHand": {
+          "itemId": 13964,
+          "enchantId": 8217
+        },
+        "offHand": {
+          "itemId": 11904
+        },
+        "ranged": {
+          "itemId": 13938
+        }
+      }
+    },
+    {
+      "id": "demo-shadow-brand",
+      "name": "Demo (Shadow Brand)",
+      "gear": {
+        "head": {
+          "itemId": 22267,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 22403,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 19050
+        },
+        "back": {
+          "itemId": 272411,
+          "enchantId": 2621
+        },
+        "chest": {
+          "itemId": 280057,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 18497,
+          "enchantId": 1901
+        },
+        "hands": {
+          "itemId": 13253,
+          "enchantId": 8492
+        },
+        "waist": {
+          "itemId": 11662
+        },
+        "legs": {
+          "itemId": 13170,
+          "enchantId": 8492
+        },
+        "feet": {
+          "itemId": 11822,
+          "enchantId": 911
+        },
+        "finger1": {
+          "itemId": 272406
+        },
+        "finger2": {
+          "itemId": 12545
+        },
+        "trinket1": {
+          "itemId": 18467
+        },
+        "trinket2": {
+          "itemId": 13968
+        },
+        "mainHand": {
+          "itemId": 13964,
+          "enchantId": 8217
+        },
+        "offHand": {
+          "itemId": 18316
+        },
+        "ranged": {
+          "itemId": 13938
+        }
+      }
+    },
+    {
+      "id": "destro",
+      "name": "Destro",
+      "gear": {
+        "head": {
+          "itemId": 22267,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 22403,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 19050
+        },
+        "back": {
+          "itemId": 272411,
+          "enchantId": 2621
+        },
+        "chest": {
+          "itemId": 280057,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 18497,
+          "enchantId": 1901
+        },
+        "hands": {
+          "itemId": 18408,
+          "enchantId": 8492
+        },
+        "waist": {
+          "itemId": 11662
+        },
+        "legs": {
+          "itemId": 13170,
+          "enchantId": 8492
+        },
+        "feet": {
+          "itemId": 11822,
+          "enchantId": 911
+        },
+        "finger1": {
+          "itemId": 272406
+        },
+        "finger2": {
+          "itemId": 12545
+        },
+        "trinket1": {
+          "itemId": 18467
+        },
+        "trinket2": {
+          "itemId": 13968
+        },
+        "mainHand": {
+          "itemId": 13964,
+          "enchantId": 8217
+        },
+        "offHand": {
+          "itemId": 11904
+        },
+        "ranged": {
+          "itemId": 13938
+        }
+      }
+    },
+    {
+      "id": "sm-ruin",
+      "name": "SM/Ruin",
+      "gear": {
+        "head": {
+          "itemId": 22267,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 22403,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 19050
+        },
+        "back": {
+          "itemId": 272411,
+          "enchantId": 2621
+        },
+        "chest": {
+          "itemId": 280057,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 18497,
+          "enchantId": 1901
+        },
+        "hands": {
+          "itemId": 18407,
+          "enchantId": 8492
+        },
+        "waist": {
+          "itemId": 11662
+        },
+        "legs": {
+          "itemId": 13170,
+          "enchantId": 8492
+        },
+        "feet": {
+          "itemId": 11822,
+          "enchantId": 911
+        },
+        "finger1": {
+          "itemId": 272406
+        },
+        "finger2": {
+          "itemId": 12543
+        },
+        "trinket1": {
+          "itemId": 272438
+        },
+        "trinket2": {
+          "itemId": 13968
+        },
+        "mainHand": {
+          "itemId": 18372,
+          "enchantId": 8217
+        },
+        "offHand": {
+          "itemId": 18316
+        },
+        "ranged": {
+          "itemId": 13396
+        }
+      }
+    },
+    {
+      "id": "aff-wrack",
+      "name": "Aff (Wrack)",
+      "gear": {
+        "head": {
+          "itemId": 22267,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 18691,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 19050
+        },
+        "back": {
+          "itemId": 272411,
+          "enchantId": 2621
+        },
+        "chest": {
+          "itemId": 14136,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 18497,
+          "enchantId": 1901
+        },
+        "hands": {
+          "itemId": 18407,
+          "enchantId": 8492
+        },
+        "waist": {
+          "itemId": 254087
+        },
+        "legs": {
+          "itemId": 13170,
+          "enchantId": 8492
+        },
+        "feet": {
+          "itemId": 11822,
+          "enchantId": 911
+        },
+        "finger1": {
+          "itemId": 22433
+        },
+        "finger2": {
+          "itemId": 12545
+        },
+        "trinket1": {
+          "itemId": 18467
+        },
+        "trinket2": {
+          "itemId": 272438
+        },
+        "mainHand": {
+          "itemId": 18372,
+          "enchantId": 2568
+        },
+        "offHand": {
+          "itemId": 18316
+        },
+        "ranged": {
+          "itemId": 13396
+        }
+      }
+    },
     {
       "id": "file-preraid",
       "name": "preraid.gear.json",

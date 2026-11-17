@@ -1,0 +1,536 @@
+{
+  "class": "hunter",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
+    "files": ["ui/sim/talents/trees/hunter.json", "assets/database/db.json"]
+  },
+  "trees": [
+    {
+      "name": "Beast Mastery",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/361.jpg",
+      "talents": [
+        {
+          "name": "Deadly Aspects",
+          "field": "deadlyAspects",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 19552,
+          "definitionId": 134422,
+          "icon": "spell_nature_ravenform"
+        },
+        {
+          "name": "Endurance Training",
+          "field": "enduranceTraining",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19583,
+          "definitionId": 134438,
+          "icon": "spell_nature_reincarnation"
+        },
+        {
+          "name": "Focused Fire",
+          "field": "focusedFire",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1223755,
+          "definitionId": 134437,
+          "icon": "inv_weapon_crossbow_10"
+        },
+        {
+          "name": "Improved Aspect of the Monkey",
+          "field": "improvedAspectOfTheMonkey",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 19549,
+          "definitionId": 134436,
+          "icon": "ability_hunter_aspectofthemonkey"
+        },
+        {
+          "name": "Improved Revive Pet",
+          "field": "improvedRevivePet",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 24443,
+          "definitionId": 134434,
+          "icon": "ability_hunter_beastsoothe"
+        },
+        {
+          "name": "Pathfinding",
+          "field": "pathfinding",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 19559,
+          "definitionId": 134435,
+          "icon": "ability_mount_jungletiger"
+        },
+        {
+          "name": "Bestial Swiftness",
+          "field": "bestialSwiftness",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 19596,
+          "definitionId": 134432,
+          "icon": "ability_druid_dash"
+        },
+        {
+          "name": "Unleashed Fury",
+          "field": "unleashedFury",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19616,
+          "definitionId": 134431,
+          "icon": "ability_bullrush"
+        },
+        {
+          "name": "Improved Mend Pet",
+          "field": "improvedMendPet",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 19572,
+          "definitionId": 134430,
+          "icon": "ability_hunter_mendpet"
+        },
+        {
+          "name": "Ferocity",
+          "field": "ferocity",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19598,
+          "definitionId": 134429,
+          "icon": "inv_misc_monsterclaw_04"
+        },
+        {
+          "name": "Summon Hawk",
+          "field": "summonHawk",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 1,
+          "spellId": 1293241,
+          "definitionId": 134428,
+          "icon": "ability_hunter_animalhandler"
+        },
+        {
+          "name": "Spirit Bond",
+          "field": "spiritBond",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 19578,
+          "definitionId": 134427,
+          "icon": "ability_druid_demoralizingroar"
+        },
+        {
+          "name": "Intimidation",
+          "field": "intimidation",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 19577,
+          "definitionId": 134426,
+          "icon": "ability_devour",
+          "prereq": 6
+        },
+        {
+          "name": "Bestial Discipline",
+          "field": "bestialDiscipline",
+          "row": 4,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 19590,
+          "definitionId": 134425,
+          "icon": "spell_nature_abolishmagic"
+        },
+        {
+          "name": "Frenzy",
+          "field": "frenzy",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19621,
+          "definitionId": 134424,
+          "icon": "inv_misc_monsterclaw_03",
+          "prereq": 9
+        },
+        {
+          "name": "Bestial Wrath",
+          "field": "bestialWrath",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 19574,
+          "definitionId": 134423,
+          "icon": "ability_druid_ferociousbite",
+          "prereq": 12
+        }
+      ]
+    },
+    {
+      "name": "Marksmanship",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/363.jpg",
+      "talents": [
+        {
+          "name": "Hawk Eye",
+          "field": "hawkEye",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 19498,
+          "definitionId": 134478,
+          "icon": "ability_townwatch"
+        },
+        {
+          "name": "Improved Concussive Shot",
+          "field": "improvedConcussiveShot",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 19407,
+          "definitionId": 134477,
+          "icon": "spell_frost_stun"
+        },
+        {
+          "name": "Lethal Attacks",
+          "field": "lethalAttacks",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19426,
+          "definitionId": 134476,
+          "icon": "ability_searingarrow"
+        },
+        {
+          "name": "Improved Stings",
+          "field": "improvedStings",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 1310661,
+          "definitionId": 142622,
+          "icon": "ability_hunter_quickshot"
+        },
+        {
+          "name": "Efficiency",
+          "field": "efficiency",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 19416,
+          "definitionId": 134474,
+          "icon": "spell_frost_wizardmark"
+        },
+        {
+          "name": "Careful Aim",
+          "field": "carefulAim",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 1223984,
+          "definitionId": 134473,
+          "icon": "ability_hunter_zenarchery"
+        },
+        {
+          "name": "Rapid Killing",
+          "field": "rapidKilling",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 415405,
+          "definitionId": 134470,
+          "icon": "ability_hunter_rapidkilling"
+        },
+        {
+          "name": "Improved Arcane Shot",
+          "field": "improvedArcaneShot",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 19454,
+          "definitionId": 134471,
+          "icon": "ability_impalingbolt"
+        },
+        {
+          "name": "Lone Wolf",
+          "field": "loneWolf",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 1,
+          "spellId": 415370,
+          "definitionId": 134472,
+          "icon": "ability_mount_whitedirewolf"
+        },
+        {
+          "name": "Trueshot Aura",
+          "field": "trueshotAura",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1299346,
+          "definitionId": 134469,
+          "icon": "ability_trueshot"
+        },
+        {
+          "name": "Mortal Shots",
+          "field": "mortalShots",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19485,
+          "definitionId": 134467,
+          "icon": "ability_piercedamage",
+          "prereq": 5
+        },
+        {
+          "name": "Rapid Recuperation",
+          "field": "rapidRecuperation",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1223987,
+          "definitionId": 134464,
+          "icon": "ability_hunter_rapidregeneration",
+          "prereq": 6
+        },
+        {
+          "name": "Barrage",
+          "field": "barrage",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 19461,
+          "definitionId": 134466,
+          "icon": "ability_upgrademoonglaive"
+        },
+        {
+          "name": "Scatter Shot",
+          "field": "scatterShot",
+          "row": 4,
+          "col": 3,
+          "maxPoints": 1,
+          "spellId": 19503,
+          "definitionId": 134465,
+          "icon": "ability_golemstormbolt"
+        },
+        {
+          "name": "Ranged Weapon Specialization",
+          "field": "rangedWeaponSpecialization",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19507,
+          "definitionId": 134463,
+          "icon": "inv_weapon_rifle_06"
+        },
+        {
+          "name": "Sniper Shot",
+          "field": "sniperShot",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1310687,
+          "definitionId": 134462,
+          "icon": "hunter_pvp_snipershot",
+          "prereq": 9
+        }
+      ]
+    },
+    {
+      "name": "Survival",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/362.jpg",
+      "talents": [
+        {
+          "name": "Improved Tracking",
+          "field": "improvedTracking",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 24293,
+          "definitionId": 134461,
+          "icon": "inv_misc_head_dragon_black"
+        },
+        {
+          "name": "Deflection",
+          "field": "deflection",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19295,
+          "definitionId": 134460,
+          "icon": "ability_parry"
+        },
+        {
+          "name": "Entrapment",
+          "field": "entrapment",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 19184,
+          "definitionId": 134459,
+          "icon": "spell_nature_stranglevines"
+        },
+        {
+          "name": "Savage Strikes",
+          "field": "savageStrikes",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 19159,
+          "definitionId": 134458,
+          "icon": "ability_racial_bloodrage"
+        },
+        {
+          "name": "Survivalist",
+          "field": "survivalist",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19255,
+          "definitionId": 134457,
+          "icon": "spell_shadow_twilight"
+        },
+        {
+          "name": "Improved Wing Clip",
+          "field": "improvedWingClip",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 19228,
+          "definitionId": 134455,
+          "icon": "ability_rogue_trip"
+        },
+        {
+          "name": "Clever Traps",
+          "field": "cleverTraps",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 19239,
+          "definitionId": 134456,
+          "icon": "spell_nature_timestop"
+        },
+        {
+          "name": "Surefooted",
+          "field": "surefooted",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 19290,
+          "definitionId": 134452,
+          "icon": "ability_kick"
+        },
+        {
+          "name": "Deterrence",
+          "field": "deterrence",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 19263,
+          "definitionId": 134451,
+          "icon": "ability_whirlwind"
+        },
+        {
+          "name": "Survival Tactics",
+          "field": "survivalTactics",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 19376,
+          "definitionId": 134453,
+          "icon": "ability_ensnare"
+        },
+        {
+          "name": "Predator's Edge",
+          "field": "predatorsEdge",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 1310627,
+          "definitionId": 142607,
+          "icon": "ability_dualwield"
+        },
+        {
+          "name": "Counterattack",
+          "field": "counterattack",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 19306,
+          "definitionId": 134454,
+          "icon": "ability_warrior_challange",
+          "prereq": 8
+        },
+        {
+          "name": "Resourcefulness",
+          "field": "resourcefulness",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 440529,
+          "definitionId": 134448,
+          "icon": "ability_hunter_resourcefulness"
+        },
+        {
+          "name": "Expose Prey",
+          "field": "exposePrey",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 1310532,
+          "definitionId": 134450,
+          "icon": "ability_hunter_swiftstrike"
+        },
+        {
+          "name": "Survivalist's Discipline",
+          "field": "survivalistsDiscipline",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 1310496,
+          "definitionId": 142606,
+          "icon": "ability_hunter_mastertactitian"
+        },
+        {
+          "name": "Strider Kick",
+          "field": "striderKick",
+          "row": 4,
+          "col": 3,
+          "maxPoints": 1,
+          "spellId": 1317257,
+          "definitionId": 134446,
+          "icon": "ability_hunter_pet_tallstrider"
+        },
+        {
+          "name": "Lightning Reflexes",
+          "field": "lightningReflexes",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 19168,
+          "definitionId": 142605,
+          "icon": "spell_nature_invisibilty"
+        },
+        {
+          "name": "Lacerating Strikes",
+          "field": "laceratingStrikes",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1310533,
+          "definitionId": 134449,
+          "icon": "ability_gouge",
+          "prereq": 13
+        }
+      ]
+    }
+  ]
+}

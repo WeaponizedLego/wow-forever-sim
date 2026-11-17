@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
@@ -202,14 +202,13 @@
           "enchantId": 2543
         },
         "neck": {
-          "itemId": 19491
+          "itemId": 15411
         },
         "shoulder": {
-          "itemId": 10263,
-          "randomSuffix": 12727
+          "itemId": 22241
         },
         "back": {
-          "itemId": 18511,
+          "itemId": 272414,
           "enchantId": 7667
         },
         "chest": {
@@ -217,47 +216,46 @@
           "enchantId": 1891
         },
         "wrist": {
-          "itemId": 10147,
-          "enchantId": 7656,
-          "randomSuffix": 12727
+          "itemId": 12936,
+          "enchantId": 1885
         },
         "hands": {
-          "itemId": 11745,
-          "enchantId": 8206
+          "itemId": 226861,
+          "enchantId": 8207
         },
         "waist": {
-          "itemId": 20216
+          "itemId": 272403
         },
         "legs": {
           "itemId": 22385,
           "enchantId": 2543
         },
         "feet": {
-          "itemId": 13070,
+          "itemId": 226857,
           "enchantId": 1887
         },
         "finger1": {
           "itemId": 272408
         },
         "finger2": {
-          "itemId": 272409
+          "itemId": 13098
         },
         "trinket1": {
-          "itemId": 249469
+          "itemId": 11815
         },
         "trinket2": {
-          "itemId": 272437
+          "itemId": 13965
         },
         "mainHand": {
           "itemId": 22384,
           "enchantId": 1900
         },
         "offHand": {
-          "itemId": 12798,
+          "itemId": 871,
           "enchantId": 1900
         },
         "ranged": {
-          "itemId": 22347
+          "itemId": 12651
         }
       }
     },
@@ -268,63 +266,60 @@
       "gear": {
         "head": {
           "itemId": 12640,
-          "enchantId": 2543
+          "enchantId": 1506
         },
         "neck": {
-          "itemId": 19491
+          "itemId": 15411
         },
         "shoulder": {
           "itemId": 10263,
           "randomSuffix": 12727
         },
         "back": {
-          "itemId": 10249,
-          "enchantId": 7667,
-          "randomSuffix": 12727
+          "itemId": 13340,
+          "enchantId": 7667
         },
         "chest": {
           "itemId": 252483,
           "enchantId": 1891
         },
         "wrist": {
-          "itemId": 10147,
-          "enchantId": 7656,
-          "randomSuffix": 12727
+          "itemId": 13400,
+          "enchantId": 1885
         },
         "hands": {
-          "itemId": 11745,
-          "enchantId": 8206
+          "itemId": 226861,
+          "enchantId": 8207
         },
         "waist": {
           "itemId": 272403
         },
         "legs": {
           "itemId": 22385,
-          "enchantId": 2543
+          "enchantId": 1506
         },
         "feet": {
-          "itemId": 13070,
+          "itemId": 226857,
           "enchantId": 1887
         },
         "finger1": {
           "itemId": 272408
         },
         "finger2": {
-          "itemId": 272409
+          "itemId": 13098
         },
         "trinket1": {
-          "itemId": 249469
+          "itemId": 11815
         },
         "trinket2": {
-          "itemId": 272437
+          "itemId": 13965
         },
         "mainHand": {
-          "itemId": 272604,
+          "itemId": 12790,
           "enchantId": 1900
         },
         "ranged": {
-          "itemId": 15289,
-          "randomSuffix": 12727
+          "itemId": 18323
         }
       }
     },
@@ -1971,6 +1966,134 @@
                     }
                   }
                 }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "actionGroupUsed": {
+                                "name": "Recklessness ON/OFF"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "cmp": {
+                                  "op": "OpLe",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "20s"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpGt",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "310s"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 13965
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "actionGroupUsed": {
+                            "name": "Recklessness ON/OFF"
+                          }
+                        },
+                        {
+                          "auraIsInactive": {
+                            "auraId": {
+                              "spellId": 1719
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGt",
+                            "lhs": {
+                              "remainingTime": {}
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "15s"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "cmp": {
+                                  "op": "OpGt",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "320s"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpLe",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "35s"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 13965
+                    }
+                  }
+                }
               }
             ]
           },
@@ -3267,14 +3390,6 @@
                       }
                     },
                     {
-                      "auraIsInactive": {
-                        "auraId": {
-                          "spellId": 10610,
-                          "tag": -1
-                        }
-                      }
-                    },
-                    {
                       "not": {
                         "val": {
                           "spellIsCasting": {
@@ -3286,46 +3401,16 @@
                       }
                     },
                     {
-                      "or": {
-                        "vals": [
-                          {
-                            "cmp": {
-                              "op": "OpLt",
-                              "lhs": {
-                                "numberTargets": {}
-                              },
-                              "rhs": {
-                                "const": {
-                                  "val": "2"
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "and": {
-                              "vals": [
-                                {
-                                  "actionGroupUsed": {
-                                    "name": "Stance Dance ON/OFF"
-                                  }
-                                },
-                                {
-                                  "cmp": {
-                                    "op": "OpLt",
-                                    "lhs": {
-                                      "numberTargets": {}
-                                    },
-                                    "rhs": {
-                                      "const": {
-                                        "val": "3"
-                                      }
-                                    }
-                                  }
-                                }
-                              ]
-                            }
+                      "cmp": {
+                        "op": "OpLt",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "2"
                           }
-                        ]
+                        }
                       }
                     }
                   ]
@@ -4039,6 +4124,134 @@
                   "castSpell": {
                     "spellId": {
                       "itemId": 274759
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "not": {
+                            "val": {
+                              "variableRef": {
+                                "name": "Recklessness: Used"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "cmp": {
+                                  "op": "OpLe",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "20s"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpGt",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "310s"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 13965
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "condition": {
+                    "and": {
+                      "vals": [
+                        {
+                          "variableRef": {
+                            "name": "Recklessness: Used"
+                          }
+                        },
+                        {
+                          "auraIsInactive": {
+                            "auraId": {
+                              "spellId": 1719
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpGt",
+                            "lhs": {
+                              "remainingTime": {}
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "15s"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "or": {
+                            "vals": [
+                              {
+                                "cmp": {
+                                  "op": "OpGt",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "320s"
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "cmp": {
+                                  "op": "OpLe",
+                                  "lhs": {
+                                    "remainingTime": {}
+                                  },
+                                  "rhs": {
+                                    "const": {
+                                      "val": "35s"
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 13965
                     }
                   }
                 }

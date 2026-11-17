@@ -63,3 +63,4 @@ export {
   encounterProto,
   sliceRanAsScheduled,
 } from './fights';
+export * from './talents';

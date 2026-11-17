@@ -11,9 +11,9 @@ describe('loadDatabase', () => {
 
   it('decodes db.bin and appends leftovers like upstream proto.Merge', () => {
     const main = loadDatabase(fixtureBytes('db.bin'));
-    expect(main.raw.items).toHaveLength(7212);
-    expect(db.raw.items).toHaveLength(7212 + 3730);
-    expect(db.items.size).toBe(7212 + 3730);
+    expect(main.raw.items).toHaveLength(7476);
+    expect(db.raw.items).toHaveLength(7476 + 3731);
+    expect(db.items.size).toBe(7476 + 3731);
     expect(db.raw.enchants).toHaveLength(248 + 20);
     expect(db.consumables.size).toBe(431);
     expect(db.spellEffects.size).toBe(71);

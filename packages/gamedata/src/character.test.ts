@@ -39,10 +39,10 @@ describe('characterToPlayer', () => {
       level: 60,
       buffs: 'full-raid',
     });
-    expect(hunter.rotation).toEqual({ kind: 'preset', presetId: 'melee-weave' });
-    expect(hunter.gear.head?.itemId).toBe(16677);
-    const warlock = await defaultCharacter('warlock'); // upstream defaults carry no gear; the first build does
-    expect(Object.keys(warlock.gear).length).toBe(0);
+    expect(hunter.rotation).toEqual({ kind: 'preset', presetId: 'melee-weave-max' });
+    expect(hunter.gear.head?.itemId).toBe(252605);
+    const warlock = await defaultCharacter('warlock'); // upstream's defaults name a gear set (since 540ad8f)
+    expect(Object.keys(warlock.gear).length).toBeGreaterThan(10);
   });
 
   it('resolves enchants named by spell or item id and drops ring enchants without Enchanting', async () => {
