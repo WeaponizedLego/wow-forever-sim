@@ -93,7 +93,7 @@ lacks (warrior 1, paladin 3, rogue 2; all with definition ids above every SimC i
 definition id, because node id order equals definition id order for all 469 SimC rows (tested).
 
 **What is proven.** The real level 42 shaman export (`fixtures/import/real/simc-shaman-lvl42.simc`)
-decodes to exactly 33 points (42 − 9), Enhancement 30 / Restoration 3, a valid tree, with nothing but
+decodes to exactly 33 points (42 − 9), Enhancement 25 / Restoration 8, a valid tree, with nothing but
 padding left over; re-encoding that build gives the exact same string. The shaman's SimC nodes and the
 engine's talents are the same 50 definitions. So the shaman tree (hash `f3647be8…`, spec 1489) is
 **verified** (`VERIFIED_TREES`).

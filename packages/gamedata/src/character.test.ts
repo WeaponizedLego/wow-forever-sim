@@ -7,7 +7,7 @@ import { fixtureDb } from './test-db';
 
 const fixturePlayer = () => {
   const json = JSON.parse(
-    readFileSync(new URL('../../../fixtures/engine/sv-raidsim-request.json', import.meta.url), 'utf8'),
+    readFileSync(new URL('../../../fixtures/gamedata/sv-request.json', import.meta.url), 'utf8'),
   );
   return RaidSimRequest.fromJson(json).raid!.parties[0]!.players[0]!;
 };

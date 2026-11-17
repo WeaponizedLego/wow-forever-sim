@@ -1,41 +1,76 @@
 <script setup lang="ts">
-import { presetSetup } from '@fsim/gamedata';
-import { TALENT_TREES, talentPoints } from '~/composables/workbench';
+// Talents: the class's three trees (click to spend, right-click to take back), the spec's preset builds, and the
+// engine talent string for pasting. Everything reads and writes Character.talents (the engine's digit string), so
+// share links, the pending diff and sims see each click.
+import {
+  MAX_TALENT_POINTS,
+  brokenTalents,
+  classTalents,
+  clearTree,
+  parseTalents,
+  presetSetup,
+  serializeTalents,
+  stepTalent,
+  talentProblems,
+  talentsFit,
+  totalPoints,
+} from '@fsim/gamedata';
+import { talentPoints } from '~/composables/workbench';
 
-// Talents as the engine's talent string, plus the spec's preset builds. No tree calculator yet.
 const wb = useWorkbench();
 const session = useSession();
 
+const cls = computed(() => wb.draft.value?.class ?? 'warrior');
+const data = computed(() => classTalents(cls.value));
 const current = computed(() => wb.draft.value?.talents ?? '');
-const text = ref(current.value);
-watch(current, (v) => (text.value = v));
+const points = computed(() => parseTalents(cls.value, current.value));
+const broken = computed(() => brokenTalents(cls.value, points.value));
+const spent = computed(() => totalPoints(points.value));
+const perTree = computed(() => talentPoints(current.value));
+const brokenNames = computed(() =>
+  broken.value.flatMap((t, ti) => t.flatMap((b, i) => (b ? [data.value.trees[ti]!.talents[i]!.name] : []))),
+);
 
-const trees = computed(() => (wb.draft.value ? TALENT_TREES[wb.draft.value.class] : ['', '', '']));
-const MAX_POINTS = 51;
-
-const problem = computed(() => {
-  const t = text.value.trim();
-  if (!t) return 'Enter a talent string.';
-  if (!/^[0-5]*(-[0-5]*){0,2}$/.test(t))
-    return 'Up to three trees separated by "-", one digit 0–5 per talent.';
-  const total = talentPoints(t).reduce((a, b) => a + b, 0);
-  if (total > MAX_POINTS) return `${total} points; a level 60 character has ${MAX_POINTS}.`;
-  return null;
-});
-const points = computed(() => talentPoints(problem.value ? current.value : text.value.trim()));
-const dirty = computed(() => text.value.trim() !== current.value);
-
-function apply(t = text.value.trim()) {
-  if (problem.value && t === text.value.trim()) return;
-  session.updateCharacter((c) => (c.talents = t));
+function write(talents: string) {
+  if (talents !== current.value) session.updateCharacter((c) => (c.talents = talents));
+}
+function step(tree: number, talent: number, delta: 1 | -1) {
+  const next = stepTalent(cls.value, points.value, tree, talent, delta);
+  if (next !== points.value) write(serializeTalents(next));
+}
+function reset(tree: number) {
+  write(serializeTalents(clearTree(points.value, tree)));
 }
 
-// Shown while the talents are still the preset ones the import fell back to.
-const fromPreset = computed(() => {
-  const d = session.importDiagnostics.value.find((x) => x.code === 'DEFAULT-05' && x.field === 'talents');
-  const p = wb.presets.value;
-  if (!d || !p) return undefined;
-  return presetSetup(p, p.defaultBuildId).talents === current.value ? d : undefined;
+// Raw string (advanced). Broken rows are allowed (upstream allows them; the trees flag them), a string that does
+// not fit the class or spends more than 51 points is not.
+const text = ref(current.value);
+watch(current, (v) => (text.value = v));
+const problems = computed(() => talentProblems(cls.value, text.value.trim()));
+const blocking = computed(() => {
+  const t = text.value.trim();
+  if (!talentsFit(cls.value, t)) return problems.value[0] ?? 'Does not fit this class’s trees.';
+  return totalPoints(parseTalents(cls.value, t)) > MAX_TALENT_POINTS ? problems.value[0]! : null;
+});
+const dirty = computed(() => text.value.trim() !== current.value);
+function apply() {
+  if (!blocking.value) write(text.value.trim());
+}
+
+// Import findings about the talents: the preset fallback (while the talents are still the preset's), or a
+// conversion from the game's loadout string that could not be verified.
+const importNote = computed(() => {
+  const d = session.importDiagnostics.value.find((x) => x.field === 'talents' && x.severity === 'warning');
+  if (!d) return undefined;
+  if (d.code === 'DEFAULT-05') {
+    const p = wb.presets.value;
+    if (!p || presetSetup(p, p.defaultBuildId).talents !== current.value) return undefined;
+    return {
+      lead: 'The import could not read the talents, so these are the spec preset’s.',
+      detail: d.message,
+    };
+  }
+  return { lead: 'Check these talents against the character in game.', detail: d.message };
 });
 const presets = computed(() => wb.presets.value?.talents ?? []);
 </script>
@@ -43,43 +78,48 @@ const presets = computed(() => wb.presets.value?.talents ?? []);
 <template>
   <UiPanel title="Talents" :span="8" :row-span="3">
     <template #meta
-      ><span class="num">{{ points.join('/') }}</span></template
+      ><span class="num" data-testid="talent-total"
+        >{{ perTree.join('/') }} · {{ spent }}/{{ MAX_TALENT_POINTS }}</span
+      ></template
     >
     <div class="body">
-      <p v-if="fromPreset" class="flag">
+      <p v-if="importNote" class="flag">
         <UiStatusGlyph status="warning" hide-label />
         <span
-          >The import could not read the talents, so these are the spec preset's.
-          <span class="text-3">({{ fromPreset.message }})</span></span
+          >{{ importNote.lead }} <span class="text-3">({{ importNote.detail }})</span></span
         >
       </p>
 
-      <form class="row" @submit.prevent="apply()">
-        <UiTextInput
-          v-model="text"
-          label="Engine talent string"
-          mono
-          class="grow"
-          :invalid="!!problem"
-          :hint="problem ?? 'Digits per talent, trees separated by “-”, as the WoWSims site writes them.'"
+      <p class="summary">
+        <span class="num"
+          ><strong>{{ MAX_TALENT_POINTS - spent }}</strong> points left</span
+        >
+        <span class="text-3"
+          >Click to add a point, right-click or Shift-click to remove. Arrow keys move, Backspace
+          removes.</span
+        >
+      </p>
+
+      <div class="trees">
+        <TalentsTree
+          v-for="(tree, ti) in data.trees"
+          :key="`${cls}-${ti}`"
+          :cls="cls"
+          :tree="tree"
+          :tree-index="ti"
+          :points="points"
+          :broken="broken[ti] ?? []"
+          @step="(i, d) => step(ti, i, d)"
+          @reset="reset(ti)"
         />
-        <UiButton type="submit" :disabled="!!problem || !dirty">Apply</UiButton>
-      </form>
+      </div>
 
-      <dl class="num trees">
-        <div v-for="(t, i) in trees" :key="t">
-          <dt class="label">{{ t }}</dt>
-          <dd>{{ points[i] }}</dd>
-        </div>
-        <div>
-          <dt class="label">Total</dt>
-          <dd>{{ points[0] + points[1] + points[2] }} / {{ MAX_POINTS }}</dd>
-        </div>
-      </dl>
-
-      <p class="note">
-        A clickable talent tree is not in this version. Paste a string, or start from one of the
-        <a href="#talent-presets">preset builds</a> below and edit it.
+      <p v-if="brokenNames.length" class="flag">
+        <UiStatusGlyph status="warning" hide-label />
+        <span
+          >These talents hold points the tree rules would not allow (a row or prerequisite short):
+          {{ brokenNames.join(', ') }}. The engine still applies them.</span
+        >
       </p>
     </div>
 
@@ -90,10 +130,30 @@ const presets = computed(() => wb.presets.value?.talents ?? []);
         <span class="num preset__pts">{{ talentPoints(p.talents).join('/') }}</span>
         <code class="num preset__str">{{ p.talents }}</code>
         <span v-if="p.talents === current" class="num preset__cur">current</span>
-        <UiButton v-else size="sm" @click="apply(p.talents)">Use</UiButton>
+        <UiButton v-else size="sm" @click="write(p.talents)">Use</UiButton>
       </li>
     </ul>
     <p v-else class="note pad">Upstream has no talent presets for this spec.</p>
+
+    <details class="advanced">
+      <summary class="label">Engine talent string</summary>
+      <form class="row" @submit.prevent="apply()">
+        <UiTextInput
+          v-model="text"
+          label="Engine talent string"
+          hide-label
+          mono
+          class="grow"
+          :invalid="!!blocking"
+          :hint="
+            blocking ??
+            problems[0] ??
+            'Digits per talent, trees separated by “-”, as the WoWSims site writes them. Share links carry it.'
+          "
+        />
+        <UiButton type="submit" :disabled="!!blocking || !dirty">Apply</UiButton>
+      </form>
+    </details>
   </UiPanel>
 </template>
 
@@ -116,33 +176,28 @@ const presets = computed(() => wb.presets.value?.talents ?? []);
 .text-3 {
   color: var(--text-3);
 }
-.row {
+.summary {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--text-xs);
 }
-.row :deep(.btn) {
-  margin-top: 19px;
-}
-.grow {
-  flex-grow: 1;
+.summary strong {
+  font-size: var(--text-md);
+  font-weight: 500;
 }
 .trees {
-  display: flex;
-  gap: var(--space-6);
-  margin: 0;
-}
-.trees dd {
-  margin: 0;
-  font-size: var(--text-md);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(214px, 1fr));
+  gap: var(--space-6) var(--space-5);
+  padding-bottom: var(--space-2);
 }
 .note {
   margin: 0;
   font-size: var(--text-xs);
   color: var(--text-3);
-}
-.note a {
-  color: var(--text-2);
 }
 .pad {
   padding: 0 var(--space-4) var(--space-4);
@@ -183,6 +238,21 @@ const presets = computed(() => wb.presets.value?.talents ?? []);
   font-size: var(--text-xs);
   color: var(--text-3);
   text-align: center;
+}
+.advanced {
+  padding: var(--space-2) var(--space-4) var(--space-4);
+}
+.advanced summary {
+  cursor: pointer;
+  padding: var(--space-1) 0 var(--space-2);
+}
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.grow {
+  flex-grow: 1;
 }
 @media (max-width: 640px) {
   .preset {

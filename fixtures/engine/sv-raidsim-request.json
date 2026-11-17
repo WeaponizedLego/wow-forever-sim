@@ -9,54 +9,54 @@
             "equipment":  {
               "items":  [
                 {
-                  "id":  252605,
-                  "enchant":  1508
+                  "id":  16677
                 },
                 {
-                  "id":  15411,
+                  "id":  19620,
                   "enchant":  904
                 },
                 {
-                  "id":  272106
+                  "id":  16679
                 },
                 {
-                  "id":  13340,
-                  "enchant":  7667
+                  "id":  18511,
+                  "enchant":  849
                 },
                 {
-                  "id":  252483,
+                  "id":  16674,
                   "enchant":  1891
                 },
                 {
-                  "id":  226885,
+                  "id":  16681,
                   "enchant":  7656
                 },
                 {
-                  "id":  15063,
+                  "id":  16676,
                   "enchant":  2564
                 },
                 {
-                  "id":  22232
+                  "id":  16680
                 },
                 {
-                  "id":  15062,
-                  "enchant":  1508
+                  "id":  16678,
+                  "enchant":  8491
                 },
                 {
-                  "id":  13967,
+                  "id":  16675,
                   "enchant":  1887
                 },
                 {
                   "id":  272408
                 },
                 {
-                  "id":  18500
+                  "id":  11990,
+                  "randomSuffix":  12728
                 },
                 {
-                  "id":  13965
+                  "id":  272437
                 },
                 {
-                  "id":  280065
+                  "id":  19120
                 },
                 {
                   "id":  250619,
@@ -64,8 +64,8 @@
                 },
                 {},
                 {
-                  "id":  13023,
-                  "enchant":  8720
+                  "id":  22347,
+                  "enchant":  2523
                 }
               ]
             },
@@ -168,9 +168,6 @@
                 0,
                 0,
                 0,
-                0,
-                0,
-                0,
                 0
               ]
             },
@@ -189,7 +186,7 @@
                 }
               }
             },
-            "talentsString":  "3-00510503113-52225303000021004",
+            "talentsString":  "1-00530501114-52225303000021005",
             "profession1":  "Engineering",
             "profession2":  "Blacksmithing",
             "rotation":  {
@@ -742,252 +739,271 @@
             },
             "reactionTimeMs":  150,
             "reactionTimeMaxMs":  350,
-            "channelClipDelayMs":  100,
             "distanceFromTarget":  12,
             "database":  {
               "items":  [
                 {
-                  "id":  13023,
-                  "name":  "Eaglehorn Long Bow",
-                  "type":  "ItemTypeRanged",
-                  "rangedWeaponType":  "RangedWeaponTypeBow",
-                  "weaponSpeed":  1.8,
+                  "id":  11990,
+                  "name":  "Selenium Loop",
+                  "type":  "ItemTypeFinger",
                   "scalingOptions":  {
                     "0":  {
-                      "randPropPoints":  11,
-                      "weaponDamageMin":  40,
-                      "weaponDamageMax":  76,
-                      "unroundedDps":  32.3671,
+                      "randPropPoints":  13,
+                      "ilvl":  55
+                    }
+                  }
+                },
+                {
+                  "id":  16674,
+                  "name":  "Beaststalker's Tunic",
+                  "type":  "ItemTypeChest",
+                  "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
+                  "scalingOptions":  {
+                    "0":  {
+                      "randPropPoints":  36,
                       "stats":  {
-                        "1":  10,
-                        "2":  4
+                        "0":  8,
+                        "1":  21,
+                        "2":  16,
+                        "3":  13,
+                        "13":  6,
+                        "27":  370
                       },
                       "ilvl":  63
                     }
                   }
                 },
                 {
-                  "id":  13340,
-                  "name":  "Cape of the Black Baron",
-                  "type":  "ItemTypeBack",
-                  "armorType":  "ArmorTypeCloth",
-                  "scalingOptions":  {
-                    "0":  {
-                      "randPropPoints":  20,
-                      "stats":  {
-                        "1":  15,
-                        "14":  20,
-                        "15":  20,
-                        "27":  45
-                      },
-                      "ilvl":  63
-                    }
-                  }
-                },
-                {
-                  "id":  13965,
-                  "name":  "Blackhand's Breadth",
-                  "type":  "ItemTypeTrinket",
-                  "scalingOptions":  {
-                    "0":  {
-                      "randPropPoints":  27,
-                      "ilvl":  63
-                    }
-                  },
-                  "itemEffects":  [
-                    {
-                      "buffId":  1318944,
-                      "buffName":  "Blackhand's Breadth (1318944)",
-                      "effectDurationMs":  20000,
-                      "onUse":  {
-                        "cooldownMs":  300000,
-                        "categoryId":  1141,
-                        "categoryCooldownMs":  20000
-                      }
-                    },
-                    {
-                      "buffId":  1318945,
-                      "buffName":  "Blackhand's Breadth (1318945)"
-                    }
-                  ],
-                  "unique":  true,
-                  "pseudoStats":  [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                  ]
-                },
-                {
-                  "id":  13967,
-                  "name":  "Windreaver Greaves",
+                  "id":  16675,
+                  "name":  "Beaststalker's Boots",
                   "type":  "ItemTypeFeet",
                   "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
                   "scalingOptions":  {
                     "0":  {
-                      "randPropPoints":  26,
+                      "randPropPoints":  25,
+                      "stats":  {
+                        "1":  21,
+                        "2":  9,
+                        "3":  3,
+                        "27":  240
+                      },
+                      "ilvl":  59
+                    }
+                  }
+                },
+                {
+                  "id":  16676,
+                  "name":  "Beaststalker's Gloves",
+                  "type":  "ItemTypeHands",
+                  "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
+                  "scalingOptions":  {
+                    "0":  {
+                      "randPropPoints":  25,
+                      "stats":  {
+                        "1":  14,
+                        "2":  10,
+                        "3":  10,
+                        "13":  10,
+                        "27":  218
+                      },
+                      "ilvl":  59
+                    }
+                  }
+                },
+                {
+                  "id":  16677,
+                  "name":  "Beaststalker's Cap",
+                  "type":  "ItemTypeHead",
+                  "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
+                  "scalingOptions":  {
+                    "0":  {
+                      "randPropPoints":  36,
                       "stats":  {
                         "1":  20,
-                        "3":  4,
-                        "17":  10,
-                        "27":  247
+                        "2":  20,
+                        "3":  13,
+                        "13":  6,
+                        "27":  297
+                      },
+                      "ilvl":  62
+                    }
+                  }
+                },
+                {
+                  "id":  16678,
+                  "name":  "Beaststalker's Pants",
+                  "type":  "ItemTypeLegs",
+                  "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
+                  "scalingOptions":  {
+                    "0":  {
+                      "randPropPoints":  35,
+                      "stats":  {
+                        "0":  6,
+                        "1":  26,
+                        "2":  6,
+                        "3":  10,
+                        "13":  12,
+                        "27":  315
                       },
                       "ilvl":  61
                     }
                   }
                 },
                 {
-                  "id":  15062,
-                  "name":  "Devilsaur Leggings",
-                  "type":  "ItemTypeLegs",
-                  "armorType":  "ArmorTypeLeather",
-                  "setName":  "Devilsaur Armor",
-                  "setId":  143,
+                  "id":  16679,
+                  "name":  "Beaststalker's Mantle",
+                  "type":  "ItemTypeShoulder",
+                  "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
                   "scalingOptions":  {
                     "0":  {
-                      "randPropPoints":  34,
+                      "randPropPoints":  26,
                       "stats":  {
-                        "2":  12,
-                        "14":  46,
-                        "15":  46,
-                        "18":  14,
-                        "27":  148
+                        "1":  11,
+                        "2":  17,
+                        "3":  7,
+                        "13":  7,
+                        "27":  266
                       },
                       "ilvl":  60
                     }
                   }
                 },
                 {
-                  "id":  15063,
-                  "name":  "Devilsaur Gauntlets",
-                  "type":  "ItemTypeHands",
-                  "armorType":  "ArmorTypeLeather",
-                  "setName":  "Devilsaur Armor",
-                  "setId":  143,
+                  "id":  16680,
+                  "name":  "Beaststalker's Belt",
+                  "type":  "ItemTypeWaist",
+                  "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
                   "scalingOptions":  {
                     "0":  {
                       "randPropPoints":  25,
                       "stats":  {
-                        "2":  9,
-                        "14":  28,
-                        "15":  28,
-                        "18":  14,
-                        "27":  103
+                        "0":  8,
+                        "1":  10,
+                        "2":  6,
+                        "3":  9,
+                        "13":  11,
+                        "27":  193
                       },
                       "ilvl":  58
                     }
                   }
                 },
                 {
-                  "id":  15411,
-                  "name":  "Mark of Fordring",
-                  "type":  "ItemTypeNeck",
+                  "id":  16681,
+                  "name":  "Beaststalker's Bindings",
+                  "type":  "ItemTypeWrist",
+                  "armorType":  "ArmorTypeMail",
+                  "setName":  "Beaststalker Armor",
+                  "setId":  186,
                   "scalingOptions":  {
                     "0":  {
-                      "randPropPoints":  20,
+                      "randPropPoints":  18,
                       "stats":  {
-                        "14":  26,
-                        "15":  26,
-                        "18":  14
+                        "1":  15,
+                        "2":  8,
+                        "27":  148
                       },
-                      "ilvl":  63
+                      "ilvl":  57
                     }
                   }
                 },
                 {
-                  "id":  18500,
-                  "name":  "Tarnished Elven Ring",
-                  "type":  "ItemTypeFinger",
+                  "id":  18511,
+                  "name":  "Shifting Cloak",
+                  "type":  "ItemTypeBack",
+                  "armorType":  "ArmorTypeCloth",
                   "scalingOptions":  {
                     "0":  {
-                      "randPropPoints":  20,
+                      "randPropPoints":  25,
                       "stats":  {
-                        "1":  10,
-                        "17":  10,
-                        "32":  10
+                        "1":  17,
+                        "2":  8,
+                        "25":  12,
+                        "27":  48
                       },
-                      "ilvl":  61
+                      "ilvl":  62
+                    }
+                  }
+                },
+                {
+                  "id":  19120,
+                  "name":  "Rune of the Guard Captain",
+                  "type":  "ItemTypeTrinket",
+                  "scalingOptions":  {
+                    "0":  {
+                      "randPropPoints":  16,
+                      "stats":  {
+                        "14":  14,
+                        "15":  14,
+                        "17":  7
+                      },
+                      "ilvl":  51,
+                      "areaStats":  [
+                        {
+                          "areaType":  "AreaTypeForestGrassland",
+                          "stats":  {
+                            "14":  28,
+                            "15":  28
+                          }
+                        }
+                      ]
                     }
                   },
                   "unique":  true
                 },
                 {
-                  "id":  22232,
-                  "name":  "Marksman's Girdle",
-                  "type":  "ItemTypeWaist",
-                  "armorType":  "ArmorTypeMail",
+                  "id":  19620,
+                  "name":  "Maelstrom's Tendril",
+                  "type":  "ItemTypeNeck",
                   "scalingOptions":  {
                     "0":  {
-                      "randPropPoints":  26,
+                      "randPropPoints":  22,
                       "stats":  {
-                        "1":  21,
-                        "17":  10,
-                        "27":  202,
-                        "31":  2
+                        "1":  15,
+                        "2":  9,
+                        "3":  6
                       },
-                      "ilvl":  61
-                    }
-                  }
-                },
-                {
-                  "id":  226885,
-                  "name":  "Beastmaster's Bindings",
-                  "type":  "ItemTypeWrist",
-                  "armorType":  "ArmorTypeMail",
-                  "setName":  "Beastmaster Armor",
-                  "setId":  515,
-                  "scalingOptions":  {
-                    "0":  {
-                      "randPropPoints":  21,
-                      "stats":  {
-                        "1":  16,
-                        "2":  6,
-                        "3":  7,
-                        "13":  5,
-                        "27":  167
-                      },
-                      "ilvl":  65
+                      "ilvl":  68
                     }
                   },
+                  "unique":  true,
                   "classAllowlist":  [
                     "ClassHunter"
                   ]
+                },
+                {
+                  "id":  22347,
+                  "name":  "Fahrad's Reloading Repeater",
+                  "type":  "ItemTypeRanged",
+                  "rangedWeaponType":  "RangedWeaponTypeCrossbow",
+                  "weaponSpeed":  3.2,
+                  "scalingOptions":  {
+                    "0":  {
+                      "randPropPoints":  12,
+                      "weaponDamageMin":  85,
+                      "weaponDamageMax":  128,
+                      "unroundedDps":  33.418304,
+                      "stats":  {
+                        "1":  4,
+                        "17":  10
+                      },
+                      "ilvl":  65
+                    }
+                  }
                 },
                 {
                   "id":  250619,
@@ -1013,60 +1029,6 @@
                   }
                 },
                 {
-                  "id":  252483,
-                  "name":  "Dawn Armor",
-                  "type":  "ItemTypeChest",
-                  "armorType":  "ArmorTypeLeather",
-                  "scalingOptions":  {
-                    "0":  {
-                      "randPropPoints":  45,
-                      "stats":  {
-                        "1":  37,
-                        "17":  10,
-                        "18":  14,
-                        "27":  187
-                      },
-                      "ilvl":  61
-                    }
-                  }
-                },
-                {
-                  "id":  252605,
-                  "name":  "Black Dragonscale Helm",
-                  "type":  "ItemTypeHead",
-                  "armorType":  "ArmorTypeMail",
-                  "scalingOptions":  {
-                    "0":  {
-                      "randPropPoints":  45,
-                      "stats":  {
-                        "1":  21,
-                        "3":  38,
-                        "18":  14,
-                        "27":  319
-                      },
-                      "ilvl":  61
-                    }
-                  }
-                },
-                {
-                  "id":  272106,
-                  "name":  "Darkspear Epaulets",
-                  "type":  "ItemTypeShoulder",
-                  "armorType":  "ArmorTypeMail",
-                  "scalingOptions":  {
-                    "0":  {
-                      "randPropPoints":  36,
-                      "stats":  {
-                        "1":  27,
-                        "2":  12,
-                        "18":  14,
-                        "27":  312
-                      },
-                      "ilvl":  65
-                    }
-                  }
-                },
-                {
                   "id":  272408,
                   "name":  "Cutthroat's Signet",
                   "type":  "ItemTypeFinger",
@@ -1084,34 +1046,127 @@
                   "unique":  true
                 },
                 {
-                  "id":  280065,
-                  "name":  "Behemoth Bones",
+                  "id":  272437,
+                  "name":  "Adaptive Combat Assistant",
                   "type":  "ItemTypeTrinket",
                   "scalingOptions":  {
                     "0":  {
-                      "randPropPoints":  26,
+                      "randPropPoints":  28,
                       "stats":  {
-                        "14":  34,
-                        "15":  34
+                        "21":  11
                       },
-                      "ilvl":  61
+                      "ilvl":  65
                     }
                   },
                   "itemEffects":  [
                     {
-                      "buffId":  1315849,
-                      "buffName":  "Behemoth Bone (1315849)",
+                      "buffId":  1291097,
+                      "buffName":  "Damage Sigmoid (1291097)",
+                      "effectDurationMs":  15000,
                       "onUse":  {
                         "cooldownMs":  300000,
-                        "categoryId":  2554,
-                        "categoryCooldownMs":  20000
+                        "categoryId":  1141,
+                        "categoryCooldownMs":  15000
                       }
                     }
                   ],
-                  "unique":  true
+                  "limitCategory":  707
+                }
+              ],
+              "randomSuffixes":  [
+                {
+                  "id":  12728,
+                  "name":  "of Agility",
+                  "stats":  [
+                    0,
+                    10000,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
                 }
               ],
               "enchants":  [
+                {
+                  "effectId":  849,
+                  "name":  "Enchant Cloak - Lesser Agility",
+                  "type":  "ItemTypeBack",
+                  "stats":  [
+                    0,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
                 {
                   "effectId":  904,
                   "name":  "Enchant Necklace - Agility",
@@ -1248,55 +1303,6 @@
                     0,
                     0,
                     0
-                  ]
-                },
-                {
-                  "effectId":  1508,
-                  "name":  "Lesser Arcane Amalgamation",
-                  "type":  "ItemTypeHead",
-                  "stats":  [
-                    0,
-                    8,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                  ],
-                  "extraTypes":  [
-                    "ItemTypeLegs"
                   ]
                 },
                 {
@@ -1469,6 +1475,91 @@
                     0,
                     0,
                     0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "effectId":  2523,
+                  "name":  "Biznicks 247x128 Accurascope",
+                  "type":  "ItemTypeRanged",
+                  "stats":  [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "pseudoStats":  [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    3,
                     0,
                     0,
                     0,
@@ -1715,55 +1806,9 @@
                   ]
                 },
                 {
-                  "effectId":  7667,
-                  "name":  "Enchant Cloak - Agility",
-                  "type":  "ItemTypeBack",
-                  "stats":  [
-                    0,
-                    5,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                  ]
-                },
-                {
-                  "effectId":  8720,
-                  "name":  "SAF-T Ultra Precision Scope",
-                  "type":  "ItemTypeRanged",
+                  "effectId":  8491,
+                  "name":  "Forceful Rugged Armor Kit",
+                  "type":  "ItemTypeChest",
                   "stats":  [
                     0,
                     0,
@@ -1779,6 +1824,8 @@
                     0,
                     0,
                     0,
+                    10,
+                    10,
                     0,
                     0,
                     0,
@@ -1791,9 +1838,7 @@
                     0,
                     0,
                     0,
-                    0,
-                    0,
-                    0,
+                    40,
                     0,
                     0,
                     0,
@@ -1805,47 +1850,10 @@
                     0,
                     0
                   ],
-                  "pseudoStats":  [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    2,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
+                  "extraTypes":  [
+                    "ItemTypeHands",
+                    "ItemTypeLegs",
+                    "ItemTypeFeet"
                   ]
                 }
               ],
@@ -3820,9 +3828,6 @@
                       0,
                       0,
                       1,
-                      0,
-                      0,
-                      0,
                       0,
                       0,
                       0,
@@ -10113,9 +10118,6 @@
                       0,
                       0,
                       0,
-                      0,
-                      0,
-                      0,
                       0
                     ]
                   }
@@ -16362,9 +16364,6 @@
                     0,
                     0,
                     0,
-                    0,
-                    0,
-                    0,
                     0
                   ]
                 },
@@ -17273,9 +17272,6 @@
                       0,
                       0,
                       0,
-                      0,
-                      0,
-                      0,
                       0
                     ]
                   }
@@ -17416,9 +17412,6 @@
                       0,
                       0,
                       0,
-                      0,
-                      0,
-                      0,
                       0
                     ]
                   }
@@ -17539,9 +17532,6 @@
                       0,
                       0,
                       1,
-                      0,
-                      0,
-                      0,
                       0,
                       0,
                       0,
@@ -17702,9 +17692,6 @@
                       0,
                       0,
                       0,
-                      0,
-                      0,
-                      0,
                       0
                     ]
                   }
@@ -17825,9 +17812,6 @@
                       0,
                       0,
                       2,
-                      0,
-                      0,
-                      0,
                       0,
                       0,
                       0,
@@ -21628,9 +21612,6 @@
                       0,
                       0,
                       0,
-                      0,
-                      0,
-                      0,
                       0
                     ]
                   }
@@ -22521,9 +22502,6 @@
                     0,
                     0,
                     0,
-                    0,
-                    0,
-                    0,
                     0
                   ],
                   "holiday":  "Love is in the Air",
@@ -23290,9 +23268,6 @@
                     0,
                     0,
                     2,
-                    0,
-                    0,
-                    0,
                     0,
                     0,
                     0,
@@ -25811,9 +25786,6 @@
                     0,
                     0,
                     0,
-                    0,
-                    0,
-                    0,
                     0
                   ]
                 },
@@ -25903,9 +25875,6 @@
                     0,
                     0,
                     2,
-                    0,
-                    0,
-                    0,
                     0,
                     0,
                     0,
@@ -26555,9 +26524,6 @@
                     0,
                     0,
                     0,
-                    0,
-                    0,
-                    0,
                     0
                   ]
                 },
@@ -26767,9 +26733,6 @@
                     0,
                     0,
                     2,
-                    0,
-                    0,
-                    0,
                     0,
                     0,
                     0,

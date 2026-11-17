@@ -1,9 +1,7 @@
 # Fixtures
 
 Captured from the real engine (upstream `b2047bf`) in the Phase 0 spike. Lanes test against these
-instead of a live engine. `engine/sv-raidsim-request.json` was re-captured at `540ad8f` (same spike
-builder, `tools/engine-build/spike/`) when the spec presets were re-extracted there, since the gamedata
-tests rebuild it from the "sv" preset; the result fixtures are still the `b2047bf` captures.
+instead of a live engine.
 
 | File                                 | What                                                                                                                                                                |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

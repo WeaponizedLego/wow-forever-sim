@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { test as base, expect, type Locator, type Page } from '@playwright/test';
 
-/** The real WoW Forever SimC export: Elemental Shaman, level 42, sims around 315 DPS. */
+/** The real WoW Forever SimC export: level 42 shaman, Enhancement from its converted loadout talents. */
 export const SHAMAN_SIMC = readFileSync(
   new URL('../../../fixtures/import/real/simc-shaman-lvl42.simc', import.meta.url),
   'utf8',

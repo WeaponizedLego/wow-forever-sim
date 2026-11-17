@@ -3,11 +3,13 @@ import { expect, kpiValue, openShamanInWorkbench, pasteShaman, simDraft, test } 
 test('import the shaman export, open it in the workbench, sim and read the analysis', async ({ page }) => {
   const parsed = await pasteShaman(page);
 
-  // Parse report: format, identity, slot count and the three warnings the real export raises.
+  // Parse report: format, identity (spec picked from the converted loadout talents), slot count and the warning
+  // the real export raises. Its talents convert (verified shaman tree), so no DEFAULT-05.
   await expect(parsed.getByText('SimC addon export · 12.1.5-04')).toBeVisible();
-  await expect(parsed.getByText(/Elemental Shaman · level 42/)).toBeVisible();
+  await expect(parsed.getByText(/Enhancement Shaman · level 42/)).toBeVisible();
   await expect(parsed.getByRole('definition').filter({ hasText: '16/17' })).toBeVisible();
-  for (const code of ['LEVEL-07', 'SPEC-06', 'DEFAULT-05']) {
+  await expect(parsed.getByRole('listitem').filter({ hasText: /Warning\s*DEFAULT-05/ })).toHaveCount(0);
+  for (const code of ['LEVEL-07']) {
     await expect(
       parsed
         .getByRole('listitem')
@@ -22,10 +24,10 @@ test('import the shaman export, open it in the workbench, sim and read the analy
 
   await simDraft(page, '0001');
 
-  // KPI strip: the mean is a real number in the band this export sims at (~315 DPS).
+  // KPI strip: the mean is a real number in the band this export sims at (~470 DPS as Enhancement).
   const mean = await kpiValue(page, 'Mean DPS · 95% CI');
-  expect(mean).toBeGreaterThan(250);
-  expect(mean).toBeLessThan(400);
+  expect(mean).toBeGreaterThan(350);
+  expect(mean).toBeLessThan(600);
   await expect(page.getByText('run #0001 · no baseline')).toBeVisible();
   await expect(page.getByRole('definition').filter({ hasText: /^1,000$/ })).toBeVisible();
 
@@ -37,7 +39,7 @@ test('import the shaman export, open it in the workbench, sim and read the analy
   await expect(panel('Convergence').getByRole('table', { name: /^Running mean settles at/ })).toBeAttached();
   await expect(panel('Fight timeline').getByRole('table', { name: /^Fight 1 of 1,000/ })).toBeAttached();
   const abilities = panel('Damage by ability').getByRole('table', { name: 'Damage by ability' });
-  await expect(abilities.getByRole('row').filter({ hasText: 'Lightning Bolt' }).first()).toBeVisible();
+  await expect(abilities.getByRole('row').filter({ hasText: 'Stormstrike' }).first()).toBeVisible();
   await expect(panel('Run notes').getByRole('listitem').first()).toBeVisible();
 
   // The run is listed under Runs in the header and on the start screen.

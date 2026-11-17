@@ -44,12 +44,12 @@ Nothing under the work dir is committed. The workflow commits only `engine.lock.
 `promote.mjs` regenerates, from the clone `build.mjs` left (it has the Go protos), everything that
 is extracted from upstream at the locked commit, so data and engine never drift apart:
 
-| Output                                    | From                                                                                                                                                  |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/gamedata/data/talents/`         | `packages/gamedata/scripts/extract-talents.ts`: upstream `ui/sim/talents/trees/*.json`, icons from `assets/database/db.json`. Plain Node.             |
-| `packages/gamedata/data/presets/`         | `packages/gamedata/scripts/extract-presets.ts`: every spec's `ui/specs/*` presets. Builds `wowsimcli` with Go (for `.siml`) and bundles with esbuild. |
-| `fixtures/gamedata/*.bin`                 | Upstream `assets/database/db.bin` and `leftover_db.bin`, which the gamedata tests decode (the presets point at their items).                          |
-| `fixtures/engine/sv-raidsim-request.json` | `spike/request-builder` (`go run`) on upstream's `sv.siml`, which the gamedata tests rebuild from the "sv" preset.                                    |
+| Output                              | From                                                                                                                                                  |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/gamedata/data/talents/`   | `packages/gamedata/scripts/extract-talents.ts`: upstream `ui/sim/talents/trees/*.json`, icons from `assets/database/db.json`. Plain Node.             |
+| `packages/gamedata/data/presets/`   | `packages/gamedata/scripts/extract-presets.ts`: every spec's `ui/specs/*` presets. Builds `wowsimcli` with Go (for `.siml`) and bundles with esbuild. |
+| `fixtures/gamedata/*.bin`           | Upstream `assets/database/db.bin` and `leftover_db.bin`, which the gamedata tests decode (the presets point at their items).                          |
+| `fixtures/gamedata/sv-request.json` | `spike/request-builder` (`go run`) on upstream's `sv.siml`, which the gamedata tests rebuild from the "sv" preset.                                    |
 
 Then `prettier --write packages/gamedata/data`. The workflow's `git add` lists these paths, and its
 CI check step runs the gamedata tests over them. `--no-data` skips all of it (lock only). To rerun

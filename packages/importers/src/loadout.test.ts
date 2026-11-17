@@ -20,7 +20,7 @@ const presetStrings = () => {
 const trim = (s: string) => s.replace(/0+(?=-|$)/g, '').replace(/-+$/, '');
 
 describe('client loadout string → engine talents', () => {
-  it('reads the real level 42 shaman export (golden): Enhancement 30, Restoration 3, verified', () => {
+  it('reads the real level 42 shaman export (golden): Enhancement 25, Restoration 8, verified', () => {
     const r = loadoutToTalents('shaman', REAL_SHAMAN);
     expect(r).toMatchObject({
       ok: true,

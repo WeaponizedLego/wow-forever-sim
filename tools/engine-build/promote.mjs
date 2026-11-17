@@ -12,7 +12,7 @@
 //   packages/gamedata/data/talents/   scripts/extract-talents.ts (trees + icons)
 //   packages/gamedata/data/presets/   scripts/extract-presets.ts (builds wowsimcli with Go)
 //   fixtures/gamedata/*.bin           upstream's db.bin and leftover_db.bin, which the gamedata tests decode
-//   fixtures/engine/sv-raidsim-request.json  the "sv" preset's request (spike/request-builder), which the
+//   fixtures/gamedata/sv-request.json  the "sv" preset's request (spike/request-builder), which the
 //                                     gamedata tests rebuild from the presets above
 import { copyFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -71,10 +71,7 @@ function regenerateData(clone) {
     ],
     { cwd: clone, env },
   );
-  copyFileSync(
-    join(clone, 'out/sv-request.json'),
-    join(REPO_ROOT, 'fixtures/engine/sv-raidsim-request.json'),
-  );
+  copyFileSync(join(clone, 'out/sv-request.json'), join(REPO_ROOT, 'fixtures/gamedata/sv-request.json'));
 
   const prettier = join(REPO_ROOT, 'node_modules/prettier/bin/prettier.cjs');
   run(process.execPath, [prettier, '--write', 'packages/gamedata/data'], { cwd: REPO_ROOT });
