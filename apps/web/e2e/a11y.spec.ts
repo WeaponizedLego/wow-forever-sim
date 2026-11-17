@@ -33,7 +33,9 @@ async function check(page: Page, path: string) {
   }
 }
 
-test('a11y: start, workbench, run and top gear pages have no new serious violations', async ({ page }) => {
+test('a11y: start, workbench, run, top gear, droptimizer and compare pages have no new serious violations', async ({
+  page,
+}) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'New run', level: 1 })).toBeVisible();
   await check(page, '/');
@@ -59,4 +61,29 @@ test('a11y: start, workbench, run and top gear pages have no new serious violati
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Top gear' }).click();
   await expect(page.getByRole('heading', { level: 1, name: /Top gear/ })).toBeVisible();
   await check(page, '/top-gear');
+
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Droptimizer' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: /Droptimizer/ })).toBeVisible();
+  await page.getByLabel('Dungeon or raid').selectOption({ label: 'Scarlet Monastery' });
+  await expect(page.getByRole('table', { name: 'Drops to sim' })).toBeVisible();
+  await check(page, '/droptimizer');
+
+  // Compare with results: the draft against a saved copy of it.
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Workbench' }).click();
+  await page
+    .getByRole('region', { name: 'Pending changes' })
+    .getByRole('button', { name: 'Save as variant' })
+    .click();
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Compare' }).click();
+  const picker = page.getByRole('list', { name: 'Variants to compare' });
+  await picker.getByRole('checkbox', { name: 'Current draft' }).check();
+  await picker.getByRole('checkbox', { name: 'Variant 1' }).check();
+  await page.getByRole('group', { name: 'Iterations' }).getByRole('button', { name: '1k' }).click();
+  await page.getByRole('button', { name: 'Compare 2 variants' }).click();
+  const dps = page.getByRole('table', { name: 'DPS by variant', exact: true });
+  await expect(dps.getByRole('row').filter({ hasText: /Better|Worse|Within noise/ })).toHaveCount(1, {
+    timeout: 60_000,
+  });
+  await expect(page.getByRole('table', { name: 'Ability DPS by variant' })).toBeVisible();
+  await check(page, '/compare');
 });

@@ -3,17 +3,23 @@
 import type { RankedRow, GearChange } from '~/composables/topGear';
 import type { TableColumn, TableSort } from '~/composables/ui-types';
 
-const props = defineProps<{
-  rows: RankedRow[];
-  reference: number;
-  domain: [number, number];
-  ticks: number[];
-  slotTag: (slot: GearChange['slot']) => string;
-  baseIterations: number;
-  equipping: boolean;
-  /** The character's class color, for the equipped marker. */
-  classColor: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    rows: RankedRow[];
+    reference: number;
+    domain: [number, number];
+    ticks: number[];
+    slotTag: (slot: GearChange['slot']) => string;
+    baseIterations: number;
+    equipping: boolean;
+    /** The character's class color, for the equipped marker. */
+    classColor: string;
+    /** The table's accessible name. */
+    caption?: string;
+  }>(),
+  { caption: 'Top gear ranking' },
+);
+// #detail (optional): extra line under a row's change chips, e.g. where a drop comes from.
 const emit = defineEmits<{ equip: [row: RankedRow] }>();
 const names = useActionNames();
 
@@ -40,7 +46,7 @@ const rowLabel = (r: RankedRow) =>
       :rows="rows"
       :row-key="(r) => r.key || 'equipped'"
       :row-state="(r) => (r.equipped ? 'reference' : undefined)"
-      caption="Top gear ranking"
+      :caption="caption"
       min-width="900px"
       density="lg"
     >
@@ -59,6 +65,7 @@ const rowLabel = (r: RankedRow) =>
             >{{ names.itemName(c.itemId) }}</UiChip
           >
         </span>
+        <slot name="detail" :row="row" />
       </template>
       <template #cell-mean="{ row }">
         <span class="mean"

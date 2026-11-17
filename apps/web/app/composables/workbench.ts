@@ -33,7 +33,15 @@ import {
 import { ItemQuality, PseudoStat, Stat } from '@fsim/proto/common';
 import type { PlayerStats, StatWeightsResult } from '@fsim/proto/api';
 import type { UIItem } from '@fsim/proto/ui';
-import type { DiffRow, Quality } from '~/composables/ui-types';
+import type { Quality } from '~/composables/ui-types';
+import { diffCharacters, type ChangeGroup, type DiffNames } from '~/utils/character-diff';
+import {
+  cleanVariantName,
+  newVariantId,
+  nextVariantName,
+  type UnreadableVariant,
+  type WorkbenchVariant,
+} from '~/utils/variant-record';
 
 export const SLOT_LABELS: Record<ItemSlotId, string> = {
   head: 'Head',
@@ -145,25 +153,19 @@ export function enchantName(db: GameDatabase | null, g: GearItem | undefined): s
  */
 export const weightPlan = (spec: SpecId): WeightStats => weightStatsFor(spec);
 
-export interface ChangeGroup {
-  key: string;
-  kind: 'gear' | 'talents' | 'buffs' | 'fight' | 'rotation' | 'other';
-  slot?: ItemSlotId;
-  rows: DiffRow[];
-}
-
-/** A draft kept for later. S3 (Top gear) may list these as candidates. */
-export interface WorkbenchVariant {
-  id: string;
-  name: string;
-  createdAt: string;
-  /** Run the draft was edited from; null when it came straight from an import. */
-  fromRunId: string | null;
-  character: Character;
-  /** Number of pending-change groups vs that run when saved. */
-  changes: number;
-  /** Linear estimate vs that run when saved; null without stat weights. */
-  estimate: { delta: number; ci95: number } | null;
+/** Display names for `diffCharacters`: items and enchants from the game data, rotations from the presets. */
+export function diffNames(d: GameDatabase | null, p: SpecPresets | null): DiffNames {
+  return {
+    slot: (s) => SLOT_LABELS[s],
+    item: (g) => itemName(d, g),
+    enchant: (g) => enchantName(d, g),
+    buffs: (id) => BUFF_PRESETS.find((b) => b.id === id)?.label ?? id,
+    rotation: (c) =>
+      c.rotation.kind === 'preset'
+        ? (p?.rotations.find((r) => r.id === (c.rotation as { presetId: string }).presetId)?.name ??
+          c.rotation.presetId)
+        : 'custom SIML',
+  };
 }
 
 const ALL_REFS: StatRef[] = [
@@ -172,11 +174,6 @@ const ALL_REFS: StatRef[] = [
   { kind: 'pseudo', stat: PseudoStat.PseudoStatOffHandDps },
   { kind: 'pseudo', stat: PseudoStat.PseudoStatRangedDps },
 ];
-
-const sameGear = (a: GearItem | undefined, b: GearItem | undefined) =>
-  a?.itemId === b?.itemId &&
-  (a?.randomSuffix ?? 0) === (b?.randomSuffix ?? 0) &&
-  (a?.enchantId ?? 0) === (b?.enchantId ?? 0);
 
 // ---------------------------------------------------------------- module state (one per page load)
 const db = shallowRef<GameDatabase | null>(null);
@@ -189,9 +186,13 @@ const sheetError = ref<string | null>(null);
 const slotValues = shallowRef<Partial<Record<ItemSlotId, LinearEstimate>>>({});
 const changeEstimates = shallowRef<Record<string, LinearEstimate>>({});
 const gearTotal = shallowRef<LinearEstimate | null>(null);
+/** Saved variants, newest first; stored in IndexedDB (useVariantStore) and loaded on first use. */
 const variants = ref<WorkbenchVariant[]>([]);
+/** Stored variants that no longer parse; listed so they can be deleted. */
+const unreadableVariants = ref<UnreadableVariant[]>([]);
+const variantsLoaded = ref(false);
+let variantsHydrating: Promise<void> | null = null;
 let state: ReturnType<typeof createWorkbench> | null = null;
-let variantCounter = 0;
 
 function debounce<A extends unknown[]>(fn: (...a: A) => void, ms: number) {
   let t: ReturnType<typeof setTimeout> | undefined;
@@ -231,94 +232,7 @@ function createWorkbench() {
   const changes = computed<ChangeGroup[]>(() => {
     const a = baseline.value;
     const b = draft.value;
-    if (!a || !b) return [];
-    const d = db.value;
-    const out: ChangeGroup[] = [];
-    for (const slot of ITEM_SLOTS) {
-      const x = a.gear[slot];
-      const y = b.gear[slot];
-      if (sameGear(x, y)) continue;
-      const rows: DiffRow[] = [];
-      if (x?.itemId === y?.itemId && (x?.randomSuffix ?? 0) === (y?.randomSuffix ?? 0)) {
-        // Only the enchant changed.
-        rows.push({ op: '-', label: `${SLOT_LABELS[slot]}: ${enchantName(d, x) ?? 'no enchant'}` });
-        rows.push({ op: '+', label: `${SLOT_LABELS[slot]}: ${enchantName(d, y) ?? 'no enchant'}` });
-      } else {
-        const label = (g: GearItem) => {
-          const e = enchantName(d, g);
-          return e ? `${itemName(d, g)} · ${e}` : itemName(d, g);
-        };
-        rows.push({ op: '-', label: x ? label(x) : `${SLOT_LABELS[slot]}: empty` });
-        rows.push({ op: '+', label: y ? label(y) : `${SLOT_LABELS[slot]}: empty` });
-      }
-      rows[0]!.detail = SLOT_LABELS[slot].toLowerCase();
-      out.push({ key: `gear:${slot}`, kind: 'gear', slot, rows });
-    }
-    if (a.talents !== b.talents) {
-      out.push({
-        key: 'talents',
-        kind: 'talents',
-        rows: [
-          { op: '-', label: a.talents || 'no talents', detail: 'talents' },
-          { op: '+', label: b.talents || 'no talents' },
-        ],
-      });
-    }
-    if (a.buffs !== b.buffs) {
-      const name = (id: BuffsPreset) => BUFF_PRESETS.find((p) => p.id === id)?.label ?? id;
-      out.push({
-        key: 'buffs',
-        kind: 'buffs',
-        rows: [
-          { op: '-', label: `Buffs: ${name(a.buffs)}`, detail: 'buffs' },
-          { op: '+', label: `Buffs: ${name(b.buffs)}` },
-        ],
-      });
-    }
-    const ea = a.encounter;
-    const eb = b.encounter;
-    const fight: [string, (e: Character['encounter']) => string][] = [
-      ['Duration', (e) => `${e.durationSec} s ± ${e.durationVariationSec}`],
-      ['Targets', (e) => String(e.targetCount)],
-      ['Target level', (e) => String(e.targetLevel)],
-      ['Execute phase', (e) => (e.executePhase ? 'on' : 'off')],
-    ];
-    for (const [label, f] of fight) {
-      if (f(ea) === f(eb)) continue;
-      out.push({
-        key: `fight:${label}`,
-        kind: 'fight',
-        rows: [
-          { op: '-', label: `${label}: ${f(ea)}`, detail: 'fight' },
-          { op: '+', label: `${label}: ${f(eb)}` },
-        ],
-      });
-    }
-    const rot = (c: Character) =>
-      c.rotation.kind === 'preset'
-        ? (presets.value?.rotations.find((r) => r.id === (c.rotation as { presetId: string }).presetId)
-            ?.name ?? c.rotation.presetId)
-        : 'custom SIML';
-    if (JSON.stringify(a.rotation) !== JSON.stringify(b.rotation)) {
-      out.push({
-        key: 'rotation',
-        kind: 'rotation',
-        rows: [
-          { op: '-', label: `Rotation: ${rot(a)}`, detail: 'rotation' },
-          { op: '+', label: `Rotation: ${rot(b)}` },
-        ],
-      });
-    }
-    const rest = (c: Character) =>
-      JSON.stringify([c.race, c.professions, c.consumables, c.specOptions, c.playerOptions, c.spec]);
-    if (rest(a) !== rest(b)) {
-      out.push({
-        key: 'other',
-        kind: 'other',
-        rows: [{ op: '+', label: 'Race, professions, consumables or spec options', detail: 'other' }],
-      });
-    }
-    return out;
+    return a && b ? diffCharacters(a, b, diffNames(db.value, presets.value)) : [];
   });
 
   /** Changes a gear-stat estimate cannot price (talents, buffs, fight, rotation …). */
@@ -348,12 +262,23 @@ function createWorkbench() {
     return { value: run.summary.dpsMean + gearTotal.value.delta, ci95: gearTotal.value.ci95 };
   });
 
+  // ---- saved variants
+  const variantStore = useVariantStore();
+  variantsHydrating ??= variantStore.load().then((stored) => {
+    // Variants saved in this tab before the load finished stay on top.
+    const here = new Set(variants.value.map((v) => v.id));
+    variants.value = [...variants.value, ...stored.variants.filter((v) => !here.has(v.id))];
+    unreadableVariants.value = stored.unreadable;
+    variantsLoaded.value = true;
+  });
+
+  /** Save the draft as a variant (stored in IndexedDB). Works with or without pending changes. */
   function saveVariant(name?: string): WorkbenchVariant | null {
     const c = draft.value;
     if (!c) return null;
     const v: WorkbenchVariant = {
-      id: `v${++variantCounter}`,
-      name: name || `Variant ${variantCounter}`,
+      id: newVariantId(),
+      name: cleanVariantName(name ?? '') || nextVariantName(variants.value.map((x) => x.name)),
       createdAt: new Date().toISOString(),
       fromRunId: baseRunId.value,
       character: structuredClone(toRaw(c)),
@@ -364,18 +289,59 @@ function createWorkbench() {
           : null,
     };
     variants.value = [v, ...variants.value];
+    void variantStore.put(v);
     return v;
   }
 
-  function loadVariant(id: string) {
+  /** Rename a variant; an empty name is ignored. */
+  function renameVariant(id: string, name: string) {
+    const clean = cleanVariantName(name);
     const v = variants.value.find((x) => x.id === id);
-    if (!v) return;
-    const next = structuredClone(toRaw(v.character)) as Character;
-    session.updateCharacter((c) => Object.assign(c, next));
+    if (!v || !clean || clean === v.name) return;
+    const next = { ...toRaw(v), name: clean };
+    variants.value = variants.value.map((x) => (x.id === id ? next : x));
+    void variantStore.put(next);
   }
 
-  function removeVariant(id: string) {
-    variants.value = variants.value.filter((v) => v.id !== id);
+  /**
+   * Make a character the draft. Same spec: it replaces the draft and the baseline stays, so the pending
+   * changes show it against the last run. No draft yet, or another spec: it becomes draft and baseline.
+   */
+  async function openCharacter(character: Character) {
+    const next = structuredClone(toRaw(character)) as Character;
+    const current = draft.value;
+    if (!current || current.spec !== next.spec) {
+      await session.setCharacter(next);
+      return;
+    }
+    session.updateCharacter((c) => {
+      for (const k of Object.keys(c)) delete (c as Record<string, unknown>)[k];
+      Object.assign(c, next);
+    });
+  }
+
+  /** Load a saved variant into the draft. */
+  async function loadVariant(id: string) {
+    const v = variants.value.find((x) => x.id === id);
+    if (v) await openCharacter(v.character);
+  }
+
+  /** Delete a saved variant; returns it so the caller can offer Undo (restoreVariant). */
+  function removeVariant(id: string): WorkbenchVariant | null {
+    const v = variants.value.find((x) => x.id === id) ?? null;
+    variants.value = variants.value.filter((x) => x.id !== id);
+    unreadableVariants.value = unreadableVariants.value.filter((x) => x.id !== id);
+    void variantStore.remove(id);
+    return v;
+  }
+
+  /** Put a deleted variant back, in date order. */
+  function restoreVariant(v: WorkbenchVariant) {
+    if (variants.value.some((x) => x.id === v.id)) return;
+    variants.value = [...variants.value, v].sort((a, b) =>
+      a.createdAt < b.createdAt ? 1 : a.createdAt > b.createdAt ? -1 : 0,
+    );
+    void variantStore.put(v);
   }
 
   startWatchers(draft, baseline, weights, changes);
@@ -400,9 +366,15 @@ function createWorkbench() {
     avgIlvl,
     draftEstimate,
     variants,
+    unreadableVariants,
+    variantsLoaded: readonly(variantsLoaded),
+    variantStorage: variantStore.status,
     saveVariant,
+    renameVariant,
     loadVariant,
+    openCharacter,
     removeVariant,
+    restoreVariant,
   };
 }
 
