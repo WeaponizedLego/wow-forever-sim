@@ -2,6 +2,20 @@
 export { GameDatabase, loadDatabase, maxScaling, itemLevel } from './database';
 export { toImportContext } from './import-context';
 export { ItemSearchIndex, requiredLevel, type ItemQuery } from './search';
+export {
+  lootInstances,
+  lootInstance,
+  instanceDrops,
+  usableDrops,
+  valuedBySpec,
+  type Instance,
+  type InstanceKind,
+  type LootSource,
+  type LootSourceKind,
+  type DropWearer,
+  type DropSkipReason,
+  type UsableDrop,
+} from './drops';
 export { weightStatsFor, type WeightStats } from './weight-stats';
 export {
   SOURCE_KINDS,

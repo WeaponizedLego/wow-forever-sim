@@ -33,7 +33,9 @@ async function check(page: Page, path: string) {
   }
 }
 
-test('a11y: start, workbench, run and top gear pages have no new serious violations', async ({ page }) => {
+test('a11y: start, workbench, run, top gear and droptimizer pages have no new serious violations', async ({
+  page,
+}) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'New run', level: 1 })).toBeVisible();
   await check(page, '/');
@@ -48,4 +50,10 @@ test('a11y: start, workbench, run and top gear pages have no new serious violati
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Top gear' }).click();
   await expect(page.getByRole('heading', { level: 1, name: /Top gear/ })).toBeVisible();
   await check(page, '/top-gear');
+
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Droptimizer' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: /Droptimizer/ })).toBeVisible();
+  await page.getByLabel('Dungeon or raid').selectOption({ label: 'Scarlet Monastery' });
+  await expect(page.getByRole('table', { name: 'Drops to sim' })).toBeVisible();
+  await check(page, '/droptimizer');
 });
