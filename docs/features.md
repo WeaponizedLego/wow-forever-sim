@@ -15,6 +15,13 @@ refreshed by our own pipeline. Nuxt 4, pnpm, static/SSG deploy, all simming in W
 | Data freshness  | upstream `check_hotfixes.yml` (hourly), `scheduled_release.yml` (daily tag `v0.0.N`) | No GitHub Releases, tags only. Built site in `wowsims/pages-deploy/forever` with `version.json`                                                   |
 | Importers       | `ui/features/import-export/importers/`                                               | WoWSims addon, Wowhead gear planner, JSON, SIML. **No SimC importer.**                                                                            |
 
+## v1 status (2026-11-17)
+
+v1 ships every **M** item below plus these **N** items: Wowhead gear-planner import, Top gear, Droptimizer,
+Compare (up to 4 variants), local history, the ⌘K palette and the per-spec DPS table on each engine bump. Fights
+are fixed styles: Patchwerk 3 min, Patchwerk 5 min, Dungeon slice 5 min (one continuous sim) and Custom.
+**Character lookup is cut from v1.** Status, known limits and what comes next: [plan.md](plan.md#status-2026-11-17-v1-feature-complete).
+
 ## Features
 
 Legend: **M** = MVP, **N** = next, **L** = later.

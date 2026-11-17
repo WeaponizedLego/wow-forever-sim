@@ -4,33 +4,44 @@ Build the v2 design ([canvas](https://claude.ai/artifact/UpvfYeTSiM5oUmsncPjxYn)
 [wowsims/forever](https://github.com/wowsims/forever). Feature scope: [features.md](features.md).
 Work is split into lanes that subagents run in parallel, each in its own git worktree.
 
-## Status (2026-11-13)
+## Status (2026-11-17): v1 feature-complete
 
-| Phase                 | State                                     | Where                                                                     |
-| --------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
-| 0 Foundations         | Done                                      | merged to `main` (PR #1)                                                  |
-| 1 Packages (6 lanes)  | Done                                      | merged to `main` (PR #1)                                                  |
-| 2 Screens (3 lanes)   | Done                                      | merged to `main` (PR #1)                                                  |
-| Engine sync live      | Done                                      | hourly on `main`; first sync PR #3 auto-merged, engine `80ef867` released |
-| 3 Whole-app (4 lanes) | Done, **PR #6 open** (`phase-3` → `main`) | CI `check` + `e2e` green; Cloudflare build failing (below)                |
+**v1 goal** (decided 2026-11-17): sim a WoW Forever character entered as a **SimC string**, a **Wowhead
+gear-planner link** or **built in the tool**, on **Patchwerk 3 min**, **Patchwerk 5 min** or a **5-minute
+dungeon slice**, plus Droptimizer, Compare, the ⌘K palette, and the existing analysis, stat weights and top gear.
+Armory lookup, accounts, short links and stored reports are out of v1.
 
-**Open right now**
+| Phase                        | State | Where                                                              |
+| ---------------------------- | ----- | ------------------------------------------------------------------ |
+| 0–2 Foundations and screens  | Done  | PR #1                                                              |
+| 3 Whole-app                  | Done  | PR #6                                                              |
+| Engine sync                  | Live  | hourly; reports its own `check` (PR #54, #63); smoke rule (PR #55) |
+| Deploy                       | Live  | Cloudflare Workers Builds; production on `main`, preview per PR    |
+| 4 v1 lanes: Compare          | Done  | PR #57                                                             |
+| 4 v1 lanes: Droptimizer      | Done  | PR #58                                                             |
+| 4 v1 lanes: Fight styles     | Done  | PR #59 (engine patch `tools/engine-build/patches/`)                |
+| 4 v1 lanes: ⌘K + Wowhead     | Done  | PR #60                                                             |
+| 4 v1 lanes: Talents and SimC | Done  | PR #62                                                             |
 
-1. **Cloudflare Workers Builds fails in 0 s** on every commit (also `main`): it stops before cloning, so it is
-   a project/account setting, not code. Needs the build log (dashboard → Workers → `wow-forever-sim` → Builds).
-   Check: Git app access to the repo, root dir = repo root, build `pnpm build`, deploy `npx wrangler deploy`,
-   production branch `main`. `wrangler.jsonc` (static assets, SPA fallback) is in PR #6 and dry-run validated.
-2. **Merge PR #6** once the above is understood (it does not depend on it; our CI is green).
-3. **Local engine**: `packages/engine/vendor/` is gitignored. Rebuild at the lock's commit (`80ef867`) per
-   `docs/dev-setup.md`, or delete it so dev stages the release.
+Live at https://wow-forever-sim.glen-21f.workers.dev (name and domain stay placeholders).
 
-**Next (proposed, not started)**
+**Known limits**
 
-- SimC talent conversion (client loadout string → engine talent string). Riskiest item: SimC's talent data
-  and the engine's trees disagree; needs its own spike.
-- Interactive talent tree in the Workbench (today: engine string + presets).
-- From "Later" below: Droptimizer first (drop sources are in `db.bin`).
-- Product name / domain (user decides later).
+1. **SimC client loadout strings**: verified for Shaman only (one real export). Other classes convert with a
+   `TALENT-08` warning when the decoded build passes the tree rules, or fall back to the preset with a reason.
+   One real export per class pins its tree hash (`packages/importers/README.md`, "Client loadout strings").
+2. **Raid loot is thin in the data**: upstream's `db.bin` holds only some raid items (for example 10 Molten Core
+   drops; Perdition's Blade, Band of Accuria and Bonereaver's Edge are absent). The Droptimizer lists what the
+   data has; the hourly sync brings in more as upstream adds it.
+3. **Dungeon slice mobs** use guessed settings (level 62, raid-target armor). DPS counts downtime, like SimC's
+   DungeonSlice. The slice needs an engine built with our patch (every release from `51a5912` on).
+4. **Engine identity**: an engine id is the upstream commit. A change to our engine patch only ships with the
+   next upstream commit, because the release for the current one is never overwritten.
+5. **Old engines**: share links made on an older engine are flagged but run on the current one (GitHub release
+   assets have no CORS headers).
+
+**After v1 (not started)**: armory lookup (spike on Blizzard's Forever profile namespace), short links and stored
+reports (need a backend), compare share links, tuning-history page, aggregated timeline (upstream PR).
 
 **Repo setup done via `gh`**: auto-merge on, merged branches deleted, Actions may open PRs, `main` protected
 (requires a `check` status from any source). GitHub holds `pull_request` runs on PRs opened with `GITHUB_TOKEN`
