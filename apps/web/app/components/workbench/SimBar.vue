@@ -80,6 +80,21 @@ function onKey(e: KeyboardEvent) {
     void run();
   }
 }
+// The command palette's "Run sim" runs this bar's sim (its iterations and stat weights setting).
+useCommandSource(() => [
+  {
+    id: 'sim.run',
+    section: 'Actions',
+    label: 'Run sim',
+    detail: `${iterations.value} iterations${withWeights.value ? ' + stat weights' : ''}`,
+    keywords: ['simulate', 'dps', 'start sim'],
+    kbd: '⌘↵',
+    suggested: true,
+    disabled: !wb.draft.value ? 'No character to sim' : progress.value ? 'A sim is running' : null,
+    run,
+  },
+]);
+
 onMounted(() => window.addEventListener('keydown', onKey));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
 </script>

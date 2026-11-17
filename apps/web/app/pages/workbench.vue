@@ -2,7 +2,7 @@
 // Workbench (lane S2): edit the current character (the draft) and sim it against the last run.
 // Sub-views are ?tab=… so each has its own URL; the right-hand column (pending changes, stats, caps)
 // stays on every tab because every tab's edits show up there.
-import { RACES, type ItemSlotId } from '@fsim/contracts';
+import { ITEM_SLOTS, RACES, type ItemSlotId } from '@fsim/contracts';
 import type { KeyValue, NavItem } from '~/composables/ui-types';
 import { BUFF_PRESETS, specInfo, talentPoints } from '~/composables/workbench';
 
@@ -70,15 +70,29 @@ const kv = computed<KeyValue[]>(() => {
 
 // Item picker
 const pickSlot = ref<ItemSlotId | null>(null);
+const pickItem = ref<number | undefined>();
 let opener: HTMLElement | null = null;
-function openPicker(slot: ItemSlotId) {
+function openPicker(slot: ItemSlotId, itemId?: number) {
   opener = document.activeElement as HTMLElement | null;
+  pickItem.value = itemId;
   pickSlot.value = slot;
 }
 function closePicker() {
   pickSlot.value = null;
+  pickItem.value = undefined;
   nextTick(() => opener?.focus());
 }
+// ?pick=<slot>&item=<id> (from the command palette) opens the picker on that item; the query is then dropped.
+watch(
+  [() => route.query.pick, c],
+  ([pick]) => {
+    if (!c.value || typeof pick !== 'string' || !(ITEM_SLOTS as readonly string[]).includes(pick)) return;
+    openPicker(pick as ItemSlotId, Number(route.query.item) || undefined);
+    const { pick: _pick, item: _item, ...rest } = route.query;
+    void navigateTo({ query: rest }, { replace: true });
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -119,7 +133,13 @@ function closePicker() {
     </template>
   </main>
   <WorkbenchSimBar v-if="c" />
-  <WorkbenchItemPicker v-if="pickSlot" :key="pickSlot" :slot-id="pickSlot" @close="closePicker" />
+  <WorkbenchItemPicker
+    v-if="pickSlot"
+    :key="`${pickSlot}:${pickItem ?? ''}`"
+    :slot-id="pickSlot"
+    :item-id="pickItem"
+    @close="closePicker"
+  />
 </template>
 
 <style scoped>

@@ -13,7 +13,8 @@ const result = importAny(pasted, ctx); // { format, character, diagnostics }
 | `detectFormat(input)`                                | `'simc' \| 'wowsims-json' \| 'wowhead-url' \| null`. Checks Wowhead link, then JSON, then SimC |
 | `importAny(input, ctx)`                              | Detects the format and parses. Unknown format → `FMT-01` error, `character: null`              |
 | `simcImporter`, `wowsimsImporter`, `wowheadImporter` | The three `Importer`s; `IMPORTERS` lists them in detection order                               |
-| `readWowheadHash(hash)`                              | The raw Wowhead planner hash decoder                                                           |
+| `readWowheadHash(hash)`                              | The raw Wowhead planner hash decoder (all three formats)                                       |
+| `parseWowheadLink(text)`                             | `{ game, className, raceName, hash }` of the first planner link in the text, or null           |
 | `WowheadImportContext`                               | `ImportContext` + optional `enchantIdForSpell(spellId)` (see below)                            |
 
 ## Diagnostics
@@ -85,11 +86,30 @@ Talents are only used when `flavor` is `"forever"`. The `spec` field (`fury`, `f
 
 ## Wowhead gear planner
 
-Decoder ported from upstream `wowhead_gear_planner.ts` (MIT). Class and race come from the path,
-spec from the talents' points per tree. Wowhead stores enchants as **spell ids** in **2 bytes**;
-the engine wants effect ids, so the context's `enchantIdForSpell` maps them. Without it every
-enchant is a `DATA-03`. Forever enchants whose spell id is above 65535 (e.g. 1217203, 1254772)
-cannot be represented in a planner link at all and also come back as `DATA-03`.
+Checked against wowhead.com in November 2026 (its planner code and links it wrote). Forever players
+share links from Wowhead's **WoW Forever planner**:
+`https://www.wowhead.com/forever/gear-planner/<class>/<race>/<code>`, or localized with the locale
+after the game (`/forever/de/gear-planner/…`). `parseWowheadLink` also takes the Classic Era planner
+(`/classic/…`, `classic.wowhead.com/…`; a `PARSE-02` info says so), other games' planners (`/tbc/`,
+`/mop-classic/`…; `PARSE-02` warning), retail (`/gear-planner/…` with no game; gear skipped), a
+class-only link (`…/gear-planner/hunter`) and locale-first paths. A lone link to any other Wowhead page
+is a `wowhead-url` with an `FMT-01` error that says to copy the planner's address.
+
+The code after class/race comes in three formats, told apart by its first character:
+
+| First char | Format              | Written by                     | Decoder                                                 |
+| ---------- | ------------------- | ------------------------------ | ------------------------------------------------------- |
+| `F`        | packed, version 5   | the Forever planner (now)      | `wowhead-packed.ts`: base64url digits as prefix varints |
+| `B`        | bytes, version 4    | the Classic Era planner (now)  | `readV4Items`: 3-byte item ids and values               |
+| `A`        | bytes, versions 0–3 | older links, upstream exporter | ported from upstream `wowhead_gear_planner.ts` (MIT)    |
+
+The packed format carries Wowhead's data environment (16 = Forever), level, talents as digits (the
+same order as the engine's trees; checked for hunter), a talent tree version tag (`vkndmh`), the Legacy
+calculator build (skipped) and per item: slot, id, random suffix, gems (skipped) and enchant **spell
+ids**. The engine wants effect ids, so the context's `enchantIdForSpell` maps them; without it every
+enchant is a `DATA-03`. Spell ids above 65535 (Forever's 1217203, 1254772…) fit in the packed format;
+in the byte formats they are cut to 2 bytes and come back as `DATA-03`. Class and race come from the
+path, spec from the talents' points per tree. `writePackedHash` builds test links.
 
 ## Tests
 
