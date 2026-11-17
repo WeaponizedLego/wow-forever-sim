@@ -2,7 +2,7 @@
 // Run analysis (docs/features.md §3): one run against its baseline.
 import { RaidSimResult } from '@fsim/proto/api';
 import { CLASSES, RACES, SPECS } from '@fsim/contracts';
-import { fightLabel, sliceRanAsScheduled } from '@fsim/gamedata';
+import { fightChange, fightLabel, sliceRanAsScheduled } from '@fsim/gamedata';
 import { engineErrorText } from '@fsim/engine';
 import { comparableBaseline, lineageOf } from '~/utils/lineage';
 
@@ -17,6 +17,12 @@ const entry = computed(() => session.run(runId.value));
 // previous run of another character.
 const base = computed(() => (entry.value ? comparableBaseline(entry.value.record, session.run) : null));
 const baseId = computed(() => base.value?.record.id ?? null);
+// The baseline simmed another fight: its Δ is not like-for-like.
+const baseFightChange = computed(() =>
+  entry.value && base.value
+    ? fightChange(base.value.record.character.encounter, entry.value.record.character.encounter)
+    : null,
+);
 // Read the run list itself: runStatWeights attaches the result to the existing entry object.
 const statWeights = computed(() => {
   void session.runs.value;
@@ -184,6 +190,7 @@ const hit = computed(() => hitScaling.state(runId.value));
           :base-summary="a.baseSummary.value"
           :baseline-id="baseId"
           :welch="a.welch.value"
+          :fight-change="baseFightChange"
           :stable-after="a.convergence.value?.stableAfter ?? null"
         />
 

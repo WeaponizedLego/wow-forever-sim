@@ -60,6 +60,7 @@ export {
   effectiveEncounter,
   withFightStyle,
   fightLabel,
+  fightChange,
   fightSegments,
   encounterProto,
   sliceRanAsScheduled,

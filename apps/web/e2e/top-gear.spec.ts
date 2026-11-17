@@ -30,7 +30,7 @@ test('top gear: 3 candidates across 2 slots rank with verdicts', async ({ page }
 
   const ranking = page.getByRole('table', { name: 'Top gear ranking' });
   await expect(ranking).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByText('showing 6 of 6 · sorted by mean')).toBeVisible();
+  await expect(page.getByText('showing 6 of 6 · sorted by Δ')).toBeVisible();
   // Header row + 6 combinations, one of them the equipped set; the rest each carry a verdict.
   await expect(ranking.getByRole('row')).toHaveCount(7);
   await expect(ranking.getByRole('row').filter({ hasText: 'Currently equipped' })).toHaveCount(1);

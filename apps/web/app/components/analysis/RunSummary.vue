@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // The run in plain words, above the detailed panels: DPS with its ±, the fight, how many fights were simmed, the
 // top three abilities by share, and what changed since the previous run of the same character (by name and class)
-// in this browser's history. A "What am I looking at?" disclosure explains the terms the panels below use.
+// in this browser's history (led by a warning when that run simmed another fight, so the Δ is not like-for-like).
+// A "What am I looking at?" disclosure explains the terms the panels below use.
 import type { Summary } from '@fsim/analysis';
-import { fightLabel } from '@fsim/gamedata';
+import { fightChange, fightLabel } from '@fsim/gamedata';
 import type { RunEntry } from '~/composables/session';
 
 const props = defineProps<{
@@ -52,6 +53,7 @@ const sincePrevious = computed(() => {
     delta,
     pct: p.record.summary.dpsMean ? delta / Math.abs(p.record.summary.dpsMean) : null,
     real: Math.abs(delta) > noise,
+    fight: fightChange(p.record.character.encounter, char.value.encounter),
     changed: groups.length ? changeSummary(groups, (s) => SLOT_LABELS[s]) : null,
   };
 });
@@ -84,12 +86,18 @@ const CI_TIP =
       <p class="line">
         <span class="label">Since last run</span>
         <span v-if="sincePrevious">
+          <strong v-if="sincePrevious.fight" class="fight-change" data-testid="summary-fight-change"
+            >Different fight than {{ sincePrevious.id }} ({{ sincePrevious.fight.from }} →
+            {{ sincePrevious.fight.to }}): not a like-for-like comparison.</strong
+          >
           <span class="num">{{ formatSigned(sincePrevious.delta, 1) }} DPS</span>
           <span v-if="sincePrevious.pct !== null" class="num">
             ({{ formatSigned(sincePrevious.pct * 100, 1) }}%)</span
           >
-          vs run {{ sincePrevious.id }},
-          {{ sincePrevious.real ? 'more than the runs’ noise' : 'within the runs’ noise' }}.
+          vs run {{ sincePrevious.id }}<template v-if="sincePrevious.fight">.</template
+          ><template v-else
+            >, {{ sincePrevious.real ? 'more than the runs’ noise' : 'within the runs’ noise' }}.</template
+          >
           {{ sincePrevious.changed ? `Changed: ${sincePrevious.changed}.` : 'Same character settings.' }}
         </span>
         <span v-else class="text-3">This is the first run of {{ who }} in this browser.</span>
@@ -160,6 +168,11 @@ const CI_TIP =
 }
 .text-3 {
   color: var(--text-3);
+}
+.fight-change {
+  display: block;
+  font-weight: 500;
+  color: var(--status-warning);
 }
 .help summary {
   cursor: pointer;

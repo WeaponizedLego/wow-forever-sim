@@ -97,6 +97,10 @@ const showTable = ref(false);
           :options="FIGHT_STYLES.map((s) => ({ value: s.id, label: s.label }))"
         />
         <p class="hint">{{ info.description }}</p>
+        <p v-if="info.segments.length" class="hint" data-testid="slice-dps-note">
+          DPS counts the whole 5 minutes, downtime included. Cleave and AoE specs often still do more DPS here
+          than on Patchwerk (more mobs to hit, level 62 trash); single-target specs usually do less.
+        </p>
       </div>
 
       <section v-if="enc" class="timeline" aria-label="Fight schedule">
