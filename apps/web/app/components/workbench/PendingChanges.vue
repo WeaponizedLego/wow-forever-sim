@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { DiffRow } from '~/composables/ui-types';
+import type { WorkbenchVariant } from '~/utils/variant-record';
 
 // Draft vs baseline as −/+ rows, each gear change with its estimated gain, then the total, Discard and
-// Save as variant. Saved variants are listed underneath.
+// Save as variant. Saved variants (kept in this browser) are listed underneath: rename, load, delete.
 const wb = useWorkbench();
 const session = useSession();
 
@@ -31,11 +32,39 @@ const groups = computed<DiffRow[][]>(() =>
 
 const total = computed(() => wb.gearTotal.value);
 const hasChanges = computed(() => wb.changes.value.length > 0);
-const saved = ref<string | null>(null);
+const status = ref<string | null>(null);
+
+// ---- saved variants (IndexedDB): save the draft, rename, load back, delete with undo.
+const editingId = ref<string | null>(null);
+const editName = ref('');
+const deleted = ref<WorkbenchVariant | null>(null);
 
 function save() {
   const v = wb.saveVariant();
-  if (v) saved.value = v.name;
+  if (!v) return;
+  deleted.value = null;
+  status.value = `Saved ${v.name}`;
+}
+function startRename(v: WorkbenchVariant) {
+  editingId.value = v.id;
+  editName.value = v.name;
+}
+function commitRename() {
+  if (editingId.value) wb.renameVariant(editingId.value, editName.value);
+  editingId.value = null;
+}
+async function load(v: WorkbenchVariant) {
+  await wb.loadVariant(v.id);
+  status.value = `Loaded ${v.name}`;
+}
+function remove(id: string) {
+  deleted.value = wb.removeVariant(id);
+  status.value = deleted.value ? `Deleted ${deleted.value.name}` : null;
+}
+function undo() {
+  if (deleted.value) wb.restoreVariant(deleted.value);
+  status.value = deleted.value ? `Restored ${deleted.value.name}` : null;
+  deleted.value = null;
 }
 </script>
 
@@ -73,22 +102,66 @@ function save() {
     </template>
     <div class="btn-row">
       <UiButton variant="quiet" :disabled="!hasChanges" @click="session.discardChanges()">Discard</UiButton>
-      <UiButton :disabled="!hasChanges" @click="save">Save as variant</UiButton>
-      <span v-if="saved" class="num saved" role="status">saved {{ saved }}</span>
+      <UiButton :disabled="!wb.draft.value" @click="save">Save as variant</UiButton>
     </div>
-    <div v-if="wb.variants.value.length" class="variants">
-      <p class="label variants__h">Variants · this tab</p>
+    <section
+      v-if="wb.variants.value.length || wb.unreadableVariants.value.length"
+      class="variants"
+      aria-label="Saved variants"
+    >
+      <div class="variants__h">
+        <p class="label">Saved variants</p>
+        <NuxtLink v-if="wb.variants.value.length" to="/compare" class="variants__cmp">Compare →</NuxtLink>
+      </div>
       <ul>
         <li v-for="v in wb.variants.value" :key="v.id" class="variant">
-          <span class="variant__name">{{ v.name }}</span>
-          <span class="num variant__meta"
-            >{{ v.changes }} {{ v.changes === 1 ? 'change' : 'changes' }}
-            <template v-if="v.estimate"> · {{ est(v.estimate.delta, v.estimate.ci95) }}</template></span
+          <form
+            v-if="editingId === v.id"
+            class="variant__rename"
+            @submit.prevent="commitRename"
+            @keydown.esc="editingId = null"
           >
-          <UiButton size="sm" variant="quiet" @click="wb.loadVariant(v.id)">Load</UiButton>
+            <UiTextInput v-model="editName" :label="`New name for ${v.name}`" hide-label />
+            <UiButton size="sm" type="submit">Save</UiButton>
+            <UiButton size="sm" variant="quiet" @click="editingId = null">Cancel</UiButton>
+          </form>
+          <template v-else>
+            <span class="variant__name">{{ v.name }}</span>
+            <span class="num variant__meta"
+              >{{ v.changes }} {{ v.changes === 1 ? 'change' : 'changes' }}
+              <template v-if="v.estimate"> · {{ est(v.estimate.delta, v.estimate.ci95) }}</template></span
+            >
+            <span class="variant__actions">
+              <UiButton size="sm" variant="quiet" :aria-label="`Load ${v.name}`" @click="load(v)"
+                >Load</UiButton
+              >
+              <UiButton size="sm" variant="quiet" :aria-label="`Rename ${v.name}`" @click="startRename(v)"
+                >Rename</UiButton
+              >
+              <UiButton size="sm" variant="quiet" :aria-label="`Delete ${v.name}`" @click="remove(v.id)"
+                >Delete</UiButton
+              >
+            </span>
+          </template>
+        </li>
+        <li v-for="u in wb.unreadableVariants.value" :key="u.id" class="variant">
+          <span class="variant__name variant__bad">{{ u.name }}</span>
+          <span class="num variant__meta">cannot be read ({{ u.reason }})</span>
+          <span class="variant__actions">
+            <UiButton size="sm" variant="quiet" :aria-label="`Delete ${u.name}`" @click="remove(u.id)"
+              >Delete</UiButton
+            >
+          </span>
         </li>
       </ul>
-    </div>
+    </section>
+    <p v-if="status" class="num saved" role="status">
+      {{ status }}
+      <UiButton v-if="deleted" size="sm" variant="quiet" @click="undo">Undo</UiButton>
+    </p>
+    <p v-if="wb.variantStorage.value === 'unavailable'" class="note">
+      This browser is not keeping data for this site, so variants last only until the tab closes.
+    </p>
   </UiPanel>
 </template>
 
@@ -145,6 +218,11 @@ function save() {
   padding: 0 var(--space-4) var(--space-4);
 }
 .saved {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-3);
   font-size: var(--text-xs);
   color: var(--text-3);
 }
@@ -153,7 +231,17 @@ function save() {
   padding: var(--space-2) var(--space-4) var(--space-3);
 }
 .variants__h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   margin: 0 0 var(--space-1);
+}
+.variants__h .label {
+  margin: 0;
+}
+.variants__cmp {
+  font-size: var(--text-xs);
+  color: var(--text-2);
 }
 .variants ul {
   margin: 0;
@@ -173,5 +261,20 @@ function save() {
 .variant__meta {
   font-size: var(--text-xs);
   color: var(--text-3);
+}
+.variant__actions {
+  display: inline-flex;
+}
+.variant__bad {
+  color: var(--text-3);
+}
+.variant__rename {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-grow: 1;
+}
+.variant__rename > :first-child {
+  flex-grow: 1;
 }
 </style>

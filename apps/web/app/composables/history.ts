@@ -19,8 +19,20 @@
 //
 // When IndexedDB is unavailable (private mode in some browsers, blocked storage), every call resolves
 // quietly and status says 'unavailable'; the session keeps runs in memory for the tab.
+//
+// Saved Workbench variants live in their own database, "fsim-variants" v1:
+//   variants: VariantRow (utils/variant-record.ts) keyed by id (a UUID, so tabs never collide).
+// A separate database rather than a third store here: variants are things the user named and kept, never
+// pruned by the run cap or "clear history"; and "fsim-history" stays at version 1, so adding variants needs
+// no upgrade of existing users' run history and no versionchange that would cut off older tabs still open.
 import type { RunRecord } from '@fsim/contracts';
 import { RaidSimResult, StatWeightsResult } from '@fsim/proto/api';
+import {
+  readVariantRows,
+  toVariantRow,
+  type UnreadableVariant,
+  type WorkbenchVariant,
+} from '~/utils/variant-record';
 
 export const HISTORY_MAX_RUNS = 50;
 export const HISTORY_FULL_RUNS = 10;
@@ -63,19 +75,23 @@ function done(tx: IDBTransaction): Promise<void> {
   });
 }
 
-function open(): Promise<IDBDatabase> {
+function open(
+  name = DB_NAME,
+  version = 1,
+  upgrade: (d: IDBDatabase) => void = (d) => {
+    d.createObjectStore(RUNS, { keyPath: 'seq' });
+    d.createObjectStore(META);
+  },
+): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     if (typeof indexedDB === 'undefined') return reject(new Error('IndexedDB is not available'));
     let r: IDBOpenDBRequest;
     try {
-      r = indexedDB.open(DB_NAME, 1);
+      r = indexedDB.open(name, version);
     } catch (e) {
       return reject(e);
     }
-    r.onupgradeneeded = () => {
-      r.result.createObjectStore(RUNS, { keyPath: 'seq' });
-      r.result.createObjectStore(META);
-    };
+    r.onupgradeneeded = () => upgrade(r.result);
     r.onsuccess = () => {
       // A newer version of the app (another tab) is upgrading the database: let it. This tab then stops
       // saving (writes fail quietly) until it is reloaded.
@@ -217,4 +233,69 @@ export function useHistory() {
 
   void db();
   return { status: readonly(status), load, nextSeq, save, clear };
+}
+
+// ---------------------------------------------------------------- saved variants ("fsim-variants")
+const VARIANTS_DB = 'fsim-variants';
+const VARIANTS = 'variants';
+
+let variantsDbPromise: Promise<IDBDatabase | null> | null = null;
+const variantStatus = ref<HistoryStatus>('loading');
+
+function variantsDb(): Promise<IDBDatabase | null> {
+  variantsDbPromise ??= open(VARIANTS_DB, 1, (d) => {
+    if (!d.objectStoreNames.contains(VARIANTS)) d.createObjectStore(VARIANTS, { keyPath: 'id' });
+  }).then(
+    (d) => {
+      variantStatus.value = 'ready';
+      return d;
+    },
+    (e: unknown) => {
+      console.warn('variants: IndexedDB unavailable, variants are kept for this tab only.', e);
+      variantStatus.value = 'unavailable';
+      return null;
+    },
+  );
+  return variantsDbPromise;
+}
+
+async function variantsSafely<T>(what: string, fallback: T, fn: (d: IDBDatabase) => Promise<T>): Promise<T> {
+  const d = await variantsDb();
+  if (!d) return fallback;
+  try {
+    return await fn(d);
+  } catch (e) {
+    console.warn(`variants: ${what} failed`, e);
+    return fallback;
+  }
+}
+
+/** Saved variants in IndexedDB. Every call resolves, also without storage (then nothing is kept). */
+export function useVariantStore() {
+  /** Every stored variant, newest first, plus rows that no longer parse (kept in storage, listed apart). */
+  function load(): Promise<{ variants: WorkbenchVariant[]; unreadable: UnreadableVariant[] }> {
+    return variantsSafely('load', { variants: [], unreadable: [] }, async (d) => {
+      const rows = await req(d.transaction(VARIANTS, 'readonly').objectStore(VARIANTS).getAll());
+      return readVariantRows(rows as unknown[]);
+    });
+  }
+
+  /** Store (or replace) a variant. */
+  function put(v: WorkbenchVariant) {
+    return variantsSafely('save', undefined, async (d) => {
+      const tx = d.transaction(VARIANTS, 'readwrite');
+      tx.objectStore(VARIANTS).put(toVariantRow(v));
+      await done(tx);
+    });
+  }
+
+  function remove(id: string) {
+    return variantsSafely('delete', undefined, async (d) => {
+      const tx = d.transaction(VARIANTS, 'readwrite');
+      tx.objectStore(VARIANTS).delete(id);
+      await done(tx);
+    });
+  }
+
+  return { status: readonly(variantStatus), load, put, remove };
 }
