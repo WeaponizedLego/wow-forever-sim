@@ -34,6 +34,8 @@ export interface TableColumn<Row> {
   sortable?: boolean;
   /** Value used for sorting (defaults to row[key]). */
   sortValue?: (row: Row) => number | string;
+  /** In a stacked table (DataTable `stack`, narrow panels): false shows the cell full width without its label. */
+  stackLabel?: boolean;
 }
 
 export interface TableSort {

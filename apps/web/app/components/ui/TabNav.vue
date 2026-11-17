@@ -52,9 +52,11 @@ defineProps<{ label: string; items: NavItem[]; current?: string }>();
   color: var(--text-3);
 }
 @media (max-width: 640px) {
+  /* Every tab in view: wrap onto a second line rather than scroll some off-screen. */
   .tabs {
     justify-content: flex-start;
     flex-basis: 100%;
+    flex-wrap: wrap;
   }
 }
 </style>

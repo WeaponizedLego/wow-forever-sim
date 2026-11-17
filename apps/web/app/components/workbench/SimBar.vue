@@ -2,16 +2,14 @@
 import { weightPlan } from '~/composables/workbench';
 
 // Sticky bar at the bottom of the Workbench: iterations, expected CI, stat weights, and the one primary
-// action (⌘↵ / Ctrl+↵). While a sim runs it turns into the progress bar with Cancel.
+// action (⌘↵ / Ctrl+↵). While a sim runs it turns into the progress bar with Cancel. The iterations and stat
+// weights choices are remembered (useSimPrefs) and shared with the palette and the start screen.
 const session = useSession();
 const wb = useWorkbench();
 
-const ITER = { '1k': 1000, '5k': 5000, '25k': 25000 } as const;
-const iterations = ref<keyof typeof ITER>('5k');
-const withWeights = ref(true);
+const { preset: iterations, withWeights, iterations: n } = useSimPrefs();
 const error = ref<string | null>(null);
 
-const n = computed(() => ITER[iterations.value]);
 const ciNote = computed(() => {
   const run = wb.lastRun.value;
   if (!run) return 'expected ±: shown after the first run';
@@ -80,13 +78,13 @@ function onKey(e: KeyboardEvent) {
     void run();
   }
 }
-// The command palette's "Run sim" runs this bar's sim (its iterations and stat weights setting).
+// The command palette's "Run sim" runs this bar's sim (its iterations and stat weights setting), and says so.
 useCommandSource(() => [
   {
     id: 'sim.run',
     section: 'Actions',
-    label: 'Run sim',
-    detail: `${iterations.value} iterations${withWeights.value ? ' + stat weights' : ''}`,
+    label: withWeights.value ? 'Run sim + stat weights' : 'Run sim',
+    detail: `${iterations.value} iterations`,
     keywords: ['simulate', 'dps', 'start sim'],
     kbd: '⌘↵',
     suggested: true,
@@ -112,15 +110,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
         <UiButton @click="session.cancel()">Cancel</UiButton>
       </template>
       <template v-else>
-        <UiSegmentedControl
-          v-model="iterations"
-          label="Iterations"
-          :options="[
-            { value: '1k', label: '1k', mono: true },
-            { value: '5k', label: '5k', mono: true },
-            { value: '25k', label: '25k', mono: true },
-          ]"
-        />
+        <UiSegmentedControl v-model="iterations" label="Iterations" :options="ITERATION_OPTIONS" />
         <span class="num note">{{ ciNote }}</span>
         <UiCheckbox v-model="withWeights">Stat weights</UiCheckbox>
         <span v-if="error" class="err" role="alert"

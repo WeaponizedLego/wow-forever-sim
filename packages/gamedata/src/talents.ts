@@ -212,6 +212,39 @@ export function removePointBlocker(
   return `Can't remove: ${reasons.join('; ') || 'other talents depend on it'}`;
 }
 
+/**
+ * Why a point cannot go into the talent, in words ("Can't add: all 51 talent points are spent", "Can't add: tier 3
+ * needs 10 points in Elemental above it (6 so far)", "Can't add: needs 5/5 in Convection"); null when it can.
+ * Tiers count from 1 at the top, as in the game.
+ */
+export function addPointBlocker(
+  cls: ClassId,
+  points: TalentPoints,
+  tree: number,
+  talent: number,
+): string | null {
+  const t = DATA[cls].trees[tree];
+  const def = t?.talents[talent];
+  if (!t || !def || canAddPoint(cls, points, tree, talent)) return null;
+  const pts = points[tree] ?? [];
+  if ((pts[talent] ?? 0) >= def.maxPoints) return `Can't add: ${def.name} is at its maximum rank`;
+  if (totalPoints(points) >= MAX_TALENT_POINTS)
+    return `Can't add: all ${MAX_TALENT_POINTS} talent points are spent`;
+  // Points in broken talents do not count towards a tier, as in brokenTalents.
+  const broken = brokenTalents(cls, points)[tree] ?? [];
+  const above = t.talents.reduce((a, x, k) => (x.row < def.row && !broken[k] ? a + (pts[k] ?? 0) : a), 0);
+  const need = def.row * POINTS_PER_ROW;
+  const reasons: string[] = [];
+  if (above < need)
+    reasons.push(`tier ${def.row + 1} needs ${need} points in ${t.name} above it (${above} so far)`);
+  if (def.prereq !== undefined) {
+    const pre = t.talents[def.prereq]!;
+    if ((pts[def.prereq] ?? 0) < pre.maxPoints || broken[def.prereq])
+      reasons.push(`needs ${pre.maxPoints}/${pre.maxPoints} in ${pre.name}`);
+  }
+  return `Can't add: ${reasons.join('; ') || 'the tree rules do not allow it'}`;
+}
+
 /** Adds (`delta` 1) or removes (-1) a point when the rules allow it; otherwise returns `points` unchanged. */
 export function stepTalent(
   cls: ClassId,

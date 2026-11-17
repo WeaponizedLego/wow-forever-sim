@@ -37,6 +37,7 @@ const status = computed(() => {
   </UiAppChrome>
   <slot />
   <LazyPaletteCommandPalette v-if="palette.open.value" :nav="nav" />
+  <UiToast />
   <footer class="footer">
     Simulation engine:
     <a href="https://github.com/wowsims/forever">WoWSims Forever</a> (MIT). Not affiliated with Blizzard

@@ -94,6 +94,9 @@ async function open() {
   }
 }
 
+// The same remembered iterations as the Workbench sim bar.
+const simPrefs = useSimPrefs();
+
 async function simAsIs() {
   const c = character.value;
   if (!c || busy.value) return;
@@ -101,7 +104,7 @@ async function simAsIs() {
   actionError.value = null;
   try {
     await session.setCharacter(c, props.result!.diagnostics);
-    const run = await session.runSim({ iterations: 5000 });
+    const run = await session.runSim({ iterations: simPrefs.iterations.value });
     await navigateTo(`/runs/${run.record.id.replace(/^#/, '')}`);
   } catch (e) {
     actionError.value = session.lastError.value ?? (e instanceof Error ? e.message : String(e));
@@ -166,6 +169,13 @@ const progress = computed(() => {
           <UiProgressBar :label="progress.label" :value="progress.value" :detail="progress.detail" />
         </div>
         <div class="actions__row">
+          <UiSegmentedControl
+            v-model="simPrefs.preset.value"
+            label="Iterations"
+            hide-label
+            size="sm"
+            :options="ITERATION_OPTIONS"
+          />
           <UiButton :disabled="!!simBlockedReason || !!busy" @click="simAsIs">{{
             busy === 'sim' ? 'Simming…' : 'Sim as-is'
           }}</UiButton>
@@ -177,7 +187,8 @@ const progress = computed(() => {
           </span>
           <span v-else-if="simBlockedReason" class="actions__why">{{ simBlockedReason }}</span>
           <span v-else class="actions__why"
-            >Sim as-is runs 5,000 iterations with the preset buffs and fight.</span
+            >Sim as-is runs {{ formatNumber(simPrefs.iterations.value, 0) }} iterations with the preset buffs
+            and fight.</span
           >
         </div>
       </div>

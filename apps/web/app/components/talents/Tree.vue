@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // One talent tree: header (name, points, reset) and the 4-column grid with prerequisite arrows.
 // Left-click or Enter/Space/+ adds a point, right-click, Shift-click or Backspace/Delete/- removes one. The arrow keys
-// move between talents (one tab stop per tree). The parent owns the points and the rules (stepTalent). A removal the
-// rules refuse says why, in the tooltip and in a status line under the tree (read out by screen readers).
+// move between talents (one tab stop per tree). The parent owns the points and the rules (stepTalent). A step the
+// rules refuse (no points left, tier locked, prerequisite missing, nothing to remove) says why, in the tooltip and in a
+// status line under the tree (read out by screen readers).
 import {
-  POINTS_PER_ROW,
+  addPointBlocker,
   canAddPoint,
   canRemovePoint,
   removePointBlocker,
@@ -45,14 +46,21 @@ const canRemove = computed(() =>
 const blockers = computed(() =>
   props.tree.talents.map((_, i) => removePointBlocker(props.cls, props.points, props.treeIndex, i)),
 );
+/** Why a point cannot go into each talent (null when it can). */
+const addBlockers = computed(() =>
+  props.tree.talents.map((_, i) => addPointBlocker(props.cls, props.points, props.treeIndex, i)),
+);
+/** The add reason for the tooltip; a maxed talent already says so in its rank line. */
+const addTip = (i: number) =>
+  (pts.value[i] ?? 0) < props.tree.talents[i]!.maxPoints ? addBlockers.value[i] : null;
 const help = (i: number) =>
   [canAdd.value[i] && 'Click: add', canRemove.value[i] && 'Right-click: remove'].filter(Boolean).join(' · ');
 
-// The last refused removal, shown under the tree until the next step or a few seconds pass.
+// The last refused step, shown under the tree until the next step or a few seconds pass.
 const notice = ref('');
 let noticeTimer: ReturnType<typeof setTimeout> | undefined;
 function step(i: number, delta: 1 | -1) {
-  const blocker = delta < 0 ? blockers.value[i] : null;
+  const blocker = delta < 0 ? blockers.value[i] : addBlockers.value[i];
   clearTimeout(noticeTimer);
   notice.value = blocker ?? '';
   if (blocker) noticeTimer = setTimeout(() => (notice.value = ''), 6000);
@@ -70,21 +78,6 @@ const states = computed<State[]>(() =>
     return canAdd.value[i] ? 'open' : 'locked';
   }),
 );
-
-/** Why a point cannot go in, in words; empty when it can (or the talent is full). */
-function requirements(i: number): string[] {
-  const t = props.tree.talents[i]!;
-  const out: string[] = [];
-  const above = props.tree.talents.reduce((a, x, k) => (x.row < t.row ? a + (pts.value[k] ?? 0) : a), 0);
-  if (above < t.row * POINTS_PER_ROW)
-    out.push(`Requires ${t.row * POINTS_PER_ROW} points in ${props.tree.name}`);
-  if (t.prereq !== undefined) {
-    const pre = props.tree.talents[t.prereq]!;
-    if ((pts.value[t.prereq] ?? 0) < pre.maxPoints)
-      out.push(`Requires ${pre.maxPoints} points in ${pre.name}`);
-  }
-  return out;
-}
 
 const arrows = computed(() =>
   props.tree.talents.flatMap((child, i) => {
@@ -221,7 +214,7 @@ const STATE_WORDS: Record<State, string> = {
           <template #content>
             <strong class="tip__name">{{ t.name }}</strong>
             <span class="tip__rank num">Rank {{ pts[i] ?? 0 }}/{{ t.maxPoints }}</span>
-            <span v-for="r in requirements(i)" :key="r" class="tip__req">{{ r }}</span>
+            <span v-if="addTip(i)" class="tip__req">{{ addTip(i) }}</span>
             <span v-if="broken[i]" class="tip__req"
               >Its points break the tree rules; the engine still applies them.</span
             >
