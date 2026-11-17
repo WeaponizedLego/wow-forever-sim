@@ -39,8 +39,12 @@ describe('characterToPlayer', () => {
       level: 60,
       buffs: 'full-raid',
     });
-    expect(hunter.rotation).toEqual({ kind: 'preset', presetId: 'melee-weave-max' });
-    expect(hunter.gear.head?.itemId).toBe(252605);
+    // Upstream's hunter defaults: the rotation and head piece they name, whatever they are at the locked commit.
+    const presets = await loadSpecPresets('hunter');
+    expect(hunter.rotation).toEqual({ kind: 'preset', presetId: presets.defaults.rotationId });
+    const gearSet = presets.gearSets.find((g) => g.id === presets.defaults.gearSetId)!;
+    expect(hunter.gear.head?.itemId).toBe(gearSet.gear.head?.itemId);
+    expect(hunter.gear.head?.itemId).toBeGreaterThan(0);
     const warlock = await defaultCharacter('warlock'); // upstream's defaults name a gear set (since 540ad8f)
     expect(Object.keys(warlock.gear).length).toBeGreaterThan(10);
   });

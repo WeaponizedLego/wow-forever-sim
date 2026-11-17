@@ -10,13 +10,17 @@ describe('loadDatabase', () => {
   const db = fixtureDb();
 
   it('decodes db.bin and appends leftovers like upstream proto.Merge', () => {
+    // The fixtures follow the locked engine (engine-sync copies them), so the counts are floors, not exact.
     const main = loadDatabase(fixtureBytes('db.bin'));
-    expect(main.raw.items).toHaveLength(7476);
-    expect(db.raw.items).toHaveLength(7476 + 3731);
-    expect(db.items.size).toBe(7476 + 3731);
-    expect(db.raw.enchants).toHaveLength(248 + 20);
-    expect(db.consumables.size).toBe(431);
-    expect(db.spellEffects.size).toBe(71);
+    const leftover = loadDatabase(fixtureBytes('leftover_db.bin'));
+    expect(main.raw.items.length).toBeGreaterThan(7000);
+    expect(leftover.raw.items.length).toBeGreaterThan(3000);
+    expect(db.raw.items).toHaveLength(main.raw.items.length + leftover.raw.items.length);
+    expect(db.items.size).toBe(db.raw.items.length);
+    expect(db.raw.enchants).toHaveLength(main.raw.enchants.length + leftover.raw.enchants.length);
+    expect(db.raw.enchants.length).toBeGreaterThan(200);
+    expect(db.consumables.size).toBeGreaterThan(400);
+    expect(db.spellEffects.size).toBeGreaterThan(50);
     expect(db.zones.size).toBeGreaterThan(100);
     expect(db.npcs.size).toBeGreaterThan(600);
     expect(db.itemEffectRandPropPoints.size).toBeGreaterThan(200);
