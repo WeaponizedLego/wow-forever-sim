@@ -283,6 +283,14 @@ async function equip(row: RankedRow) {
                   >{{ g.label }}</UiFilterChip
                 >
               </div>
+              <p v-if="dt.thinData.value" class="note" data-testid="thin-data">
+                The game data currently lists {{ dt.thinData.value.drops }} drop{{
+                  dt.thinData.value.drops === 1 ? '' : 's'
+                }}
+                for {{ dt.thinData.value.sources }} boss{{ dt.thinData.value.sources === 1 ? '' : 'es' }} in
+                this {{ dt.instance.value?.kind === 'raid' ? 'raid' : 'dungeon' }}; more appear as the data
+                updates.
+              </p>
               <p v-if="dt.instance.value" class="note">
                 Counts are the drops {{ char.name || 'this character' }} could wear and whose stats the spec
                 weighs, up to level {{ char.level }}. Rings and trinkets are simmed in both slots and
@@ -384,6 +392,7 @@ async function equip(row: RankedRow) {
               :ticks="forest.ticks"
               :slot-tag="slotTag"
               :base-iterations="batch!.iterations"
+              :quick="batch!.quick"
               :equipping="equipping"
               :class-color="classColorVar(char.class)"
               caption="Droptimizer ranking"
@@ -413,6 +422,7 @@ async function equip(row: RankedRow) {
           <UiPanelStack :span="3">
             <DroptimizerSourceSummary :rows="dt.bySource.value" />
             <TopGearBestPerSlot :rows="dt.bestPerSlot.value" :slot-label="bestSlotLabel" />
+            <DroptimizerSkippedPanel v-if="dt.batchZone.value" :skipped="dt.batchZone.value.skipped" />
           </UiPanelStack>
         </UiPanelGrid>
       </template>

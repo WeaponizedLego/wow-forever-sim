@@ -11,6 +11,7 @@
 // from the upstream clone at <commit> (which has build.mjs's Go protos):
 //   packages/gamedata/data/talents/   scripts/extract-talents.ts (trees + icons)
 //   packages/gamedata/data/presets/   scripts/extract-presets.ts (builds wowsimcli with Go)
+//   packages/gamedata/data/spell-names/ scripts/extract-spell-names.ts (engine spell table names)
 //   fixtures/gamedata/*.bin           upstream's db.bin and leftover_db.bin, which the gamedata tests decode
 //   fixtures/gamedata/sv-request.json  the "sv" preset's request (spike/request-builder), which the
 //                                     gamedata tests rebuild from the presets above
@@ -50,6 +51,7 @@ function regenerateData(clone) {
   const script = (name) => join(REPO_ROOT, 'packages/gamedata/scripts', name);
   run('node', [script('extract-talents.ts'), '--upstream', clone], { cwd: REPO_ROOT, env });
   run('node', [script('extract-presets.ts'), '--upstream', clone], { cwd: REPO_ROOT, env });
+  run('node', [script('extract-spell-names.ts'), '--upstream', clone], { cwd: REPO_ROOT, env });
   for (const f of ['db.bin', 'leftover_db.bin'])
     copyFileSync(join(clone, 'assets/database', f), join(REPO_ROOT, 'fixtures/gamedata', f));
 

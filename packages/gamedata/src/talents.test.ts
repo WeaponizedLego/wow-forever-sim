@@ -9,6 +9,7 @@ import {
   classTalents,
   clearTree,
   parseTalents,
+  removePointBlocker,
   serializeTalents,
   stepTalent,
   talentIconUrl,
@@ -188,5 +189,43 @@ describe('talent tree rules', () => {
     const cleared = clearTree(p, 0);
     expect(treePoints(cleared, 0)).toBe(0);
     expect(serializeTalents(cleared)).toBe('-55050000002-2');
+  });
+});
+
+describe('why a point cannot come out', () => {
+  // The shaman export's build: Enhancement 25 (Stormstrike 1/1 under Improved Stormstrike 2/2), Restoration 8.
+  const shaman = parseTalents('shaman', '-0530303100212122-053');
+  const enh = classTalents('shaman').trees[1]!.talents;
+  const at = (name: string) => enh.findIndex((t) => t.name === name);
+
+  it('names the talent that needs it as a prerequisite', () => {
+    // With a spare point in Toughness, tier 5 keeps its 20 points when Stormstrike loses one.
+    const spare = parseTalents('shaman', '-0530303101212122-053');
+    expect(removePointBlocker('shaman', spare, 1, at('Stormstrike'))).toBe(
+      "Can't remove: Improved Stormstrike needs it",
+    );
+    expect(removePointBlocker('shaman', shaman, 1, at('Stormstrike'))).toBe(
+      "Can't remove: Improved Stormstrike needs it; talents in tier 5 need 20 points above them",
+    );
+  });
+
+  it('names the tier that would fall short of points', () => {
+    // Tiers 1 to 3 hold exactly 15 points, so any point out of them leaves tier 4 short.
+    expect(removePointBlocker('shaman', shaman, 1, at('Thundering Strikes'))).toBe(
+      "Can't remove: talents in tier 4 need 15 points above them",
+    );
+  });
+
+  it('gives both reasons when both apply', () => {
+    const pre = enh[at('Flurry')]!.prereq!;
+    expect(removePointBlocker('shaman', shaman, 1, pre)).toBe(
+      "Can't remove: Flurry needs it; talents in tier 4 need 15 points above them",
+    );
+  });
+
+  it('is null when the point can come out, or there is none', () => {
+    expect(removePointBlocker('shaman', shaman, 1, at('Improved Stormstrike'))).toBeNull();
+    expect(removePointBlocker('shaman', shaman, 1, at('Toughness'))).toBeNull();
+    expect(canRemovePoint('shaman', shaman, 1, at('Improved Stormstrike'))).toBe(true);
   });
 });

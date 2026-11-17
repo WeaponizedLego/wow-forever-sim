@@ -34,4 +34,7 @@ test('swap an item in the workbench, see the pending diff, sim again and compare
   const delta = await kpiValue(page, /^Δ vs baseline #0001/);
   expect(mean).toBeGreaterThan(250);
   expect(Math.abs(mean - baseline - delta)).toBeLessThan(0.2);
+
+  // The plain summary names the previous run of this character and what changed since.
+  await expect(page.getByTestId('run-summary')).toContainText(/DPS .*vs run #0001, .*Changed: Head\./);
 });

@@ -275,6 +275,7 @@ async function equip(row: RankedRow) {
               :ticks="forest.ticks"
               :slot-tag="slotTag"
               :base-iterations="batch!.iterations"
+              :quick="batch!.quick"
               :equipping="equipping"
               :class-color="classColorVar(char.class)"
               @equip="equip"

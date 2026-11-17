@@ -163,6 +163,13 @@ const hit = computed(() => hitScaling.state(runId.value));
       </div>
 
       <UiPanelGrid>
+        <AnalysisRunSummary
+          v-if="a.summary.value"
+          :entry="entry"
+          :summary="a.summary.value"
+          :abilities="a.abilities.value"
+        />
+
         <AnalysisKpiStrip
           v-if="a.summary.value"
           :summary="a.summary.value"

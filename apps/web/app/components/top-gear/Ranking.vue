@@ -1,6 +1,8 @@
 <script setup lang="ts">
 // Combinations ranked by mean, each against the equipped set on one shared forest axis.
-import type { RankedRow, GearChange } from '~/composables/topGear';
+// After a re-run at more iterations, the Δ column splits in two: "Quick pass Δ" (muted, the first pass, against the
+// first-pass equipped set) and "Final Δ (10k)" (the re-run rows only), so it is plain which number to go by.
+import type { ComboResult, RankedRow, GearChange } from '~/composables/topGear';
 import type { TableColumn, TableSort } from '~/composables/ui-types';
 
 const props = withDefaults(
@@ -16,22 +18,61 @@ const props = withDefaults(
     classColor: string;
     /** The table's accessible name. */
     caption?: string;
+    /** First-pass results of re-run rows (`Batch.quick`), the equipped set under ''. */
+    quick?: Record<string, ComboResult>;
   }>(),
-  { caption: 'Top gear ranking' },
+  { caption: 'Top gear ranking', quick: () => ({}) },
 );
 // #detail (optional): extra line under a row's change chips, e.g. where a drop comes from.
 const emit = defineEmits<{ equip: [row: RankedRow] }>();
 const names = useActionNames();
 
-const cols: TableColumn<RankedRow>[] = [
+const isRerun = (r: RankedRow) => !r.equipped && r.n !== props.baseIterations;
+/** Iterations of the re-run, when any row was re-run. */
+const rerunN = computed(() => props.rows.find(isRerun)?.n ?? null);
+const rerunLabel = computed(() =>
+  rerunN.value === null
+    ? ''
+    : rerunN.value >= 1000
+      ? `${formatNumber(rerunN.value / 1000, 0)}k`
+      : formatNumber(rerunN.value, 0),
+);
+/** The first-pass Δ: a re-run row's stored first pass, else the row itself, against the first-pass equipped set. */
+function quickDelta(r: RankedRow): number {
+  const ref = props.quick[''];
+  const own = props.quick[r.key] ?? r;
+  return ref ? own.mean - ref.mean : r.delta;
+}
+
+const cols = computed<TableColumn<RankedRow>[]>(() => [
   { key: 'rank', label: '#', numeric: true, tone: '3', width: '28px' },
   { key: 'changes', label: 'Changes from equipped' },
   { key: 'mean', label: 'Mean', numeric: true, sortable: true },
-  { key: 'delta', label: 'Δ', srLabel: 'Change vs equipped', numeric: true, sortable: true },
+  ...(rerunN.value === null
+    ? [{ key: 'delta', label: 'Δ', srLabel: 'Change vs equipped', numeric: true, sortable: true }]
+    : [
+        {
+          key: 'quick',
+          label: 'Quick pass Δ',
+          srLabel: `Quick pass change vs equipped, ${formatNumber(props.baseIterations, 0)} iterations`,
+          numeric: true,
+          tone: '3' as const,
+          sortable: true,
+          sortValue: quickDelta,
+        },
+        {
+          key: 'delta',
+          label: `Final Δ (${rerunLabel.value})`,
+          srLabel: `Final change vs equipped, ${formatNumber(rerunN.value, 0)} iterations`,
+          numeric: true,
+          sortable: true,
+          sortValue: (r: RankedRow) => (isRerun(r) ? r.delta : -Infinity),
+        },
+      ]),
   { key: 'forest', label: 'Mean and 95% CI', width: '32%' },
   { key: 'verdict', label: 'Verdict' },
   { key: 'equip', label: '', srLabel: 'Equip', width: '64px' },
-];
+]);
 const sort = ref<TableSort | null>(null);
 const rowLabel = (r: RankedRow) =>
   r.equipped ? 'Currently equipped' : r.changes.map((c) => names.itemName(c.itemId)).join(' + ');
@@ -39,6 +80,11 @@ const rowLabel = (r: RankedRow) =>
 
 <template>
   <!-- position + overflow: keeps the table's visually-hidden labels from widening the page on phones -->
+  <p v-if="rerunN !== null" class="rerun-note">
+    Rows tagged {{ rerunLabel }} were re-run at {{ formatNumber(rerunN, 0) }} iterations: their mean and
+    <strong>Final Δ</strong> are the numbers to go by. Quick pass Δ is the first pass at
+    {{ formatNumber(baseIterations, 0) }} iterations, kept for comparison.
+  </p>
   <div class="clip">
     <UiDataTable
       v-model:sort="sort"
@@ -73,8 +119,14 @@ const rowLabel = (r: RankedRow) =>
           >{{ formatNumber(row.mean, 1) }}</span
         >
       </template>
-      <template #cell-delta="{ row }">
+      <template #cell-quick="{ row }">
         <span v-if="row.equipped" class="text-3">—</span>
+        <span v-else class="num text-3">{{ formatSigned(quickDelta(row)) }}</span>
+      </template>
+      <template #cell-delta="{ row }">
+        <span v-if="row.equipped || (rerunN !== null && !isRerun(row))" class="text-3"
+          >—<span v-if="!row.equipped" class="visually-hidden"> not re-run</span></span
+        >
         <UiDeltaValue v-else :value="row.delta" :verdict="row.verdict" :glyph="false" />
       </template>
       <template #cell-forest="{ row }">
@@ -134,6 +186,17 @@ const rowLabel = (r: RankedRow) =>
 }
 .text-3 {
   color: var(--text-3);
+}
+.rerun-note {
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--line-seam);
+  font-size: var(--text-xs);
+  color: var(--text-2);
+}
+.rerun-note strong {
+  font-weight: 500;
+  color: var(--text-1);
 }
 .mean {
   white-space: nowrap;
