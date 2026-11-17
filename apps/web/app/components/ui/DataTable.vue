@@ -6,6 +6,7 @@ import type { RowState, TableColumn, TableSort } from '~/composables/ui-types';
 // The table sits in its own horizontal scroll box; with `maxHeight` it also scrolls vertically and
 // the header sticks.
 // Cells: #cell-<key>="{ row, value }", headers: #head-<key>="{ column }".
+// With `rowTo`, clicking anywhere on a row opens its page; keep a real link in one cell for keyboard users.
 const props = withDefaults(
   defineProps<{
     columns: TableColumn<Row>[];
@@ -19,6 +20,8 @@ const props = withDefaults(
     maxHeight?: string;
     /** Row padding: 'md' 7px (default), 'sm' 5px, 'lg' 8px. */
     density?: 'sm' | 'md' | 'lg';
+    /** Where a click on the row goes. */
+    rowTo?: (row: Row) => string | undefined;
   }>(),
   {
     rowState: undefined,
@@ -27,8 +30,18 @@ const props = withDefaults(
     minWidth: undefined,
     maxHeight: undefined,
     density: 'md',
+    rowTo: undefined,
   },
 );
+
+function onRowClick(row: Row, e: MouseEvent) {
+  const to = props.rowTo?.(row);
+  if (!to) return;
+  // Links, buttons and fields in the row do their own thing; a drag that selected text is not a click.
+  if ((e.target as Element | null)?.closest('a, button, input, select, textarea, summary, label')) return;
+  if (window.getSelection()?.toString()) return;
+  void navigateTo(to);
+}
 const sort = defineModel<TableSort | null>('sort', { default: null });
 
 function cellValue(row: Row, key: string): unknown {
@@ -113,7 +126,8 @@ function alignOf(col: TableColumn<Row>) {
         <tr
           v-for="(row, i) in sorted"
           :key="rowKey(row, i)"
-          :class="rowState?.(row) && `is-${rowState(row)}`"
+          :class="[rowState?.(row) && `is-${rowState(row)}`, { 'is-link': !!rowTo }]"
+          @click="onRowClick(row, $event)"
         >
           <td
             v-for="col in columns"
@@ -207,6 +221,12 @@ td:last-child {
   display: inline-block;
   width: 0.75em;
   font-size: 0.75em;
+}
+tr.is-link {
+  cursor: pointer;
+}
+tr.is-link:hover {
+  background: var(--chart-hover);
 }
 tr.is-changed {
   background: var(--bg-row-changed);

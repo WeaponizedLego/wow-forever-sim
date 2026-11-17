@@ -35,6 +35,7 @@ import type { PlayerStats, StatWeightsResult } from '@fsim/proto/api';
 import type { UIItem } from '@fsim/proto/ui';
 import type { Quality } from '~/composables/ui-types';
 import { diffCharacters, type ChangeGroup, type DiffNames } from '~/utils/character-diff';
+import { latestOfLineage, lineageOf } from '~/utils/lineage';
 import {
   cleanVariantName,
   newVariantId,
@@ -225,7 +226,15 @@ function createWorkbench() {
   /** Changes a gear-stat estimate cannot price (talents, buffs, fight, rotation …). */
   const unpriced = computed(() => changes.value.filter((c) => c.kind !== 'gear'));
 
-  const lastRun = computed(() => session.latest.value?.record ?? null);
+  /**
+   * The run the draft is compared against: the session's base run, always of the draft's own lineage
+   * (utils/lineage.ts). Null before the draft's first run, so a new import never shows another character's
+   * run as "last run".
+   */
+  const lastRun = computed(() => {
+    const id = session.baseRunId.value;
+    return id ? (session.run(id)?.record ?? null) : null;
+  });
   /** "#0004", or null before the first run. */
   const baseRunId = computed(() => lastRun.value?.id ?? null);
 
@@ -268,6 +277,7 @@ function createWorkbench() {
       name: cleanVariantName(name ?? '') || nextVariantName(variants.value.map((x) => x.name)),
       createdAt: new Date().toISOString(),
       fromRunId: baseRunId.value,
+      ...(session.lineageId.value && { lineageId: session.lineageId.value }),
       character: structuredClone(toRaw(c)),
       changes: changes.value.length,
       estimate:
@@ -291,8 +301,9 @@ function createWorkbench() {
   }
 
   /**
-   * Make a character the draft. Same spec: it replaces the draft and the baseline stays, so the pending
-   * changes show it against the last run. No draft yet, or another spec: it becomes draft and baseline.
+   * Make a character the draft. Same spec: it replaces the draft and the baseline and lineage stay, so the
+   * pending changes show it against the last run. No draft yet, or another spec: it becomes draft and
+   * baseline of a new lineage.
    */
   async function openCharacter(character: Character) {
     const next = structuredClone(toRaw(character)) as Character;
@@ -307,10 +318,25 @@ function createWorkbench() {
     });
   }
 
-  /** Load a saved variant into the draft. */
+  /**
+   * Load a saved variant into the draft, in the variant's lineage. Same lineage as the draft: it replaces the
+   * draft and the baseline stays. Another lineage: the draft moves to it, compared against that lineage's
+   * newest run (if any). A variant saved before lineages takes the lineage of the run it was edited from, or
+   * else is opened like any character (`openCharacter`).
+   */
   async function loadVariant(id: string) {
     const v = variants.value.find((x) => x.id === id);
-    if (v) await openCharacter(v.character);
+    if (!v) return;
+    const from = v.fromRunId ? session.run(v.fromRunId) : null;
+    const lineage = v.lineageId ?? (from ? lineageOf(from.record) : null);
+    if (!lineage) return openCharacter(v.character);
+    if (draft.value && lineage === session.lineageId.value) return openCharacter(v.character);
+    const base = latestOfLineage(session.runs.value, lineage);
+    session.openDraft(v.character, {
+      lineageId: lineage,
+      baseRunId: base?.record.id ?? null,
+      baseline: (base?.record.character as Character | undefined) ?? v.character,
+    });
   }
 
   /** Delete a saved variant; returns it so the caller can offer Undo (restoreVariant). */

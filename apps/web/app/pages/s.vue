@@ -149,9 +149,9 @@ async function simIt() {
         />
         <UiButton @click="session.cancel()">Cancel</UiButton>
       </div>
-      <p v-if="runError" class="err" role="alert">
-        <UiStatusGlyph status="warning" hide-label />{{ runError }}
-      </p>
+      <div v-if="runError" class="err" role="alert">
+        <UiStatusGlyph status="warning" hide-label /><UiErrorText :text="runError" />
+      </div>
 
       <UiPanelGrid>
         <UiPanel title="Gear" :span="12" :meta="`${gear.length} items`">
@@ -209,7 +209,7 @@ async function simIt() {
 }
 .err {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
   color: var(--text-2);
 }

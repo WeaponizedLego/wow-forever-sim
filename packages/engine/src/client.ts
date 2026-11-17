@@ -14,6 +14,7 @@ import {
   StatWeightsResult,
   type ErrorOutcome,
 } from '@fsim/proto/api';
+import type { ErrorRequestContext } from './errors';
 import type { EngineAssets } from './loader';
 import { EngineError, WorkerPool, abortReason, type WorkerFactory } from './pool';
 
@@ -36,9 +37,13 @@ export interface EngineClientOptions {
 let requestCounter = 0;
 const newRequestId = (kind: string) => `${kind}-${++requestCounter}-${crypto.randomUUID().slice(0, 8)}`;
 
-function outcomeError(err: ErrorOutcome, signal: AbortSignal | undefined): unknown {
+function outcomeError(
+  err: ErrorOutcome,
+  signal: AbortSignal | undefined,
+  ctx?: ErrorRequestContext,
+): unknown {
   if (err.type === ErrorOutcomeType.ErrorOutcomeAborted) return abortReason(signal);
-  return new EngineError(err.message || 'The engine reported an error.');
+  return new EngineError(err.message || 'The engine reported an error.', ctx);
 }
 
 /** An abort controller that follows `parent` and can also be aborted on its own. */
@@ -140,7 +145,7 @@ export class WasmEngineClient implements EngineClient {
         });
         const res = final.finalRaidResult!;
         if (res.error) {
-          const err = outcomeError(res.error, signal);
+          const err = outcomeError(res.error, signal, req);
           ctl.abort(err); // stop the other splits
           throw err;
         }
@@ -162,7 +167,7 @@ export class WasmEngineClient implements EngineClient {
           { signal },
         ),
       );
-      if (result.error) throw outcomeError(result.error, signal);
+      if (result.error) throw outcomeError(result.error, signal, req);
     }
 
     // create() deep-copies its input; attach the (large) result afterwards so listeners get the same object.
@@ -193,7 +198,10 @@ export class WasmEngineClient implements EngineClient {
     ).catch((e: unknown) => {
       throw opts.signal?.aborted ? abortReason(opts.signal) : e;
     });
-    if (res.error) throw outcomeError(res.error, opts.signal);
+    if (res.error)
+      throw outcomeError(res.error, opts.signal, {
+        raid: { parties: [{ players: req.player ? [req.player] : [] }] },
+      });
     return res;
   }
 
@@ -221,7 +229,7 @@ export class WasmEngineClient implements EngineClient {
     const res = ComputeStatsResult.fromBinary(
       await this.pool.call('computeStats', ComputeStatsRequest.toBinary(req), { signal: opts.signal }),
     );
-    if (res.errorResult) throw new EngineError(res.errorResult);
+    if (res.errorResult) throw new EngineError(res.errorResult, req);
     return res;
   }
 

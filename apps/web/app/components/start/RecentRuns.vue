@@ -78,6 +78,7 @@ const columns: TableColumn<Row>[] = [
         :columns="columns"
         :rows="rows"
         :row-key="(r) => r.id"
+        :row-to="(r) => r.to"
         caption="Recent runs"
         hide-header
         min-width="420px"
