@@ -1,8 +1,15 @@
-// Display names for engine action ids. Spell names come from the game data's spell icon table and
-// item names from its items; anything not found shows as "Spell 12345" / "Item 12345". Nothing is
-// made up: the only fixed labels are the engine's own OtherAction ids (melee, shoot, regen, …).
+// Display names for engine action ids. Spell names come from the game data's spell icon table plus the
+// engine's own spell table (extracted at the lock commit, loaded lazily: see @fsim/gamedata spell-names),
+// item names from its items; anything not found shows as "Spell 12345" / "Item 12345". Nothing is made
+// up: the only fixed labels are the engine's own OtherAction ids (melee, shoot, regen, …).
 import type { ParsedActionId } from '@fsim/analysis';
-import type { GameDatabase } from '@fsim/gamedata';
+import {
+  buildSpellNames,
+  loadSpellNames,
+  talentIconUrl,
+  type GameDatabase,
+  type SpellName,
+} from '@fsim/gamedata';
 import { OtherAction } from '@fsim/proto/common';
 import type { Quality } from './ui-types';
 import { ItemQuality } from '@fsim/proto/common';
@@ -35,20 +42,29 @@ export const qualityFromEnum = (q: ItemQuality | undefined): Quality =>
   q === undefined ? 'common' : (QUALITY[q] ?? 'common');
 
 const db = shallowRef<GameDatabase | null>(null);
-let spellNames: Map<number, string> | null = null;
-let spellRanks: Map<number, number> | null = null;
+const spells = shallowRef<Map<number, SpellName> | null>(null);
+let loading = false;
+
+/** Loads the game data and the extracted spell names once. A failed spell-name chunk leaves db.bin's names. */
+function load(): void {
+  if (loading) return;
+  loading = true;
+  const extra = loadSpellNames().catch(() => []);
+  void useEngine()
+    .gameDatabase()
+    .then(async (d) => {
+      db.value = d;
+      spells.value = buildSpellNames(d.raw.spellIcons);
+      spells.value = buildSpellNames(d.raw.spellIcons, await extra);
+    })
+    .catch(() => {
+      loading = false;
+    });
+}
 
 /** Reactive name lookup; names fill in once the game data has loaded. */
 export function useActionNames() {
-  if (!db.value)
-    void useEngine()
-      .gameDatabase()
-      .then((d) => {
-        spellNames = new Map(d.raw.spellIcons.map((s) => [s.id, s.name]));
-        spellRanks = new Map(d.raw.spellIcons.filter((s) => s.rank > 0).map((s) => [s.id, s.rank]));
-        db.value = d;
-      })
-      .catch(() => {});
+  load();
 
   function actionName(id: ParsedActionId): string {
     if (id.kind === 'other') {
@@ -56,8 +72,18 @@ export function useActionNames() {
       return id.id === OtherAction.OtherActionAttack && HAND[id.tag] ? `${base} · ${HAND[id.tag]}` : base;
     }
     if (id.kind === 'item') return db.value?.item(id.id)?.name || `Item ${id.id}`;
-    // Read db.value so callers re-render when the data arrives.
-    return (db.value && spellNames?.get(id.id)) || `Spell ${id.id}`;
+    return spells.value?.get(id.id)?.name || `Spell ${id.id}`;
+  }
+
+  /** Small Wowhead icon URL for a spell or item, or null when the data has none. */
+  function actionIcon(id: ParsedActionId): string | null {
+    const icon =
+      id.kind === 'spell'
+        ? spells.value?.get(id.id)?.icon
+        : id.kind === 'item'
+          ? db.value?.item(id.id)?.icon
+          : undefined;
+    return icon ? talentIconUrl(icon, 'small') : null;
   }
 
   /**
@@ -66,7 +92,8 @@ export function useActionNames() {
    */
   function distinctNames(ids: readonly ParsedActionId[]): string[] {
     const names = ids.map(actionName);
-    const rankOf = (id: ParsedActionId) => (id.kind === 'spell' ? spellRanks?.get(id.id) : undefined);
+    const rankOf = (id: ParsedActionId) =>
+      id.kind === 'spell' ? spells.value?.get(id.id)?.rank || undefined : undefined;
     const groups = new Map<string, number[]>();
     names.forEach((n, i) => groups.set(n, [...(groups.get(n) ?? []), i]));
     return names.map((n, i) => {
@@ -91,5 +118,5 @@ export function useActionNames() {
     return qualityFromEnum(db.value?.item(itemId)?.quality);
   }
 
-  return { db, actionName, distinctNames, itemName, itemQuality };
+  return { db, actionName, actionIcon, distinctNames, itemName, itemQuality };
 }

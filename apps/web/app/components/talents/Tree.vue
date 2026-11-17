@@ -1,11 +1,13 @@
 <script setup lang="ts">
 // One talent tree: header (name, points, reset) and the 4-column grid with prerequisite arrows.
 // Left-click or Enter/Space/+ adds a point, right-click, Shift-click or Backspace/Delete/- removes one. The arrow keys
-// move between talents (one tab stop per tree). The parent owns the points and the rules (stepTalent).
+// move between talents (one tab stop per tree). The parent owns the points and the rules (stepTalent). A removal the
+// rules refuse says why, in the tooltip and in a status line under the tree (read out by screen readers).
 import {
   POINTS_PER_ROW,
   canAddPoint,
   canRemovePoint,
+  removePointBlocker,
   talentIconUrl,
   type TalentPoints,
   type TalentTree,
@@ -38,6 +40,25 @@ const canAdd = computed(() =>
 const canRemove = computed(() =>
   props.tree.talents.map((_, i) => canRemovePoint(props.cls, props.points, props.treeIndex, i)),
 );
+
+/** Why each talent's point cannot come out (null when it can, or it has none). */
+const blockers = computed(() =>
+  props.tree.talents.map((_, i) => removePointBlocker(props.cls, props.points, props.treeIndex, i)),
+);
+const help = (i: number) =>
+  [canAdd.value[i] && 'Click: add', canRemove.value[i] && 'Right-click: remove'].filter(Boolean).join(' · ');
+
+// The last refused removal, shown under the tree until the next step or a few seconds pass.
+const notice = ref('');
+let noticeTimer: ReturnType<typeof setTimeout> | undefined;
+function step(i: number, delta: 1 | -1) {
+  const blocker = delta < 0 ? blockers.value[i] : null;
+  clearTimeout(noticeTimer);
+  notice.value = blocker ?? '';
+  if (blocker) noticeTimer = setTimeout(() => (notice.value = ''), 6000);
+  else emit('step', i, delta);
+}
+onBeforeUnmount(() => clearTimeout(noticeTimer));
 
 type State = 'max' | 'partial' | 'open' | 'locked' | 'broken';
 const states = computed<State[]>(() =>
@@ -106,19 +127,19 @@ function onKey(e: KeyboardEvent, i: number) {
     buttons.value[focusIdx.value]?.focus();
   } else if (['Backspace', 'Delete', '-', '_'].includes(e.key)) {
     e.preventDefault();
-    emit('step', i, -1);
+    step(i, -1);
   } else if (['+', '='].includes(e.key)) {
     e.preventDefault();
-    emit('step', i, 1);
+    step(i, 1);
   }
 }
 function onClick(e: MouseEvent, i: number) {
   focusIdx.value = i;
-  emit('step', i, e.shiftKey ? -1 : 1);
+  step(i, e.shiftKey ? -1 : 1);
 }
 function onContext(i: number) {
   focusIdx.value = i;
-  emit('step', i, -1);
+  step(i, -1);
 }
 
 const failedIcons = ref(new Set<string>());
@@ -204,11 +225,13 @@ const STATE_WORDS: Record<State, string> = {
             <span v-if="broken[i]" class="tip__req"
               >Its points break the tree rules; the engine still applies them.</span
             >
-            <span class="tip__help">Click: add · Right-click: remove</span>
+            <span v-if="blockers[i]" class="tip__req">{{ blockers[i] }}</span>
+            <span v-if="help(i)" class="tip__help">{{ help(i) }}</span>
           </template>
         </UiTooltip>
       </div>
     </div>
+    <p class="tree__notice" role="status" :data-testid="`talent-notice-${treeIndex}`">{{ notice }}</p>
   </section>
 </template>
 
@@ -322,6 +345,13 @@ const STATE_WORDS: Record<State, string> = {
 }
 .talent--broken .talent__rank {
   border-color: var(--delta-down);
+  color: var(--delta-down);
+}
+.tree__notice {
+  min-height: 1.4em;
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.4;
   color: var(--delta-down);
 }
 .tip__name,

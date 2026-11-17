@@ -55,6 +55,20 @@ test('the SimC loadout talents arrive converted, build a tree by clicking, sim i
   await expect(first).toHaveAttribute('aria-disabled', 'true'); // maxed, and holding up the second row
   await first.click({ button: 'right', force: true });
   await expect(elemental.getByLabel(/points in Elemental/)).toHaveText('6');
+  // The refusal says why, in a status line under the tree and in the talent's tooltip (which no longer offers removal).
+  const refusal = "Can't remove: talents in tier 2 need 5 points above them";
+  await expect(elemental.getByRole('status')).toHaveText(refusal);
+  await first.hover();
+  const tip = elemental.getByRole('tooltip').filter({ hasText: refusal });
+  await expect(tip).toBeVisible();
+  await expect(tip).not.toContainText('Right-click: remove');
+  // The same for the keyboard: Backspace on the maxed first-row talent is refused with the reason.
+  await page.mouse.move(0, 0);
+  await expect(elemental.getByRole('status')).toHaveText('', { timeout: 10_000 });
+  await first.focus();
+  await page.keyboard.press('Backspace');
+  await expect(elemental.getByRole('status')).toHaveText(refusal);
+  await expect(elemental.getByLabel(/points in Elemental/)).toHaveText('6');
 
   // Keyboard: Backspace on the focused talent removes, Enter adds.
   await rowTwo.focus();

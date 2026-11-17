@@ -211,7 +211,7 @@ jobs:
             echo
             cat "$ENGINE_BUILD_WORK/out/$ENGINE_ID/smoke-report.md"
           } > "$body"
-          git add engine.lock.json tools/engine-build/smoke-baseline.json packages/proto/proto packages/proto/src/generated packages/gamedata/data/talents packages/gamedata/data/presets fixtures/gamedata
+          git add engine.lock.json tools/engine-build/smoke-baseline.json packages/proto/proto packages/proto/src/generated packages/gamedata/data/talents packages/gamedata/data/presets packages/gamedata/data/spell-names fixtures/gamedata
           if git diff --cached --quiet; then
             echo "::notice::nothing changed; no PR"
             exit 0

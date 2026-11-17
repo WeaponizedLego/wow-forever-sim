@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import type { CheckItem } from '~/composables/ui-types';
+import type { CheckItem, Status } from '~/composables/ui-types';
 
 // List of rule results: status icon, optional code, text, optional location and action.
-// Used for run notes (Analysis) and the parse report (Start).
-withDefaults(defineProps<{ items: CheckItem[]; dense?: boolean }>(), { dense: false });
+// Used for run notes (Analysis) and the parse report (Start). `collapsed` adds one closed row at the end that
+// opens onto more items (routine notes that would drown the ones worth reading).
+withDefaults(
+  defineProps<{
+    items: CheckItem[];
+    dense?: boolean;
+    collapsed?: { summary: string; status: Status; items: CheckItem[] } | null;
+  }>(),
+  { dense: false, collapsed: null },
+);
 </script>
 
 <template>
@@ -18,6 +26,15 @@ withDefaults(defineProps<{ items: CheckItem[]; dense?: boolean }>(), { dense: fa
           item.action.label
         }}</NuxtLink>
       </span>
+    </li>
+    <li v-if="collapsed && collapsed.items.length" class="check check--group">
+      <details class="group">
+        <summary class="group__summary">
+          <UiStatusGlyph :status="collapsed.status" hide-label />
+          <span class="check__text">{{ collapsed.summary }}</span>
+        </summary>
+        <UiCheckList :items="collapsed.items" :dense="dense" class="group__items" />
+      </details>
     </li>
   </ul>
 </template>
@@ -66,6 +83,31 @@ withDefaults(defineProps<{ items: CheckItem[]; dense?: boolean }>(), { dense: fa
   display: flex;
   gap: var(--space-3);
   white-space: nowrap;
+}
+.check--group {
+  display: block;
+}
+.group__summary {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: start;
+  cursor: pointer;
+  color: var(--text-2);
+  list-style: none;
+}
+.group__summary::-webkit-details-marker {
+  display: none;
+}
+.group__summary .check__text::after {
+  content: ' ▸';
+  color: var(--text-3);
+}
+.group[open] .group__summary .check__text::after {
+  content: ' ▾';
+}
+.group__items {
+  margin: 0 calc(-1 * var(--space-4));
 }
 @media (max-width: 640px) {
   .check,

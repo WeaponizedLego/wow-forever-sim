@@ -261,7 +261,11 @@ export function useRunAnalysis(
     if (!entry.value) return [];
     const rows = abilityBreakdown(entry.value.result);
     const labels = names.distinctNames(rows.map((r) => r.id));
-    return rows.map((r, i) => ({ ...r, name: r.petName ? `${labels[i]} (${r.petName})` : labels[i]! }));
+    return rows.map((r, i) => ({
+      ...r,
+      name: r.petName ? `${labels[i]} (${r.petName})` : labels[i]!,
+      icon: names.actionIcon(r.id),
+    }));
   });
 
   const player = computed(() => (entry.value ? findPlayer(entry.value.result) : undefined));

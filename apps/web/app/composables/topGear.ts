@@ -65,6 +65,11 @@ export interface Batch {
   iterations: number;
   combos: Combo[];
   results: Record<string, ComboResult>;
+  /**
+   * First-pass results of the combinations a re-run replaced in `results` (the equipped set under ''), so the
+   * ranking can show the quick-pass Δ beside the final one.
+   */
+  quick: Record<string, ComboResult>;
   status: 'running' | 'done' | 'cancelled' | 'error';
   /** Combinations finished in the current pass, and how many the pass has. */
   done: number;
@@ -131,6 +136,7 @@ export function newBatch(character: Character, combos: Combo[], iterations: numb
     iterations,
     combos,
     results: {},
+    quick: {},
     status: 'running',
     done: 0,
     total: combos.length,
@@ -173,6 +179,9 @@ export async function simCombos(
     });
     tick();
     const s = summarize(result.raidMetrics!.dps!, result.iterationsDone);
+    const prev = b.results[combo.key];
+    if (prev && prev.n === b.iterations && s.n !== b.iterations && !b.quick[combo.key])
+      b.quick[combo.key] = prev;
     b.results[combo.key] = { ...combo, mean: s.mean, stdev: s.stdev, n: s.n, ci95: s.ci95 };
     b.fights += result.iterationsDone;
     b.done = i + 1;

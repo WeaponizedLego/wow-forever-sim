@@ -72,6 +72,9 @@ export const DROP_SKIP_LABELS: Record<DropSkip, string> = {
   'two-hander': 'off hand while a two-hander is equipped',
 };
 
+/** Below this many listed drops per boss, the page says the game data for the instance is still thin. */
+const THIN_DROPS_PER_SOURCE = 3;
+
 /** Most candidate sims one batch runs (rings, trinkets and dual-wield weapons count once per slot). */
 export const DROP_MAX_CANDIDATES = 250;
 /** Above this many candidates the page warns that the batch takes a while. */
@@ -158,7 +161,13 @@ const slotsOff = ref<Partial<Record<ItemSlotId, boolean>>>({});
 const batch = ref<Batch | null>(null);
 /** The candidates of the current batch, by combo key. */
 const batchCandidates = shallowRef<Map<string, DropCandidate>>(new Map());
-const batchZone = ref<{ zoneId: number; name: string; sources: string[] } | null>(null);
+const batchZone = ref<{
+  zoneId: number;
+  name: string;
+  sources: string[];
+  /** The drops of those sources the batch left out, with the reason. */
+  skipped: DropPlan['skipped'];
+} | null>(null);
 const pass = ref<{ kind: 'fast' | 'refine'; startWallMs: number; refineAfter: boolean } | null>(null);
 const runner = batchRunner();
 
@@ -185,6 +194,19 @@ export function useDroptimizer() {
   function setSources(keys: string[] | null) {
     sourceKeys.value = keys;
   }
+
+  /**
+   * How many drops the game data lists for the whole instance, when that is thin: fewer than 3 per boss (Molten
+   * Core lists 10 for its 10 bosses at this data build). Null when the data looks complete enough.
+   */
+  const thinData = computed(() => {
+    const inst = instance.value;
+    if (!db.value || !inst?.sources.length) return null;
+    const drops = instanceDrops(db.value, inst.zoneId).length;
+    return drops < THIN_DROPS_PER_SOURCE * inst.sources.length
+      ? { drops, sources: inst.sources.length }
+      : null;
+  });
 
   /** Candidates from the chosen sources, before the slot filter. */
   const fullPlan = computed<DropPlan | null>(() => {
@@ -230,6 +252,7 @@ export function useDroptimizer() {
       sources: [
         ...new Set(inst.sources.filter((s) => selectedKeys.value.includes(s.key)).map((s) => s.name)),
       ],
+      skipped: p.skipped,
     };
     batch.value = newBatch(c as Character, combos, iterations);
     const b = batch.value;
@@ -370,6 +393,7 @@ export function useDroptimizer() {
     fullPlan,
     plan,
     usablePerSource,
+    thinData,
     batch,
     batchZone,
     batchCandidates: computed(() => batchCandidates.value),

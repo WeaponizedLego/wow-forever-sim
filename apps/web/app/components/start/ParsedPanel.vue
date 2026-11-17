@@ -33,12 +33,17 @@ const formatLabel = computed(() => {
   const game = parseWowheadLink(props.input)?.game;
   return game ? `Wowhead planner link · ${PLANNERS[game] ?? game}` : 'Wowhead link, not the gear planner';
 });
-const items = computed(() => {
-  const r = props.result;
-  if (!r) return [];
-  const diags = startDiagnosticItems(r.diagnostics);
-  return diags.length ? diags : [{ status: 'good' as const, text: 'Everything in the export was read.' }];
-});
+// Warnings first; lines set aside because the engine does not use them fold into one closed row.
+const report = computed(() => (props.result ? parseReport(props.result.diagnostics) : null));
+const unusedGroup = computed(() =>
+  report.value?.unused.length
+    ? {
+        summary: unusedSummary(report.value.unused.length),
+        status: 'good' as const,
+        items: report.value.unused,
+      }
+    : null,
+);
 
 const identity = computed(() => {
   const c = character.value;
@@ -151,7 +156,7 @@ const progress = computed(() => {
         />
       </div>
       <div class="checks">
-        <UiCheckList dense :items="items" />
+        <UiCheckList dense :items="report?.items ?? []" :collapsed="unusedGroup" />
       </div>
     </template>
 

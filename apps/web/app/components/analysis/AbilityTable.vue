@@ -4,7 +4,7 @@
 import type { AbilityRow } from '@fsim/analysis';
 import type { TableColumn, TableSort } from '~/composables/ui-types';
 
-type Row = AbilityRow & { name: string };
+type Row = AbilityRow & { name: string; icon?: string | null };
 const props = defineProps<{ rows: Row[] }>();
 
 const cols: TableColumn<Row>[] = [
@@ -24,6 +24,10 @@ const cols: TableColumn<Row>[] = [
   { key: 'out', label: 'Outcomes', width: '24%' },
 ];
 const sort = ref<TableSort | null>({ key: 'dps', dir: 'desc' });
+/** Icons come from Wowhead's CDN; offline, the row keeps its name and drops the icon. */
+const failedIcons = ref(new Set<string>());
+/** Rows without an icon (Melee) keep a blank so names line up, while any row shows one. */
+const hasIcons = computed(() => props.rows.some((r) => r.icon && !failedIcons.value.has(r.icon)));
 const maxShare = computed(() => Math.max(0, ...props.rows.map((r) => r.share)));
 const legend = [
   { label: 'Hit', mark: 'swatch', color: 'var(--series-1)' },
@@ -51,6 +55,17 @@ const outcomes = (r: Row) => ({
       min-width="720px"
     >
       <template #cell-name="{ row }">
+        <img
+          v-if="row.icon && !failedIcons.has(row.icon)"
+          :src="row.icon"
+          class="icon"
+          alt=""
+          width="16"
+          height="16"
+          loading="lazy"
+          @error="failedIcons.add(row.icon)"
+        />
+        <span v-else-if="hasIcons" class="icon" aria-hidden="true" />
         <span class="name">{{ row.name }}</span>
         <span v-if="row.basis === 'ticks'" class="tag">DoT</span>
       </template>
@@ -81,6 +96,14 @@ const outcomes = (r: Row) => ({
 </template>
 
 <style scoped>
+.icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: -3px;
+  border-radius: 2px;
+}
 .name {
   font-family: var(--font-sans);
   font-size: var(--text-md);

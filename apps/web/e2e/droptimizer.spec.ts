@@ -5,7 +5,14 @@ test('droptimizer: one boss, ranked drops, equip the best into the draft', async
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Droptimizer' }).click();
   await expect(page.getByRole('heading', { level: 1, name: /Droptimizer/ })).toBeVisible();
 
+  // A raid the game data lists only a few drops for says so, so a thin pool does not look like a bug.
+  await page.getByLabel('Dungeon or raid').selectOption({ label: 'Molten Core' });
+  await expect(page.getByTestId('thin-data')).toHaveText(
+    /The game data currently lists \d+ drops? for \d+ bosses in this raid; more appear as the data updates\./,
+  );
+
   await page.getByLabel('Dungeon or raid').selectOption({ label: 'Scarlet Monastery' });
+  await expect(page.getByTestId('thin-data')).toHaveCount(0);
   const bosses = page.getByRole('group', { name: 'Bosses' });
   // Every boss starts selected; narrow to one small boss.
   await bosses.getByRole('button', { name: 'All', exact: true }).click();
@@ -33,6 +40,26 @@ test('droptimizer: one boss, ranked drops, equip the best into the draft', async
     items - 1,
   );
   await expect(page.getByRole('table', { name: 'Upgrades by boss' })).toContainText('Bloodmage Thalnos');
+  // One pass: a single Δ column.
+  await expect(ranking.getByRole('columnheader', { name: 'Change vs equipped' })).toBeVisible();
+
+  // The drops left out are listed by name under their reason, not just counted.
+  const leftOut = page.getByRole('region', { name: 'Left out' });
+  const leftOutItems = leftOut
+    .getByRole('list', { name: /^Left out: / })
+    .first()
+    .getByRole('listitem');
+  await expect(leftOutItems.first()).toBeVisible();
+  await expect(leftOutItems.first()).not.toHaveText(/^Item \d+$/);
+
+  // Re-run the top drops at 10k: the Δ column splits into the muted quick pass and the final number.
+  await page.getByRole('button', { name: /^Re-run top \d+ at 10k$/ }).click();
+  await expect(ranking.getByRole('columnheader', { name: /^Final change vs equipped/ })).toBeVisible({
+    timeout: 120_000,
+  });
+  await expect(ranking.getByRole('columnheader', { name: /^Quick pass change vs equipped/ })).toBeVisible();
+  await expect(page.getByText(/Final Δ\s*are the numbers to go by/)).toBeVisible();
+  await expect(page.getByRole('progressbar')).toHaveCount(0, { timeout: 120_000 });
 
   // Equip the top drop that is not the equipped set and check it lands on the workbench draft.
   const row = ranking
