@@ -2,7 +2,7 @@
 // Workbench (lane S2): edit the current character (the draft) and sim it against the last run.
 // Sub-views are ?tab=… so each has its own URL; the right-hand column (pending changes, stats, caps)
 // stays on every tab because every tab's edits show up there.
-import { RACES, type ItemSlotId } from '@fsim/contracts';
+import { RACES, fightStyle, type ItemSlotId } from '@fsim/contracts';
 import type { KeyValue, NavItem } from '~/composables/ui-types';
 import { BUFF_PRESETS, specInfo, talentPoints } from '~/composables/workbench';
 
@@ -40,7 +40,15 @@ const tabs = computed<NavItem[]>(() => {
     { label: 'Gear', to: tabTo('gear') },
     { label: 'Talents', to: tabTo('talents'), detail: ch ? talentPoints(ch.talents).join('/') : undefined },
     { label: 'Buffs', to: tabTo('buffs'), detail: BUFF_PRESETS.find((b) => b.id === ch?.buffs)?.short },
-    { label: 'Fight', to: tabTo('fight'), detail: ch ? `${ch.encounter.durationSec}s` : undefined },
+    {
+      label: 'Fight',
+      to: tabTo('fight'),
+      detail: !ch
+        ? undefined
+        : ch.encounter.style === 'custom'
+          ? `${ch.encounter.durationSec}s`
+          : fightStyle(ch.encounter.style).short,
+    },
     {
       label: 'Rotation',
       to: tabTo('rotation'),

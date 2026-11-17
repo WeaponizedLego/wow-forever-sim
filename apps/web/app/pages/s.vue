@@ -7,7 +7,7 @@
 // release-assets.githubusercontent.com, and neither response carries Access-Control-Allow-Origin, so the
 // browser blocks the fetch. Older engines would need to be served from our own origin (Phase 4+).
 import { CLASSES, ITEM_SLOTS, RACES, SPECS } from '@fsim/contracts';
-import type { GameDatabase } from '@fsim/gamedata';
+import { fightLabel, type GameDatabase } from '@fsim/gamedata';
 import type { KeyValue } from '~/composables/ui-types';
 import { SLOT_LABELS, qualityOf } from '~/composables/workbench';
 import { ShareLinkError, decodeShare, type SharePayload } from '~/utils/share-codec';
@@ -63,7 +63,7 @@ const items = computed<KeyValue[]>(() => {
     { label: 'Made with engine', value: p.engineId },
     { label: 'Iterations', value: formatNumber(p.iterations, 0) },
     { label: 'Seed', value: String(p.seed) },
-    { label: 'Fight', value: `${e.durationSec}s ±${e.durationVariationSec}s · ${e.targetCount} tgt` },
+    { label: 'Fight', value: fightLabel(e) },
     { label: 'Talents', value: p.character.talents || '—' },
   ];
 });

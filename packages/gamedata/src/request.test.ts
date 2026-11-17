@@ -69,7 +69,7 @@ describe('buildRaidSimRequest', () => {
     const presets = await loadSpecPresets('hunter');
     const c = characterFromPresets(presets, 'sv');
     const req = buildRaidSimRequest(
-      { ...c, encounter: { ...c.encounter, targetCount: 3, executePhase: false } },
+      { ...c, encounter: { ...c.encounter, style: 'custom', targetCount: 3, executePhase: false } },
       presets,
       fixtureDb(),
       { iterations: 10, seed: 1 },

@@ -3,10 +3,11 @@
 // The engine package then attaches each player's SimDatabase (`withDatabases`).
 import type { Character } from '@fsim/contracts';
 import { Party, Raid, RaidSimRequest, SimOptions, SimType } from '@fsim/proto/api';
-import { Encounter, Target } from '@fsim/proto/common';
+import type { Encounter } from '@fsim/proto/common';
 import { Debuffs, PartyBuffs, RaidBuffs } from '@fsim/proto/buffs';
 import { characterToPlayer, type CharacterToPlayerOptions } from './character';
 import type { GameDatabase } from './database';
+import { encounterProto } from './fights';
 import { presetSetup, type SpecPresets } from './presets';
 
 /**
@@ -89,40 +90,7 @@ export function buildRaidSimRequest(
   });
 }
 
-/**
- * The site's default raid target (upstream Encounter.defaultTargetProto): a level 63 dragonkin raid boss with
- * 1,428,900 health, 3,731 armor and 54 block value. Copied from a request the engine's own builder produced.
- */
-export const DEFAULT_TARGET_JSON = {
-  id: 31146,
-  name: 'Raid Target',
-  level: 63,
-  mobType: 'MobTypeDragonkin',
-  stats: [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0, 1428900, 0,
-    0, 0, 0, 0, 0, 0, 0, 0,
-  ],
-  minBaseDamage: 2601,
-  damageSpread: 0.5,
-  swingSpeed: 2,
-  parryHaste: true,
-  canCrush: true,
-} as const;
-
+/** The engine Encounter for the character's fight style (fights.ts). */
 function encounterOf(character: Character): Encounter {
-  const e = character.encounter;
-  const targets: Target[] = [];
-  for (let i = 0; i < e.targetCount; i++) {
-    const t = Target.fromJson(DEFAULT_TARGET_JSON as never);
-    t.level = e.targetLevel;
-    if (i > 0) t.name = `Raid Target ${i + 1}`;
-    targets.push(t);
-  }
-  return Encounter.create({
-    duration: e.durationSec,
-    durationVariation: e.durationVariationSec,
-    executeProportion20: e.executePhase ? 0.2 : 0,
-    executeProportion35: e.executePhase ? 0.35 : 0,
-    targets,
-  });
+  return encounterProto(character.encounter);
 }

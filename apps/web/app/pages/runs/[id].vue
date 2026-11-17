@@ -2,6 +2,7 @@
 // Run analysis (docs/features.md §3): one run against its baseline.
 import { RaidSimResult } from '@fsim/proto/api';
 import { CLASSES, RACES, SPECS } from '@fsim/contracts';
+import { fightLabel, sliceRanAsScheduled } from '@fsim/gamedata';
 
 const route = useRoute();
 const session = useSession();
@@ -50,10 +51,14 @@ const headerItems = computed(() => {
   const e = r.character.encounter;
   return [
     { label: 'Iterations', value: formatNumber(r.iterations, 0) },
-    {
-      label: 'Fight',
-      value: `${e.durationSec}s ±${e.durationVariationSec}s · ${e.targetCount} tgt`,
-    },
+    // An engine without our slice patch sims the later pulls' mobs as never there; say so rather than mislabel.
+    sliceRanAsScheduled(e, entry.value!.result)
+      ? { label: 'Fight', value: fightLabel(e) }
+      : {
+          label: 'Fight',
+          value: `${fightLabel(e)} · not as scheduled (engine lacks slice support)`,
+          tone: 'down' as const,
+        },
     { label: 'Seed', value: String(r.seed) },
     { label: 'Engine', value: `${r.engine.engineId} @ ${r.engine.commit.slice(0, 7)}` },
     {

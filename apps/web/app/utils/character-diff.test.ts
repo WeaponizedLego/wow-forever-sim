@@ -67,6 +67,7 @@ describe('diffCharacters', () => {
     const b = edit((c) => {
       c.talents = '1-2-3';
       c.buffs = 'solo';
+      c.encounter.style = 'custom';
       c.encounter.durationSec = 120;
       c.encounter.targetCount = 3;
       c.rotation = { kind: 'siml', source: 'cast x' };
@@ -76,14 +77,25 @@ describe('diffCharacters', () => {
     expect(groups.map((g) => g.key)).toEqual([
       'talents',
       'buffs',
+      'fight:Fight',
       'fight:Duration',
       'fight:Targets',
       'rotation',
       'other',
     ]);
     expect(groups[1]!.rows.map((r) => r.label)).toEqual(['Buffs: FULL-RAID', 'Buffs: SOLO']);
-    expect(groups[2]!.rows.map((r) => r.label)).toEqual(['Duration: 180 s ± 5', 'Duration: 120 s ± 5']);
-    expect(groups[4]!.rows.map((r) => r.label)).toEqual(['Rotation: default', 'Rotation: custom SIML']);
+    expect(groups[3]!.rows.map((r) => r.label)).toEqual(['Duration: 180 s ± 5', 'Duration: 120 s ± 5']);
+    expect(groups[5]!.rows.map((r) => r.label)).toEqual(['Rotation: default', 'Rotation: custom SIML']);
+  });
+
+  it('shows a change of fight style as one row', () => {
+    const b = edit((c) => (c.encounter.style = 'dungeon-slice-5m'));
+    const groups = diffCharacters(base, b, names);
+    expect(groups.map((g) => g.key)).toEqual(['fight:Fight']);
+    expect(groups[0]!.rows.map((r) => r.label)).toEqual([
+      'Fight: Patchwerk 3 min',
+      'Fight: Dungeon slice 5 min',
+    ]);
   });
 
   it('ignores display-only fields (name, realm)', () => {
@@ -106,6 +118,7 @@ describe('changeSummary', () => {
     const b = edit((c) => {
       c.gear.head = { itemId: 1 };
       c.gear.neck = { itemId: 2 };
+      c.encounter.style = 'custom';
       c.encounter.durationSec = 60;
       c.encounter.targetCount = 2;
       c.professions = ['Alchemy'];

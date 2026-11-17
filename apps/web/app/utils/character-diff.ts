@@ -3,6 +3,7 @@
 // through `names`, so this runs (and is tested) without game data or Nuxt.
 import {
   ITEM_SLOTS,
+  fightStyle,
   type BuffsPreset,
   type Character,
   type GearItem,
@@ -34,14 +35,19 @@ export const sameGear = (a: GearItem | undefined, b: GearItem | undefined) =>
   (a?.randomSuffix ?? 0) === (b?.randomSuffix ?? 0) &&
   (a?.enchantId ?? 0) === (b?.enchantId ?? 0);
 
-/** Fight settings with their own row; any other encounter field that differs shows as "Fight settings". */
+/**
+ * Fight settings with their own row; any other encounter field that differs shows as "Fight settings". A change of
+ * fight style is one "Fight" row (a preset fixes the other fields); for a Custom fight, each field that differs too.
+ */
 const FIGHT: [string, (e: Character['encounter']) => string][] = [
+  ['Fight', (e) => fightStyle(e.style).label],
   ['Duration', (e) => `${e.durationSec} s ± ${e.durationVariationSec}`],
   ['Targets', (e) => String(e.targetCount)],
   ['Target level', (e) => String(e.targetLevel)],
   ['Execute phase', (e) => (e.executePhase ? 'on' : 'off')],
 ];
 const FIGHT_KEYS = new Set([
+  'style',
   'durationSec',
   'durationVariationSec',
   'targetCount',
@@ -108,7 +114,7 @@ export function diffCharacters(a: Character, b: Character, names: DiffNames): Ch
   const ea = a.encounter;
   const eb = b.encounter;
   for (const [label, f] of FIGHT) {
-    if (f(ea) === f(eb)) continue;
+    if (f(ea) === f(eb) || (label !== 'Fight' && eb.style !== 'custom')) continue;
     out.push({
       key: `fight:${label}`,
       kind: 'fight',

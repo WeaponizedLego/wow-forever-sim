@@ -1,0 +1,144 @@
+// forever/sim engine patch (not part of upstream wowsims/forever).
+//
+// Copied into the upstream clone as sim/core/zz_fsim_slice_mob.go by tools/engine-build/patches/apply.mjs,
+// before `go build`, so a dungeon slice runs as ONE sim: cooldowns and resources carry across pulls.
+//
+// A "slice mob" (Target.id == FsimSliceMobID) lives in one window of the fight, given by its own target inputs:
+//
+//	[0] Spawn at (s)      the mob is disabled until then; 0 is active from the pull
+//	[1] Despawn at (s)    the mob dies then; 0 (or not after the spawn) lives to the fight's end
+//	[2] Kill share (%)    chance the death counts as the raid's kill (on-kill effects); 100 if absent
+//
+// A request lists every mob of the slice with its window (packs are mobs sharing a window). Each mob's execute
+// phases (35/25/20% health) fall at the encounter's execute proportions of its OWN life, not of the whole fight,
+// so a pack is "in execute" at the end of its pull. It lives in package core for that alone: the execute times are
+// unexported. Everything else uses the API upstream's own DynamicAddsAI uses (Enable, Die, raid debuff landing).
+//
+// Kept small on purpose: the hourly engine sync rebuilds upstream with it, and apply.mjs checks the anchors it
+// needs before copying, so an upstream refactor fails the build with a message instead of a silent change.
+package core
+
+import (
+	"time"
+
+	"github.com/wowsims/forever/sim/core/proto"
+)
+
+// Outside the NPC id range; upstream's own synthetic presets use 99998-100000.
+const FsimSliceMobID int32 = 2_000_000_101
+
+func init() {
+	AddPresetTarget(&PresetTarget{
+		PathPrefix: "fsim",
+		Config: &proto.Target{
+			Id:    FsimSliceMobID,
+			Name:  "Slice Mob",
+			Level: 63,
+			TargetInputs: []*proto.TargetInput{
+				{Label: "Spawn at", Tooltip: "Seconds into the fight the mob appears", InputType: proto.InputType_Number},
+				{Label: "Despawn at", Tooltip: "Seconds into the fight the mob dies; 0 for the fight's end", InputType: proto.InputType_Number},
+				{Label: "Kill share %", Tooltip: "Chance the death counts as your kill", InputType: proto.InputType_Number, NumberValue: 100},
+			},
+		},
+		AI: func() TargetAI { return &fsimSliceMobAI{} },
+	})
+}
+
+type fsimSliceMobAI struct {
+	target    *Target
+	spawnAt   time.Duration
+	despawnAt time.Duration // NeverExpires for none.
+	killShare float64
+	spawned   bool // Whether this iteration's spawn has happened.
+}
+
+func (ai *fsimSliceMobAI) Initialize(target *Target, config *proto.Target) {
+	ai.target = target
+	target.Schedule = ai
+	in := config.TargetInputs
+	num := func(i int, fallback float64) float64 {
+		if i < len(in) {
+			return in[i].NumberValue
+		}
+		return fallback
+	}
+	ai.spawnAt = DurationFromSeconds(max(num(0, 0), 0))
+	ai.despawnAt = NeverExpires
+	if d := DurationFromSeconds(num(1, 0)); d > ai.spawnAt {
+		ai.despawnAt = d
+	}
+	ai.killShare = Clamp(num(2, 100)/100, 0, 1)
+}
+
+func (ai *fsimSliceMobAI) Reset(sim *Simulation) {
+	t := ai.target
+	ai.spawned = ai.spawnAt == 0
+	if ai.spawned {
+		// Active from the pull, as a target that is not disabled at start: the pull starts its swings.
+		if !t.IsEnabled() {
+			t.enabled = true
+			sim.Encounter.addActiveTarget(t)
+		}
+	} else {
+		t.Disable(sim, true)
+		t.DisableRaidDebuffs(sim)
+		// A mob already down skips Disable, so stop the rotation look its reset started; Enable starts it again.
+		t.CancelGCDTimer(sim)
+		ai.at(sim, ai.spawnAt, ai.spawn)
+	}
+	if ai.despawnAt != NeverExpires {
+		ai.at(sim, ai.despawnAt, ai.despawn)
+	}
+	ai.resetExecutePhases(sim)
+}
+
+// The execute phases over the mob's own life: it reaches 35% and 20% health at the encounter's proportions of it.
+func (ai *fsimSliceMobAI) resetExecutePhases(sim *Simulation) {
+	t := ai.target
+	enc := &sim.Encounter
+	end := min(ai.despawnAt, sim.Duration)
+	life := max(end-ai.spawnAt, 0)
+	t.executeAt35 = ai.spawnAt + time.Duration((1-enc.ExecuteProportion_35)*float64(life))
+	t.executeAt20 = ai.spawnAt + time.Duration((1-enc.ExecuteProportion_20)*float64(life))
+	t.executeAt25 = t.executeAt35 + time.Duration(float64(t.executeAt20-t.executeAt35)*(35-25)/(35-20))
+	t.executePhase = 0
+	enc.updateNextExecuteDuration(sim)
+}
+
+func (ai *fsimSliceMobAI) at(sim *Simulation, when time.Duration, f func(*Simulation)) {
+	pa := sim.GetConsumedPendingActionFromPool()
+	pa.NextActionAt = when
+	pa.Priority = ActionPriorityDOT
+	pa.OnAction = f
+	sim.AddPendingAction(pa)
+}
+
+func (ai *fsimSliceMobAI) spawn(sim *Simulation) {
+	ai.spawned = true
+	ai.target.Enable(sim)
+	sim.Encounter.ScheduleAddRaidDebuffs(sim, ai.target, true, 0, 0)
+	if sim.Log != nil {
+		ai.target.Log(sim, "fsim slice: spawned")
+	}
+}
+
+func (ai *fsimSliceMobAI) despawn(sim *Simulation) {
+	ai.target.Die(sim, ai.killShare)
+	ai.target.DisableRaidDebuffs(sim)
+}
+
+// TargetSchedule, for the APL's target spawn and death values.
+func (ai *fsimSliceMobAI) NextActiveAt(_ *Simulation) time.Duration {
+	if ai.spawned {
+		return NeverExpires
+	}
+	return ai.spawnAt
+}
+
+func (ai *fsimSliceMobAI) DiesAt(_ *Simulation) time.Duration {
+	return ai.despawnAt
+}
+
+func (ai *fsimSliceMobAI) ExecuteCustomRotation(sim *Simulation) {
+	ai.target.ExtendGCDUntil(sim, sim.CurrentTime+BossGCD)
+}
