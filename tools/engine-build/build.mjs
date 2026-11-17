@@ -80,7 +80,17 @@ time('clone', () => {
   mkdirSync(clone, { recursive: true });
   run('git', ['init', '-q'], { cwd: clone });
   run('git', ['remote', 'add', 'origin', UPSTREAM_GIT], { cwd: clone });
-  run('git', ['fetch', '-q', '--depth', '1', 'origin', commit], { cwd: clone });
+  // GitHub answers the occasional 5xx; retry before failing the sync (and opening an issue).
+  for (let attempt = 1; ; attempt++) {
+    try {
+      run('git', ['fetch', '-q', '--depth', '1', 'origin', commit], { cwd: clone });
+      break;
+    } catch (err) {
+      if (attempt === 4) throw err;
+      log(`fetch failed (attempt ${attempt}); retrying in ${attempt * 15}s`);
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, attempt * 15_000);
+    }
+  }
   run('git', ['checkout', '-q', '--detach', 'FETCH_HEAD'], { cwd: clone });
 });
 const committedAt = capture('git', ['log', '-1', '--format=%cI'], { cwd: clone });

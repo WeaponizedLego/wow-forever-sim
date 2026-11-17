@@ -7,11 +7,12 @@ name: engine-sync
 # an issue instead. Scripts and failure modes: tools/engine-build/README.md.
 #
 # Repo setup this needs (done 2026-11-13 via gh):
-#   - "Allow auto-merge" on, and branch protection on main that requires the ci `check` job.
+#   - "Allow auto-merge" on, and branch protection on main that requires a `check` status (any source).
 #   - Actions → "Allow GitHub Actions to create and approve pull requests" on.
-# No personal token: the sync PR (opened with GITHUB_TOKEN) gets its ci `check` from ci.yml's own
-# pull_request run. The repo's "approve first-time contributors" policy held the very first sync
-# PR's run for approval; once the Actions bot has a merged PR, its runs start on their own.
+# No personal token. GitHub holds every pull_request run on a PR opened with GITHUB_TOKEN for manual
+# approval (it did for all sync PRs after #3, though #3 had merged), so ci.yml never reports `check`
+# on the sync PR. This job runs ci.yml's `check` steps itself on the exact tree it commits and posts
+# the `check` commit status on the sync commit. Keep the "CI check" step in step with ci.yml.
 
 on:
   schedule:
@@ -45,8 +46,9 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: write # release + push the engine-sync/<id> branch
-      pull-requests: write # open the PR and enable auto-merge
+      pull-requests: write # open the PR, enable auto-merge, close superseded sync PRs
       issues: write # report failures
+      statuses: write # post the `check` status on the sync commit
     steps:
       - uses: actions/checkout@v5
 
@@ -159,6 +161,17 @@ jobs:
           pnpm --filter @fsim/proto exec tsc -p tsconfig.json
           pnpm exec vitest run --project proto
 
+      # ci.yml's `check` job, on the tree the sync PR will hold (see the header for why it runs here).
+      # Before publishing, so a failure publishes nothing and opens the failure issue.
+      - name: CI check
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          pnpm typecheck
+          pnpm lint
+          pnpm format:check
+          pnpm test
+          pnpm build
+
       - name: Publish release engine-${{ steps.check.outputs.engineId }}
         if: steps.gate.outputs.run == 'true'
         env:
@@ -208,6 +221,11 @@ jobs:
           git commit -m "Engine sync: wowsims/forever@$ENGINE_ID"
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin "$branch"
+          # The "CI check" step passed on exactly this tree; report it as the `check` main requires.
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$(git rev-parse HEAD)" \
+            -f state=success -f context=check \
+            -f description="ci check steps, run by engine-sync" \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >/dev/null
           if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')" ]; then
             gh pr edit "$branch" --body-file "$body"
           else
@@ -215,6 +233,13 @@ jobs:
           fi
           # Needs "Allow auto-merge" in the repo settings and a protected main; warn instead of failing.
           gh pr merge "$branch" --auto --squash || echo "::warning::could not enable auto-merge (repo setting off?)"
+          # Only one lock can land: close the bot's other open sync PRs (all touch engine.lock.json).
+          gh pr list --state open --limit 200 --json number,headRefName,author \
+            --jq ".[] | select(.author.is_bot and (.headRefName | startswith(\"engine-sync/\")) and .headRefName != \"$branch\") | .number" |
+            while read -r n; do
+              gh pr close "$n" --delete-branch --comment "Superseded by the $ENGINE_ID engine sync ($branch)." ||
+                echo "::warning::could not close superseded sync PR #$n"
+            done
 
       - name: Report failure
         if: failure() && steps.gate.outputs.run == 'true'
