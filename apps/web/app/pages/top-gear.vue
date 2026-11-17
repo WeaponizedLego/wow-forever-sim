@@ -224,7 +224,9 @@ async function equip(row: RankedRow) {
         {{ formatNumber(tg.count.value, 0) }} combinations is more than the {{ TOP_GEAR_MAX_COMBOS }} a batch
         runs. Remove candidates to bring it under.
       </p>
-      <p v-if="runError || batch?.error" class="warn">{{ runError ?? batch?.error }}</p>
+      <div v-if="runError || batch?.error" class="warn" role="alert">
+        <UiErrorText :text="(runError ?? batch?.error)!" />
+      </div>
 
       <div v-if="running && batch" class="progress">
         <UiProgressBar

@@ -23,6 +23,7 @@ import {
   type ItemSpec,
 } from '@fsim/proto/common';
 import type { GameDatabase } from './database';
+import { knowsEnchant, knowsItem } from './missing';
 import {
   findGearSet,
   findRotation,
@@ -124,10 +125,12 @@ export function characterToPlayer(
 
   const items: ItemSpec[] = ITEM_SLOTS.map((slot, i) => {
     const g = character.gear[slot];
-    if (!g) return { id: 0, randomSuffix: 0, enchant: 0 };
+    // Pre-sim guard (missing.ts): an item or enchant the data lacks would make the engine panic; leave it out.
+    if (!g || !knowsItem(db, g.itemId)) return { id: 0, randomSuffix: 0, enchant: 0 };
     const item = db.item(g.itemId);
     let enchant = 0;
-    if (g.enchantId) enchant = db.findEnchant(g.enchantId, item)?.effectId ?? g.enchantId;
+    if (g.enchantId && knowsEnchant(db, g.enchantId))
+      enchant = db.findEnchant(g.enchantId, item)?.effectId ?? g.enchantId;
     if (!enchanting && (i === ItemSlot.ItemSlotFinger1 || i === ItemSlot.ItemSlotFinger2)) enchant = 0;
     return { id: g.itemId, randomSuffix: g.randomSuffix ?? 0, enchant };
   });

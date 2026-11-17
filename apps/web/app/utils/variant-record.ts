@@ -16,6 +16,8 @@ export interface WorkbenchVariant {
   createdAt: string;
   /** Run the draft was edited from; null when it came straight from an import. */
   fromRunId: string | null;
+  /** Character lineage of the draft (utils/lineage.ts); absent on variants saved before lineages. */
+  lineageId?: string;
   character: Character;
   /** Number of pending-change groups vs that run when saved. */
   changes: number;
@@ -72,6 +74,7 @@ export function readVariantRow(raw: unknown): ReadResult {
       name,
       createdAt: typeof row.createdAt === 'string' ? row.createdAt : '',
       fromRunId: typeof row.fromRunId === 'string' ? row.fromRunId : null,
+      ...(typeof row.lineageId === 'string' && row.lineageId && { lineageId: row.lineageId }),
       character: parsed.data,
       changes: finite(row.changes) ? row.changes : 0,
       estimate: est && finite(est.delta) && finite(est.ci95) ? { delta: est.delta, ci95: est.ci95 } : null,

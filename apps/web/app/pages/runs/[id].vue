@@ -3,6 +3,8 @@
 import { RaidSimResult } from '@fsim/proto/api';
 import { CLASSES, RACES, SPECS } from '@fsim/contracts';
 import { fightLabel, sliceRanAsScheduled } from '@fsim/gamedata';
+import { engineErrorText } from '@fsim/engine';
+import { comparableBaseline, lineageOf } from '~/utils/lineage';
 
 const route = useRoute();
 const session = useSession();
@@ -11,10 +13,10 @@ const hitScaling = useHitScaling();
 
 const runId = computed(() => `#${String(route.params.id)}`);
 const entry = computed(() => session.run(runId.value));
-const base = computed(() => {
-  const id = entry.value?.record.baselineId;
-  return id ? session.run(id) : null;
-});
+// Only a run of the same character lineage is a baseline (utils/lineage.ts); older records may name the
+// previous run of another character.
+const base = computed(() => (entry.value ? comparableBaseline(entry.value.record, session.run) : null));
+const baseId = computed(() => base.value?.record.id ?? null);
 // Read the run list itself: runStatWeights attaches the result to the existing entry object.
 const statWeights = computed(() => {
   void session.runs.value;
@@ -42,7 +44,7 @@ const when = (iso: string) =>
 
 const meta = computed(() => {
   const r = record.value!;
-  return [`run ${r.id}`, r.baselineId ? `baseline ${r.baselineId}` : 'no baseline', when(r.createdAt)].join(
+  return [`run ${r.id}`, baseId.value ? `baseline ${baseId.value}` : 'no baseline', when(r.createdAt)].join(
     ' · ',
   );
 });
@@ -86,15 +88,21 @@ const busy = computed(() => session.progress.value !== null);
 async function rerun() {
   actionError.value = null;
   try {
+    const r = record.value!;
     const next = await session.runSim({
-      iterations: record.value!.iterations,
-      character: record.value!.character,
+      iterations: r.iterations,
+      character: r.character,
+      lineage: { lineageId: lineageOf(r), baselineId: r.id },
     });
     await navigateTo(`/runs/${runSlug(next.record.id)}`);
   } catch (e) {
-    if (!(e instanceof DOMException && e.name === 'AbortError'))
-      actionError.value = e instanceof Error ? e.message : String(e);
+    if (!(e instanceof DOMException && e.name === 'AbortError')) actionError.value = engineErrorText(e);
   }
+}
+
+// Add variant: this run's character becomes the Workbench draft, in its lineage and compared against this run.
+async function addVariant() {
+  if (record.value && session.openRun(record.value.id)) await navigateTo('/workbench');
 }
 
 // ---- stat weights
@@ -146,7 +154,7 @@ const hit = computed(() => hitScaling.state(runId.value));
         <template #actions>
           <UiButton @click="exportJson">Export JSON</UiButton>
           <UiButton @click="share">{{ shareButton.label.value }}</UiButton>
-          <UiButton to="/workbench">Add variant</UiButton>
+          <UiButton @click="addVariant">Add variant</UiButton>
           <UiButton variant="primary" :disabled="busy" @click="rerun">Re-run</UiButton>
         </template>
       </UiPageHeader>
@@ -159,7 +167,7 @@ const hit = computed(() => hitScaling.state(runId.value));
           :detail="`${formatNumber(session.progress.value.completed, 0)} / ${formatNumber(session.progress.value.total, 0)} it`"
         />
         <UiButton v-if="busy" variant="quiet" size="sm" @click="session.cancel()">Cancel</UiButton>
-        <p v-if="actionError" class="error">{{ actionError }}</p>
+        <div v-if="actionError" class="error" role="alert"><UiErrorText :text="actionError" /></div>
       </div>
 
       <UiPanelGrid>
@@ -167,7 +175,7 @@ const hit = computed(() => hitScaling.state(runId.value));
           v-if="a.summary.value"
           :summary="a.summary.value"
           :base-summary="a.baseSummary.value"
-          :baseline-id="record.baselineId ?? null"
+          :baseline-id="baseId"
           :welch="a.welch.value"
           :stable-after="a.convergence.value?.stableAfter ?? null"
         />
@@ -175,7 +183,7 @@ const hit = computed(() => hitScaling.state(runId.value));
         <AnalysisDistributionPanel
           v-if="a.histogram.value && a.summary.value"
           :run-id="record.id"
-          :baseline-id="record.baselineId ?? null"
+          :baseline-id="baseId"
           v-bind="a.histogram.value"
           :mean="a.summary.value.mean"
           :baseline-mean="a.baseSummary.value?.mean"

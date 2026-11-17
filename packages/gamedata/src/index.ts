@@ -53,6 +53,7 @@ export {
   type CharacterToPlayerOptions,
 } from './character';
 export { buildRaidSimRequest, fillFromPreset, type SimRequestOptions } from './request';
+export { missingGameData, knowsItem, knowsEnchant, type MissingGameData } from './missing';
 export {
   DEFAULT_TARGET_JSON,
   SLICE_MOB_ID,

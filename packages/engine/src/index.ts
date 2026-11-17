@@ -2,6 +2,14 @@
 // EngineClient. Browser-safe; the Node worker_threads adapter lives in `@fsim/engine/node`.
 export { WasmEngineClient, DEFAULT_MAX_CONCURRENCY, type EngineClientOptions } from './client';
 export { createBrowserEngineClient, wrapWebWorker, type BrowserEngineOptions } from './browser';
+export {
+  describeEngineError,
+  engineErrorText,
+  ENGINE_SLOT_NAMES,
+  type EngineErrorInfo,
+  type ErrorRequestContext,
+  type MissingKind,
+} from './errors';
 export { WorkerPool, EngineError, type WorkerLike, type WorkerFactory, type WorkerPoolOptions } from './pool';
 export {
   loadEngineAssets,

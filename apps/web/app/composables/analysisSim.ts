@@ -6,7 +6,7 @@ import type { RaidSimResult } from '@fsim/proto';
 import { ComputeStatsRequest } from '@fsim/proto/api';
 import { PseudoStat, Stat, UnitStats } from '@fsim/proto/common';
 import { buildRaidSimRequest, loadSpecPresets } from '@fsim/gamedata';
-import { withDatabases } from '@fsim/engine';
+import { EngineError, withDatabases } from '@fsim/engine';
 
 export interface VariantOptions {
   iterations: number;
@@ -49,7 +49,7 @@ export async function simVariant(c: Character, opts: VariantOptions): Promise<Ra
       if (p.totalIterations > 0) opts.onProgress?.(p.completedIterations / p.totalIterations);
     },
   });
-  if (result.error) throw new Error(result.error.message.split('\n')[0]);
+  if (result.error) throw new EngineError(result.error.message, req);
   return result;
 }
 

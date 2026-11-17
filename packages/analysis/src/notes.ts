@@ -45,7 +45,10 @@ export interface ResourceInput {
 
 export interface MissingItem {
   slot: ItemSlotId;
+  /** The item's id, or for kind 'enchant' the enchant's. */
   itemId: number | null;
+  /** What is missing; default 'item'. An enchant the data lacks is left out while its item stays. */
+  kind?: 'item' | 'enchant';
 }
 
 export interface MissingItemsInput {
@@ -171,12 +174,13 @@ export const DATA_03: NoteRule = {
     if (!missingItems || missingItems.items.length === 0) return null;
     const build = missingItems.dataBuild ? `data build ${missingItems.dataBuild}` : 'the game data';
     const describe = (m: MissingItem) =>
-      `${SLOT_NAMES[m.slot]} item${m.itemId === null ? '' : ` ${m.itemId}`}`;
+      `${SLOT_NAMES[m.slot]} ${m.kind ?? 'item'}${m.itemId === null ? '' : ` ${m.itemId}`}`;
     const items = missingItems.items;
+    const noun = items.some((m) => m.kind === 'enchant') ? 'items and enchants' : 'items';
     const text =
       items.length === 1
         ? `${describe(items[0]!)} is not in ${build} and was left out of the sim. Results understate DPS.`
-        : `${items.length} items are not in ${build} and were left out of the sim: ${items.map(describe).join(', ')}. Results understate DPS.`;
+        : `${items.length} ${noun} are not in ${build} and were left out of the sim: ${items.map(describe).join(', ')}. Results understate DPS.`;
     return {
       id: 'DATA-03',
       severity: 'warning',

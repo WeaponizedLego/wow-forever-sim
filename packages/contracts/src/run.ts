@@ -11,8 +11,16 @@ export interface RunRecord {
   engine: EngineVersion;
   iterations: number;
   seed: number;
-  /** Run this one is compared against, if any. */
+  /**
+   * Run this one is compared against, if any. Only meaningful when that run has the same `lineageId`:
+   * records made before lineages existed may name the previous run of a different character.
+   */
   baselineId?: string;
+  /**
+   * The character lineage this run belongs to: a new import, spec preset or share link starts one; edits
+   * and saved variants of it keep it. Absent on older records, which count as a lineage of their own.
+   */
+  lineageId?: string;
   /** Headline numbers, so lists render without loading the full result. */
   summary: RunSummary;
 }

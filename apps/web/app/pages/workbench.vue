@@ -10,6 +10,13 @@ useHead({ title: 'Workbench · forever/sim' });
 
 const route = useRoute();
 const wb = useWorkbench();
+const session = useSession();
+
+// No draft (first visit, or storage was cleared) but runs in history: offer the latest run's character.
+const latest = computed(() => session.latest.value?.record ?? null);
+function openLatest() {
+  if (latest.value) session.openRun(latest.value.id);
+}
 
 const TABS = ['gear', 'talents', 'buffs', 'fight', 'rotation'] as const;
 type Tab = (typeof TABS)[number];
@@ -108,6 +115,15 @@ watch(
     <template v-if="!c">
       <h1 class="visually-hidden">Workbench</h1>
       <UiEmptyState
+        v-if="latest"
+        title="No character to edit"
+        :body="`Pick up where you left off with the character from run ${latest.id}, or paste a SimC, WoWSims or Wowhead export on New run.`"
+      >
+        <UiButton variant="primary" @click="openLatest">Open run {{ latest.id }}</UiButton>
+        <UiButton to="/">New run</UiButton>
+      </UiEmptyState>
+      <UiEmptyState
+        v-else
         title="No character to edit"
         body="Paste a SimC, WoWSims or Wowhead export on New run, or start from a spec preset, then open it here."
       >

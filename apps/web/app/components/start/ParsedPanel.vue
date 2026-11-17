@@ -168,7 +168,7 @@ const progress = computed(() => {
             busy === 'open' ? 'Opening…' : 'Open in workbench'
           }}</UiButton>
           <span v-if="actionError" class="actions__why">
-            <UiStatusGlyph status="warning" hide-label label="Failed" /> {{ actionError }}
+            <UiStatusGlyph status="warning" hide-label label="Failed" /> <UiErrorText :text="actionError" />
           </span>
           <span v-else-if="simBlockedReason" class="actions__why">{{ simBlockedReason }}</span>
           <span v-else class="actions__why"
