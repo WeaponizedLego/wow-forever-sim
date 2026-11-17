@@ -27,9 +27,11 @@ Live at https://wow-forever-sim.glen-21f.workers.dev (name and domain stay place
 
 **Known limits**
 
-1. **SimC client loadout strings**: verified for Shaman only (one real export). Other classes convert with a
-   `TALENT-08` warning when the decoded build passes the tree rules, or fall back to the preset with a reason.
-   One real export per class pins its tree hash (`packages/importers/README.md`, "Client loadout strings").
+1. **SimC client loadout strings**: verified from real client exports for Shaman, Hunter, Warlock and Warrior
+   (the warrior export predates the current 53-node tree, so new warrior strings may still warn). Paladin, Rogue,
+   Priest, Mage and Druid decode with the node table checked against Wowhead's node ids, but carry a `TALENT-08`
+   warning until a real export pins their tree hash. Sources and evidence: `fixtures/import/real/loadouts.json`
+   and `packages/importers/README.md`, "Client loadout strings".
 2. **Raid loot is thin in the data**: upstream's `db.bin` holds only some raid items (for example 10 Molten Core
    drops; Perdition's Blade, Band of Accuria and Bonereaver's Edge are absent). The Droptimizer lists what the
    data has; the hourly sync brings in more as upstream adds it.
