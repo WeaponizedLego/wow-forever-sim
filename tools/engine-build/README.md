@@ -123,9 +123,13 @@ All set on 2026-11-13 (via `gh api`):
   (admins can bypass; force pushes and deletion blocked). Merged sync branches are deleted.
 - **Actions may open PRs.** Settings → Actions → "Allow GitHub Actions to create and approve pull
   requests" is on, so the built-in `GITHUB_TOKEN` can open the sync PR.
-- **No personal token.** The sync PR, opened with `GITHUB_TOKEN`, gets its `check` from `ci.yml`'s own
-  `pull_request` run. (A run dispatched by hand does not count toward a PR's required checks.) The
-  repo's default "require approval for first-time contributors" policy held the first sync PR's run
-  (#3) until someone approved it; once the Actions bot has a merged PR, its runs start on their own.
-- **Permissions.** The job's `GITHUB_TOKEN` has `contents`, `pull-requests` and `issues` write. The
+- **No personal token.** GitHub holds every `pull_request` run on a PR opened with `GITHUB_TOKEN`
+  until someone approves it. That was true for every sync PR after #3, even though #3 had merged.
+  So `ci.yml` never reports `check` on a sync PR on its own. Instead, the workflow's "CI check" step
+  runs `ci.yml`'s `check` commands on the tree it is about to commit, and the job posts a `check`
+  commit status on the sync commit. `main`'s protection accepts a `check` from any source. Keep
+  that step in step with `ci.yml`.
+- **One open sync PR.** When the workflow opens a sync PR, it closes the bot's other open
+  `engine-sync/*` PRs and deletes their branches, because each one rewrites `engine.lock.json`.
+- **Permissions.** The job's `GITHUB_TOKEN` has `contents`, `pull-requests`, `issues` and `statuses` write. The
   workflow default is `permissions: {}`.
