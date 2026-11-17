@@ -2,7 +2,7 @@
   "specId": "balance-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "161a62003af48b186f2c18acc9d381c3dea97dd7",
+    "commit": "a20d13c0509b83456bf560ebb7bd05637eb05544",
     "dir": "ui/specs/druid/balance",
     "files": ["apls/default.apl.json", "gear_sets/p1.gear.json", "gear_sets/prebis.gear.json", "presets.ts"]
   },
