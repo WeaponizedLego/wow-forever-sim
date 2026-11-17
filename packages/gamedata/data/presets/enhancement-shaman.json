@@ -2,7 +2,7 @@
   "specId": "enhancement-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
+    "commit": "193332c1a46b9b88fa7d107dc75a0cea6325c9b1",
     "dir": "ui/specs/shaman/enhancement",
     "files": ["builds/testing.build.json", "presets.ts"]
   },
