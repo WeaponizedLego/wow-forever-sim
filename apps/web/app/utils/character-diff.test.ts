@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CharacterSchema, type Character } from '@fsim/contracts';
-import { changeSummary, diffCharacters, type DiffNames } from './character-diff';
+import { MAX_TALENT_ROWS, changeSummary, diffCharacters, type DiffNames } from './character-diff';
 
 const base = CharacterSchema.parse({
   class: 'shaman',
@@ -86,6 +86,49 @@ describe('diffCharacters', () => {
     expect(groups[1]!.rows.map((r) => r.label)).toEqual(['Buffs: FULL-RAID', 'Buffs: SOLO']);
     expect(groups[3]!.rows.map((r) => r.label)).toEqual(['Duration: 180 s ± 5', 'Duration: 120 s ± 5']);
     expect(groups[5]!.rows.map((r) => r.label)).toEqual(['Rotation: default', 'Rotation: custom SIML']);
+  });
+
+  it('describes a talent change talent by talent, with the points per tree', () => {
+    const warrior = CharacterSchema.parse({
+      ...structuredClone(base),
+      class: 'warrior',
+      spec: 'dps-warrior',
+      talents: '30303213002-350530005122100231-1',
+    });
+    const b = { ...warrior, talents: '30303213002-250530005122100231-1' };
+    expect(diffCharacters(warrior, b, names)).toEqual([
+      {
+        key: 'talents',
+        kind: 'talents',
+        rows: [{ op: '-', label: 'Booming Voice 3/5 → 2/5', detail: 'Fury 33 → 32' }],
+      },
+    ]);
+
+    // Points moved between trees: each tree's rows, in tree order, its first row with the tree's points.
+    const c = { ...warrior, talents: '30303213002-350530005122100231-15' };
+    const d = { ...warrior, talents: '30303213002-350530005122100201-1', class: 'warrior' as const };
+    expect(diffCharacters(c, d, names)[0]!.rows).toEqual([
+      { op: '-', label: expect.stringMatching(/ 3\/3 → 0\/3$/), detail: 'Fury 33 → 30' },
+      { op: '-', label: expect.stringMatching(/ 5\/5 → 0\/5$/), detail: 'Protection 6 → 1' },
+    ]);
+
+    // Strings that spend the same points ("…-" vs "…") are no change.
+    expect(diffCharacters(warrior, { ...warrior, talents: `${warrior.talents}-` }, names)).toEqual([]);
+  });
+
+  it(`lists at most ${MAX_TALENT_ROWS} talents, then how many more`, () => {
+    const warrior = CharacterSchema.parse({
+      ...structuredClone(base),
+      class: 'warrior',
+      spec: 'dps-warrior',
+      talents: '',
+    });
+    const b = { ...warrior, talents: '30303213002-350530005122100231-1' };
+    const rows = diffCharacters(warrior, b, names)[0]!.rows;
+    expect(rows).toHaveLength(MAX_TALENT_ROWS + 1);
+    expect(rows[0]).toEqual({ op: '+', label: 'Improved Heroic Strike 0/3 → 3/3', detail: 'Arms 0 → 17' });
+    expect(rows.slice(0, -1).every((r) => r.op === '+' && /\d\/\d → \d\/\d$/.test(r.label))).toBe(true);
+    expect(rows.at(-1)).toEqual({ op: '+', label: 'and 14 more talent changes' });
   });
 
   it('shows a change of fight style as one row', () => {

@@ -14,8 +14,8 @@ const groups = computed<DiffRow[][]>(() =>
   wb.changes.value.map((g) => {
     const rows = g.rows.map((r) => ({ ...r }));
     const plus = rows.find((r) => r.op === '+');
-    if (!plus) return rows;
     if (g.kind === 'gear') {
+      if (!plus) return rows;
       const e = wb.changeEstimates.value[g.key];
       if (e) {
         plus.detail = est(e.delta, e.ci95);
@@ -24,7 +24,9 @@ const groups = computed<DiffRow[][]>(() =>
         plus.detail = '…';
       }
     } else if (wb.weights.value) {
-      plus.detail = 'sim to price';
+      // Talent rows carry their tree's points in `detail`: the hint goes on the last row without one.
+      const free = rows.findLast((r) => !r.detail);
+      if (free) free.detail = 'sim to price';
     }
     return rows;
   }),

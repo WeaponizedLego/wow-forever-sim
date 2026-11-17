@@ -22,7 +22,12 @@ import {
   type StatRef,
 } from '@fsim/analysis';
 import { fightStyle, type SpecId } from '@fsim/contracts';
-import { missingGameData, weightStatsFor as sharedWeightStats, type WeightStats } from '@fsim/gamedata';
+import {
+  missingGameData,
+  shownAuraKeys,
+  weightStatsFor as sharedWeightStats,
+  type WeightStats,
+} from '@fsim/gamedata';
 import { PseudoStat, Stat } from '@fsim/proto/common';
 import type { StatWeightsResult } from '@fsim/proto/api';
 import type { RunEntry } from './session';
@@ -183,13 +188,15 @@ export function useRunAnalysis(
   );
   const cooldownKeys = computed(() => cooldownKeysFromLog(events.value));
 
-  const playerLanes = computed(() =>
-    fight1Duration.value
-      ? auraLanes(events.value, fight1Duration.value).filter(
-          (l) => l.unit.kind === 'player' && l.unit.index === 0,
-        )
-      : [],
-  );
+  const playerLanes = computed(() => {
+    if (!fight1Duration.value) return [];
+    const lanes = auraLanes(events.value, fight1Duration.value).filter(
+      (l) => l.unit.kind === 'player' && l.unit.index === 0,
+    );
+    // An aura another one already shows (the Windfury Totem standing, by its raid aura) gets no lane.
+    const shown = shownAuraKeys(lanes.map((l) => l.key));
+    return lanes.filter((l) => shown.has(l.key));
+  });
   /** Auras up the whole of fight 1 (raid buffs, forms): no timing to show, so counted, not drawn. */
   const alwaysOn = computed(
     () => playerLanes.value.filter((l) => l.uptimeSeconds >= fight1Duration.value * ALWAYS_ON).length,
@@ -217,9 +224,9 @@ export function useRunAnalysis(
     const d = fight1Duration.value;
     if (!d || events.value.length === 0) return null;
     const series = damageSeries(events.value, d, { bucketSeconds: 5, playerIndex: 0 });
+    // One point per bucket, at its start. The chart carries the last bucket's level on to the fight's end
+    // (LineBand `extendTo`) rather than taking a second point for it, which would list that bucket twice.
     const points = series.map((p) => ({ x: p.t, y: p.dps }));
-    // The line ends at the fight's end, not at the last bucket's start.
-    if (points.length) points.push({ x: d, y: points.at(-1)!.y });
     const max = Math.max(...points.map((p) => p.y), summary.value?.mean ?? 0);
     const char = entry.value!.record.character;
     return {
@@ -260,7 +267,10 @@ export function useRunAnalysis(
   const abilities = computed(() => {
     if (!entry.value) return [];
     const rows = abilityBreakdown(entry.value.result);
-    const labels = names.distinctNames(rows.map((r) => r.id));
+    const labels = names.distinctNames(
+      rows.map((r) => r.id),
+      rows.map((r) => r.petName),
+    );
     return rows.map((r, i) => ({
       ...r,
       name: r.petName ? `${labels[i]} (${r.petName})` : labels[i]!,
