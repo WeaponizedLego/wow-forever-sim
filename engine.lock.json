@@ -2,33 +2,33 @@
   "schema": 1,
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "193332c1a46b9b88fa7d107dc75a0cea6325c9b1",
-    "committedAt": "2026-11-17T12:08:59+01:00"
+    "commit": "161a62003af48b186f2c18acc9d381c3dea97dd7",
+    "committedAt": "2026-11-17T14:41:18+01:00"
   },
-  "engineId": "193332c",
+  "engineId": "161a620",
   "dataBuild": "1.60.1.70938",
   "goVersion": "1.27.4",
   "artifacts": {
     "wasm": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-193332c/lib.wasm.gz",
-      "sha256": "55b3dd7d9e708cf15924052ade382ecf45fe92448abdc6ac8e4228d2505d78d5",
-      "bytes": 5805723
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-161a620/lib.wasm.gz",
+      "sha256": "73ebcf523f8d791698ccc4a18ead9bd6fa9dd531f44174bca8fa9ddcfb499d81",
+      "bytes": 5806767
     },
     "wasmExec": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-193332c/wasm_exec.js",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-161a620/wasm_exec.js",
       "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
       "bytes": 16992
     },
     "db": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-193332c/db.bin",
-      "sha256": "6ca01e7d3f04874a3390a4a7be6eb2d7215764cd1df6f788147b134689178830",
-      "bytes": 1683208
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-161a620/db.bin",
+      "sha256": "7441dbe7baa3fcd2f7d9fedf750f2d65be89fc15b3586f15c67dcf21419c04f6",
+      "bytes": 1683491
     },
     "leftoverDb": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-193332c/leftover_db.bin",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-161a620/leftover_db.bin",
       "sha256": "cb57592ec76e6fd2ec8ed2d05926b6e571c4345427c4baad416a6f5fbaccfdfb",
       "bytes": 540114
     }
   },
-  "syncedAt": "2026-11-17T11:44:43Z"
+  "syncedAt": "2026-11-17T14:24:14Z"
 }
