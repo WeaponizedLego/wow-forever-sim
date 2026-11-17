@@ -232,8 +232,12 @@ jobs:
           else
             gh pr create --base main --head "$branch" --title "Engine sync: wowsims/forever@$ENGINE_ID" --body-file "$body"
           fi
-          # Needs "Allow auto-merge" in the repo settings and a protected main; warn instead of failing.
-          gh pr merge "$branch" --auto --squash || echo "::warning::could not enable auto-merge (repo setting off?)"
+          # The `check` status is already on the commit, so the PR is often mergeable at once, and GitHub then
+          # refuses to *enable* auto-merge ("clean status"). Merge directly in that case. Auto-merge needs
+          # "Allow auto-merge" in the repo settings and a protected main; warn instead of failing.
+          gh pr merge "$branch" --auto --squash ||
+            gh pr merge "$branch" --squash ||
+            echo "::warning::could not enable auto-merge or merge the sync PR"
           # Only one lock can land: close the bot's other open sync PRs (all touch engine.lock.json).
           gh pr list --state open --limit 200 --json number,headRefName,author \
             --jq ".[] | select(.author.is_bot and (.headRefName | startswith(\"engine-sync/\")) and .headRefName != \"$branch\") | .number" |
