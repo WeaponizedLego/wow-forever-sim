@@ -180,6 +180,38 @@ export function canRemovePoint(cls: ClassId, points: TalentPoints, tree: number,
   return !anyBroken(cls, withPoints(points, tree, talent, cur - 1));
 }
 
+const listNames = (names: string[]): string =>
+  names.length < 2 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
+
+/**
+ * Why a point cannot come out of the talent, in words ("Can't remove: Stormstrike needs it", "Can't remove:
+ * talents in tier 4 need 15 points above them"); null when it can, or when the talent holds no points.
+ * Tiers count from 1 at the top, as in the game.
+ */
+export function removePointBlocker(
+  cls: ClassId,
+  points: TalentPoints,
+  tree: number,
+  talent: number,
+): string | null {
+  const cur = points[tree]?.[talent] ?? 0;
+  if (cur <= 0 || canRemovePoint(cls, points, tree, talent)) return null;
+  const talents = DATA[cls].trees[tree]!.talents;
+  const after = brokenTalents(cls, withPoints(points, tree, talent, cur - 1))[tree] ?? [];
+  // Children whose prerequisite this talent is: they break because it drops below its maximum.
+  const children = talents.flatMap((t, i) => (after[i] && t.prereq === talent ? [t.name] : []));
+  const reasons: string[] = [];
+  if (children.length) reasons.push(`${listNames(children)} ${children.length > 1 ? 'need' : 'needs'} it`);
+  // Otherwise (or as well) a lower tier falls short of points: name the first one.
+  const rows = talents.flatMap((t, i) => (after[i] && t.prereq !== talent ? [t.row] : []));
+  if (rows.length) {
+    const row = Math.min(...rows);
+    reasons.push(`talents in tier ${row + 1} need ${row * POINTS_PER_ROW} points above them`);
+  }
+  // Another tree cannot break by removing a point here, so one of the two always applies.
+  return `Can't remove: ${reasons.join('; ') || 'other talents depend on it'}`;
+}
+
 /** Adds (`delta` 1) or removes (-1) a point when the rules allow it; otherwise returns `points` unchanged. */
 export function stepTalent(
   cls: ClassId,

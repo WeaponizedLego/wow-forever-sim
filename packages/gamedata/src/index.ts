@@ -65,3 +65,4 @@ export {
   sliceRanAsScheduled,
 } from './fights';
 export * from './talents';
+export { buildSpellNames, loadSpellNames, type SpellName, type SpellNameRow } from './spell-names';

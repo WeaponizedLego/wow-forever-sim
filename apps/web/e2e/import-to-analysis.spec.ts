@@ -31,6 +31,14 @@ test('import the shaman export, open it in the workbench, sim and read the analy
   await expect(page.getByText('run #0001 · no baseline')).toBeVisible();
   await expect(page.getByRole('definition').filter({ hasText: /^1,000$/ })).toBeVisible();
 
+  // The plain summary on top: DPS ±, the fight, iterations, the top abilities by name, and no earlier run.
+  const summary = page.getByTestId('run-summary');
+  await expect(summary).toContainText(/\d+\.\d DPS\s*± \d+\.\d/);
+  await expect(summary).toContainText(/on Patchwerk.*, averaged over 1,000 simulated fights\./);
+  await expect(summary).toContainText(/Most damage.*Windfury Weapon \d+%/);
+  await expect(summary).not.toContainText(/Spell \d+/);
+  await expect(summary).toContainText('This is the first run of Testshaman in this browser.');
+
   // Every analysis panel renders with its data, not an empty state.
   const panel = (name: string) => page.getByRole('region', { name });
   await expect(
@@ -40,6 +48,10 @@ test('import the shaman export, open it in the workbench, sim and read the analy
   await expect(panel('Fight timeline').getByRole('table', { name: /^Fight 1 of 1,000/ })).toBeAttached();
   const abilities = panel('Damage by ability').getByRole('table', { name: 'Damage by ability' });
   await expect(abilities.getByRole('row').filter({ hasText: 'Stormstrike' }).first()).toBeVisible();
+  // Windfury Weapon's strike (spell 439440, ~18% of the damage) is named from the engine's spell table, and no
+  // ability is left as a bare "Spell N".
+  await expect(abilities.getByRole('row').filter({ hasText: 'Windfury Weapon' }).first()).toBeVisible();
+  await expect(abilities.getByRole('row').filter({ hasText: /Spell \d+/ })).toHaveCount(0);
   await expect(panel('Run notes').getByRole('listitem').first()).toBeVisible();
 
   // The run is listed under Runs in the header and on the start screen.

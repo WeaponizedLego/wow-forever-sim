@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// Drops from the chosen bosses that are not simmed, counted by reason, with the items behind each count.
+// Drops from the chosen bosses that are not simmed, grouped by reason: each group a collapsible list of the items (in
+// their quality colour). Short lists start open so the names show without a click.
 import type { DropSkip } from '~/composables/droptimizer';
 
 const props = defineProps<{ skipped: { itemId: number; reason: DropSkip }[] }>();
@@ -15,18 +16,20 @@ const groups = computed(() => {
     }))
     .sort((a, b) => b.ids.length - a.ids.length);
 });
+/** Up to this many items in all, every group starts open. */
+const OPEN_UP_TO = 12;
 </script>
 
 <template>
   <UiPanel title="Left out" :meta="`${skipped.length} item${skipped.length === 1 ? '' : 's'}`">
     <ul v-if="groups.length" class="groups">
       <li v-for="g in groups" :key="g.reason">
-        <details>
+        <details :open="skipped.length <= OPEN_UP_TO">
           <summary>
             <span>{{ DROP_SKIP_LABELS[g.reason] }}</span>
             <span class="num text-2">{{ g.ids.length }}</span>
           </summary>
-          <ul class="items">
+          <ul class="items" :aria-label="`Left out: ${DROP_SKIP_LABELS[g.reason]}`">
             <li v-for="id in g.ids" :key="id">
               <UiQualityName :quality="names.itemQuality(id)">{{ names.itemName(id) }}</UiQualityName>
             </li>

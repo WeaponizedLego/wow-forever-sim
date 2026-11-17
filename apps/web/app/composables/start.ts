@@ -15,7 +15,8 @@ import { PRESET_INDEX, type PresetSummary } from '@fsim/gamedata';
 import { Spec } from '@fsim/proto/common';
 import baselineJson from '../../../../tools/engine-build/smoke-baseline.json';
 import lockJson from '../../../../engine.lock.json';
-import type { CheckItem, LineMarker } from './ui-types';
+import { isUnusedNote } from '../utils/parse-report';
+import type { LineMarker } from './ui-types';
 
 // ---------------------------------------------------------------- paste box
 
@@ -83,8 +84,11 @@ export function startLineMarkers(input: string, r: ImportResult | null): Record<
   for (const d of r.diagnostics) {
     if (!d.line) continue;
     const prev = out[d.line];
+    // Lines the engine has no use for (bags, shirt) are fine too: OK, as in the parse report (utils/parse-report).
     const status: LineMarker['status'] =
-      d.severity === 'info' && d.field && gear?.[d.field] ? 'good' : severityStatus(d.severity);
+      d.severity === 'info' && ((d.field && gear?.[d.field]) || isUnusedNote(d))
+        ? 'good'
+        : severityStatus(d.severity);
     out[d.line] = {
       status: prev && rank[prev.status] > rank[status] ? prev.status : status,
       message: prev?.message ? `${prev.message} ${d.message}` : d.message,
@@ -98,15 +102,6 @@ export function startLineMarkers(input: string, r: ImportResult | null): Record<
     });
   }
   return out;
-}
-
-export function startDiagnosticItems(diagnostics: readonly Diagnostic[]): CheckItem[] {
-  return diagnostics.map((d) => ({
-    status: severityStatus(d.severity),
-    code: d.code,
-    text: d.message,
-    where: d.line ? `line ${d.line}` : '—',
-  }));
 }
 
 const FORMAT_LABEL: Record<NonNullable<ImportResult['format']>, string> = {
