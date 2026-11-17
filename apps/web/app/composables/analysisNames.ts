@@ -1,33 +1,21 @@
 // Display names for engine action ids. Spell names come from the game data's spell icon table plus the
 // engine's own spell table (extracted at the lock commit, loaded lazily: see @fsim/gamedata spell-names),
-// item names from its items; anything not found shows as "Spell 12345" / "Item 12345". Nothing is made
-// up: the only fixed labels are the engine's own OtherAction ids (melee, shoot, regen, …).
+// item names from its items and consumables. What a tag adds (the hand, the spell that granted an extra
+// attack, a queued swing, ...) follows @fsim/gamedata action-names, mirrored from upstream's UI. Nothing is
+// made up, and a raw tag is never shown.
 import type { ParsedActionId } from '@fsim/analysis';
 import {
+  actionName as nameAction,
+  actionNameSources,
   buildSpellNames,
+  distinctActionNames,
   loadSpellNames,
   talentIconUrl,
   type GameDatabase,
   type SpellName,
 } from '@fsim/gamedata';
-import { OtherAction } from '@fsim/proto/common';
 import type { Quality } from './ui-types';
 import { ItemQuality } from '@fsim/proto/common';
-
-const OTHER: Partial<Record<OtherAction, string>> = {
-  [OtherAction.OtherActionAttack]: 'Melee',
-  [OtherAction.OtherActionShoot]: 'Shoot',
-  [OtherAction.OtherActionManaRegen]: 'Mana regen',
-  [OtherAction.OtherActionEnergyRegen]: 'Energy regen',
-  [OtherAction.OtherActionFocusRegen]: 'Focus regen',
-  [OtherAction.OtherActionManaGain]: 'Mana gain',
-  [OtherAction.OtherActionRageGain]: 'Rage gain',
-  [OtherAction.OtherActionPet]: 'Pet',
-  [OtherAction.OtherActionRefund]: 'Refund',
-  [OtherAction.OtherActionWait]: 'Wait',
-};
-/** The engine tags auto attacks 1 (main hand) and 2 (off hand). */
-const HAND: Record<number, string> = { 1: 'main hand', 2: 'off hand' };
 
 const QUALITY: Partial<Record<ItemQuality, Quality>> = {
   [ItemQuality.ItemQualityCommon]: 'common',
@@ -66,13 +54,11 @@ function load(): void {
 export function useActionNames() {
   load();
 
+  const sources = computed(() => actionNameSources(db.value, spells.value));
+
+  /** "Melee (main hand)", "Heroic Strike (queued)", "Goblin Sapper Charge (self)". */
   function actionName(id: ParsedActionId): string {
-    if (id.kind === 'other') {
-      const base = OTHER[id.id as OtherAction] ?? `Other ${id.id}`;
-      return id.id === OtherAction.OtherActionAttack && HAND[id.tag] ? `${base} · ${HAND[id.tag]}` : base;
-    }
-    if (id.kind === 'item') return db.value?.item(id.id)?.name || `Item ${id.id}`;
-    return spells.value?.get(id.id)?.name || `Spell ${id.id}`;
+    return nameAction(id, sources.value);
   }
 
   /** Small Wowhead icon URL for a spell or item, or null when the data has none. */
@@ -81,31 +67,18 @@ export function useActionNames() {
       id.kind === 'spell'
         ? spells.value?.get(id.id)?.icon
         : id.kind === 'item'
-          ? db.value?.item(id.id)?.icon
+          ? db.value?.item(id.id)?.icon || db.value?.consumables.get(id.id)?.icon
           : undefined;
     return icon ? talentIconUrl(icon, 'small') : null;
   }
 
   /**
-   * Names for a list of ids. Where two rows would read the same, the spell rank (from the game data) or
-   * the engine's tag is added: "Lightning Bolt (rank 9)", "Lightning Bolt (tag 6)".
+   * Names for a list of ids. Same-named rows are told apart by spell rank where it differs, else by count
+   * ("Whirlwind (2)"), never by the raw tag. `owners` (pet names, null for the player) keeps the rows of
+   * different units apart, as the caller adds the owner.
    */
-  function distinctNames(ids: readonly ParsedActionId[]): string[] {
-    const names = ids.map(actionName);
-    const rankOf = (id: ParsedActionId) =>
-      id.kind === 'spell' ? spells.value?.get(id.id)?.rank || undefined : undefined;
-    const groups = new Map<string, number[]>();
-    names.forEach((n, i) => groups.set(n, [...(groups.get(n) ?? []), i]));
-    return names.map((n, i) => {
-      const group = groups.get(n)!;
-      if (group.length < 2) return n;
-      const id = ids[i]!;
-      const parts: string[] = [];
-      const rank = rankOf(id);
-      if (rank && new Set(group.map((j) => rankOf(ids[j]!))).size > 1) parts.push(`rank ${rank}`);
-      if (id.tag && new Set(group.map((j) => ids[j]!.tag)).size > 1) parts.push(`tag ${id.tag}`);
-      return parts.length ? `${n} (${parts.join(', ')})` : n;
-    });
+  function distinctNames(ids: readonly ParsedActionId[], owners?: readonly (string | null)[]): string[] {
+    return distinctActionNames(ids, sources.value, owners);
   }
 
   /** Item name, with the random suffix ("of the Boar") when one is given and known. */

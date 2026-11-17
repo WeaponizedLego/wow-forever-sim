@@ -40,6 +40,8 @@ const props = withDefaults(
     baseline?: boolean;
     /** Side of the marker line its label sits on. */
     markerAlign?: 'left' | 'right';
+    /** Carry the last point's level on to this x (a bucketed series up to its end). Not a point of its own. */
+    extendTo?: number;
   }>(),
   {
     xDomain: undefined,
@@ -64,6 +66,7 @@ const props = withDefaults(
     showTable: false,
     baseline: true,
     markerAlign: 'right',
+    extendTo: undefined,
   },
 );
 
@@ -84,7 +87,10 @@ const geo = computed(() => {
   const W = width.value;
   const sx = (v: number) => fx.value(v) * W;
   const xs = props.points.map((p) => sx(p.x));
-  const line = props.points.map((p, i) => `${i ? 'L' : 'M'}${xs[i]} ${sy(p.y)}`).join('');
+  let line = props.points.map((p, i) => `${i ? 'L' : 'M'}${xs[i]} ${sy(p.y)}`).join('');
+  const last = props.points.at(-1);
+  if (last && props.extendTo !== undefined && props.extendTo > last.x)
+    line += `L${sx(props.extendTo)} ${sy(last.y)}`;
   let band = '';
   if (props.points.length && props.points.every((p) => p.lo !== undefined && p.hi !== undefined)) {
     const up = props.points.map((p, i) => `${xs[i]} ${sy(p.hi!)}`);

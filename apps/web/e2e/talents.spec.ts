@@ -87,7 +87,10 @@ test('the SimC loadout talents arrive converted, build a tree by clicking, sim i
   const built = await engineString(page).inputValue();
   expect(built).toMatch(/^\d+$/); // Elemental only
   await expect(panel.getByTestId('talent-total')).toHaveText('6/0/0 · 6/51');
-  await expect(page.getByRole('region', { name: 'Pending changes' }).getByText(built)).toBeVisible();
+  // Pending changes describes the build talent by talent, with each tree's points, not as engine strings.
+  const pending = page.getByRole('region', { name: 'Pending changes' });
+  await expect(pending.getByText('Elemental 0 → 6')).toBeVisible();
+  await expect(pending.getByText(/^.+ 0\/\d → \d\/\d$/).first()).toBeVisible();
 
   // Sim the draft, then share the run: the link's character carries exactly the clicked build.
   await simDraft(page, '0001');

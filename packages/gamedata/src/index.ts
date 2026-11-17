@@ -60,9 +60,21 @@ export {
   effectiveEncounter,
   withFightStyle,
   fightLabel,
+  fightChange,
   fightSegments,
   encounterProto,
   sliceRanAsScheduled,
 } from './fights';
 export * from './talents';
 export { buildSpellNames, loadSpellNames, type SpellName, type SpellNameRow } from './spell-names';
+export {
+  actionName,
+  actionBaseName,
+  actionTagLabel,
+  actionNameSources,
+  distinctActionNames,
+  shownAuraKeys,
+  AURA_SHOWN_BY,
+  type ActionRef,
+  type ActionNameSources,
+} from './action-names';

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 // The headline tiles of a run: mean ± CI, Δ vs baseline (Welch), spread, percentiles, precision. Without a
 // baseline (the first run of a character lineage, utils/lineage.ts) there is no Δ tile; the mean takes its room.
+// When the baseline simmed another fight the Δ is not like-for-like (a dungeon slice favours cleave specs), so
+// the tile says that first and drops the Welch verdict, which would otherwise read as a real gear change.
 import type { Summary, WelchResult } from '@fsim/analysis';
 
 const props = defineProps<{
@@ -9,6 +11,8 @@ const props = defineProps<{
   baselineId: string | null;
   welch: WelchResult | null;
   stableAfter: number | null;
+  /** Set when the baseline simmed a different fight (`fightChange` from @fsim/gamedata). */
+  fightChange?: { from: string; to: string } | null;
 }>();
 
 const hasBase = computed(() => !!props.welch && !!props.baseSummary);
@@ -18,11 +22,13 @@ const deltaPct = computed(() =>
 const tone = computed(() =>
   !props.welch
     ? undefined
-    : props.welch.verdict === 'better'
-      ? 'up'
-      : props.welch.verdict === 'worse'
-        ? 'down'
-        : 'noise',
+    : props.fightChange
+      ? 'noise'
+      : props.welch.verdict === 'better'
+        ? 'up'
+        : props.welch.verdict === 'worse'
+          ? 'down'
+          : 'noise',
 );
 const pText = computed(() => {
   const p = props.welch?.p;
@@ -48,12 +54,21 @@ const pText = computed(() => {
     :span="3"
   >
     <template #foot>
-      <UiStatusGlyph
-        :status="welch.verdict === 'noise' ? 'info' : 'good'"
-        :label="welch.verdict === 'noise' ? 'Within noise' : 'Significant'"
-        class="text-2"
-      />
-      <span class="text-2"> · Welch t = {{ formatNumber(welch.t, 1) }}, {{ pText }}</span>
+      <span v-if="fightChange" class="fight-note text-2">
+        <UiStatusGlyph status="warning" label="Fight changed" class="fight-note__glyph" />
+        <span data-testid="fight-change-note"
+          >Different fight than {{ baselineId }} ({{ fightChange.from }} → {{ fightChange.to }}): not a
+          like-for-like comparison.</span
+        >
+      </span>
+      <template v-else>
+        <UiStatusGlyph
+          :status="welch.verdict === 'noise' ? 'info' : 'good'"
+          :label="welch.verdict === 'noise' ? 'Within noise' : 'Significant'"
+          class="text-2"
+        />
+        <span class="text-2"> · Welch t = {{ formatNumber(welch.t, 1) }}, {{ pText }}</span>
+      </template>
     </template>
   </UiKpiTile>
   <UiKpiTile
@@ -93,5 +108,14 @@ const pText = computed(() => {
 }
 .lc {
   text-transform: none;
+}
+.fight-note {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fight-note__glyph {
+  color: var(--text-1);
+  font-weight: 500;
 }
 </style>

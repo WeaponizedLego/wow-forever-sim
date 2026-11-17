@@ -1,14 +1,17 @@
 // What differs between two characters, as −/+ groups: the Workbench's pending changes (draft vs baseline)
-// and the Compare screen's "what differs" (each variant vs the first). Pure: every display name comes in
-// through `names`, so this runs (and is tested) without game data or Nuxt.
+// and the Compare screen's "what differs" (each variant vs the first). Pure: item, enchant, buff and rotation
+// names come in through `names`, talent names from the committed talent trees (@fsim/gamedata), so this runs
+// (and is tested) without db.bin or Nuxt.
 import {
   ITEM_SLOTS,
   fightStyle,
   type BuffsPreset,
   type Character,
+  type ClassId,
   type GearItem,
   type ItemSlotId,
 } from '@fsim/contracts';
+import { talentChanges } from '@fsim/gamedata';
 import type { DiffRow } from '~/composables/ui-types';
 
 export interface ChangeGroup {
@@ -68,6 +71,33 @@ function stable(v: unknown): string {
 const without = (o: Record<string, unknown>, skip: Set<string>) =>
   Object.fromEntries(Object.entries(o).filter(([k]) => !skip.has(k)));
 
+/** Most talent rows a change lists; the rest are counted in one "and N more" row. */
+export const MAX_TALENT_ROWS = 6;
+
+/**
+ * Talents from `a` to `b`, one row per talent ("Booming Voice 3/5 → 2/5": − when points come out, + when they
+ * go in), grouped by tree in tree order; each tree's first row carries its points ("Fury 21 → 26").
+ */
+function talentRows(cls: ClassId, a: string, b: string): DiffRow[] {
+  const rows: DiffRow[] = [];
+  let more = 0;
+  for (const tree of talentChanges(cls, a, b)) {
+    tree.talents.forEach((t, i) => {
+      if (rows.length >= MAX_TALENT_ROWS) {
+        more++;
+        return;
+      }
+      rows.push({
+        op: t.after > t.before ? '+' : '-',
+        label: `${t.name} ${t.before}/${t.maxPoints} → ${t.after}/${t.maxPoints}`,
+        ...(i === 0 && { detail: `${tree.tree} ${tree.before} → ${tree.after}` }),
+      });
+    });
+  }
+  if (more) rows.push({ op: '+', label: `and ${more} more talent change${more > 1 ? 's' : ''}` });
+  return rows;
+}
+
 /** `b` against `a`: one group per changed slot, then talents, buffs, fight, rotation and the rest. */
 export function diffCharacters(a: Character, b: Character, names: DiffNames): ChangeGroup[] {
   const out: ChangeGroup[] = [];
@@ -92,14 +122,17 @@ export function diffCharacters(a: Character, b: Character, names: DiffNames): Ch
     out.push({ key: `gear:${slot}`, kind: 'gear', slot, rows });
   }
   if (a.talents !== b.talents) {
-    out.push({
-      key: 'talents',
-      kind: 'talents',
-      rows: [
-        { op: '-', label: a.talents || 'no talents', detail: 'talents' },
-        { op: '+', label: b.talents || 'no talents' },
-      ],
-    });
+    const rows = a.class === b.class ? talentRows(a.class, a.talents, b.talents) : null;
+    if (rows?.length !== 0) {
+      out.push({
+        key: 'talents',
+        kind: 'talents',
+        rows: rows ?? [
+          { op: '-', label: a.talents || 'no talents', detail: 'talents' },
+          { op: '+', label: b.talents || 'no talents' },
+        ],
+      });
+    }
   }
   if (a.buffs !== b.buffs) {
     out.push({

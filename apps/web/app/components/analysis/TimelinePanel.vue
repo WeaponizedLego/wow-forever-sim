@@ -51,6 +51,7 @@ const label = computed(() => {
       <ChartsLineBand
         :points="points"
         :x-domain="[0, duration]"
+        :extend-to="duration"
         :y-domain="yDomain"
         :y-ticks="yTicks"
         :height="160"

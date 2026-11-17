@@ -58,6 +58,29 @@ export function fightLabel(e: CharacterEncounter, opts: { short?: boolean } = {}
   return `${opts.short ? 'Custom' : s.label} ${parts.join(' · ')}`;
 }
 
+/**
+ * The fight two runs differ by, or null when they simmed the same fight. DPS from different fights is not a
+ * like-for-like comparison (a dungeon slice favours cleave specs; a longer fight dilutes cooldowns), so a Δ
+ * between them must say so rather than read as a gear or talent change.
+ */
+export function fightChange(
+  from: CharacterEncounter,
+  to: CharacterEncounter,
+): { from: string; to: string } | null {
+  const a = effectiveEncounter(from);
+  const b = effectiveEncounter(to);
+  const keys = [
+    'style',
+    'durationSec',
+    'durationVariationSec',
+    'targetCount',
+    'targetLevel',
+    'executePhase',
+  ] as const;
+  if (keys.every((k) => a[k] === b[k])) return null;
+  return { from: fightLabel(from), to: fightLabel(to) };
+}
+
 /** Segments the timeline draws: the style's own, or one segment spanning the fight. */
 export function fightSegments(e: CharacterEncounter): readonly FightSegment[] {
   const eff = effectiveEncounter(e);
