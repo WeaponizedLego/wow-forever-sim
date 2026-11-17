@@ -4,6 +4,10 @@
 // Format, version 1: JSON `{ v: 1, character, iterations, seed, engineId, kind }` → deflate-raw
 // (CompressionStream) → base64url without padding. A future format bumps `v`; decoding an unknown `v`
 // fails with a message rather than guessing. Pure and browser/Node-agnostic so vitest can cover it.
+//
+// Fight styles (`character.encounter.style`) needed no new version: a link carries the style like any other
+// encounter field, and one made before styles existed has none, which CharacterSchema reads as Custom with the
+// link's own values (or Patchwerk 3 min for the old defaults, the same fight).
 import { CharacterSchema, type Character } from '@fsim/contracts';
 
 export const SHARE_VERSION = 1;

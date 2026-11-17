@@ -43,7 +43,10 @@ export function professionFromName(name: string | undefined): Profession {
   return key ? (Profession[key as keyof typeof Profession] as Profession) : Profession.ProfessionUnknown;
 }
 
-function encounterFrom(json: Record<string, unknown> | undefined): CharacterEncounter | undefined {
+// No style: CharacterSchema infers it (Patchwerk 3 min for upstream's usual 180 ± 5 s single target, else Custom).
+function encounterFrom(
+  json: Record<string, unknown> | undefined,
+): Omit<CharacterEncounter, 'style'> | undefined {
   if (!json) return undefined;
   const targets = (json['targets'] as { level?: number }[] | undefined) ?? [];
   return {

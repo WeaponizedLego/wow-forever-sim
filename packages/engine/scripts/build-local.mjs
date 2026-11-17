@@ -22,6 +22,7 @@ import {
 } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { applyEnginePatches, removeEnginePatches } from '../../../tools/engine-build/patches/apply.mjs';
 
 const pkgDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repoRoot = resolve(pkgDir, '../..');
@@ -71,12 +72,18 @@ if (!existsSync(join(src, 'sim/core/proto/api.pb.go'))) {
   ]);
 }
 
-// 2. lib.wasm, built without with_db: item data travels in each request.
+// 2. lib.wasm, built without with_db: item data travels in each request. Our engine patches (the same ones the
+// release build applies, tools/engine-build/patches/) are copied into the checkout for the build and removed after.
 console.log('building lib.wasm');
 const t0 = performance.now();
-run('go', ['build', '-ldflags', '-w -s', '-o', join(vendor, 'lib.wasm'), './sim/wasm/'], {
-  env: { ...env, GOOS: 'js', GOARCH: 'wasm' },
-});
+const patched = applyEnginePatches(src);
+try {
+  run('go', ['build', '-ldflags', '-w -s', '-o', join(vendor, 'lib.wasm'), './sim/wasm/'], {
+    env: { ...env, GOOS: 'js', GOARCH: 'wasm' },
+  });
+} finally {
+  removeEnginePatches(patched);
+}
 console.log(`built in ${Math.round((performance.now() - t0) / 1000)} s`);
 
 // 3. wasm_exec.js from the same toolchain (Go >= 1.24 keeps it in lib/wasm, older in misc/wasm).

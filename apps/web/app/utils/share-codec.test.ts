@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CharacterSchema } from '@fsim/contracts';
+import { CharacterSchema, FIGHT_STYLE_IDS } from '@fsim/contracts';
 import {
   SHARE_VERSION,
   ShareLinkError,
@@ -113,5 +113,31 @@ describe('share codec', () => {
       /garbled/,
     );
     await expect(decodeShare(await rawFragment([1, 2]))).rejects.toThrow(/no format version/);
+  });
+});
+
+describe('share codec: fight styles', () => {
+  it.each(FIGHT_STYLE_IDS)('round-trips %s', async (style) => {
+    const c = CharacterSchema.parse({ ...character, encounter: { ...character.encounter, style } });
+    const back = await decodeShare(await encodeShare({ ...payload, character: c }));
+    expect(back.character.encounter).toEqual(c.encounter);
+    expect(back.character.encounter.style).toBe(style);
+  });
+
+  it('decodes a v1 link made before fight styles: Custom with its own values', async () => {
+    const { encounter: _, ...rest } = character;
+    const text = await rawFragment({
+      v: 1,
+      ...payload,
+      character: { ...rest, encounter: { durationSec: 240, targetCount: 3 } },
+    });
+    const e = (await decodeShare(text)).character.encounter;
+    expect(e).toMatchObject({ style: 'custom', durationSec: 240, targetCount: 3, durationVariationSec: 5 });
+  });
+
+  it('decodes an old link whose fight was the old default (left out of the link) as Patchwerk 3 min', async () => {
+    const { encounter: _, ...rest } = character;
+    const text = await rawFragment({ v: 1, ...payload, character: rest });
+    expect((await decodeShare(text)).character.encounter.style).toBe('patchwerk-3m');
   });
 });
