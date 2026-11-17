@@ -8,7 +8,7 @@
 // locally; set WASM_OPT to point at a binary that is not on PATH.
 //
 // Writes to $ENGINE_BUILD_WORK (default $TMPDIR/fsim-engine-build, outside the repo):
-//   forever-<id>/                 shallow clone of upstream at <commit>
+//   forever-<id>/                 shallow clone of upstream at <commit>, plus our patches (patches/)
 //   out/<id>/lib.wasm.gz          engine, wasm-opt -O3 (if available), gzip -9
 //   out/<id>/wasm_exec.js         from the same Go toolchain that built lib.wasm
 //   out/<id>/db.bin, leftover_db.bin
@@ -48,6 +48,7 @@ import {
   which,
   writeJson,
 } from './lib.mjs';
+import { applyEnginePatches } from './patches/apply.mjs';
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const commit = positional[0];
@@ -124,7 +125,9 @@ time('go-protos', () => {
   );
 });
 
-// 4. The WASM.
+// 4. The WASM, with our engine patches (patches/README.md) copied into the clone first. The clone was reset
+// above, so a patch from an earlier build never lingers.
+time('patches', () => applyEnginePatches(clone, log));
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 const wasmPath = join(out, 'lib.wasm');

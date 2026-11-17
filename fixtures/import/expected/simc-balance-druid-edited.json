@@ -76,6 +76,7 @@
       "presetId": "default"
     },
     "encounter": {
+      "style": "patchwerk-3m",
       "durationSec": 180,
       "durationVariationSec": 5,
       "targetCount": 1,

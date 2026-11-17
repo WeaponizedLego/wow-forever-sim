@@ -21,7 +21,7 @@ import {
   type RunNote,
   type StatRef,
 } from '@fsim/analysis';
-import type { SpecId } from '@fsim/contracts';
+import { fightStyle, type SpecId } from '@fsim/contracts';
 import { weightStatsFor as sharedWeightStats, type WeightStats } from '@fsim/gamedata';
 import { PseudoStat, Stat } from '@fsim/proto/common';
 import type { StatWeightsResult } from '@fsim/proto/api';
@@ -226,7 +226,11 @@ export function useRunAnalysis(
       duration: d,
       points,
       yDomain: [0, niceCeil(max * 1.05)] as [number, number],
-      execute: char.encounter.executePhase ? { from: d * 0.8, to: d } : null,
+      // A dungeon slice's mobs each reach execute at the end of their own life, so there is no one band.
+      execute:
+        char.encounter.executePhase && !fightStyle(char.encounter.style).segments.length
+          ? { from: d * 0.8, to: d }
+          : null,
       xTicks: niceTicks(0, d, 7).filter((t) => t <= d),
     };
   });

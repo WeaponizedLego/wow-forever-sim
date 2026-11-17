@@ -1,4 +1,11 @@
 import { z } from 'zod';
+import {
+  DEFAULT_FIGHT_STYLE,
+  FIGHT_STYLE_IDS,
+  FIGHT_STYLES,
+  fightStyle,
+  type FightValues,
+} from './fight-styles';
 import { CLASS_IDS, ITEM_SLOTS, MAX_LEVEL, RACE_IDS, SPEC_IDS } from './game';
 
 /**
@@ -27,10 +34,13 @@ export type Rotation = z.infer<typeof RotationSchema>;
 export const BuffsPresetSchema = z.enum(['full-raid', 'five-man', 'solo', 'none']);
 export type BuffsPreset = z.infer<typeof BuffsPresetSchema>;
 
-export const EncounterSchema = z.object({
+const EncounterFieldsSchema = z.object({
+  /** Which fight (fight-styles.ts). A style other than `custom` fixes every field below. */
+  style: z.enum(FIGHT_STYLE_IDS),
   durationSec: z.number().positive().default(180),
   /** ± seconds; the engine draws each fight's length from duration ± variation. */
   durationVariationSec: z.number().nonnegative().default(5),
+  /** For a dungeon slice: the most targets alive at once. */
   targetCount: z.number().int().min(1).max(5).default(1),
   targetLevel: z
     .number()
@@ -38,6 +48,26 @@ export const EncounterSchema = z.object({
     .default(MAX_LEVEL + 3),
   executePhase: z.boolean().default(true),
 });
+
+const DEFAULT_VALUES = fightStyle(DEFAULT_FIGHT_STYLE).values!;
+const sameValues = (a: Record<string, unknown>, b: FightValues) =>
+  (Object.keys(b) as (keyof FightValues)[]).every((k) => (a[k] ?? DEFAULT_VALUES[k]) === b[k]);
+
+/**
+ * Before parsing: an encounter saved before fight styles existed (old share links, saved runs) has no `style`.
+ * It is `custom` with its own values, except one with exactly the old defaults, which is Patchwerk 3 min (the
+ * same sim). A style other than `custom` then overwrites the fields with its own values, so every reader of
+ * `durationSec`, `targetLevel`, … sees what the engine sims.
+ */
+function normalizeEncounter(input: unknown): unknown {
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) return input;
+  const e = input as Record<string, unknown>;
+  const style = e.style ?? (sameValues(e, DEFAULT_VALUES) ? DEFAULT_FIGHT_STYLE : 'custom');
+  const preset = FIGHT_STYLES.find((s) => s.id === style)?.values;
+  return { ...e, ...preset, style };
+}
+
+export const EncounterSchema = z.preprocess(normalizeEncounter, EncounterFieldsSchema);
 export type Encounter = z.infer<typeof EncounterSchema>;
 
 export const CharacterSchema = z.object({
@@ -77,12 +107,6 @@ export const CharacterSchema = z.object({
 
   buffs: BuffsPresetSchema.default('full-raid'),
   rotation: RotationSchema,
-  encounter: EncounterSchema.default({
-    durationSec: 180,
-    durationVariationSec: 5,
-    targetCount: 1,
-    targetLevel: MAX_LEVEL + 3,
-    executePhase: true,
-  }),
+  encounter: EncounterSchema.default({ style: DEFAULT_FIGHT_STYLE, ...DEFAULT_VALUES }),
 });
 export type Character = z.infer<typeof CharacterSchema>;

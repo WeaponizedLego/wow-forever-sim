@@ -38,4 +38,14 @@ export {
   professionFromName,
   type CharacterToPlayerOptions,
 } from './character';
-export { buildRaidSimRequest, fillFromPreset, DEFAULT_TARGET_JSON, type SimRequestOptions } from './request';
+export { buildRaidSimRequest, fillFromPreset, type SimRequestOptions } from './request';
+export {
+  DEFAULT_TARGET_JSON,
+  SLICE_MOB_ID,
+  effectiveEncounter,
+  withFightStyle,
+  fightLabel,
+  fightSegments,
+  encounterProto,
+  sliceRanAsScheduled,
+} from './fights';
