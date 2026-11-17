@@ -152,7 +152,9 @@ async function open(row: CompareRow) {
         </div>
       </template>
 
-      <p v-if="runError || batch?.error" class="warn" role="alert">{{ runError ?? batch?.error }}</p>
+      <div v-if="runError || batch?.error" class="warn" role="alert">
+        <UiErrorText :text="(runError ?? batch?.error)!" />
+      </div>
 
       <div v-if="running && batch" class="progress">
         <UiProgressBar

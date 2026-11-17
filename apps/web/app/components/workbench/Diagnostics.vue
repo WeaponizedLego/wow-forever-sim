@@ -1,6 +1,24 @@
 <script setup lang="ts">
-// Import findings, once and compactly: warnings on one line each, info notes folded away.
+// Import findings, once and compactly: warnings on one line each, info notes folded away. First, gear the
+// loaded game data lacks: the sim leaves it out (pre-sim guard, @fsim/gamedata missingGameData), so say
+// which slot and id before anyone sims.
+import { missingGameData } from '@fsim/gamedata';
+import { SLOT_LABELS } from '~/composables/workbench';
+
 const session = useSession();
+const wb = useWorkbench();
+const engine = useEngine();
+
+const leftOut = computed(() => {
+  const c = wb.draft.value;
+  const db = wb.db.value;
+  if (!c || !db) return null;
+  const missing = missingGameData(c, db);
+  if (!missing.length) return null;
+  const build = engine.version.value?.dataBuild;
+  const list = missing.map((m) => `${SLOT_LABELS[m.slot]} ${m.kind} ${m.id}`).join(', ');
+  return `Left out of the sim, not in ${build ? `data build ${build}` : 'the game data'}: ${list}. Pick a substitute to sim with it.`;
+});
 
 const warnings = computed(() =>
   session.importDiagnostics.value.filter((d) => d.severity !== 'info' && d.code !== 'DATA-03'),
@@ -11,17 +29,22 @@ const infos = computed(() => session.importDiagnostics.value.filter((d) => d.sev
 
 <template>
   <section
-    v-if="warnings.length || dataMissing.length || infos.length"
+    v-if="leftOut || warnings.length || dataMissing.length || infos.length"
     class="diag"
     aria-label="Import notes"
   >
     <ul class="diag__list">
+      <li v-if="leftOut" class="diag__row" data-testid="left-out">
+        <UiStatusGlyph status="warning" hide-label />
+        <span class="num diag__code">DATA-03</span>
+        <span class="diag__msg">{{ leftOut }}</span>
+      </li>
       <li v-for="(d, i) in warnings" :key="`${d.code}-${i}`" class="diag__row">
         <UiStatusGlyph status="warning" hide-label :label="d.severity" />
         <span class="num diag__code">{{ d.code }}</span>
         <span class="diag__msg">{{ d.message }}</span>
       </li>
-      <li v-if="dataMissing.length" class="diag__row">
+      <li v-if="dataMissing.length && !leftOut" class="diag__row">
         <UiStatusGlyph status="warning" hide-label />
         <span class="num diag__code">DATA-03</span>
         <span class="diag__msg"

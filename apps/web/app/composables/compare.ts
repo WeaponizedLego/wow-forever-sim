@@ -4,6 +4,7 @@
 import type { Character } from '@fsim/contracts';
 import { abilityBreakdown, summarize, type AbilityRow } from '@fsim/analysis';
 import { loadSpecPresets, type SpecPresets } from '@fsim/gamedata';
+import { engineErrorText } from '@fsim/engine';
 import type { UnitStats } from '@fsim/proto/common';
 import { diffCharacters, type ChangeGroup } from '~/utils/character-diff';
 import { abilityCompareRows, statDiffRows, vsBaseline, type VsBaseline } from '~/utils/compare-rows';
@@ -184,7 +185,7 @@ export function useCompare() {
       if (ctl.signal.aborted) b.status = 'cancelled';
       else {
         b.status = 'error';
-        b.error = e instanceof Error ? e.message : String(e);
+        b.error = engineErrorText(e);
       }
     } finally {
       if (abort === ctl) abort = null;
@@ -229,9 +230,13 @@ export function useCompare() {
     return b ? abilityCompareRows(b.entries.map((e) => b.results[e.id]?.abilities)) : [];
   });
 
-  /** Load an entry's character into the Workbench draft. */
+  /**
+   * Load an entry's character into the Workbench draft: a saved variant keeps its lineage (loadVariant),
+   * the draft's snapshot replaces the draft.
+   */
   async function openInWorkbench(entry: CompareEntry) {
-    await wb.openCharacter(entry.character);
+    if (!entry.draft && wb.variants.value.some((v) => v.id === entry.id)) await wb.loadVariant(entry.id);
+    else await wb.openCharacter(entry.character);
     await navigateTo('/workbench');
   }
 

@@ -336,7 +336,9 @@ async function equip(row: RankedRow) {
         </p>
       </template>
 
-      <p v-if="runError || batch?.error" class="warn">{{ runError ?? batch?.error }}</p>
+      <div v-if="runError || batch?.error" class="warn" role="alert">
+        <UiErrorText :text="(runError ?? batch?.error)!" />
+      </div>
 
       <div v-if="running && batch" class="progress">
         <UiProgressBar :label="progressLabel" :value="batch.progress" :detail="progressDetail" />

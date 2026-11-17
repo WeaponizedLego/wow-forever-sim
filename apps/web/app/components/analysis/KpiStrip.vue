@@ -1,5 +1,6 @@
 <script setup lang="ts">
-// The five headline tiles of a run: mean ± CI, Δ vs baseline (Welch), spread, percentiles, precision.
+// The headline tiles of a run: mean ± CI, Δ vs baseline (Welch), spread, percentiles, precision. Without a
+// baseline (the first run of a character lineage, utils/lineage.ts) there is no Δ tile; the mean takes its room.
 import type { Summary, WelchResult } from '@fsim/analysis';
 
 const props = defineProps<{
@@ -10,6 +11,7 @@ const props = defineProps<{
   stableAfter: number | null;
 }>();
 
+const hasBase = computed(() => !!props.welch && !!props.baseSummary);
 const deltaPct = computed(() =>
   props.welch && props.baseSummary ? props.welch.delta / Math.abs(props.baseSummary.mean) : null,
 );
@@ -35,7 +37,7 @@ const pText = computed(() => {
     :value="formatNumber(summary.mean, 1)"
     :secondary="`± ${formatNumber(summary.ci95, 1)}`"
     :foot="`${formatNumber(summary.mean - summary.ci95, 1)} – ${formatNumber(summary.mean + summary.ci95, 1)}`"
-    :span="3"
+    :span="hasBase ? 3 : 6"
   />
   <UiKpiTile
     v-if="welch && baseSummary"
@@ -53,9 +55,6 @@ const pText = computed(() => {
       />
       <span class="text-2"> · Welch t = {{ formatNumber(welch.t, 1) }}, {{ pText }}</span>
     </template>
-  </UiKpiTile>
-  <UiKpiTile v-else label="Δ vs baseline" value="—" :span="3">
-    <template #foot><span class="text-3">No earlier run to compare with</span></template>
   </UiKpiTile>
   <UiKpiTile
     label="Spread (σ)"
@@ -91,9 +90,6 @@ const pText = computed(() => {
 <style scoped>
 .text-2 {
   color: var(--text-2);
-}
-.text-3 {
-  color: var(--text-3);
 }
 .lc {
   text-transform: none;

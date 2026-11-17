@@ -124,8 +124,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
         <span class="num note">{{ ciNote }}</span>
         <UiCheckbox v-model="withWeights">Stat weights</UiCheckbox>
         <span v-if="error" class="err" role="alert"
-          ><UiStatusGlyph status="warning" hide-label />{{ error }}</span
-        >
+          ><UiStatusGlyph status="warning" hide-label /><UiErrorText :text="error"
+        /></span>
         <span class="grow" />
         <UiButton :disabled="!wb.draft.value" @click="shareDraft">{{ shareButton.label.value }}</UiButton>
         <UiButton variant="primary" size="lg" kbd="⌘↵" :disabled="!wb.draft.value" @click="run">{{
@@ -164,7 +164,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
 }
 .err {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
+  max-width: 100%;
   gap: 6px;
   font-size: var(--text-xs);
   color: var(--text-2);

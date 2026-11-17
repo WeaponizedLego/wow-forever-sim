@@ -42,6 +42,13 @@ describe('variant rows', () => {
     expect(back).toEqual({ ok: true, variant });
   });
 
+  it('keeps the lineage of a variant; one saved before lineages has none', () => {
+    const withLineage = { ...variant, lineageId: 'lineage-a' };
+    expect(readVariantRow(toVariantRow(withLineage))).toEqual({ ok: true, variant: withLineage });
+    const r = readVariantRow(toVariantRow(variant));
+    expect(r.ok && 'lineageId' in r.variant).toBe(false);
+  });
+
   it('reads a row saved before the schema had today’s defaults: missing fields get them', () => {
     // A character as an older build stored it: no level, buffs, encounter, consumables, options.
     const stale = {

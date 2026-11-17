@@ -6,6 +6,7 @@
 // loop (its `time.Sleep(time.Microsecond)` "yield" expires before the Go scheduler goes idle, so no
 // JS timer is ever scheduled), so the abort message would only be read after the sim has finished.
 import { ProgressMetrics } from '@fsim/proto/api';
+import { describeEngineError, type EngineErrorInfo, type ErrorRequestContext } from './errors';
 import type { EngineAssets } from './loader';
 import type { AsyncMethod, HostMessage, SyncMethod, WorkerMessage } from './protocol';
 
@@ -19,11 +20,19 @@ export interface WorkerLike {
 }
 export type WorkerFactory = (index: number) => WorkerLike;
 
-/** A failure the engine reported (ErrorOutcome, a panic, a request that did not parse). */
+/**
+ * A failure the engine reported (ErrorOutcome, a panic, a request that did not parse). `message` is one
+ * readable line (`describeEngineError`); `detail` keeps the raw engine text, stack trace and all.
+ */
 export class EngineError extends Error {
-  constructor(message: string) {
-    super(message);
+  readonly detail: string | null;
+  readonly missing: EngineErrorInfo['missing'];
+  constructor(raw: string, ctx?: ErrorRequestContext) {
+    const info = describeEngineError(raw, ctx);
+    super(info.message);
     this.name = 'EngineError';
+    this.detail = info.detail;
+    this.missing = info.missing;
   }
 }
 

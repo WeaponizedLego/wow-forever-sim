@@ -22,7 +22,7 @@ import {
   type StatRef,
 } from '@fsim/analysis';
 import { fightStyle, type SpecId } from '@fsim/contracts';
-import { weightStatsFor as sharedWeightStats, type WeightStats } from '@fsim/gamedata';
+import { missingGameData, weightStatsFor as sharedWeightStats, type WeightStats } from '@fsim/gamedata';
 import { PseudoStat, Stat } from '@fsim/proto/common';
 import type { StatWeightsResult } from '@fsim/proto/api';
 import type { RunEntry } from './session';
@@ -272,9 +272,12 @@ export function useRunAnalysis(
   const missingItems = computed(() => {
     const db = names.db.value;
     if (!db || !entry.value) return null;
-    return Object.entries(entry.value.record.character.gear)
-      .filter(([, g]) => g && !db.item(g.itemId))
-      .map(([slot, g]) => ({ slot: slot as never, itemId: g!.itemId }));
+    // The same list the request builder leaves out (pre-sim guard): unknown items, and unknown enchants.
+    return missingGameData(entry.value.record.character, db).map((m) => ({
+      slot: m.slot,
+      itemId: m.id,
+      kind: m.kind,
+    }));
   });
 
   const notes = computed<RunNote[]>(() => {

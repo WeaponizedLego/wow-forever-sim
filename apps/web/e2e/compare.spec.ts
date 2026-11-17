@@ -59,7 +59,7 @@ test('compare: two saved variants that differ in one item, simmed side by side w
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(list.getByText('Circlet', { exact: true })).toBeVisible();
 
-  // Variants are kept in IndexedDB: still there after a reload (which drops the in-memory draft).
+  // Variants are kept in IndexedDB: still there after a reload. So is the draft (localStorage).
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Compare' }).click();
   await expect(page.getByRole('heading', { level: 1, name: /Compare/ })).toBeVisible();
   // Writes go to IndexedDB in the background (in order); wait for the last (the undo) to land.
@@ -68,7 +68,7 @@ test('compare: two saved variants that differ in one item, simmed side by side w
   const picker = page.getByRole('list', { name: 'Variants to compare' });
   await expect(picker.getByRole('checkbox', { name: 'Circlet' })).toBeVisible();
   await expect(picker.getByRole('checkbox', { name: 'Cassandra' })).toBeVisible();
-  await expect(picker.getByRole('checkbox', { name: 'Current draft' })).toHaveCount(0);
+  await expect(picker.getByRole('checkbox', { name: 'Current draft' })).toBeVisible();
 
   // The first ticked is the baseline (A).
   await picker.getByRole('checkbox', { name: 'Circlet' }).check();
@@ -140,7 +140,10 @@ test('compare: variants saved by an older build still load; an unreadable one is
   // The delete is written in the background; once it lands, a reload no longer sees the row.
   await expect.poll(() => storedVariantCount(page)).toBe(2);
   await page.goto('/compare');
-  await expect(page.getByRole('list', { name: 'Variants to compare' }).getByRole('checkbox')).toHaveCount(2);
+  // The two old variants, plus the current draft (kept across the reload).
+  const after = page.getByRole('list', { name: 'Variants to compare' });
+  await expect(after.getByRole('checkbox')).toHaveCount(3);
+  await expect(after.getByRole('checkbox', { name: 'Current draft' })).toBeVisible();
 });
 
 function storedVariantCount(page: Page): Promise<number> {

@@ -3,6 +3,7 @@
 import { ITEM_SLOTS, type Character, type ItemSlotId } from '@fsim/contracts';
 import { noiseFloor, welchTTest, summarize, type Verdict as WelchVerdict } from '@fsim/analysis';
 import { enchantAppliesToItem, type GameDatabase } from '@fsim/gamedata';
+import { engineErrorText } from '@fsim/engine';
 import type { Verdict } from './ui-types';
 
 export interface GearChange {
@@ -195,7 +196,7 @@ export function batchRunner() {
       if (ctl.signal.aborted) b.status = 'cancelled';
       else {
         b.status = 'error';
-        b.error = e instanceof Error ? e.message : String(e);
+        b.error = engineErrorText(e);
       }
     } finally {
       if (abort === ctl) abort = null;
