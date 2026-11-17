@@ -11,6 +11,7 @@ const nav = computed(() => [
   },
   { label: 'Workbench', to: '/workbench' },
   { label: 'Top gear', to: '/top-gear' },
+  { label: 'Compare', to: '/compare' },
   { label: 'New run', to: '/' },
 ]);
 // The section is the first path segment, so /runs/#0004 highlights "Runs".
