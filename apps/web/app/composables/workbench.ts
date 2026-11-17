@@ -92,19 +92,6 @@ export const BUFF_PRESETS: { id: BuffsPreset; label: string; short: string; body
 
 export const specInfo = (id: SpecId) => SPECS.find((s) => s.id === id)!;
 
-/** Talent tree names per class, in the engine's tree order. */
-export const TALENT_TREES: Record<Character['class'], [string, string, string]> = {
-  warrior: ['Arms', 'Fury', 'Protection'],
-  paladin: ['Holy', 'Protection', 'Retribution'],
-  hunter: ['Beast Mastery', 'Marksmanship', 'Survival'],
-  rogue: ['Assassination', 'Combat', 'Subtlety'],
-  priest: ['Discipline', 'Holy', 'Shadow'],
-  shaman: ['Elemental', 'Enhancement', 'Restoration'],
-  mage: ['Arcane', 'Fire', 'Frost'],
-  warlock: ['Affliction', 'Demonology', 'Destruction'],
-  druid: ['Balance', 'Feral Combat', 'Restoration'],
-};
-
 /** Points spent per tree of an engine talent string ("5500331023001351-05500001-053"). */
 export function talentPoints(talents: string): [number, number, number] {
   const trees = talents.split('-');

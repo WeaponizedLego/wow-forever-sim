@@ -30,11 +30,14 @@ describe('real SimC export: level 42 shaman', () => {
     expect(c.gear.wrist?.randomSuffix).toBeUndefined();
   });
 
-  it('warns that the engine sims level 60, and that spec and talents were not in the export', () => {
+  it('warns that the engine sims level 60; converts the loadout talents and picks the spec from them', () => {
     const codes = r.diagnostics.map((d) => `${d.code}:${d.severity}`);
     expect(codes).toContain('LEVEL-07:warning');
-    expect(codes).toContain('SPEC-06:warning');
-    expect(r.diagnostics.find((d) => d.field === 'talents')?.code).toBe('DEFAULT-05');
+    expect(codes).toContain('SPEC-06:info');
+    // The client loadout string, read with the verified shaman tree: Enhancement 25, Restoration 8.
+    expect(c.talents).toBe('-0530303100212122-053');
+    expect(c.spec).toBe('enhancement-shaman');
+    expect(r.diagnostics.filter((d) => d.field === 'talents')).toEqual([]);
     expect(c.level).toBe(42);
   });
 

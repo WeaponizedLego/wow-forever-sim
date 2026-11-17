@@ -1,0 +1,556 @@
+{
+  "class": "warlock",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
+    "files": ["ui/sim/talents/trees/warlock.json", "assets/database/db.json"]
+  },
+  "trees": [
+    {
+      "name": "Affliction",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/302.jpg",
+      "talents": [
+        {
+          "name": "Improved Life Tap",
+          "field": "improvedLifeTap",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 18182,
+          "definitionId": 135452,
+          "icon": "spell_shadow_burningspirit"
+        },
+        {
+          "name": "Suppression",
+          "field": "suppression",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 18174,
+          "definitionId": 135456,
+          "icon": "spell_shadow_unsummonbuilding"
+        },
+        {
+          "name": "Improved Corruption",
+          "field": "improvedCorruption",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 17810,
+          "definitionId": 135455,
+          "icon": "spell_shadow_abominationexplosion"
+        },
+        {
+          "name": "Grim Reach",
+          "field": "grimReach",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 18218,
+          "definitionId": 135454,
+          "icon": "spell_shadow_callofbone"
+        },
+        {
+          "name": "Soul Harvest",
+          "field": "soulHarvest",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 437032,
+          "definitionId": 135453,
+          "icon": "inv_elemental_primal_shadow"
+        },
+        {
+          "name": "Improved Drains",
+          "field": "improvedDrains",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 403511,
+          "definitionId": 135451,
+          "icon": "spell_shadow_haunting"
+        },
+        {
+          "name": "Improved Bane of Agony",
+          "field": "improvedBaneOfAgony",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 18827,
+          "definitionId": 135450,
+          "icon": "spell_shadow_curseofsargeras"
+        },
+        {
+          "name": "Fel Concentration",
+          "field": "felConcentration",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 17783,
+          "definitionId": 135449,
+          "icon": "spell_shadow_fingerofdeath"
+        },
+        {
+          "name": "Amplify Curse",
+          "field": "amplifyCurse",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 18288,
+          "definitionId": 135447,
+          "icon": "spell_shadow_contagion"
+        },
+        {
+          "name": "Pandemic",
+          "field": "pandemic",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 427712,
+          "definitionId": 135448,
+          "icon": "spell_shadow_unstableaffliction_2"
+        },
+        {
+          "name": "Malevolence",
+          "field": "malevolence",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 1310949,
+          "definitionId": 142628,
+          "icon": "spell_shadow_focusedpower"
+        },
+        {
+          "name": "Nightfall",
+          "field": "nightfall",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 18094,
+          "definitionId": 135445,
+          "icon": "spell_shadow_twilight"
+        },
+        {
+          "name": "Curse of Exhaustion",
+          "field": "curseOfExhaustion",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 18223,
+          "definitionId": 135444,
+          "icon": "spell_shadow_grimward",
+          "prereq": 8
+        },
+        {
+          "name": "Siphon Life",
+          "field": "siphonLife",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 18265,
+          "definitionId": 135443,
+          "icon": "spell_shadow_requiem"
+        },
+        {
+          "name": "Soul Siphon",
+          "field": "soulSiphon",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 17804,
+          "definitionId": 135442,
+          "icon": "spell_shadow_lifedrain02"
+        },
+        {
+          "name": "Shadow Mastery",
+          "field": "shadowMastery",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 18271,
+          "definitionId": 135441,
+          "icon": "spell_shadow_shadetruesight"
+        },
+        {
+          "name": "Wrack",
+          "field": "wrack",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1316697,
+          "definitionId": 135440,
+          "icon": "ability_deathknight_hemorrhagicfever",
+          "prereq": 13
+        }
+      ]
+    },
+    {
+      "name": "Demonology",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/303.jpg",
+      "talents": [
+        {
+          "name": "Improved Health Funnel",
+          "field": "improvedHealthFunnel",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 18703,
+          "definitionId": 135436,
+          "icon": "spell_shadow_lifedrain"
+        },
+        {
+          "name": "Improved Imp",
+          "field": "improvedImp",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 18694,
+          "definitionId": 135439,
+          "icon": "spell_shadow_summonimp"
+        },
+        {
+          "name": "Demonic Embrace",
+          "field": "demonicEmbrace",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 18697,
+          "definitionId": 135438,
+          "icon": "spell_shadow_metamorphosis"
+        },
+        {
+          "name": "Unholy Power",
+          "field": "unholyPower",
+          "row": 0,
+          "col": 3,
+          "maxPoints": 5,
+          "spellId": 18769,
+          "definitionId": 135437,
+          "icon": "spell_shadow_shadowworddominate"
+        },
+        {
+          "name": "Demonic Aegis",
+          "field": "demonicAegis",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1235316,
+          "definitionId": 135433,
+          "icon": "spell_shadow_ragingscream"
+        },
+        {
+          "name": "Improved Voidwalker",
+          "field": "improvedVoidwalker",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 18705,
+          "definitionId": 135435,
+          "icon": "spell_shadow_summonvoidwalker"
+        },
+        {
+          "name": "Fel Vitality",
+          "field": "felVitality",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 18731,
+          "definitionId": 135434,
+          "icon": "spell_shadow_demonictactics"
+        },
+        {
+          "name": "Demonic Energies",
+          "field": "demonicEnergies",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 1225214,
+          "definitionId": 135430,
+          "icon": "spell_shadow_felmending"
+        },
+        {
+          "name": "Improved Sayaad",
+          "field": "improvedSayaad",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 18754,
+          "definitionId": 135432,
+          "icon": "ability_warlock_randomizesuccubusincubus"
+        },
+        {
+          "name": "Demonic Sacrifice",
+          "field": "demonicSacrifice",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 18788,
+          "definitionId": 135431,
+          "icon": "spell_shadow_psychicscream"
+        },
+        {
+          "name": "Master Summoner",
+          "field": "masterSummoner",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 18709,
+          "definitionId": 135429,
+          "icon": "spell_shadow_impphaseshift"
+        },
+        {
+          "name": "Decimation",
+          "field": "decimation",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 440870,
+          "definitionId": 135428,
+          "icon": "spell_fire_fireball02"
+        },
+        {
+          "name": "Fel Domination",
+          "field": "felDomination",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 18708,
+          "definitionId": 135426,
+          "icon": "spell_nature_removecurse",
+          "prereq": 10
+        },
+        {
+          "name": "Demonic Brand",
+          "field": "demonicBrand",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 1293695,
+          "definitionId": 135427,
+          "icon": "ability_demonhunter_chaoticimprint_fire"
+        },
+        {
+          "name": "Improved Felhunter",
+          "field": "improvedFelhunter",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 1225217,
+          "definitionId": 135425,
+          "icon": "spell_shadow_summonfelhunter"
+        },
+        {
+          "name": "Soul Link",
+          "field": "soulLink",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 19028,
+          "definitionId": 135423,
+          "icon": "spell_shadow_gathershadows",
+          "prereq": 9
+        },
+        {
+          "name": "Demonic Knowledge",
+          "field": "demonicKnowledge",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 412732,
+          "definitionId": 135424,
+          "icon": "spell_shadow_improvedvampiricembrace"
+        },
+        {
+          "name": "Master Demonologist",
+          "field": "masterDemonologist",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 23785,
+          "definitionId": 135422,
+          "icon": "spell_shadow_shadowpact"
+        },
+        {
+          "name": "Demonic Pact",
+          "field": "demonicPact",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 425464,
+          "definitionId": 135421,
+          "icon": "inv_ability_soulharvesterwarlock_demonicsoul",
+          "prereq": 15
+        }
+      ]
+    },
+    {
+      "name": "Destruction",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/301.jpg",
+      "talents": [
+        {
+          "name": "Destructive Reach",
+          "field": "destructiveReach",
+          "row": 0,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 17917,
+          "definitionId": 135412,
+          "icon": "spell_shadow_corpseexplode"
+        },
+        {
+          "name": "Improved Shadow Bolt",
+          "field": "improvedShadowBolt",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 17793,
+          "definitionId": 135420,
+          "icon": "spell_shadow_shadowbolt"
+        },
+        {
+          "name": "Bane",
+          "field": "bane",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 17788,
+          "definitionId": 135419,
+          "icon": "spell_shadow_deathpact"
+        },
+        {
+          "name": "Molten Skin",
+          "field": "moltenSkin",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 1225220,
+          "definitionId": 135416,
+          "icon": "ability_mage_moltenarmor"
+        },
+        {
+          "name": "Cataclysm",
+          "field": "cataclysm",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 17778,
+          "definitionId": 135418,
+          "icon": "spell_fire_windsofwoe"
+        },
+        {
+          "name": "Aftermath",
+          "field": "aftermath",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 18119,
+          "definitionId": 135417,
+          "icon": "spell_fire_fire"
+        },
+        {
+          "name": "Ruin",
+          "field": "ruin",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 17959,
+          "definitionId": 135414,
+          "icon": "spell_shadow_shadowwordpain"
+        },
+        {
+          "name": "Shadowburn",
+          "field": "shadowburn",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 17877,
+          "definitionId": 135415,
+          "icon": "spell_shadow_scourgebuild"
+        },
+        {
+          "name": "Intensity",
+          "field": "intensity",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 18135,
+          "definitionId": 135413,
+          "icon": "spell_fire_lavaspawn"
+        },
+        {
+          "name": "Agonizing Flames",
+          "field": "agonizingFlames",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 17927,
+          "definitionId": 135410,
+          "icon": "spell_fire_soulburn"
+        },
+        {
+          "name": "Conflagrate",
+          "field": "conflagrate",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 1293817,
+          "definitionId": 135411,
+          "icon": "spell_fire_fireball"
+        },
+        {
+          "name": "Pyroclasm",
+          "field": "pyroclasm",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 18073,
+          "definitionId": 135409,
+          "icon": "spell_fire_volcano",
+          "prereq": 8
+        },
+        {
+          "name": "Bane of Havoc",
+          "field": "baneOfHavoc",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1225228,
+          "definitionId": 135407,
+          "icon": "ability_warlock_baneofhavoc"
+        },
+        {
+          "name": "Fire and Brimstone",
+          "field": "fireAndBrimstone",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 412751,
+          "definitionId": 135408,
+          "icon": "spell_fire_meteorstorm",
+          "prereq": 10
+        },
+        {
+          "name": "Shadow and Flame",
+          "field": "shadowAndFlame",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 426316,
+          "definitionId": 135406,
+          "icon": "spell_fire_playingwithfire"
+        },
+        {
+          "name": "Incinerate",
+          "field": "incinerate",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 412758,
+          "definitionId": 135405,
+          "icon": "spell_fire_burnout",
+          "prereq": 12
+        }
+      ]
+    }
+  ]
+}

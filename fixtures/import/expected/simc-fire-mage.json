@@ -101,7 +101,7 @@
     {
       "code": "DEFAULT-05",
       "severity": "warning",
-      "message": "Talents are a WoW client loadout string, which cannot be converted yet. The spec preset will be used; set talents in the workbench.",
+      "message": "Talents are a WoW client loadout string that could not be converted safely: It selects talents past the end of the tree this importer knows (the game’s tree has newer nodes). The spec preset will be used; set talents in the workbench.",
       "line": 15,
       "field": "talents"
     },

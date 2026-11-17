@@ -2,7 +2,7 @@
   "specId": "restoration-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
     "dir": "ui/specs/shaman/restoration",
     "files": ["presets.ts"]
   },

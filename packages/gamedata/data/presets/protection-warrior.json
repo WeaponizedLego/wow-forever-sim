@@ -2,7 +2,7 @@
   "specId": "protection-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2047bfe4cf000e64c223eefcab016b411214380",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
     "dir": "ui/specs/warrior/protection",
     "files": [
       "apls/default.apl.json",
@@ -30,7 +30,7 @@
     "consumables": {
       "foodId": 20452,
       "conjuredId": 9421,
-      "explosiveId": 260817,
+      "explosiveId": 260814,
       "mhImbueId": 12404,
       "extraIds": [10646, 17048],
       "elixirIds": [250350, 13452, 12820, 13445, 250329],
@@ -81,65 +81,65 @@
       "name": "Pre-BiS (Defense Cap)",
       "gear": {
         "head": {
-          "itemId": 10388,
-          "enchantId": 2543,
-          "randomSuffix": 12736
+          "itemId": 12640,
+          "enchantId": 1506
         },
         "neck": {
-          "itemId": 22150
+          "itemId": 275736
         },
         "shoulder": {
-          "itemId": 275737
+          "itemId": 10390,
+          "randomSuffix": 12736
         },
         "back": {
-          "itemId": 18413,
+          "itemId": 272414,
           "enchantId": 7667
         },
         "chest": {
-          "itemId": 252483,
-          "enchantId": 1891
+          "itemId": 10378,
+          "enchantId": 1891,
+          "randomSuffix": 12736
         },
         "wrist": {
-          "itemId": 10147,
-          "enchantId": 8214,
-          "randomSuffix": 12727
+          "itemId": 250582,
+          "enchantId": 8214
         },
         "hands": {
-          "itemId": 250552,
-          "enchantId": 8206
+          "itemId": 9410,
+          "enchantId": 8207,
+          "randomSuffix": 13103
         },
         "waist": {
-          "itemId": 13077
+          "itemId": 250572
         },
         "legs": {
-          "itemId": 10389,
-          "enchantId": 2543,
-          "randomSuffix": 12736
+          "itemId": 22385,
+          "enchantId": 1506
         },
         "feet": {
-          "itemId": 10376,
-          "enchantId": 1887,
-          "randomSuffix": 12736
+          "itemId": 287033,
+          "enchantId": 1887
         },
         "finger1": {
-          "itemId": 272409
+          "itemId": 17713
         },
         "finger2": {
-          "itemId": 15855
+          "itemId": 272409
         },
         "trinket1": {
           "itemId": 272440
         },
         "trinket2": {
-          "itemId": 10779
+          "itemId": 19120
         },
         "mainHand": {
           "itemId": 12798,
           "enchantId": 1900
         },
         "offHand": {
-          "itemId": 16998,
-          "enchantId": 1886
+          "itemId": 10271,
+          "enchantId": 1886,
+          "randomSuffix": 12736
         },
         "ranged": {
           "itemId": 15289,
@@ -153,52 +153,49 @@
       "gear": {
         "head": {
           "itemId": 12640,
-          "enchantId": 2543
+          "enchantId": 1506
         },
         "neck": {
-          "itemId": 22150
+          "itemId": 15411
         },
         "shoulder": {
-          "itemId": 10263,
-          "randomSuffix": 12727
+          "itemId": 287022
         },
         "back": {
-          "itemId": 10249,
-          "enchantId": 7667,
-          "randomSuffix": 12727
+          "itemId": 272414,
+          "enchantId": 7667
         },
         "chest": {
-          "itemId": 252483,
+          "itemId": 226862,
           "enchantId": 1891
         },
         "wrist": {
-          "itemId": 10147,
-          "enchantId": 7656,
-          "randomSuffix": 12727
+          "itemId": 13400,
+          "enchantId": 1885
         },
         "hands": {
-          "itemId": 11745,
-          "enchantId": 8206
+          "itemId": 226861,
+          "enchantId": 8207
         },
         "waist": {
-          "itemId": 272403
+          "itemId": 276742
         },
         "legs": {
           "itemId": 22385,
-          "enchantId": 2543
+          "enchantId": 1506
         },
         "feet": {
-          "itemId": 13070,
+          "itemId": 287033,
           "enchantId": 1887
         },
         "finger1": {
           "itemId": 272408
         },
         "finger2": {
-          "itemId": 272409
+          "itemId": 17713
         },
         "trinket1": {
-          "itemId": 13164
+          "itemId": 13965
         },
         "trinket2": {
           "itemId": 272437
@@ -208,12 +205,11 @@
           "enchantId": 1900
         },
         "offHand": {
-          "itemId": 16998,
+          "itemId": 13375,
           "enchantId": 1886
         },
         "ranged": {
-          "itemId": 15289,
-          "randomSuffix": 12727
+          "itemId": 12653
         }
       }
     },
@@ -1349,7 +1345,79 @@
                 "action": {
                   "castSpell": {
                     "spellId": {
+                      "itemId": 260817
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 276145
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 16005
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 260816
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
                       "itemId": 11566
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 10830
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 15993
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 284868
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 260814
                     }
                   }
                 }
@@ -1400,6 +1468,24 @@
                   "castSpell": {
                     "spellId": {
                       "itemId": 272440
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 272437
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 13965
                     }
                   }
                 }

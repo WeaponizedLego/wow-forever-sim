@@ -7,9 +7,7 @@ import { buildRaidSimRequest, fillFromPreset } from './request';
 import { fixtureDb } from './test-db';
 
 const fixture = RaidSimRequest.fromJson(
-  JSON.parse(
-    readFileSync(new URL('../../../fixtures/engine/sv-raidsim-request.json', import.meta.url), 'utf8'),
-  ),
+  JSON.parse(readFileSync(new URL('../../../fixtures/gamedata/sv-request.json', import.meta.url), 'utf8')),
 );
 
 /** The parts of a request's protojson these tests read. */

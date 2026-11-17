@@ -1,0 +1,546 @@
+{
+  "class": "paladin",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
+    "files": ["ui/sim/talents/trees/paladin.json", "assets/database/db.json"]
+  },
+  "trees": [
+    {
+      "name": "Holy",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/382.jpg",
+      "talents": [
+        {
+          "name": "Spiritual Focus",
+          "field": "spiritualFocus",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 20205,
+          "definitionId": 134830,
+          "icon": "spell_arcane_blink"
+        },
+        {
+          "name": "Divine Strength",
+          "field": "divineStrength",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 20262,
+          "definitionId": 145961,
+          "icon": "ability_golemthunderclap"
+        },
+        {
+          "name": "Healing Light",
+          "field": "healingLight",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 20237,
+          "definitionId": 134828,
+          "icon": "spell_holy_holybolt"
+        },
+        {
+          "name": "Reverence",
+          "field": "reverence",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 1310899,
+          "definitionId": 142623,
+          "icon": "spell_holy_divineillumination"
+        },
+        {
+          "name": "Improved Seals",
+          "field": "improvedSeals",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 20224,
+          "definitionId": 134829,
+          "icon": "ability_thunderbolt"
+        },
+        {
+          "name": "Purifying Power",
+          "field": "purifyingPower",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 429144,
+          "definitionId": 134822,
+          "icon": "spell_holy_purifyingpower"
+        },
+        {
+          "name": "Divine Favor",
+          "field": "divineFavor",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 1,
+          "spellId": 20216,
+          "definitionId": 134820,
+          "icon": "spell_holy_heal"
+        },
+        {
+          "name": "Illumination",
+          "field": "illumination",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 20210,
+          "definitionId": 134824,
+          "icon": "spell_holy_greaterheal",
+          "prereq": 3
+        },
+        {
+          "name": "Holy Conduit",
+          "field": "holyConduit",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 1237268,
+          "definitionId": 135234,
+          "icon": "spell_holy_devineaegis"
+        },
+        {
+          "name": "Divine Precision",
+          "field": "divinePrecision",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1310904,
+          "definitionId": 134819,
+          "icon": "spell_holy_mindsooth"
+        },
+        {
+          "name": "Infusion of Light",
+          "field": "infusionOfLight",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 426065,
+          "definitionId": 142625,
+          "icon": "ability_paladin_infusionoflight"
+        },
+        {
+          "name": "Oath of Light",
+          "field": "oathOfLight",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 1328548,
+          "definitionId": 134825,
+          "icon": "spell_holy_greaterblessingoflight"
+        },
+        {
+          "name": "Consecrated Ground",
+          "field": "consecratedGround",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1310905,
+          "definitionId": 142624,
+          "icon": "spell_holy_innerfire"
+        },
+        {
+          "name": "Holy Shock",
+          "field": "holyShock",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1311606,
+          "definitionId": 134818,
+          "icon": "spell_holy_searinglight"
+        },
+        {
+          "name": "Boundless Light",
+          "field": "boundlessLight",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 1328550,
+          "definitionId": 145962,
+          "icon": "ability_paladin_sacredcleansing",
+          "prereq": 13
+        },
+        {
+          "name": "Holy Power",
+          "field": "holyPower",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 5923,
+          "definitionId": 134816,
+          "icon": "spell_holy_power"
+        },
+        {
+          "name": "Light's Vigil",
+          "field": "lightsVigil",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1310911,
+          "definitionId": 134815,
+          "icon": "ability_paladin_judgementofthepure",
+          "prereq": 13
+        }
+      ]
+    },
+    {
+      "name": "Protection",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/383.jpg",
+      "talents": [
+        {
+          "name": "Divine Intellect",
+          "field": "divineIntellect",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 20257,
+          "definitionId": 134827,
+          "icon": "spell_nature_sleep"
+        },
+        {
+          "name": "Redoubt",
+          "field": "redoubt",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 20127,
+          "definitionId": 135151,
+          "icon": "ability_defend"
+        },
+        {
+          "name": "Precision",
+          "field": "precision",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 20189,
+          "definitionId": 135163,
+          "icon": "ability_rogue_ambush"
+        },
+        {
+          "name": "Guardian's Favor",
+          "field": "guardiansFavor",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 20174,
+          "definitionId": 135162,
+          "icon": "spell_holy_sealofprotection"
+        },
+        {
+          "name": "Sacred Duty",
+          "field": "sacredDuty",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 1224697,
+          "definitionId": 135157,
+          "icon": "spell_holy_divineintervention"
+        },
+        {
+          "name": "Templar's Bulwark",
+          "field": "templarsBulwark",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 1,
+          "spellId": 1311015,
+          "definitionId": 135150,
+          "icon": "ability_paladin_shieldofthetemplar"
+        },
+        {
+          "name": "Improved Hammer of Justice",
+          "field": "improvedHammerOfJustice",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 20487,
+          "definitionId": 135158,
+          "icon": "spell_holy_sealofmight"
+        },
+        {
+          "name": "Shield Specialization",
+          "field": "shieldSpecialization",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 20150,
+          "definitionId": 142626,
+          "icon": "inv_shield_06",
+          "prereq": 1
+        },
+        {
+          "name": "Toughness",
+          "field": "toughness",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 5,
+          "spellId": 20143,
+          "definitionId": 135155,
+          "icon": "spell_holy_devotion"
+        },
+        {
+          "name": "Swift Judgement",
+          "field": "swiftJudgement",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 1,
+          "spellId": 1310994,
+          "definitionId": 142630,
+          "icon": "ability_paladin_judgementred",
+          "prereq": 5
+        },
+        {
+          "name": "Improved Righteous Fury",
+          "field": "improvedRighteousFury",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 20468,
+          "definitionId": 135159,
+          "icon": "spell_holy_sealoffury"
+        },
+        {
+          "name": "Anticipation",
+          "field": "anticipation",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 20096,
+          "definitionId": 135161,
+          "icon": "spell_magic_lesserinvisibilty"
+        },
+        {
+          "name": "Stoicism",
+          "field": "stoicism",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1328546,
+          "definitionId": 135164,
+          "icon": "spell_holy_stoicism"
+        },
+        {
+          "name": "Holy Shield",
+          "field": "holyShield",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 20925,
+          "definitionId": 135153,
+          "icon": "spell_holy_blessingofprotection"
+        },
+        {
+          "name": "Reckoning",
+          "field": "reckoning",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 20177,
+          "definitionId": 135152,
+          "icon": "spell_holy_blessingofstrength"
+        },
+        {
+          "name": "Iron Creed",
+          "field": "ironCreed",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 1311034,
+          "definitionId": 142631,
+          "icon": "spell_holy_improvedresistanceauras"
+        },
+        {
+          "name": "Shieldsworn",
+          "field": "shieldsworn",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1328544,
+          "definitionId": 142627,
+          "icon": "spell_holy_greaterblessingofsanctuary",
+          "prereq": 13
+        }
+      ]
+    },
+    {
+      "name": "Retribution",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/381.jpg",
+      "talents": [
+        {
+          "name": "Deflection",
+          "field": "deflection",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 20060,
+          "definitionId": 135237,
+          "icon": "ability_parry"
+        },
+        {
+          "name": "Benediction",
+          "field": "benediction",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 20101,
+          "definitionId": 135236,
+          "icon": "spell_frost_windwalkon"
+        },
+        {
+          "name": "Improved Judgement",
+          "field": "improvedJudgement",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 25956,
+          "definitionId": 135235,
+          "icon": "spell_holy_righteousfury"
+        },
+        {
+          "name": "Conviction",
+          "field": "conviction",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 20117,
+          "definitionId": 135233,
+          "icon": "spell_holy_retributionaura"
+        },
+        {
+          "name": "Sanctified Judgement",
+          "field": "sanctifiedJudgement",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 1311074,
+          "definitionId": 135231,
+          "icon": "ability_paladin_judgementblue"
+        },
+        {
+          "name": "Vindication",
+          "field": "vindication",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 9452,
+          "definitionId": 135232,
+          "icon": "spell_holy_vindication"
+        },
+        {
+          "name": "Unyielding Faith",
+          "field": "unyieldingFaith",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 9453,
+          "definitionId": 134826,
+          "icon": "spell_holy_unyieldingfaith"
+        },
+        {
+          "name": "Seal of Command",
+          "field": "sealOfCommand",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 20375,
+          "definitionId": 135226,
+          "icon": "ability_warrior_innerrage"
+        },
+        {
+          "name": "Pursuit of Justice",
+          "field": "pursuitOfJustice",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 26022,
+          "definitionId": 135229,
+          "icon": "spell_holy_persuitofjustice"
+        },
+        {
+          "name": "Eye for an Eye",
+          "field": "eyeForAnEye",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 9799,
+          "definitionId": 135228,
+          "icon": "spell_holy_eyeforaneye"
+        },
+        {
+          "name": "Sacred Arbiter",
+          "field": "sacredArbiter",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1311087,
+          "definitionId": 135230,
+          "icon": "inv_sword_08"
+        },
+        {
+          "name": "Two-Handed Weapon Specialization",
+          "field": "twohandedWeaponSpecialization",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 20111,
+          "definitionId": 135227,
+          "icon": "inv_hammer_04"
+        },
+        {
+          "name": "Turn Evil",
+          "field": "turnEvil",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 1328370,
+          "definitionId": 145960,
+          "icon": "spell_holy_turnundead"
+        },
+        {
+          "name": "Repentance",
+          "field": "repentance",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 20066,
+          "definitionId": 135224,
+          "icon": "spell_holy_prayerofhealing"
+        },
+        {
+          "name": "Vengeance",
+          "field": "vengeance",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 20049,
+          "definitionId": 135223,
+          "icon": "ability_racial_avatar",
+          "prereq": 7
+        },
+        {
+          "name": "Champion of the Light",
+          "field": "championOfTheLight",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 1311084,
+          "definitionId": 142634,
+          "icon": "ability_paladin_enlightenedjudgements"
+        },
+        {
+          "name": "Unsealed Wrath",
+          "field": "unsealedWrath",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1310735,
+          "definitionId": 135222,
+          "icon": "spell_holy_blessedresillience",
+          "prereq": 13
+        }
+      ]
+    }
+  ]
+}

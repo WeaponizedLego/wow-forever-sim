@@ -1,0 +1,558 @@
+{
+  "class": "druid",
+  "upstream": {
+    "repo": "wowsims/forever",
+    "commit": "540ad8fca3fd367c5f780972f43d65af858bcef7",
+    "files": ["ui/sim/talents/trees/druid.json", "assets/database/db.json"]
+  },
+  "trees": [
+    {
+      "name": "Balance",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/283.jpg",
+      "talents": [
+        {
+          "name": "Improved Wrath",
+          "field": "improvedWrath",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 16814,
+          "definitionId": 134384,
+          "icon": "spell_nature_abolishmagic"
+        },
+        {
+          "name": "Genesis",
+          "field": "genesis",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 1223081,
+          "definitionId": 134385,
+          "icon": "spell_arcane_arcane03"
+        },
+        {
+          "name": "Moonglow",
+          "field": "moonglow",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 16845,
+          "definitionId": 134386,
+          "icon": "spell_nature_sentinal"
+        },
+        {
+          "name": "Improved Moonfire",
+          "field": "improvedMoonfire",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 16821,
+          "definitionId": 134392,
+          "icon": "spell_nature_starfall"
+        },
+        {
+          "name": "Nature's Majesty",
+          "field": "naturesMajesty",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 1223082,
+          "definitionId": 134388,
+          "icon": "inv_staff_01"
+        },
+        {
+          "name": "Nature's Reach",
+          "field": "naturesReach",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 16819,
+          "definitionId": 134390,
+          "icon": "spell_nature_naturetouchgrow"
+        },
+        {
+          "name": "Improved Entangling Roots",
+          "field": "improvedEntanglingRoots",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 16918,
+          "definitionId": 134387,
+          "icon": "spell_nature_stranglevines"
+        },
+        {
+          "name": "Nature's Splendor",
+          "field": "naturesSplendor",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 1223083,
+          "definitionId": 134389,
+          "icon": "spell_nature_natureresistancetotem",
+          "prereq": 4
+        },
+        {
+          "name": "Insect Swarm",
+          "field": "insectSwarm",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 1,
+          "spellId": 5570,
+          "definitionId": 134391,
+          "icon": "spell_nature_insectswarm"
+        },
+        {
+          "name": "Vengeance",
+          "field": "vengeance",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 16909,
+          "definitionId": 134393,
+          "icon": "spell_nature_purge",
+          "prereq": 3
+        },
+        {
+          "name": "Improved Starfire",
+          "field": "improvedStarfire",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 16850,
+          "definitionId": 134394,
+          "icon": "spell_arcane_starfire"
+        },
+        {
+          "name": "Overgrowth",
+          "field": "overgrowth",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 17245,
+          "definitionId": 142590,
+          "icon": "inv_misc_herb_15"
+        },
+        {
+          "name": "Nature's Grace",
+          "field": "naturesGrace",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 16880,
+          "definitionId": 134395,
+          "icon": "spell_nature_naturesblessing"
+        },
+        {
+          "name": "Eclipse",
+          "field": "eclipse",
+          "row": 4,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 408248,
+          "definitionId": 134396,
+          "icon": "ability_druid_eclipse"
+        },
+        {
+          "name": "Moonfury",
+          "field": "moonfury",
+          "row": 5,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 16896,
+          "definitionId": 134397,
+          "icon": "spell_nature_moonglow"
+        },
+        {
+          "name": "Moonkin Form",
+          "field": "moonkinForm",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 24858,
+          "definitionId": 134398,
+          "icon": "spell_nature_forceofnature"
+        }
+      ]
+    },
+    {
+      "name": "Feral Combat",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/281.jpg",
+      "talents": [
+        {
+          "name": "Ferocity",
+          "field": "ferocity",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 16934,
+          "definitionId": 134399,
+          "icon": "ability_hunter_pet_hyena"
+        },
+        {
+          "name": "Furor",
+          "field": "furor",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 17056,
+          "definitionId": 134400,
+          "icon": "spell_holy_blessingofstamina"
+        },
+        {
+          "name": "Feral Swiftness",
+          "field": "feralSwiftness",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 2,
+          "spellId": 17002,
+          "definitionId": 134404,
+          "icon": "spell_nature_spiritwolf"
+        },
+        {
+          "name": "Feral Instinct",
+          "field": "feralInstinct",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 16947,
+          "definitionId": 134401,
+          "icon": "ability_ambush"
+        },
+        {
+          "name": "Brutal Impact",
+          "field": "brutalImpact",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 2,
+          "spellId": 16940,
+          "definitionId": 134402,
+          "icon": "ability_druid_bash"
+        },
+        {
+          "name": "Thick Hide",
+          "field": "thickHide",
+          "row": 1,
+          "col": 3,
+          "maxPoints": 3,
+          "spellId": 16929,
+          "definitionId": 134403,
+          "icon": "inv_misc_pelt_bear_03"
+        },
+        {
+          "name": "Shredding Attacks",
+          "field": "shreddingAttacks",
+          "row": 2,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 16966,
+          "definitionId": 134406,
+          "icon": "spell_shadow_vampiricaura"
+        },
+        {
+          "name": "Savage Fury",
+          "field": "savageFury",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 2,
+          "spellId": 16998,
+          "definitionId": 134409,
+          "icon": "ability_druid_ravage"
+        },
+        {
+          "name": "Feral Charge",
+          "field": "feralCharge",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 1238122,
+          "definitionId": 134405,
+          "icon": "ability_hunter_pet_bear"
+        },
+        {
+          "name": "Sharpened Claws",
+          "field": "sharpenedClaws",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 16942,
+          "definitionId": 134407,
+          "icon": "inv_misc_monsterclaw_04"
+        },
+        {
+          "name": "Predatory Strikes",
+          "field": "predatoryStrikes",
+          "row": 3,
+          "col": 0,
+          "maxPoints": 3,
+          "spellId": 16972,
+          "definitionId": 134413,
+          "icon": "ability_hunter_pet_cat"
+        },
+        {
+          "name": "Lacerate",
+          "field": "lacerate",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 1328617,
+          "definitionId": 134410,
+          "icon": "ability_druid_lacerate",
+          "prereq": 7
+        },
+        {
+          "name": "Predatory Discipline",
+          "field": "predatoryDiscipline",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 1328613,
+          "definitionId": 134412,
+          "icon": "spell_druid_savagery"
+        },
+        {
+          "name": "Blood Frenzy",
+          "field": "bloodFrenzy",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 16958,
+          "definitionId": 134408,
+          "icon": "ability_ghoulfrenzy",
+          "prereq": 9
+        },
+        {
+          "name": "Leader of the Pack",
+          "field": "leaderOfThePack",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 17007,
+          "definitionId": 134416,
+          "icon": "spell_nature_unyeildingstamina"
+        },
+        {
+          "name": "Natural Instinct",
+          "field": "naturalInstinct",
+          "row": 4,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 1223242,
+          "definitionId": 134411,
+          "icon": "ability_druid_predatoryinstincts"
+        },
+        {
+          "name": "Rend and Tear",
+          "field": "rendAndTear",
+          "row": 5,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 1223246,
+          "definitionId": 134414,
+          "icon": "ability_druid_primalagression",
+          "prereq": 10
+        },
+        {
+          "name": "Natural Reaction",
+          "field": "naturalReaction",
+          "row": 5,
+          "col": 3,
+          "maxPoints": 5,
+          "spellId": 417051,
+          "definitionId": 134415,
+          "icon": "ability_bullrush"
+        },
+        {
+          "name": "Primal Bite",
+          "field": "primalBite",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 407995,
+          "definitionId": 134417,
+          "icon": "ability_racial_cannibalize",
+          "prereq": 14
+        },
+        {
+          "name": "Shifting Power",
+          "field": "shiftingPower",
+          "row": 6,
+          "col": 2,
+          "maxPoints": 1,
+          "spellId": 1322605,
+          "definitionId": 145859,
+          "icon": "spell_druid_displacement",
+          "prereq": 12
+        }
+      ]
+    },
+    {
+      "name": "Restoration",
+      "background": "https://wow.zamimg.com/images/wow/talents/backgrounds/tbc/282.jpg",
+      "talents": [
+        {
+          "name": "Nature's Focus",
+          "field": "naturesFocus",
+          "row": 0,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 17063,
+          "definitionId": 134418,
+          "icon": "spell_nature_healingwavegreater"
+        },
+        {
+          "name": "Heart of the Wild",
+          "field": "heartOfTheWild",
+          "row": 0,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 17003,
+          "definitionId": 134419,
+          "icon": "spell_holy_blessingofagility"
+        },
+        {
+          "name": "Naturalist",
+          "field": "naturalist",
+          "row": 1,
+          "col": 0,
+          "maxPoints": 5,
+          "spellId": 17069,
+          "definitionId": 134383,
+          "icon": "spell_nature_healingtouch"
+        },
+        {
+          "name": "Reflection",
+          "field": "reflection",
+          "row": 1,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 17106,
+          "definitionId": 134381,
+          "icon": "spell_frost_windwalkon"
+        },
+        {
+          "name": "Natural Shapeshifter",
+          "field": "naturalShapeshifter",
+          "row": 1,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 16833,
+          "definitionId": 134380,
+          "icon": "spell_nature_wispsplode"
+        },
+        {
+          "name": "Subtlety",
+          "field": "subtlety",
+          "row": 2,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 17118,
+          "definitionId": 134378,
+          "icon": "ability_eyeoftheowl"
+        },
+        {
+          "name": "Gift of Nature",
+          "field": "giftOfNature",
+          "row": 2,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 17104,
+          "definitionId": 134377,
+          "icon": "spell_nature_protectionformnature"
+        },
+        {
+          "name": "Bloom",
+          "field": "bloom",
+          "row": 2,
+          "col": 3,
+          "maxPoints": 1,
+          "spellId": 1328621,
+          "definitionId": 134379,
+          "icon": "inv_misc_herb_felblossom"
+        },
+        {
+          "name": "Tranquil Spirit",
+          "field": "tranquilSpirit",
+          "row": 3,
+          "col": 1,
+          "maxPoints": 5,
+          "spellId": 24968,
+          "definitionId": 134376,
+          "icon": "spell_holy_elunesgrace"
+        },
+        {
+          "name": "Improved Rejuvenation",
+          "field": "improvedRejuvenation",
+          "row": 3,
+          "col": 2,
+          "maxPoints": 3,
+          "spellId": 17111,
+          "definitionId": 134375,
+          "icon": "spell_nature_rejuvenation"
+        },
+        {
+          "name": "Swiftmend",
+          "field": "swiftmend",
+          "row": 3,
+          "col": 3,
+          "maxPoints": 1,
+          "spellId": 18562,
+          "definitionId": 134373,
+          "icon": "inv_relics_idolofrejuvenation"
+        },
+        {
+          "name": "Nature's Swiftness",
+          "field": "naturesSwiftness",
+          "row": 4,
+          "col": 0,
+          "maxPoints": 1,
+          "spellId": 17116,
+          "definitionId": 134382,
+          "icon": "spell_nature_ravenform",
+          "prereq": 2
+        },
+        {
+          "name": "Living Spirit",
+          "field": "livingSpirit",
+          "row": 4,
+          "col": 1,
+          "maxPoints": 3,
+          "spellId": 1309631,
+          "definitionId": 134372,
+          "icon": "spell_nature_giftofthewaterspirit"
+        },
+        {
+          "name": "Improved Tranquility",
+          "field": "improvedTranquility",
+          "row": 4,
+          "col": 3,
+          "maxPoints": 2,
+          "spellId": 17123,
+          "definitionId": 134370,
+          "icon": "spell_nature_tranquility"
+        },
+        {
+          "name": "Improved Regrowth",
+          "field": "improvedRegrowth",
+          "row": 5,
+          "col": 2,
+          "maxPoints": 5,
+          "spellId": 17074,
+          "definitionId": 134374,
+          "icon": "spell_nature_resistnature",
+          "prereq": 9
+        },
+        {
+          "name": "Wild Growth",
+          "field": "wildGrowth",
+          "row": 6,
+          "col": 1,
+          "maxPoints": 1,
+          "spellId": 408120,
+          "definitionId": 134371,
+          "icon": "ability_druid_flourish",
+          "prereq": 12
+        }
+      ]
+    }
+  ]
+}

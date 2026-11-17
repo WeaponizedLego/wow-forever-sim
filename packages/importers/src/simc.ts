@@ -6,7 +6,7 @@
 //   # <name> - <date> - <region>/<realm>        header comments (no spec on Forever)
 //   warrior="Name"                              class token = "name"
 //   level= race= region= server= role= professions=a=300/b=275 spec=unknown
-//   talents=<Blizzard C_Traits loadout string>  NOT the engine's digit string (see README)
+//   talents=<Blizzard C_Traits loadout string>  converted by ./loadout.ts (see README)
 //   legacy_talents=entry:rank/...               Forever Legacy trees; not used by the engine
 //   head=,id=123,enchant_id=456,bonus_id=1/2    one line per slot, preceded by "# Item (ilvl)"
 //   bag1=,id=...  pet_family=...                Forever extras; not used by the engine
@@ -16,6 +16,7 @@
 import type { ClassId, Gear, ImportContext, ImportResult, Importer, ItemSlotId } from '@fsim/contracts';
 import { MAX_LEVEL } from '@fsim/contracts';
 import { Diags, checkItem, finish, parseRegion, resolveRace, resolveSpec, slotLabel } from './build';
+import { loadoutToTalents } from './loadout';
 import type { RawItem } from './build';
 import {
   ENGINE_TALENTS,
@@ -158,12 +159,26 @@ function parseSimc(input: string, ctx: ImportContext): ImportResult {
   } else if (ENGINE_TALENTS.test(talentsOpt.value)) {
     talents = talentsOpt.value;
   } else if (LOADOUT_STRING.test(talentsOpt.value)) {
-    diags.add(
-      'DEFAULT-05',
-      'warning',
-      'Talents are a WoW client loadout string, which cannot be converted yet. The spec preset will be used; set talents in the workbench.',
-      { line: talentsOpt.line, field: 'talents' },
-    );
+    const r = loadoutToTalents(cls.value, talentsOpt.value);
+    const where = { line: talentsOpt.line, field: 'talents' };
+    if (!r.ok) {
+      diags.add(
+        'DEFAULT-05',
+        'warning',
+        `Talents are a WoW client loadout string that could not be converted safely: ${r.reason} The spec preset will be used; set talents in the workbench.`,
+        where,
+      );
+    } else {
+      talents = r.talents;
+      if (!r.verified)
+        diags.add(
+          'TALENT-08',
+          'warning',
+          `Talents converted from the WoW client loadout string (${r.talents || 'no points'}), but this ${cls.value} tree layout has not been checked against a real export yet, so a talent may be misread. Check them in the workbench's Talents tab.`,
+          where,
+        );
+      for (const note of r.notes) diags.add('PARSE-02', 'info', note, where);
+    }
   } else {
     diags.add('PARSE-02', 'warning', 'Talents could not be read. The spec preset will be used.', {
       line: talentsOpt.line,

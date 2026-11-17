@@ -32,7 +32,9 @@ export type DiagnosticCode =
   /** Value filled from the spec preset because the export did not include it. */
   | 'DEFAULT-05'
   /** Character is below the level the engine sims at (it always sims level 60). */
-  | 'LEVEL-07';
+  | 'LEVEL-07'
+  /** Talents converted from a WoW client loadout string whose tree layout is not verified for that class. */
+  | 'TALENT-08';
 
 export interface ImportResult {
   format: ImportFormat | null;
