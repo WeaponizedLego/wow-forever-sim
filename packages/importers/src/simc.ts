@@ -170,10 +170,9 @@ function parseSimc(input: string, ctx: ImportContext): ImportResult {
       );
     } else {
       talents = r.talents;
-      // PARSE-02 stands in for a talent-specific code until contracts gain one.
       if (!r.verified)
         diags.add(
-          'PARSE-02',
+          'TALENT-08',
           'warning',
           `Talents converted from the WoW client loadout string (${r.talents || 'no points'}), but this ${cls.value} tree layout has not been checked against a real export yet, so a talent may be misread. Check them in the workbench's Talents tab.`,
           where,

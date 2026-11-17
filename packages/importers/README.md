@@ -30,7 +30,7 @@ const result = importAny(pasted, ctx); // { format, character, diagnostics }
 | `SPEC-04`    | warning        | Race the engine lacks; class default race used                                                                                                                                    |
 | `DEFAULT-05` | info           | Rotation, consumables (always), race, gear, talents missing → spec preset fills them                                                                                              |
 | `DEFAULT-05` | warning        | Talents present but unusable (a SimC client loadout string that cannot be read safely, with the reason; WoWSims export from a non-Forever client)                                 |
-| `PARSE-02`   | warning        | Talents converted from a client loadout string for a class whose tree layout no real export has confirmed yet (see below)                                                         |
+| `TALENT-08`  | warning        | Talents converted from a client loadout string for a class whose tree layout no real export has confirmed yet (see below)                                                         |
 
 SimC diagnostics carry the 1-based `line`; gear findings carry `field` = slot id (`mainHand`, …).
 `character.rotation` is always `{ kind: 'preset', presetId: 'default' }` and `consumables` is `{}`;
@@ -112,7 +112,7 @@ algorithm is not public, so we can only recognise hashes we have checked.
   rank is above the engine's maximum; the result is over 51 points or breaks the tree rules (5 points
   per row, prerequisites at their maximum). A misaligned read almost always trips one of these.
 - Converts silently when the class's tree hash and spec are in `VERIFIED_TREES`.
-- Otherwise converts and emits a `PARSE-02` warning on `talents`: the layout is unconfirmed and the
+- Otherwise converts and emits a `TALENT-08` warning on `talents`: the layout is unconfirmed and the
   build should be checked in the Talents tab (which shows the converted tree).
 
 **To verify another class:** paste a real export, check the Talents tab against the character in game,
