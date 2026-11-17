@@ -350,7 +350,7 @@ export interface APLAction {
     };
 }
 /**
- * NextIndex: 148
+ * NextIndex: 149
  *
  * @generated from protobuf message proto.APLValue
  */
@@ -1088,6 +1088,12 @@ export interface APLValue {
          * @generated from protobuf field: proto.APLValueDruidExcessEnergy druid_excess_energy = 137
          */
         druidExcessEnergy: APLValueDruidExcessEnergy;
+    } | {
+        oneofKind: "hunterActiveHawks";
+        /**
+         * @generated from protobuf field: proto.APLValueHunterActiveHawks hunter_active_hawks = 148
+         */
+        hunterActiveHawks: APLValueHunterActiveHawks;
     } | {
         oneofKind: "variableRef";
         /**
@@ -2778,6 +2784,13 @@ export interface APLValueDruidBleedIsActive {
 export interface APLValueDruidExcessEnergy {
 }
 /**
+ * The hunter's hawks up on the target now, from none to two.
+ *
+ * @generated from protobuf message proto.APLValueHunterActiveHawks
+ */
+export interface APLValueHunterActiveHawks {
+}
+/**
  * @generated from protobuf message proto.APLValueAfflictionCurrentSnapshot
  */
 export interface APLValueAfflictionCurrentSnapshot {
@@ -3776,6 +3789,7 @@ class APLValue$Type extends MessageType<APLValue> {
             { no: 100, name: "protection_paladin_damage_taken_last_global", kind: "message", oneof: "value", T: () => APLValueProtectionPaladinDamageTakenLastGlobal },
             { no: 68, name: "druid_bleed_is_active", kind: "message", oneof: "value", T: () => APLValueDruidBleedIsActive },
             { no: 137, name: "druid_excess_energy", kind: "message", oneof: "value", T: () => APLValueDruidExcessEnergy },
+            { no: 148, name: "hunter_active_hawks", kind: "message", oneof: "value", T: () => APLValueHunterActiveHawks },
             { no: 111, name: "variable_ref", kind: "message", oneof: "value", T: () => APLValueVariableRef },
             { no: 112, name: "variable_placeholder", kind: "message", oneof: "value", T: () => APLValueVariablePlaceholder },
             { no: 124, name: "action_group_used", kind: "message", oneof: "value", T: () => APLValueActionGroupUsed },
@@ -4496,6 +4510,12 @@ class APLValue$Type extends MessageType<APLValue> {
                         druidExcessEnergy: APLValueDruidExcessEnergy.internalBinaryRead(reader, reader.uint32(), options, (message.value as any).druidExcessEnergy)
                     };
                     break;
+                case /* proto.APLValueHunterActiveHawks hunter_active_hawks */ 148:
+                    message.value = {
+                        oneofKind: "hunterActiveHawks",
+                        hunterActiveHawks: APLValueHunterActiveHawks.internalBinaryRead(reader, reader.uint32(), options, (message.value as any).hunterActiveHawks)
+                    };
+                    break;
                 case /* proto.APLValueVariableRef variable_ref */ 111:
                     message.value = {
                         oneofKind: "variableRef",
@@ -4922,6 +4942,9 @@ class APLValue$Type extends MessageType<APLValue> {
         /* proto.APLValueRemainingCastTime remaining_cast_time = 147; */
         if (message.value.oneofKind === "remainingCastTime")
             APLValueRemainingCastTime.internalBinaryWrite(message.value.remainingCastTime, writer.tag(147, WireType.LengthDelimited).fork(), options).join();
+        /* proto.APLValueHunterActiveHawks hunter_active_hawks = 148; */
+        if (message.value.oneofKind === "hunterActiveHawks")
+            APLValueHunterActiveHawks.internalBinaryWrite(message.value.hunterActiveHawks, writer.tag(148, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -11737,6 +11760,44 @@ class APLValueDruidExcessEnergy$Type extends MessageType<APLValueDruidExcessEner
  * @generated MessageType for protobuf message proto.APLValueDruidExcessEnergy
  */
 export const APLValueDruidExcessEnergy = new APLValueDruidExcessEnergy$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class APLValueHunterActiveHawks$Type extends MessageType<APLValueHunterActiveHawks> {
+    constructor() {
+        super("proto.APLValueHunterActiveHawks", []);
+    }
+    create(value?: PartialMessage<APLValueHunterActiveHawks>): APLValueHunterActiveHawks {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        if (value !== undefined)
+            reflectionMergePartial<APLValueHunterActiveHawks>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: APLValueHunterActiveHawks): APLValueHunterActiveHawks {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: APLValueHunterActiveHawks, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.APLValueHunterActiveHawks
+ */
+export const APLValueHunterActiveHawks = new APLValueHunterActiveHawks$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class APLValueAfflictionCurrentSnapshot$Type extends MessageType<APLValueAfflictionCurrentSnapshot> {
     constructor() {
