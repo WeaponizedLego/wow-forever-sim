@@ -216,7 +216,7 @@ const presets = computed(() => wb.presets.value?.talents ?? []);
 }
 .preset {
   display: grid;
-  grid-template-columns: minmax(120px, 1fr) 72px minmax(0, 2fr) 64px;
+  grid-template-columns: minmax(9.25em, 1fr) 5.5em minmax(0, 2fr) 5em;
   gap: var(--space-3);
   align-items: center;
   padding: 7px var(--space-4);

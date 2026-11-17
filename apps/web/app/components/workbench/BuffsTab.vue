@@ -77,18 +77,20 @@ const current = computed(() => BUFF_PRESETS.find((p) => p.id === preset.value));
     </div>
 
     <h3 class="label sub">Consumables · read-only</h3>
-    <table v-if="consumables.length" class="cons">
-      <caption class="visually-hidden">
-        Consumables
-      </caption>
-      <tbody>
-        <tr v-for="c in consumables" :key="c.key">
-          <th scope="row">{{ c.label }}</th>
-          <td :class="{ warn: c.unknown }">{{ c.value }}</td>
-          <td class="num id">{{ c.id ? `#${c.id}` : '' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-if="consumables.length" class="cons-wrap">
+      <table class="cons">
+        <caption class="visually-hidden">
+          Consumables
+        </caption>
+        <tbody>
+          <tr v-for="c in consumables" :key="c.key">
+            <th scope="row">{{ c.label }}</th>
+            <td :class="{ warn: c.unknown }">{{ c.value }}</td>
+            <td class="num id">{{ c.id ? `#${c.id}` : '' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <p v-else class="note pad">No consumables.</p>
     <p class="note pad">{{ source }} Editing consumables comes in a later version.</p>
   </UiPanel>
@@ -103,7 +105,7 @@ const current = computed(() => BUFF_PRESETS.find((p) => p.id === preset.value));
 }
 .presets {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14em, 1fr));
   gap: 1px;
   margin: 0;
   background: var(--line-seam);
@@ -143,6 +145,9 @@ const current = computed(() => BUFF_PRESETS.find((p) => p.id === preset.value));
   border-top: 1px solid var(--line-seam);
   border-bottom: 1px solid var(--line-seam);
   font-weight: 400;
+}
+.cons-wrap {
+  overflow-x: auto; /* the table scrolls inside the panel on narrow screens instead of widening the page */
 }
 .cons {
   width: 100%;

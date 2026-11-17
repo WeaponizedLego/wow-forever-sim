@@ -450,7 +450,7 @@ async function equip(row: RankedRow) {
   max-width: 360px;
 }
 .sel select {
-  height: 30px;
+  height: var(--control-md);
   padding: 0 8px;
   border: 1px solid var(--line-control);
   border-radius: var(--radius-control);

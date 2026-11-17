@@ -40,7 +40,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  height: 26px;
+  height: var(--control-sm);
   padding: 0 var(--space-2);
   border: 1px solid var(--line-subtle);
   border-radius: var(--radius-control);

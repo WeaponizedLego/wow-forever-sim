@@ -275,7 +275,7 @@ const tableRows = computed(() =>
 }
 .lbl {
   position: absolute;
-  font-size: var(--text-xs);
+  font-size: var(--text-tick);
   white-space: nowrap;
   pointer-events: none;
 }
@@ -291,7 +291,7 @@ const tableRows = computed(() =>
 .lbl--p5,
 .lbl--p95 {
   bottom: 4px;
-  font-size: 10px;
+  font-size: var(--text-tick);
   color: var(--text-3);
 }
 .lbl--p5 {

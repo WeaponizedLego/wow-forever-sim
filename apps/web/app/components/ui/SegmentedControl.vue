@@ -37,8 +37,9 @@ const model = defineModel<string>({ required: true });
   margin: 0;
   padding: 0;
   display: flex;
+  flex-wrap: wrap; /* on narrow screens the label goes above the control instead of pushing it off-screen */
   align-items: center;
-  gap: 10px;
+  gap: 6px 10px;
   min-width: 0;
 }
 legend {
@@ -47,12 +48,13 @@ legend {
 }
 .seg {
   display: flex;
+  max-width: 100%;
   border: 1px solid var(--line-control);
   border-radius: var(--radius-control);
   overflow: hidden;
 }
 .seg__btn {
-  height: 30px;
+  height: var(--control-md);
   padding: 0 12px;
   border: 0;
   background: transparent;
@@ -62,7 +64,7 @@ legend {
   white-space: nowrap;
 }
 .seg--sm .seg__btn {
-  height: 24px;
+  height: calc(var(--control-md) - 6px);
   padding: 0 8px;
   font-size: var(--text-xs);
 }

@@ -94,7 +94,7 @@ const notes = computed(() =>
 }
 .code__inner {
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
+  grid-template-columns: 4.5em minmax(0, 1fr);
   padding: var(--space-2) 0;
 }
 .code__gutter {
@@ -105,7 +105,7 @@ const notes = computed(() =>
 }
 .code__gline {
   display: grid;
-  grid-template-columns: 40px 18px;
+  grid-template-columns: 3em 18px;
   height: var(--line);
 }
 .code__n {

@@ -108,7 +108,7 @@ const tableRows = computed(() => props.rows.map((r) => ({ label: r.label, value:
 }
 .row {
   display: grid;
-  grid-template-columns: 150px minmax(0, 1fr) 54px;
+  grid-template-columns: 11.5em minmax(0, 1fr) 4.25em;
   gap: 10px;
   align-items: center;
   padding: var(--space-1) 0;
@@ -161,7 +161,7 @@ const tableRows = computed(() => props.rows.map((r) => ({ label: r.label, value:
 }
 @media (max-width: 420px) {
   .row {
-    grid-template-columns: 120px minmax(0, 1fr) 48px;
+    grid-template-columns: 9.25em minmax(0, 1fr) 3.75em;
     gap: var(--space-2);
   }
 }

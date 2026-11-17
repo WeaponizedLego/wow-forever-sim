@@ -22,7 +22,7 @@ const props = withDefaults(
     label: string;
     showTable?: boolean;
   }>(),
-  { xTicks: () => [], unit: 's', labelWidth: 136, gap: 12, showTable: false },
+  { xTicks: () => [], unit: 's', labelWidth: 168, gap: 12, showTable: false },
 );
 
 const at = (t: number) => clamp(t / props.duration, 0, 1);
@@ -122,11 +122,11 @@ const tableCols = [
 }
 @media (max-width: 640px) {
   .lanes {
-    grid-template-columns: min(var(--label-w), 92px) minmax(0, 1fr);
+    grid-template-columns: min(var(--label-w), 9em) minmax(0, 1fr);
   }
 }
 .lane__label {
-  height: 22px;
+  height: 1.75rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -142,12 +142,12 @@ const tableCols = [
   white-space: nowrap;
 }
 .lane__up {
-  font-size: 10px;
+  font-size: var(--text-tick);
   color: var(--text-3);
 }
 .lane__track {
   position: relative;
-  height: 22px;
+  height: 1.75rem;
   border-top: 1px solid var(--line-row);
 }
 .lane__track:hover,
@@ -173,10 +173,10 @@ const tableCols = [
 }
 .xaxis {
   position: relative;
-  height: 20px;
+  height: 1.5rem;
   padding-top: var(--space-1);
   border-top: 1px solid var(--line-row);
-  font-size: 10px;
+  font-size: var(--text-tick);
   color: var(--text-3);
 }
 .xaxis__tick {

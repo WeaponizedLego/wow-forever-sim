@@ -9,7 +9,7 @@ withDefaults(defineProps<{ keys: string; inverted?: boolean }>(), { inverted: fa
 
 <style scoped>
 .kbd {
-  font-size: 10px;
+  font-size: var(--text-xs);
   line-height: 14px;
   padding: 0 4px;
   border: 1px solid var(--line-control);
