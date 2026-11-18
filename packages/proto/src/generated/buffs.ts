@@ -217,7 +217,7 @@ export interface IndividualBuffs {
     thornsSpellPower: number;
 }
 /**
- * Next index: 23
+ * Next index: 24
  *
  * @generated from protobuf message proto.Debuffs
  */
@@ -310,6 +310,10 @@ export interface Debuffs {
      * @generated from protobuf field: bool thunderfury = 22
      */
     thunderfury: boolean;
+    /**
+     * @generated from protobuf field: int32 puncture_armor = 23
+     */
+    punctureArmor: number;
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class RaidBuffs$Type extends MessageType<RaidBuffs> {
@@ -813,7 +817,8 @@ class Debuffs$Type extends MessageType<Debuffs> {
             { no: 19, name: "dust_cloud", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 20, name: "armor_shatter", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 21, name: "vindication", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 22, name: "thunderfury", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 22, name: "thunderfury", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 23, name: "puncture_armor", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<Debuffs>): Debuffs {
@@ -840,6 +845,7 @@ class Debuffs$Type extends MessageType<Debuffs> {
         message.armorShatter = false;
         message.vindication = false;
         message.thunderfury = false;
+        message.punctureArmor = 0;
         if (value !== undefined)
             reflectionMergePartial<Debuffs>(this, message, value);
         return message;
@@ -914,6 +920,9 @@ class Debuffs$Type extends MessageType<Debuffs> {
                     break;
                 case /* bool thunderfury */ 22:
                     message.thunderfury = reader.bool();
+                    break;
+                case /* int32 puncture_armor */ 23:
+                    message.punctureArmor = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -993,6 +1002,9 @@ class Debuffs$Type extends MessageType<Debuffs> {
         /* bool thunderfury = 22; */
         if (message.thunderfury !== false)
             writer.tag(22, WireType.Varint).bool(message.thunderfury);
+        /* int32 puncture_armor = 23; */
+        if (message.punctureArmor !== 0)
+            writer.tag(23, WireType.Varint).int32(message.punctureArmor);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

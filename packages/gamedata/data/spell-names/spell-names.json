@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "ecb50fdc54e462cf6f945630bf3a970403de9f11",
+    "commit": "ab0f00e4fc83cdede13ba8a184f2a384b8efa3ab",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -7443,6 +7443,10 @@
     [1330734, "Drink", 0],
     [1330741, "Poised", 0],
     [1330763, "Poised", 0],
-    [1330855, "Gloves of Holy Might", 0]
+    [1330855, "Gloves of Holy Might", 0],
+    [1330858, "Lash of the Dark Rider", 0],
+    [1330916, "Howler's Cry", 0],
+    [1331725, "Camper's Lure", 0],
+    [1331727, "Fishing Skill +60", 0]
   ]
 }
