@@ -2,7 +2,7 @@
   "specId": "elemental-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "a20d13c0509b83456bf560ebb7bd05637eb05544",
+    "commit": "b83fe9df5fcd04d08061514332105ad9b769971d",
     "dir": "ui/specs/shaman/elemental",
     "files": ["builds/default.build.json", "presets.ts"]
   },
@@ -155,7 +155,7 @@
       "gear": {
         "head": {
           "itemId": 227002,
-          "enchantId": 1509
+          "enchantId": 2544
         },
         "neck": {
           "itemId": 22403,
@@ -177,15 +177,15 @@
           "enchantId": 7665
         },
         "hands": {
-          "itemId": 20133,
+          "itemId": 227006,
           "enchantId": 8213
         },
         "waist": {
-          "itemId": 18405
+          "itemId": 227008
         },
         "legs": {
           "itemId": 252486,
-          "enchantId": 8492
+          "enchantId": 2544
         },
         "feet": {
           "itemId": 227007,
@@ -195,7 +195,7 @@
           "itemId": 272406
         },
         "finger2": {
-          "itemId": 12543
+          "itemId": 22339
         },
         "trinket1": {
           "itemId": 272438
@@ -204,13 +204,11 @@
           "itemId": 13968
         },
         "mainHand": {
-          "itemId": 13964,
+          "itemId": 20214,
           "enchantId": 8217
         },
         "offHand": {
-          "itemId": 10271,
-          "enchantId": 7664,
-          "randomSuffix": 12734
+          "itemId": 19315
         },
         "ranged": {
           "itemId": 23199
