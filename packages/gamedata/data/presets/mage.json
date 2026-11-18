@@ -2,7 +2,7 @@
   "specId": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "a20d13c0509b83456bf560ebb7bd05637eb05544",
+    "commit": "b83fe9df5fcd04d08061514332105ad9b769971d",
     "dir": "ui/specs/mage/dps",
     "files": [
       "apls/arcane.apl.json",
@@ -22,7 +22,7 @@
     "race": "human",
     "professions": ["Engineering", "Tailoring"],
     "talents": "050205223101311531-5500003-003",
-    "gearSetId": "preraid",
+    "gearSetId": "arcane-preraid",
     "rotationId": "arcane",
     "consumables": {
       "flaskId": 13512,
@@ -75,7 +75,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "050205223101311531-5500003-003",
-        "gearSetId": "preraid",
+        "gearSetId": "arcane-preraid",
         "rotationId": "arcane",
         "consumables": {
           "flaskId": 13512,
@@ -128,7 +128,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "050205203100311531-525000012001-003",
-        "gearSetId": "preraid",
+        "gearSetId": "arcane-preraid",
         "rotationId": "arcane-fire",
         "consumables": {
           "flaskId": 13512,
@@ -181,7 +181,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "-5550000123011303-2035010311013002",
-        "gearSetId": "preraid",
+        "gearSetId": "arcane-preraid",
         "rotationId": "ffb",
         "consumables": {
           "flaskId": 13512,
@@ -234,7 +234,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "0502052001001-55500001230133031-003",
-        "gearSetId": "preraid",
+        "gearSetId": "arcane-preraid",
         "rotationId": "fire",
         "consumables": {
           "flaskId": 13512,
@@ -287,7 +287,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "203205-5-053500011121331251",
-        "gearSetId": "preraid",
+        "gearSetId": "arcane-preraid",
         "rotationId": "frost",
         "consumables": {
           "flaskId": 13512,
@@ -340,7 +340,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "2032250100003--053500001121331251",
-        "gearSetId": "preraid",
+        "gearSetId": "arcane-preraid",
         "rotationId": "frost",
         "consumables": {
           "flaskId": 13512,
@@ -388,38 +388,47 @@
   ],
   "gearSets": [
     {
-      "id": "preraid",
+      "id": "arcane-preraid",
       "name": "Preraid",
+      "group": "Arcane",
+      "phase": 1,
       "gear": {
         "head": {
-          "itemId": 22267
+          "itemId": 226935,
+          "enchantId": 2544
         },
         "neck": {
-          "itemId": 22403
+          "itemId": 22403,
+          "enchantId": 8218
         },
         "shoulder": {
-          "itemId": 19050
+          "itemId": 226936
         },
         "back": {
           "itemId": 272411
         },
         "chest": {
-          "itemId": 14152
+          "itemId": 14152,
+          "enchantId": 1893
         },
         "wrist": {
-          "itemId": 226929
+          "itemId": 226929,
+          "enchantId": 7665
         },
         "hands": {
-          "itemId": 226930
+          "itemId": 226930,
+          "enchantId": 7647
         },
         "waist": {
           "itemId": 18405
         },
         "legs": {
-          "itemId": 226933
+          "itemId": 226933,
+          "enchantId": 2544
         },
         "feet": {
-          "itemId": 22231
+          "itemId": 226931,
+          "enchantId": 8492
         },
         "finger1": {
           "itemId": 272406
@@ -431,13 +440,14 @@
           "itemId": 22268
         },
         "trinket2": {
-          "itemId": 272438
+          "itemId": 13968
         },
         "mainHand": {
-          "itemId": 13964
+          "itemId": 22383,
+          "enchantId": 8217
         },
         "offHand": {
-          "itemId": 18316
+          "itemId": 19315
         },
         "ranged": {
           "itemId": 13938

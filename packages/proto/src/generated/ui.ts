@@ -43,7 +43,6 @@ import { IndividualBuffs } from "./buffs";
 import { PseudoStat } from "./common";
 import { EquipmentSpec } from "./common";
 import { ReforgeSettings } from "./api";
-import { Stat } from "./common";
 import { UnitStats } from "./common";
 import { Encounter } from "./common";
 import { Player } from "./api";
@@ -51,6 +50,7 @@ import { PartyBuffs } from "./buffs";
 import { UnitReference } from "./common";
 import { Debuffs } from "./buffs";
 import { RaidBuffs } from "./buffs";
+import { Stat } from "./common";
 import { UIStat } from "./api";
 import { EnchantProcKind } from "./common";
 import { EnchantType } from "./common";
@@ -667,7 +667,7 @@ export interface StatFilters {
     consumables?: StatSelection;
 }
 /**
- * NextIndex: 28
+ * NextIndex: 34
  *
  * @generated from protobuf message proto.DatabaseFilters
  */
@@ -776,6 +776,13 @@ export interface DatabaseFilters {
      * @generated from protobuf field: bool newly_discovered_only = 32
      */
     newlyDiscoveredOnly: boolean;
+    /**
+     * With any set, the item list shows only the items that carry every one of these stats, from their own stats or
+     * from one of their random suffixes. Empty hides none.
+     *
+     * @generated from protobuf field: repeated proto.Stat item_stats = 33
+     */
+    itemStats: Stat[];
     /**
      * The enchant picker also lists enchants worth nothing to the spec's stat weights.
      *
@@ -3600,6 +3607,7 @@ class DatabaseFilters$Type extends MessageType<DatabaseFilters> {
             { no: 30, name: "mob_types", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.MobType", MobType] },
             { no: 31, name: "creature_families", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.CreatureFamily", CreatureFamily] },
             { no: 32, name: "newly_discovered_only", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 33, name: "item_stats", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.Stat", Stat] },
             { no: 25, name: "show_all_enchants", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 26, name: "stat_filters", kind: "message", T: () => StatFilters },
             { no: 11, name: "favorite_items", kind: "scalar", repeat: 1 /*RepeatType.PACKED*/, T: 5 /*ScalarType.INT32*/ },
@@ -3633,6 +3641,7 @@ class DatabaseFilters$Type extends MessageType<DatabaseFilters> {
         message.mobTypes = [];
         message.creatureFamilies = [];
         message.newlyDiscoveredOnly = false;
+        message.itemStats = [];
         message.showAllEnchants = false;
         message.favoriteItems = [];
         message.favoriteRandomSuffixes = [];
@@ -3747,6 +3756,13 @@ class DatabaseFilters$Type extends MessageType<DatabaseFilters> {
                     break;
                 case /* bool newly_discovered_only */ 32:
                     message.newlyDiscoveredOnly = reader.bool();
+                    break;
+                case /* repeated proto.Stat item_stats */ 33:
+                    if (wireType === WireType.LengthDelimited)
+                        for (let e = reader.int32() + reader.pos; reader.pos < e;)
+                            message.itemStats.push(reader.int32());
+                    else
+                        message.itemStats.push(reader.int32());
                     break;
                 case /* bool show_all_enchants */ 25:
                     message.showAllEnchants = reader.bool();
@@ -3937,6 +3953,13 @@ class DatabaseFilters$Type extends MessageType<DatabaseFilters> {
         /* bool newly_discovered_only = 32; */
         if (message.newlyDiscoveredOnly !== false)
             writer.tag(32, WireType.Varint).bool(message.newlyDiscoveredOnly);
+        /* repeated proto.Stat item_stats = 33; */
+        if (message.itemStats.length) {
+            writer.tag(33, WireType.LengthDelimited).fork();
+            for (let i = 0; i < message.itemStats.length; i++)
+                writer.int32(message.itemStats[i]);
+            writer.join();
+        }
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
