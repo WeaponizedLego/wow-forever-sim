@@ -159,6 +159,9 @@ export default collect(config, {
     plugins: [plugin],
     logLevel: 'error',
     tsconfigRaw: { compilerOptions: { experimentalDecorators: true } },
+    // Upstream UI modules read Vite's `import.meta.env` (mage's spec pulls in VITE_GITHUB_REPOSITORY since
+    // wowsims/forever@f4315f4); Node has no such object, so every key reads as undefined, as in an unset Vite env.
+    define: { 'import.meta.env': '{}' },
   });
   return ((await import(pathToFileURL(outfile).href)) as { default: Extracted }).default;
 };
