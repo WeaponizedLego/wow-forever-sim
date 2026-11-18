@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "6cee38a74b40018022a04499f12d736eb8286294",
+    "commit": "b84e73cbdea08843f1c6d658685a580b54e7db36",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
@@ -2539,6 +2539,20 @@
           },
           {
             "action": {
+              "castSpell": {
+                "spellId": {
+                  "spellId": 1329555
+                }
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-1s"
+              }
+            }
+          },
+          {
+            "action": {
               "groupReference": {
                 "groupName": "Pre-pull: Move"
               }
@@ -3583,6 +3597,49 @@
               "castSpell": {
                 "spellId": {
                   "spellId": 2687
+                }
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "autoTimeToNext": {
+                            "autoType": "MainHandAuto"
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "1s"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLt",
+                        "lhs": {
+                          "currentRage": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "50"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "castSpell": {
+                "spellId": {
+                  "spellId": 1329555
                 }
               }
             }

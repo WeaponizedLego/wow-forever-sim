@@ -2,7 +2,7 @@
   "specId": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "6cee38a74b40018022a04499f12d736eb8286294",
+    "commit": "b84e73cbdea08843f1c6d658685a580b54e7db36",
     "dir": "ui/specs/mage/dps",
     "files": [
       "apls/arcane.apl.json",
@@ -11,6 +11,7 @@
       "apls/ffb.apl.json",
       "apls/frost.apl.json",
       "gear_sets/preraid.gear.json",
+      "gear_sets/preraidFire.gear.json",
       "presets.ts"
     ]
   },
@@ -234,7 +235,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "0502052001001-55500001230133031-003",
-        "gearSetId": "arcane-preraid",
+        "gearSetId": "fire-preraid",
         "rotationId": "fire",
         "consumables": {
           "flaskId": 13512,
@@ -448,6 +449,70 @@
         },
         "offHand": {
           "itemId": 19315
+        },
+        "ranged": {
+          "itemId": 13938
+        }
+      }
+    },
+    {
+      "id": "fire-preraid",
+      "name": "Preraid",
+      "group": "Fire",
+      "phase": 1,
+      "gear": {
+        "head": {
+          "itemId": 226935,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 22403,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 226936
+        },
+        "back": {
+          "itemId": 272411
+        },
+        "chest": {
+          "itemId": 14152,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 226929,
+          "enchantId": 7665
+        },
+        "hands": {
+          "itemId": 226930,
+          "enchantId": 8492
+        },
+        "waist": {
+          "itemId": 18405
+        },
+        "legs": {
+          "itemId": 226933,
+          "enchantId": 2544
+        },
+        "feet": {
+          "itemId": 226931,
+          "enchantId": 8492
+        },
+        "finger1": {
+          "itemId": 272406
+        },
+        "finger2": {
+          "itemId": 22339
+        },
+        "trinket1": {
+          "itemId": 272438
+        },
+        "trinket2": {
+          "itemId": 13968
+        },
+        "mainHand": {
+          "itemId": 944,
+          "enchantId": 7662
         },
         "ranged": {
           "itemId": 13938
