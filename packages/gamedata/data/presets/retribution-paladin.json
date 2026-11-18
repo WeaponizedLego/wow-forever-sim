@@ -2,7 +2,7 @@
   "specId": "retribution-paladin",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "ab0f00e4fc83cdede13ba8a184f2a384b8efa3ab",
+    "commit": "6cee38a74b40018022a04499f12d736eb8286294",
     "dir": "ui/specs/paladin/retribution",
     "files": [
       "apls/default.apl.siml",
