@@ -2,7 +2,7 @@
   "specId": "feral-bear-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2c544e30649ccd42c86144ac0479021da11bc18",
+    "commit": "aec90b1207bfb85adc9028a866d82ab45d3e0c41",
     "dir": "ui/specs/druid/feralbear",
     "files": ["apls/adaptive.apl.json", "gear_sets/default.gear.json", "presets.ts"]
   },
@@ -124,7 +124,7 @@
           "itemId": 22749
         },
         "feet": {
-          "itemId": 20715
+          "itemId": 16459
         },
         "finger1": {
           "itemId": 21202

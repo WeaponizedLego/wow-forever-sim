@@ -2,7 +2,7 @@
   "specId": "feral-cat-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b2c544e30649ccd42c86144ac0479021da11bc18",
+    "commit": "aec90b1207bfb85adc9028a866d82ab45d3e0c41",
     "dir": "ui/specs/druid/feralcat",
     "files": [
       "apls/adaptive.apl.json",
@@ -132,7 +132,7 @@
           "enchantId": 1508
         },
         "feet": {
-          "itemId": 20715,
+          "itemId": 12553,
           "enchantId": 1887
         },
         "finger1": {
@@ -188,7 +188,7 @@
           "itemId": 15065
         },
         "feet": {
-          "itemId": 20715
+          "itemId": 12553
         },
         "finger1": {
           "itemId": 19325
