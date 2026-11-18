@@ -2,7 +2,7 @@
   "class": "hunter",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "6cee38a74b40018022a04499f12d736eb8286294",
+    "commit": "b84e73cbdea08843f1c6d658685a580b54e7db36",
     "files": ["ui/sim/talents/trees/hunter.json", "assets/database/db.json"]
   },
   "trees": [
