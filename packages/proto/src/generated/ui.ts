@@ -130,6 +130,10 @@ export interface UIDatabase {
      * @generated from protobuf field: repeated proto.SpellEffect spell_effects = 14
      */
     spellEffects: SpellEffect[];
+    /**
+     * @generated from protobuf field: repeated proto.SetBonusProcRate set_bonus_proc_rates = 17
+     */
+    setBonusProcRates: SetBonusProcRate[];
 }
 /**
  * @generated from protobuf message proto.UIZone
@@ -188,7 +192,7 @@ export interface UIFaction {
  * Contains all information about an Item needed by the UI.
  * Generally this will include everything needed by the sim, plus some
  * additional data for displaying / filtering.
- * Next tag: 37.
+ * Next tag: 41.
  *
  * @generated from protobuf message proto.UIItem
  */
@@ -352,6 +356,10 @@ export interface UIItem {
      * @generated from protobuf field: repeated proto.CreatureFamily creature_families = 39
      */
     creatureFamilies: CreatureFamily[];
+    /**
+     * @generated from protobuf field: proto.ProcRate proc_rate = 40
+     */
+    procRate?: ProcRate;
 }
 /**
  * @generated from protobuf enum proto.UIItem.FactionRestriction
@@ -602,6 +610,46 @@ export interface UIEnchant {
      * @generated from protobuf field: repeated proto.UIItemSource sources = 19
      */
     sources: UIItemSource[]; // Of the enchant's own item and the items that teach it.
+    /**
+     * @generated from protobuf field: proto.ProcRate proc_rate = 20
+     */
+    procRate?: ProcRate;
+}
+/**
+ * The proc rate the sim rolls on a piece of gear, for display only.
+ *
+ * @generated from protobuf message proto.ProcRate
+ */
+export interface ProcRate {
+    /**
+     * @generated from protobuf field: proto.ProcRateKind kind = 1
+     */
+    kind: ProcRateKind;
+    /**
+     * @generated from protobuf field: double rate = 2
+     */
+    rate: number; // Procs per minute, or a percent from 0 to 100 for a chance; 0 where the gear has no single rate.
+    /**
+     * @generated from protobuf field: proto.ProcRateStatus status = 3
+     */
+    status: ProcRateStatus;
+}
+/**
+ * @generated from protobuf message proto.SetBonusProcRate
+ */
+export interface SetBonusProcRate {
+    /**
+     * @generated from protobuf field: int32 set_id = 1
+     */
+    setId: number;
+    /**
+     * @generated from protobuf field: int32 pieces = 2
+     */
+    pieces: number;
+    /**
+     * @generated from protobuf field: proto.ProcRate rate = 3
+     */
+    rate?: ProcRate;
 }
 /**
  * @generated from protobuf message proto.IconData
@@ -1812,6 +1860,54 @@ export enum RepLevel {
     RepLevelExalted = 8
 }
 /**
+ * @generated from protobuf enum proto.ProcRateKind
+ */
+export enum ProcRateKind {
+    /**
+     * @generated from protobuf enum value: ProcRateKindUnknown = 0;
+     */
+    ProcRateKindUnknown = 0,
+    /**
+     * @generated from protobuf enum value: ProcRateKindPpm = 1;
+     */
+    ProcRateKindPpm = 1,
+    /**
+     * @generated from protobuf enum value: ProcRateKindChance = 2;
+     */
+    ProcRateKindChance = 2
+}
+/**
+ * How sure the sim is of the rate. The gear tab shows Measured and GameFiles as a line, and the rest as a warning.
+ *
+ * @generated from protobuf enum proto.ProcRateStatus
+ */
+export enum ProcRateStatus {
+    /**
+     * @generated from protobuf enum value: ProcRateStatusUnknown = 0;
+     */
+    ProcRateStatusUnknown = 0,
+    /**
+     * @generated from protobuf enum value: ProcRateStatusMeasured = 1;
+     */
+    ProcRateStatusMeasured = 1,
+    /**
+     * @generated from protobuf enum value: ProcRateStatusGameFiles = 2;
+     */
+    ProcRateStatusGameFiles = 2,
+    /**
+     * @generated from protobuf enum value: ProcRateStatusObserved = 3;
+     */
+    ProcRateStatusObserved = 3,
+    /**
+     * @generated from protobuf enum value: ProcRateStatusTbcCarryover = 4;
+     */
+    ProcRateStatusTbcCarryover = 4,
+    /**
+     * @generated from protobuf enum value: ProcRateStatusVanillaCarryover = 5;
+     */
+    ProcRateStatusVanillaCarryover = 5
+}
+/**
  * @generated from protobuf enum proto.SourceFilterOption
  */
 export enum SourceFilterOption {
@@ -1968,7 +2064,8 @@ class UIDatabase$Type extends MessageType<UIDatabase> {
             { no: 5, name: "spell_icons", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => IconData },
             { no: 15, name: "item_effect_rand_prop_points", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ItemEffectRandPropPoints },
             { no: 13, name: "consumables", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => Consumable },
-            { no: 14, name: "spell_effects", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => SpellEffect }
+            { no: 14, name: "spell_effects", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => SpellEffect },
+            { no: 17, name: "set_bonus_proc_rates", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => SetBonusProcRate }
         ]);
     }
     create(value?: PartialMessage<UIDatabase>): UIDatabase {
@@ -1985,6 +2082,7 @@ class UIDatabase$Type extends MessageType<UIDatabase> {
         message.itemEffectRandPropPoints = [];
         message.consumables = [];
         message.spellEffects = [];
+        message.setBonusProcRates = [];
         if (value !== undefined)
             reflectionMergePartial<UIDatabase>(this, message, value);
         return message;
@@ -2029,6 +2127,9 @@ class UIDatabase$Type extends MessageType<UIDatabase> {
                     break;
                 case /* repeated proto.SpellEffect spell_effects */ 14:
                     message.spellEffects.push(SpellEffect.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated proto.SetBonusProcRate set_bonus_proc_rates */ 17:
+                    message.setBonusProcRates.push(SetBonusProcRate.internalBinaryRead(reader, reader.uint32(), options));
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -2078,6 +2179,9 @@ class UIDatabase$Type extends MessageType<UIDatabase> {
         /* repeated proto.UIFaction factions = 16; */
         for (let i = 0; i < message.factions.length; i++)
             UIFaction.internalBinaryWrite(message.factions[i], writer.tag(16, WireType.LengthDelimited).fork(), options).join();
+        /* repeated proto.SetBonusProcRate set_bonus_proc_rates = 17; */
+        for (let i = 0; i < message.setBonusProcRates.length; i++)
+            SetBonusProcRate.internalBinaryWrite(message.setBonusProcRates[i], writer.tag(17, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -2324,7 +2428,8 @@ class UIItem$Type extends MessageType<UIItem> {
             { no: 35, name: "spell_school", kind: "enum", T: () => ["proto.SpellSchool", SpellSchool] },
             { no: 37, name: "area_types", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.AreaType", AreaType] },
             { no: 38, name: "mob_types", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.MobType", MobType] },
-            { no: 39, name: "creature_families", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.CreatureFamily", CreatureFamily] }
+            { no: 39, name: "creature_families", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.CreatureFamily", CreatureFamily] },
+            { no: 40, name: "proc_rate", kind: "message", T: () => ProcRate }
         ]);
     }
     create(value?: PartialMessage<UIItem>): UIItem {
@@ -2510,6 +2615,9 @@ class UIItem$Type extends MessageType<UIItem> {
                     else
                         message.creatureFamilies.push(reader.int32());
                     break;
+                case /* proto.ProcRate proc_rate */ 40:
+                    message.procRate = ProcRate.internalBinaryRead(reader, reader.uint32(), options, message.procRate);
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -2678,6 +2786,9 @@ class UIItem$Type extends MessageType<UIItem> {
                 writer.int32(message.creatureFamilies[i]);
             writer.join();
         }
+        /* proto.ProcRate proc_rate = 40; */
+        if (message.procRate)
+            ProcRate.internalBinaryWrite(message.procRate, writer.tag(40, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -3179,7 +3290,8 @@ class UIEnchant$Type extends MessageType<UIEnchant> {
             { no: 12, name: "required_profession", kind: "enum", T: () => ["proto.Profession", Profession] },
             { no: 14, name: "enchant_effects", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ItemEffect },
             { no: 18, name: "proc_kind", kind: "enum", T: () => ["proto.EnchantProcKind", EnchantProcKind] },
-            { no: 19, name: "sources", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => UIItemSource }
+            { no: 19, name: "sources", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => UIItemSource },
+            { no: 20, name: "proc_rate", kind: "message", T: () => ProcRate }
         ]);
     }
     create(value?: PartialMessage<UIEnchant>): UIEnchant {
@@ -3285,6 +3397,9 @@ class UIEnchant$Type extends MessageType<UIEnchant> {
                 case /* repeated proto.UIItemSource sources */ 19:
                     message.sources.push(UIItemSource.internalBinaryRead(reader, reader.uint32(), options));
                     break;
+                case /* proto.ProcRate proc_rate */ 20:
+                    message.procRate = ProcRate.internalBinaryRead(reader, reader.uint32(), options, message.procRate);
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -3370,6 +3485,9 @@ class UIEnchant$Type extends MessageType<UIEnchant> {
         /* repeated proto.UIItemSource sources = 19; */
         for (let i = 0; i < message.sources.length; i++)
             UIItemSource.internalBinaryWrite(message.sources[i], writer.tag(19, WireType.LengthDelimited).fork(), options).join();
+        /* proto.ProcRate proc_rate = 20; */
+        if (message.procRate)
+            ProcRate.internalBinaryWrite(message.procRate, writer.tag(20, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -3380,6 +3498,131 @@ class UIEnchant$Type extends MessageType<UIEnchant> {
  * @generated MessageType for protobuf message proto.UIEnchant
  */
 export const UIEnchant = new UIEnchant$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ProcRate$Type extends MessageType<ProcRate> {
+    constructor() {
+        super("proto.ProcRate", [
+            { no: 1, name: "kind", kind: "enum", T: () => ["proto.ProcRateKind", ProcRateKind] },
+            { no: 2, name: "rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 3, name: "status", kind: "enum", T: () => ["proto.ProcRateStatus", ProcRateStatus] }
+        ]);
+    }
+    create(value?: PartialMessage<ProcRate>): ProcRate {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.kind = 0;
+        message.rate = 0;
+        message.status = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ProcRate>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ProcRate): ProcRate {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* proto.ProcRateKind kind */ 1:
+                    message.kind = reader.int32();
+                    break;
+                case /* double rate */ 2:
+                    message.rate = reader.double();
+                    break;
+                case /* proto.ProcRateStatus status */ 3:
+                    message.status = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ProcRate, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* proto.ProcRateKind kind = 1; */
+        if (message.kind !== 0)
+            writer.tag(1, WireType.Varint).int32(message.kind);
+        /* double rate = 2; */
+        if (message.rate !== 0)
+            writer.tag(2, WireType.Bit64).double(message.rate);
+        /* proto.ProcRateStatus status = 3; */
+        if (message.status !== 0)
+            writer.tag(3, WireType.Varint).int32(message.status);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.ProcRate
+ */
+export const ProcRate = new ProcRate$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SetBonusProcRate$Type extends MessageType<SetBonusProcRate> {
+    constructor() {
+        super("proto.SetBonusProcRate", [
+            { no: 1, name: "set_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "pieces", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "rate", kind: "message", T: () => ProcRate }
+        ]);
+    }
+    create(value?: PartialMessage<SetBonusProcRate>): SetBonusProcRate {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.setId = 0;
+        message.pieces = 0;
+        if (value !== undefined)
+            reflectionMergePartial<SetBonusProcRate>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SetBonusProcRate): SetBonusProcRate {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int32 set_id */ 1:
+                    message.setId = reader.int32();
+                    break;
+                case /* int32 pieces */ 2:
+                    message.pieces = reader.int32();
+                    break;
+                case /* proto.ProcRate rate */ 3:
+                    message.rate = ProcRate.internalBinaryRead(reader, reader.uint32(), options, message.rate);
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SetBonusProcRate, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int32 set_id = 1; */
+        if (message.setId !== 0)
+            writer.tag(1, WireType.Varint).int32(message.setId);
+        /* int32 pieces = 2; */
+        if (message.pieces !== 0)
+            writer.tag(2, WireType.Varint).int32(message.pieces);
+        /* proto.ProcRate rate = 3; */
+        if (message.rate)
+            ProcRate.internalBinaryWrite(message.rate, writer.tag(3, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message proto.SetBonusProcRate
+ */
+export const SetBonusProcRate = new SetBonusProcRate$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class IconData$Type extends MessageType<IconData> {
     constructor() {
