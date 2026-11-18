@@ -1,7 +1,7 @@
 {
-  "engineId": "3633162",
-  "commit": "36331627be64563d77b26e322e36b9f029510141",
-  "generatedAt": "2026-11-18T17:24:46Z",
+  "engineId": "b2c544e",
+  "commit": "b2c544e30649ccd42c86144ac0479021da11bc18",
+  "generatedAt": "2026-11-18T21:23:46Z",
   "tolerance": 0.25,
   "specs": {
     "TestAffliction": {
@@ -9,154 +9,154 @@
       "dps": 820.3899687817844,
       "stdev": 44.434431615979726,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestAfflictionWrack": {
       "spec": "SpecWarlock",
       "dps": 956.3746385501031,
       "stdev": 32.229279381423055,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestArcane": {
       "spec": "SpecMage",
       "dps": 851.9460192527413,
       "stdev": 44.48826581075623,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestBalance": {
       "spec": "SpecBalanceDruid",
       "dps": 928.3451274849986,
       "stdev": 42.40074908585138,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestDemonologyFireBrand": {
       "spec": "SpecWarlock",
       "dps": 929.989951548406,
       "stdev": 30.79233923065375,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestDemonologyShadowBrand": {
       "spec": "SpecWarlock",
       "dps": 947.9757872161949,
       "stdev": 48.978597458717125,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestDestruction": {
       "spec": "SpecWarlock",
       "dps": 907.7828460961587,
       "stdev": 35.94401531675238,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestDpsWarrior": {
       "spec": "SpecDpsWarrior",
       "dps": 537.9966508396884,
       "stdev": 32.03076145635018,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestElemental": {
       "spec": "SpecElementalShaman",
       "dps": 888.1613619492816,
       "stdev": 35.43250931330613,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestEnhancement": {
       "spec": "SpecEnhancementShaman",
       "dps": 787.6677541113837,
       "stdev": 35.79705231502926,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestFeralBear": {
       "spec": "SpecFeralBearDruid",
       "dps": 536.8189510278476,
       "stdev": 32.360820220026135,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestFeralCat": {
       "spec": "SpecFeralCatDruid",
       "dps": 803.1034092940884,
       "stdev": 26.30749979503503,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestFFB": {
       "spec": "SpecMage",
       "dps": 902.192529589274,
       "stdev": 58.41918666721502,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestFire": {
       "spec": "SpecMage",
       "dps": 969.7854131404647,
       "stdev": 48.08633655281607,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestFrost": {
       "spec": "SpecMage",
       "dps": 832.8026780702825,
       "stdev": 54.936011599472586,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestHunter": {
       "spec": "SpecHunter",
       "dps": 917.9353143801916,
       "stdev": 35.465840707064395,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestHunterPets": {
       "spec": "SpecHunter",
       "dps": 716.3007911392735,
       "stdev": 20.700684747924775,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestProtection": {
       "spec": "SpecProtectionPaladin",
       "dps": 408.4387361348987,
       "stdev": 18.74317783739682,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestProtectionWarrior": {
       "spec": "SpecProtectionWarrior",
       "dps": 513.6453669321863,
       "stdev": 28.657939406247976,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestRetribution": {
       "spec": "SpecRetributionPaladin",
       "dps": 888.0095338375277,
       "stdev": 51.97183729273962,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestRogue": {
       "spec": "SpecRogue",
       "dps": 844.3640504651341,
       "stdev": 30.966478379865666,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     },
     "TestShadowPriest": {
       "spec": "SpecDpsPriest",
       "dps": 757.6218249938111,
       "stdev": 28.424014267834632,
       "iterations": 2000,
-      "engineId": "3633162"
+      "engineId": "b2c544e"
     }
   },
   "skipped": {
