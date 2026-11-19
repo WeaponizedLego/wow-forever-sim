@@ -42,15 +42,15 @@ talents, professions, consumables) which serialises to the engine's `Player` pro
 
 ### 2. Workbench (editing the character)
 
-|     | Feature                                                                                             |
-| --- | --------------------------------------------------------------------------------------------------- |
-| M   | Paperdoll gear editor: slot → searchable item picker (filter by source, ilvl, stat), enchant picker |
-| M   | Talent tree editor (Forever trees from upstream data), shareable talent string                      |
-| M   | Live stat sheet via `computeStats` (instant, no sim run)                                            |
-| M   | Consumables, raid buffs, debuffs with sensible presets ("Full raid", "Solo", "None")                |
-| M   | Encounter settings: duration, target count (1–5), execute %, movement preset                        |
-| N   | Rotation: pick upstream default APL; advanced users can view/edit SIML                              |
-| N   | Pet / professions toggles where specs need them                                                     |
+|     | Feature                                                                                                                                                        |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M   | Paperdoll gear editor: slot → searchable item picker (filter by source, ilvl, stat), enchant picker                                                            |
+| M   | Talent tree editor (Forever trees from upstream data), shareable talent string                                                                                 |
+| M   | Live stat sheet via `computeStats` (instant, no sim run)                                                                                                       |
+| M   | Consumables, raid buffs, debuffs with sensible presets ("Full raid", "Solo", "None")                                                                           |
+| M   | Encounter settings: duration, target count (1–5), execute %, movement preset                                                                                   |
+| N   | Rotation: an import starts on the upstream APL of the preset build closest to its talents; pick another on the Rotation tab; advanced users can view/edit SIML |
+| N   | Pet / professions toggles where specs need them                                                                                                                |
 
 ### 3. Simming
 

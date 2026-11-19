@@ -142,3 +142,65 @@ export function findRotation(presets: SpecPresets, id: string): PresetRotation |
 export function findGearSet(presets: SpecPresets, id: string): PresetGearSet | undefined {
   return presets.gearSets.find((g) => g.id === id);
 }
+
+/** A build's name with its group where the name alone does not say it ("Fury Pre-BiS", but "Arcane Fire"). */
+export const buildLabel = (b: { name: string; group?: string }): string =>
+  b.group && !b.name.includes(b.group) ? `${b.group} ${b.name}` : b.name;
+
+/** How far apart two engine talent strings are: the difference in points, summed over every talent. */
+export function talentDistance(a: string, b: string): number {
+  const x = a.split('-');
+  const y = b.split('-');
+  let d = 0;
+  for (let t = 0; t < Math.max(x.length, y.length); t++) {
+    const p = x[t] ?? '';
+    const q = y[t] ?? '';
+    for (let i = 0; i < Math.max(p.length, q.length); i++)
+      d += Math.abs(Number(p[i] ?? 0) - Number(q[i] ?? 0));
+  }
+  return d;
+}
+
+/**
+ * The preset build whose talents are closest to `talents` (upstream's first on a tie). Null when the spec has
+ * no builds or there are no talents to go by.
+ */
+export function closestBuild(presets: SpecPresets, talents: string): PresetBuild | null {
+  if (!/[1-9]/.test(talents)) return null;
+  let best: PresetBuild | null = null;
+  let bestDistance = Infinity;
+  for (const b of presets.builds) {
+    const d = talentDistance(talents, b.setup.talents);
+    if (d < bestDistance) [best, bestDistance] = [b, d];
+  }
+  return best;
+}
+
+/**
+ * The rotation upstream plays with talents like these: the closest preset build and its APL rotation. Null when
+ * no build matches or the build has no rotation to sim.
+ */
+export function suggestedRotation(
+  presets: SpecPresets,
+  talents: string,
+): { build: PresetBuild; rotation: PresetRotation } | null {
+  const build = closestBuild(presets, talents);
+  const rotation = build?.setup.rotationId ? findRotation(presets, build.setup.rotationId) : undefined;
+  return build && rotation?.kind === 'apl' ? { build, rotation } : null;
+}
+
+/**
+ * A rotation's fixed on/off settings: its APL value variables that are a constant true or false
+ * ("Use Summon Hawk": on). Empty for a rotation without any.
+ */
+export function rotationSwitches(rotation: PresetRotation): { name: string; on: boolean }[] {
+  if (rotation.kind !== 'apl') return [];
+  const vars = (rotation.rotation['valueVariables'] ?? []) as {
+    name?: string;
+    value?: { const?: { val?: string } };
+  }[];
+  return vars.flatMap((v) => {
+    const val = v.value?.const?.val;
+    return v.name && (val === 'true' || val === 'false') ? [{ name: v.name, on: val === 'true' }] : [];
+  });
+}

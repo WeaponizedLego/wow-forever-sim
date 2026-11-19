@@ -33,8 +33,8 @@ const result = importAny(pasted, ctx); // { format, character, diagnostics }
 | `TALENT-08`  | warning        | Talents converted from a client loadout string for a class whose tree layout no real export has confirmed yet (see below)                                                         |
 
 SimC diagnostics carry the 1-based `line`; gear findings carry `field` = slot id (`mainHand`, …).
-`character.rotation` is always `{ kind: 'preset', presetId: 'default' }` and `consumables` is `{}`;
-filling them is the engine package's job. `professions` are lowercase English names (`engineering`).
+`character.rotation` is always `{ kind: 'preset', presetId: '' }` (no preset chosen) and `consumables` is `{}`;
+`fillFromPreset` in `@fsim/gamedata` fills them from the preset build closest to the talents. `professions` are lowercase English names (`engineering`).
 
 ## SimC (Forever) — what the real format is
 

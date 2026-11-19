@@ -225,9 +225,12 @@ export interface Draft {
  */
 export function finish(draft: Draft, diags: Diags): Character | null {
   const label = specName(draft.spec);
-  diags.add('DEFAULT-05', 'info', `Rotation not in the export. Using the upstream default for ${label}.`, {
-    field: 'rotation',
-  });
+  diags.add(
+    'DEFAULT-05',
+    'info',
+    `Rotation not in the export. Using the one upstream plays with the ${label} preset build closest to the talents.`,
+    { field: 'rotation' },
+  );
   diags.add('DEFAULT-05', 'info', `Consumables not in the export. The spec preset will be applied.`, {
     field: 'consumables',
   });
@@ -241,7 +244,9 @@ export function finish(draft: Draft, diags: Diags): Character | null {
     professions: draft.professions.slice(0, 2),
     consumables: {},
     specOptions: {},
-    rotation: { kind: 'preset', presetId: 'default' },
+    // No preset chosen: fillFromPreset (@fsim/gamedata) picks the one that fits the talents. Not 'default', which
+    // is a real rotation id in some specs.
+    rotation: { kind: 'preset', presetId: '' },
   };
   if (draft.name) candidate.name = draft.name;
   if (draft.realm) candidate.realm = draft.realm;

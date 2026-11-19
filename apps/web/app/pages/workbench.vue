@@ -59,7 +59,8 @@ const tabs = computed<NavItem[]>(() => {
     {
       label: 'Rotation',
       to: tabTo('rotation'),
-      detail: rotName && rotName.length <= 14 ? rotName : undefined,
+      // Always shown: which rotation runs decides what gets cast. The longest upstream name is 20 characters.
+      detail: rotName && rotName.length > 20 ? `${rotName.slice(0, 19)}…` : rotName,
     },
   ];
 });

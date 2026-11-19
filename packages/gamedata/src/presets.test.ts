@@ -1,7 +1,17 @@
 import { SPECS, CharacterSchema } from '@fsim/contracts';
 import { describe, expect, it } from 'vitest';
 import { characterFromPresets, characterToPlayer } from './character';
-import { findGearSet, loadSpecPresets, PRESET_INDEX } from './presets';
+import {
+  buildLabel,
+  closestBuild,
+  findGearSet,
+  findRotation,
+  loadSpecPresets,
+  PRESET_INDEX,
+  rotationSwitches,
+  suggestedRotation,
+  talentDistance,
+} from './presets';
 import { fixtureDb } from './test-db';
 
 const db = fixtureDb();
@@ -50,5 +60,47 @@ describe('spec presets', () => {
         expect(player.equipment?.items).toHaveLength(17);
       }
     }
+  });
+
+  it('finds the preset build closest to a talent string', async () => {
+    expect(talentDistance('5-05', '5-05')).toBe(0);
+    // Short trees and missing trees read as zeros.
+    expect(talentDistance('53', '5-2')).toBe(5);
+    expect(talentDistance('', '12-3')).toBe(6);
+
+    for (const spec of SPECS) {
+      const p = await loadSpecPresets(spec.id);
+      // Each build is its own closest match unless an earlier build has the very same talents.
+      for (const b of p.builds) {
+        const twin = p.builds.find((x) => x.setup.talents === b.setup.talents)!;
+        expect(closestBuild(p, b.setup.talents)?.id, `${spec.id} ${b.id}`).toBe(twin.id);
+      }
+      expect(closestBuild(p, ''), spec.id).toBeNull();
+      expect(closestBuild(p, '000-0'), spec.id).toBeNull();
+    }
+
+    const hunter = await loadSpecPresets('hunter');
+    // 11 points in Beast Mastery at level 20: still nearest to a build that goes down that tree.
+    expect(closestBuild(hunter, '53201')?.id).toBe('bm');
+    const s = suggestedRotation(hunter, '5320001505101251-00530502014');
+    expect([s?.build.id, s?.rotation.id]).toEqual(['bm', 'turret-hawks']);
+    expect(suggestedRotation(await loadSpecPresets('balance-druid'), '5-5-5')).toBeNull();
+  });
+
+  it("reads a rotation's fixed on/off settings", async () => {
+    const hunter = await loadSpecPresets('hunter');
+    const hawk = (id: string) =>
+      rotationSwitches(findRotation(hunter, id)!).find((x) => x.name === 'Use Summon Hawk')?.on;
+    expect(hawk('turret-hawks')).toBe(true);
+    expect(hawk('turret')).toBe(false);
+    expect(hawk('melee-weave-max')).toBe(false);
+    expect(rotationSwitches(findRotation(hunter, 'simple')!)).toEqual([]);
+    expect(rotationSwitches(findRotation(hunter, 'clean-weave')!)).toEqual([]);
+  });
+
+  it('labels a build with its group only where the name does not say it', () => {
+    expect(buildLabel({ name: 'Pre-BiS', group: 'Fury' })).toBe('Fury Pre-BiS');
+    expect(buildLabel({ name: 'Arcane Fire', group: 'Arcane' })).toBe('Arcane Fire');
+    expect(buildLabel({ name: 'BM' })).toBe('BM');
   });
 });
