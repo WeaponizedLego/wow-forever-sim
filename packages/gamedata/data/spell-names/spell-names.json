@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "aee4e832dd9aa3f92f9f973bda7126c66a8c56fc",
+    "commit": "e2b55ab20e8a21291d35dd7ba4c05500c1effbe2",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -5067,6 +5067,7 @@
     [442898, "Spell Specialization", 0],
     [443265, "Infernal Lasso", 0],
     [443320, "Loyal Beta", 0],
+    [443632, "Filcher's Cowl", 0],
     [443813, "High-Yield Radiation Bomb", 0],
     [444678, "Lava Breath", 1],
     [444680, "Lava Breath", 1],

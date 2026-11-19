@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "aee4e832dd9aa3f92f9f973bda7126c66a8c56fc",
+    "commit": "e2b55ab20e8a21291d35dd7ba4c05500c1effbe2",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
@@ -27,7 +27,7 @@
   "defaults": {
     "race": "orc",
     "professions": ["Engineering", "Blacksmithing"],
-    "talents": "30303213002-350530005122100231-1",
+    "talents": "30303213002-050530045122100231",
     "gearSetId": "fury-pre-bis",
     "rotationId": "fury",
     "consumables": {
@@ -84,7 +84,7 @@
       "setup": {
         "race": "orc",
         "professions": ["Engineering", "Blacksmithing"],
-        "talents": "30303213002-350530005122100231-1",
+        "talents": "30303213002-050530045122100231",
         "gearSetId": "fury-pre-bis",
         "rotationId": "fury",
         "consumables": {
@@ -212,7 +212,7 @@
           "enchantId": 7667
         },
         "chest": {
-          "itemId": 252483,
+          "itemId": 252484,
           "enchantId": 1891
         },
         "wrist": {
@@ -220,14 +220,14 @@
           "enchantId": 1885
         },
         "hands": {
-          "itemId": 226861,
+          "itemId": 15063,
           "enchantId": 8207
         },
         "waist": {
           "itemId": 272403
         },
         "legs": {
-          "itemId": 22385,
+          "itemId": 15062,
           "enchantId": 2543
         },
         "feet": {
@@ -238,10 +238,10 @@
           "itemId": 272408
         },
         "finger2": {
-          "itemId": 13098
+          "itemId": 19325
         },
         "trinket1": {
-          "itemId": 11815
+          "itemId": 22321
         },
         "trinket2": {
           "itemId": 13965
@@ -441,12 +441,12 @@
     {
       "id": "fury",
       "name": "Fury",
-      "talents": "30303213002-350530005122100231-1"
+      "talents": "30303213002-050530045122100231"
     },
     {
       "id": "fury-dragonkin-giant",
       "name": "Fury Dragonkin/Giant",
-      "talents": "30303213102-250530005122100231-1"
+      "talents": "30303213102-050530035122100231"
     },
     {
       "id": "arms",
