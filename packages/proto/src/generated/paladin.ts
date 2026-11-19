@@ -270,6 +270,14 @@ export interface RetributionPaladin_Rotation {
      * @generated from protobuf field: int32 delay_major_cds = 5
      */
     delayMajorCds: number; // Seconds into the fight before the other cooldowns are cast.
+    /**
+     * @generated from protobuf field: int32 uw_soc_stacks = 6
+     */
+    uwSocStacks: number; // Amount of stacks of Echo of Command to pool before swapping to Seal of Righteousness
+    /**
+     * @generated from protobuf field: int32 uw_sor_stacks = 7
+     */
+    uwSorStacks: number; // Amount of stacks of Echo of Righteousness to pool before swapping to Seal of Command
 }
 /**
  * @generated from protobuf message proto.RetributionPaladin.Options
@@ -946,7 +954,9 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
             { no: 2, name: "assigned_judgement", kind: "enum", T: () => ["proto.PaladinJudgement", PaladinJudgement] },
             { no: 3, name: "seal", kind: "enum", T: () => ["proto.PaladinSeal", PaladinSeal] },
             { no: 4, name: "pull_range", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 5, name: "delay_major_cds", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 5, name: "delay_major_cds", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 6, name: "uw_soc_stacks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 7, name: "uw_sor_stacks", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<RetributionPaladin_Rotation>): RetributionPaladin_Rotation {
@@ -956,6 +966,8 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
         message.seal = 0;
         message.pullRange = 0;
         message.delayMajorCds = 0;
+        message.uwSocStacks = 0;
+        message.uwSorStacks = 0;
         if (value !== undefined)
             reflectionMergePartial<RetributionPaladin_Rotation>(this, message, value);
         return message;
@@ -979,6 +991,12 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
                     break;
                 case /* int32 delay_major_cds */ 5:
                     message.delayMajorCds = reader.int32();
+                    break;
+                case /* int32 uw_soc_stacks */ 6:
+                    message.uwSocStacks = reader.int32();
+                    break;
+                case /* int32 uw_sor_stacks */ 7:
+                    message.uwSorStacks = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1007,6 +1025,12 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
         /* int32 delay_major_cds = 5; */
         if (message.delayMajorCds !== 0)
             writer.tag(5, WireType.Varint).int32(message.delayMajorCds);
+        /* int32 uw_soc_stacks = 6; */
+        if (message.uwSocStacks !== 0)
+            writer.tag(6, WireType.Varint).int32(message.uwSocStacks);
+        /* int32 uw_sor_stacks = 7; */
+        if (message.uwSorStacks !== 0)
+            writer.tag(7, WireType.Varint).int32(message.uwSorStacks);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
