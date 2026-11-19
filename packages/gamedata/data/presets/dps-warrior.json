@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "21189d4945098f9fafae2e87d1978d864f012a40",
+    "commit": "84c19d4326193cc522aeb590e050ce7de3348546",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
@@ -32,7 +32,7 @@
     "rotationId": "fury",
     "consumables": {
       "foodId": 20452,
-      "explosiveId": 260817,
+      "explosiveId": 260814,
       "mhImbueId": 12643,
       "ohImbueId": 12404,
       "extraIds": [10646],
@@ -89,7 +89,7 @@
         "rotationId": "fury",
         "consumables": {
           "foodId": 20452,
-          "explosiveId": 260817,
+          "explosiveId": 260814,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
           "extraIds": [10646],
@@ -146,7 +146,7 @@
         "rotationId": "arms",
         "consumables": {
           "foodId": 20452,
-          "explosiveId": 260817,
+          "explosiveId": 260814,
           "mhImbueId": 12404,
           "extraIds": [10646],
           "elixirIds": [250350, 13452, 12820],
@@ -1065,6 +1065,19 @@
                       "variableRef": {
                         "name": "Battle Stance: Swap Ready"
                       }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "currentRage": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "40"
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -1626,6 +1639,15 @@
                 "action": {
                   "castSpell": {
                     "spellId": {
+                      "itemId": 260814
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
                       "itemId": 18588
                     }
                   }
@@ -2134,6 +2156,19 @@
                           "cmp": {
                             "op": "OpLe",
                             "lhs": {
+                              "currentRage": {}
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "40"
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "op": "OpLe",
+                            "lhs": {
                               "spellTimeToReady": {
                                 "spellId": {
                                   "spellId": 11585
@@ -2293,19 +2328,6 @@
                       "rhs": {
                         "const": {
                           "val": "5"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "cmp": {
-                      "op": "OpLe",
-                      "lhs": {
-                        "currentRage": {}
-                      },
-                      "rhs": {
-                        "const": {
-                          "val": "73"
                         }
                       }
                     }
@@ -3836,6 +3858,15 @@
                   "castSpell": {
                     "spellId": {
                       "itemId": 11566
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "itemId": 260814
                     }
                   }
                 }
