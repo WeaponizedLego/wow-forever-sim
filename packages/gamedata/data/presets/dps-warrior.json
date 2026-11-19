@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2bdcfc46f8d2491f6b1d22e1a46e9797396ca8f6",
+    "commit": "1d811b4e66f8f81dbad7be89702cc9331b91ac57",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
@@ -276,15 +276,15 @@
           "randomSuffix": 12727
         },
         "back": {
-          "itemId": 13340,
+          "itemId": 272414,
           "enchantId": 7667
         },
         "chest": {
-          "itemId": 252483,
+          "itemId": 252484,
           "enchantId": 1891
         },
         "wrist": {
-          "itemId": 13400,
+          "itemId": 12936,
           "enchantId": 1885
         },
         "hands": {
@@ -295,7 +295,7 @@
           "itemId": 272403
         },
         "legs": {
-          "itemId": 22385,
+          "itemId": 12963,
           "enchantId": 1506
         },
         "feet": {
@@ -303,19 +303,19 @@
           "enchantId": 1887
         },
         "finger1": {
-          "itemId": 272408
+          "itemId": 19325
         },
         "finger2": {
           "itemId": 13098
         },
         "trinket1": {
-          "itemId": 11815
+          "itemId": 22321
         },
         "trinket2": {
-          "itemId": 13965
+          "itemId": 11815
         },
         "mainHand": {
-          "itemId": 12790,
+          "itemId": 647,
           "enchantId": 1900
         },
         "ranged": {
@@ -2817,6 +2817,93 @@
                       }
                     },
                     {
+                      "auraIsInactive": {
+                        "auraId": {
+                          "spellId": 2458
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "spellTimeToReady": {
+                            "spellId": {
+                              "spellId": 2458
+                            }
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0s"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "spellTimeToReady": {
+                            "spellId": {
+                              "spellId": 1719
+                            }
+                          }
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "0s"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "multipleCdUsages": {
+                        "targetSpellId": {
+                          "spellId": 1719
+                        },
+                        "offset": {
+                          "const": {
+                            "val": "0ms"
+                          }
+                        },
+                        "alignCdEnd": true
+                      }
+                    }
+                  ]
+                }
+              },
+              "strictSequence": {
+                "actions": [
+                  {
+                    "castSpell": {
+                      "spellId": {
+                        "spellId": 2458
+                      }
+                    }
+                  },
+                  {
+                    "castSpell": {
+                      "spellId": {
+                        "spellId": 1719
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "action": {
+              "condition": {
+                "and": {
+                  "vals": [
+                    {
+                      "variableRef": {
+                        "name": "Recklessness: Used"
+                      }
+                    },
+                    {
                       "multipleCdUsages": {
                         "targetSpellId": {
                           "spellId": 1719
@@ -2863,20 +2950,6 @@
               "castSpell": {
                 "spellId": {
                   "spellId": 12723
-                }
-              }
-            }
-          },
-          {
-            "action": {
-              "condition": {
-                "actionGroupUsed": {
-                  "name": "Stance Dance ON/OFF"
-                }
-              },
-              "castSpell": {
-                "spellId": {
-                  "spellId": 21553
                 }
               }
             }
@@ -3007,6 +3080,19 @@
                       }
                     },
                     {
+                      "cmp": {
+                        "op": "OpLe",
+                        "lhs": {
+                          "currentRage": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "40"
+                          }
+                        }
+                      }
+                    },
+                    {
                       "gcdIsReady": {}
                     },
                     {
@@ -3043,15 +3129,6 @@
           },
           {
             "action": {
-              "condition": {
-                "not": {
-                  "val": {
-                    "actionGroupUsed": {
-                      "name": "Stance Dance ON/OFF"
-                    }
-                  }
-                }
-              },
               "castSpell": {
                 "spellId": {
                   "spellId": 21553
@@ -3290,15 +3367,6 @@
                 "and": {
                   "vals": [
                     {
-                      "not": {
-                        "val": {
-                          "actionGroupUsed": {
-                            "name": "Stance Dance ON/OFF"
-                          }
-                        }
-                      }
-                    },
-                    {
                       "auraIsInactive": {
                         "auraId": {
                           "spellId": 2457
@@ -3320,85 +3388,6 @@
               "castSpell": {
                 "spellId": {
                   "spellId": 2457
-                }
-              }
-            }
-          },
-          {
-            "action": {
-              "condition": {
-                "and": {
-                  "vals": [
-                    {
-                      "actionGroupUsed": {
-                        "name": "Stance Dance ON/OFF"
-                      }
-                    },
-                    {
-                      "auraIsActive": {
-                        "auraId": {
-                          "spellId": 2457
-                        }
-                      }
-                    },
-                    {
-                      "auraIsInactive": {
-                        "auraId": {
-                          "spellId": 1282733
-                        }
-                      }
-                    },
-                    {
-                      "or": {
-                        "vals": [
-                          {
-                            "isExecutePhase": {
-                              "threshold": "E20"
-                            }
-                          },
-                          {
-                            "cmp": {
-                              "op": "OpGt",
-                              "lhs": {
-                                "dotRemainingTime": {
-                                  "spellId": {
-                                    "spellId": 11574
-                                  }
-                                }
-                              },
-                              "rhs": {
-                                "spellGcdHastedDuration": {
-                                  "spellId": {
-                                    "spellId": 11574
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              "castSpell": {
-                "spellId": {
-                  "spellId": 2458
-                }
-              }
-            }
-          },
-          {
-            "action": {
-              "condition": {
-                "actionGroupUsed": {
-                  "name": "Stance Dance ON/OFF"
-                }
-              },
-              "castSpell": {
-                "spellId": {
-                  "spellId": 1680,
-                  "tag": 14
                 }
               }
             }
@@ -3587,6 +3576,19 @@
                       }
                     },
                     {
+                      "cmp": {
+                        "op": "OpGe",
+                        "lhs": {
+                          "numberTargets": {}
+                        },
+                        "rhs": {
+                          "const": {
+                            "val": "2"
+                          }
+                        }
+                      }
+                    },
+                    {
                       "auraIsInactive": {
                         "auraId": {
                           "spellId": 2458
@@ -3765,15 +3767,6 @@
             "actions": [
               {
                 "action": {
-                  "condition": {
-                    "not": {
-                      "val": {
-                        "actionGroupUsed": {
-                          "name": "Stance Dance ON/OFF"
-                        }
-                      }
-                    }
-                  },
                   "castSpell": {
                     "spellId": {
                       "spellId": 2457
@@ -4410,31 +4403,16 @@
                     "or": {
                       "vals": [
                         {
-                          "and": {
-                            "vals": [
-                              {
-                                "not": {
-                                  "val": {
-                                    "actionGroupUsed": {
-                                      "name": "Stance Dance ON/OFF"
-                                    }
-                                  }
-                                }
-                              },
-                              {
-                                "cmp": {
-                                  "op": "OpLt",
-                                  "lhs": {
-                                    "numberTargets": {}
-                                  },
-                                  "rhs": {
-                                    "const": {
-                                      "val": "2"
-                                    }
-                                  }
-                                }
+                          "cmp": {
+                            "op": "OpLt",
+                            "lhs": {
+                              "numberTargets": {}
+                            },
+                            "rhs": {
+                              "const": {
+                                "val": "2"
                               }
-                            ]
+                            }
                           }
                         },
                         {
@@ -4515,31 +4493,16 @@
           {
             "name": "Whirlwind Weave",
             "value": {
-              "and": {
-                "vals": [
-                  {
-                    "not": {
-                      "val": {
-                        "actionGroupUsed": {
-                          "name": "Stance Dance ON/OFF"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "cmp": {
-                      "op": "OpGe",
-                      "lhs": {
-                        "numberTargets": {}
-                      },
-                      "rhs": {
-                        "const": {
-                          "val": "2"
-                        }
-                      }
-                    }
+              "cmp": {
+                "op": "OpGe",
+                "lhs": {
+                  "numberTargets": {}
+                },
+                "rhs": {
+                  "const": {
+                    "val": "2"
                   }
-                ]
+                }
               }
             }
           },

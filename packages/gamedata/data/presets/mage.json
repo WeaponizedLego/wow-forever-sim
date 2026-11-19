@@ -2,7 +2,7 @@
   "specId": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2bdcfc46f8d2491f6b1d22e1a46e9797396ca8f6",
+    "commit": "1d811b4e66f8f81dbad7be89702cc9331b91ac57",
     "dir": "ui/specs/mage/dps",
     "files": [
       "apls/arcane.apl.json",
