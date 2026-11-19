@@ -10,6 +10,7 @@ import {
   type ClassId,
   type GearItem,
   type ItemSlotId,
+  type Rotation,
 } from '@fsim/contracts';
 import { talentChanges } from '@fsim/gamedata';
 import type { DiffRow } from '~/composables/ui-types';
@@ -29,7 +30,7 @@ export interface DiffNames {
   /** Short enchant name, or null when the item has none. */
   enchant: (g: GearItem | undefined) => string | null;
   buffs: (preset: BuffsPreset) => string;
-  /** Rotation preset name, or "custom SIML". */
+  /** Rotation preset name with its changed on/off settings, or "Custom SIML". */
   rotation: (c: Character) => string;
 }
 
@@ -96,6 +97,27 @@ function talentRows(cls: ClassId, a: string, b: string): DiffRow[] {
   }
   if (more) rows.push({ op: '+', label: `and ${more} more talent change${more > 1 ? 's' : ''}` });
   return rows;
+}
+
+/**
+ * The same rotation preset with other on/off settings: one row per setting that differs ("Use Summon Hawk: on",
+ * + when it goes on). Null when the rotations themselves differ. Only changed settings are stored (contracts
+ * RotationSchema), so a setting one side does not list is at the opposite of what the other side changed it to.
+ */
+function switchRows(a: Rotation, b: Rotation): DiffRow[] | null {
+  if (a.kind !== 'preset' || b.kind !== 'preset' || a.presetId !== b.presetId) return null;
+  const x = a.switches ?? {};
+  const y = b.switches ?? {};
+  return [...new Set([...Object.keys(x), ...Object.keys(y)])]
+    .filter((name) => x[name] !== y[name])
+    .map((name, i) => {
+      const on = y[name] ?? !x[name];
+      return {
+        op: on ? ('+' as const) : ('-' as const),
+        label: `${name}: ${on ? 'on' : 'off'}`,
+        ...(i === 0 && { detail: 'rotation' }),
+      };
+    });
 }
 
 /** `b` against `a`: one group per changed slot, then talents, buffs, fight, rotation and the rest. */
@@ -165,14 +187,11 @@ export function diffCharacters(a: Character, b: Character, names: DiffNames): Ch
     });
   }
   if (stable(a.rotation) !== stable(b.rotation)) {
-    out.push({
-      key: 'rotation',
-      kind: 'rotation',
-      rows: [
-        { op: '-', label: `Rotation: ${names.rotation(a)}`, detail: 'rotation' },
-        { op: '+', label: `Rotation: ${names.rotation(b)}` },
-      ],
-    });
+    const rows = switchRows(a.rotation, b.rotation) ?? [
+      { op: '-', label: `Rotation: ${names.rotation(a)}`, detail: 'rotation' },
+      { op: '+', label: `Rotation: ${names.rotation(b)}` },
+    ];
+    if (rows.length) out.push({ key: 'rotation', kind: 'rotation', rows });
   }
   if (stable(without(a, OWN_GROUP)) !== stable(without(b, OWN_GROUP))) {
     out.push({

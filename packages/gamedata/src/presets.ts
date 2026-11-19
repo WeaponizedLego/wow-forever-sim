@@ -1,5 +1,5 @@
 // Typed access to the committed spec presets (data/presets, written by scripts/extract-presets.ts).
-import type { Gear, RaceId, SpecId } from '@fsim/contracts';
+import type { Gear, RaceId, Rotation, SpecId } from '@fsim/contracts';
 import presetIndex from '../data/presets/index.json';
 
 type JsonObject = Record<string, unknown>;
@@ -189,18 +189,81 @@ export function suggestedRotation(
   return build && rotation?.kind === 'apl' ? { build, rotation } : null;
 }
 
+type ValueVariable = { name?: string; value?: { const?: { val?: string } } };
+const variablesOf = (rotation: PresetRotation): ValueVariable[] =>
+  rotation.kind === 'apl' ? ((rotation.rotation['valueVariables'] ?? []) as ValueVariable[]) : [];
+
+export interface RotationSwitch {
+  name: string;
+  on: boolean;
+  /** What the rotation has it at before anyone changes it. */
+  preset: boolean;
+}
+
 /**
- * A rotation's fixed on/off settings: its APL value variables that are a constant true or false
- * ("Use Summon Hawk": on). Empty for a rotation without any.
+ * A rotation's on/off settings: its APL value variables that are a constant true or false ("Use Summon Hawk"),
+ * with the character's changed ones (`Rotation.switches`) applied. Empty for a rotation without any.
  */
-export function rotationSwitches(rotation: PresetRotation): { name: string; on: boolean }[] {
-  if (rotation.kind !== 'apl') return [];
-  const vars = (rotation.rotation['valueVariables'] ?? []) as {
-    name?: string;
-    value?: { const?: { val?: string } };
-  }[];
-  return vars.flatMap((v) => {
+export function rotationSwitches(
+  rotation: PresetRotation,
+  changed: Readonly<Record<string, boolean>> = {},
+): RotationSwitch[] {
+  return variablesOf(rotation).flatMap((v) => {
     const val = v.value?.const?.val;
-    return v.name && (val === 'true' || val === 'false') ? [{ name: v.name, on: val === 'true' }] : [];
+    if (!v.name || (val !== 'true' && val !== 'false')) return [];
+    const preset = val === 'true';
+    return [{ name: v.name, on: changed[v.name] ?? preset, preset }];
   });
+}
+
+/** The switches that are not at the rotation's own value. */
+export const changedSwitches = (
+  rotation: PresetRotation,
+  changed: Readonly<Record<string, boolean>> = {},
+): RotationSwitch[] => rotationSwitches(rotation, changed).filter((s) => s.on !== s.preset);
+
+/**
+ * `changed` with one switch set, as `Rotation.switches` stores it: only what differs from the rotation's own
+ * values (a switch put back is dropped, as is a name the rotation has no switch for), undefined when nothing does.
+ */
+export function setRotationSwitch(
+  rotation: PresetRotation,
+  changed: Readonly<Record<string, boolean>> | undefined,
+  name: string,
+  on: boolean,
+): Record<string, boolean> | undefined {
+  const next = changedSwitches(rotation, { ...changed, [name]: on });
+  return next.length ? Object.fromEntries(next.map((s) => [s.name, s.on])) : undefined;
+}
+
+/** The engine `APLRotation` protojson of a rotation, with the changed switches written into its variables. */
+export function rotationApl(
+  rotation: PresetRotation & { kind: 'apl' },
+  changed: Readonly<Record<string, boolean>> = {},
+): JsonObject {
+  const set = new Map(changedSwitches(rotation, changed).map((s) => [s.name, s.on]));
+  if (!set.size) return rotation.rotation;
+  return {
+    ...rotation.rotation,
+    valueVariables: variablesOf(rotation).map((v) =>
+      v.name !== undefined && set.has(v.name)
+        ? { ...v, value: { const: { val: String(set.get(v.name)) } } }
+        : v,
+    ),
+  };
+}
+
+/**
+ * A character's rotation by name, with what was changed in it: "Turret", "Turret · Use Summon Hawk on",
+ * "Turret · 3 settings changed", "Custom SIML". The preset id when the presets do not have it (or are not loaded).
+ */
+export function rotationLabel(rotation: Rotation, presets: SpecPresets | null): string {
+  if (rotation.kind === 'siml') return 'Custom SIML';
+  const preset = presets && findRotation(presets, rotation.presetId);
+  if (!preset) return rotation.presetId;
+  const changed = changedSwitches(preset, rotation.switches);
+  if (!changed.length) return preset.name;
+  return changed.length > 2
+    ? `${preset.name} · ${changed.length} settings changed`
+    : `${preset.name} · ${changed.map((s) => `${s.name} ${s.on ? 'on' : 'off'}`).join(', ')}`;
 }

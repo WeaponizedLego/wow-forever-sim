@@ -3,12 +3,16 @@ import { describe, expect, it } from 'vitest';
 import { characterFromPresets, characterToPlayer } from './character';
 import {
   buildLabel,
+  changedSwitches,
   closestBuild,
   findGearSet,
   findRotation,
   loadSpecPresets,
   PRESET_INDEX,
+  rotationApl,
+  rotationLabel,
   rotationSwitches,
+  setRotationSwitch,
   suggestedRotation,
   talentDistance,
 } from './presets';
@@ -96,6 +100,72 @@ describe('spec presets', () => {
     expect(hawk('melee-weave-max')).toBe(false);
     expect(rotationSwitches(findRotation(hunter, 'simple')!)).toEqual([]);
     expect(rotationSwitches(findRotation(hunter, 'clean-weave')!)).toEqual([]);
+  });
+
+  it('applies changed on/off settings, and stores only what differs from the rotation’s own', async () => {
+    const hunter = await loadSpecPresets('hunter');
+    const turret = findRotation(hunter, 'turret')!;
+    const hawk = (changed?: Record<string, boolean>) =>
+      rotationSwitches(turret, changed).find((x) => x.name === 'Use Summon Hawk');
+
+    expect(hawk()).toEqual({ name: 'Use Summon Hawk', on: false, preset: false });
+    expect(hawk({ 'Use Summon Hawk': true })).toEqual({ name: 'Use Summon Hawk', on: true, preset: false });
+
+    const on = setRotationSwitch(turret, undefined, 'Use Summon Hawk', true);
+    expect(on).toEqual({ 'Use Summon Hawk': true });
+    expect(setRotationSwitch(turret, on, 'Use Aimed Shot', false)).toEqual({
+      'Use Aimed Shot': false,
+      'Use Summon Hawk': true,
+    });
+    // Put back, set to what it already is, or not a switch of this rotation: nothing is stored.
+    expect(setRotationSwitch(turret, on, 'Use Summon Hawk', false)).toBeUndefined();
+    expect(setRotationSwitch(turret, undefined, 'Use Aimed Shot', true)).toBeUndefined();
+    expect(setRotationSwitch(turret, undefined, 'Melee weave', false)).toBeUndefined();
+    expect(setRotationSwitch(turret, undefined, 'Pull range', true)).toBeUndefined();
+    expect(changedSwitches(turret, { 'Use Summon Hawk': true, 'Melee weave': false })).toHaveLength(1);
+  });
+
+  it('writes changed switches into the APL it sends, leaving the preset as it was', async () => {
+    const hunter = await loadSpecPresets('hunter');
+    const turret = findRotation(hunter, 'turret')!;
+    if (turret.kind !== 'apl') throw new Error('turret is an APL');
+    const before = JSON.stringify(turret.rotation);
+    const val = (apl: Record<string, unknown>, name: string) =>
+      (apl['valueVariables'] as { name: string; value: { const?: { val: string } } }[]).find(
+        (v) => v.name === name,
+      )?.value.const?.val;
+
+    expect(rotationApl(turret)).toBe(turret.rotation);
+    const apl = rotationApl(turret, { 'Use Summon Hawk': true, 'Pull range': true });
+    expect(val(apl, 'Use Summon Hawk')).toBe('true');
+    expect(val(apl, 'Use Aimed Shot')).toBe('true');
+    expect(val(apl, 'Pull range')).toBe('25');
+    expect(apl['priorityList']).toBe(turret.rotation['priorityList']);
+    expect(JSON.stringify(turret.rotation)).toBe(before);
+
+    const character = {
+      ...characterFromPresets(hunter, 'mm'),
+      rotation: { kind: 'preset' as const, presetId: 'turret', switches: { 'Use Summon Hawk': true } },
+    };
+    const sent = characterToPlayer(CharacterSchema.parse(character), hunter, db).rotation!;
+    const sentHawk = sent.valueVariables.find((v) => v.name === 'Use Summon Hawk')!.value!.value;
+    expect(sentHawk).toEqual({ oneofKind: 'const', const: { val: 'true' } });
+  });
+
+  it('names a rotation with what was changed in it', async () => {
+    const hunter = await loadSpecPresets('hunter');
+    const turret = (switches?: Record<string, boolean>) =>
+      rotationLabel({ kind: 'preset', presetId: 'turret', switches }, hunter);
+    expect(turret()).toBe('Turret');
+    expect(turret({ 'Use Summon Hawk': true })).toBe('Turret · Use Summon Hawk on');
+    expect(turret({ 'Use Summon Hawk': true, 'Use Aimed Shot': false })).toBe(
+      'Turret · Use Aimed Shot off, Use Summon Hawk on',
+    );
+    expect(turret({ 'Use Summon Hawk': true, 'Use Aimed Shot': false, 'Use Multi-Shot': true })).toBe(
+      'Turret · 3 settings changed',
+    );
+    expect(rotationLabel({ kind: 'preset', presetId: 'turret' }, null)).toBe('turret');
+    expect(rotationLabel({ kind: 'siml', source: 'x' }, hunter)).toBe('Custom SIML');
   });
 
   it('labels a build with its group only where the name does not say it', () => {

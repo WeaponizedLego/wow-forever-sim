@@ -88,6 +88,27 @@ describe('diffCharacters', () => {
     expect(groups[5]!.rows.map((r) => r.label)).toEqual(['Rotation: default', 'Rotation: custom SIML']);
   });
 
+  it('lists a rotation’s changed on/off settings one by one', () => {
+    const turret = (switches?: Record<string, boolean>) =>
+      edit((c) => (c.rotation = { kind: 'preset', presetId: 'turret', ...(switches && { switches }) }));
+    const rows = (a: Character, b: Character) => diffCharacters(a, b, names).flatMap((g) => g.rows);
+
+    expect(rows(turret(), turret({ 'Use Summon Hawk': true, 'Use Aimed Shot': false }))).toEqual([
+      { op: '+', label: 'Use Summon Hawk: on', detail: 'rotation' },
+      { op: '-', label: 'Use Aimed Shot: off' },
+    ]);
+    // Back to the rotation's own value: the side that lists nothing has the opposite of what the other changed.
+    expect(rows(turret({ 'Use Summon Hawk': true }), turret())).toEqual([
+      { op: '-', label: 'Use Summon Hawk: off', detail: 'rotation' },
+    ]);
+    expect(rows(turret({ 'Use Summon Hawk': true }), turret({ 'Use Summon Hawk': true }))).toEqual([]);
+    // Another rotation: the two names, as `names.rotation` gives them.
+    expect(rows(base, turret({ 'Use Summon Hawk': true })).map((r) => r.label)).toEqual([
+      'Rotation: default',
+      'Rotation: turret',
+    ]);
+  });
+
   it('describes a talent change talent by talent, with the points per tree', () => {
     const warrior = CharacterSchema.parse({
       ...structuredClone(base),

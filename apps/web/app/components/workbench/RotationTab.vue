@@ -2,8 +2,9 @@
 // The spec's upstream rotations (APL presets). Simple rotations are listed but cannot be simmed here.
 // Nothing derives a rotation from the talents, so the tab says which one fits them (the rotation upstream plays
 // with the preset build closest to the talents), which builds each rotation belongs to, and what the selected one
-// has switched on and off.
-import { buildLabel, rotationSwitches } from '@fsim/gamedata';
+// has switched on and off. Those on/off settings can be changed: the changes are kept on the character
+// (`rotation.switches`) and written into the rotation when it is simmed.
+import { buildLabel, rotationSwitches, setRotationSwitch } from '@fsim/gamedata';
 
 const wb = useWorkbench();
 const session = useSession();
@@ -45,10 +46,29 @@ const adviceText = computed(() => {
     ? `${closest} ${a.current.name} is its rotation for ${a.currentBuilds.join(', ')}.`
     : closest;
 });
-const switches = computed(() => (current.value ? rotationSwitches(current.value) : []));
+const switches = computed(() => {
+  const c = wb.draft.value;
+  const preset = current.value;
+  if (!c || !preset || c.rotation.kind !== 'preset') return [];
+  return rotationSwitches(preset, c.rotation.switches).map((s) => ({
+    ...s,
+    talent: switchTalentNote(c, s),
+  }));
+});
+const changedCount = computed(() => switches.value.filter((s) => s.on !== s.preset).length);
 
+// Another rotation starts from its own settings: the changes belong to the rotation they were made in.
 function pick(id: string) {
   session.updateCharacter((c) => (c.rotation = { kind: 'preset', presetId: id }));
+}
+function setSwitch(name: string, on: boolean) {
+  const preset = current.value;
+  if (!preset) return;
+  session.updateCharacter((c) => {
+    if (c.rotation.kind !== 'preset') return;
+    const changed = setRotationSwitch(preset, c.rotation.switches, name, on);
+    c.rotation = { kind: 'preset', presetId: preset.id, ...(changed && { switches: changed }) };
+  });
 }
 </script>
 
@@ -104,16 +124,31 @@ function pick(id: string) {
       </label>
     </fieldset>
     <div v-if="current && switches.length" class="switches" data-testid="rotation-switches">
-      <div class="switches__title">{{ current.name }} settings</div>
+      <div class="switches__head">
+        <span class="switches__title"
+          >{{ current.name }} settings<template v-if="changedCount">
+            · {{ changedCount }} changed</template
+          ></span
+        >
+        <UiButton v-if="changedCount" variant="quiet" size="sm" @click="pick(current.id)"
+          >Reset to {{ current.name }}’s own</UiButton
+        >
+      </div>
       <ul class="switches__list">
-        <li v-for="s in switches" :key="s.name" :class="{ 'is-disabled': !s.on }">
-          <span>{{ s.name }}</span>
-          <span class="num">{{ s.on ? 'on' : 'off' }}</span>
+        <li v-for="s in switches" :key="s.name" :class="{ 'is-changed': s.on !== s.preset }">
+          <UiCheckbox :model-value="s.on" @update:model-value="setSwitch(s.name, $event)">{{
+            s.name
+          }}</UiCheckbox>
+          <span v-if="s.talent === 'unused'" class="switches__hint switches__hint--warn"
+            >talent taken, not cast</span
+          >
+          <span v-else-if="s.talent === 'untaken'" class="switches__hint">talent not taken</span>
+          <span v-if="s.on !== s.preset" class="switches__hint">was {{ s.preset ? 'on' : 'off' }}</span>
         </li>
       </ul>
       <p class="switches__note">
-        These are part of the rotation and cannot be changed here yet: pick the rotation that has them the way
-        you play.
+        What the rotation casts or does. A change applies to this character’s sims and is listed with the
+        pending changes; picking another rotation starts from that rotation’s own settings.
       </p>
     </div>
     <p v-if="!rotations.length" class="note">
@@ -122,8 +157,8 @@ function pick(id: string) {
     <p class="note">
       Rotations are upstream's action priority lists (APL) for this spec. No export carries one, so an import
       starts on the rotation upstream plays with the preset build closest to its talents. Simple rotations are
-      built into an APL by the WoWSims site in the browser; this tool cannot sim them yet. Editing the APL is
-      not in this version.
+      built into an APL by the WoWSims site in the browser; this tool cannot sim them yet. A rotation’s on/off
+      settings can be changed above; editing the priority list itself is not in this version.
     </p>
   </UiPanel>
 </template>
@@ -184,26 +219,45 @@ function pick(id: string) {
   padding: 10px var(--space-4);
   border-bottom: 1px solid var(--line-row);
 }
+.switches__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-height: 24px;
+}
 .switches__title {
   font-size: var(--text-xs);
   color: var(--text-3);
 }
 .switches__list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-  gap: 2px var(--space-4);
-  margin: var(--space-2) 0 0;
+  grid-template-columns: repeat(auto-fill, minmax(17em, 1fr));
+  gap: 0 var(--space-4);
+  margin: var(--space-1) 0 0;
   padding: 0;
   list-style: none;
-  font-size: var(--text-sm);
+}
+/* The label is the click target: room around it instead of a gap between rows. */
+.switches__list :deep(.check) {
+  padding: var(--space-1) 0;
 }
 .switches__list li {
   display: flex;
-  justify-content: space-between;
-  gap: var(--space-2);
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
 }
-.switches__list li.is-disabled {
+.switches__list li.is-changed :deep(.check) {
+  color: var(--text-1);
+}
+.switches__hint {
+  font-size: var(--text-xs);
   color: var(--text-3);
+}
+.switches__hint--warn {
+  color: var(--status-warning);
 }
 .switches__note {
   margin: var(--space-2) 0 0;

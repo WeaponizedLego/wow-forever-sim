@@ -3,6 +3,7 @@
 // Sub-views are ?tab=… so each has its own URL; the right-hand column (pending changes, stats, caps)
 // stays on every tab because every tab's edits show up there.
 import { ITEM_SLOTS, RACES, fightStyle, type ItemSlotId } from '@fsim/contracts';
+import { changedSwitches } from '@fsim/gamedata';
 import type { KeyValue, NavItem } from '~/composables/ui-types';
 import { BUFF_PRESETS, specInfo, talentPoints } from '~/composables/workbench';
 
@@ -41,8 +42,10 @@ const meta = computed(() => {
 
 const tabs = computed<NavItem[]>(() => {
   const ch = c.value;
-  const rot = ch?.rotation.kind === 'preset' ? ch.rotation.presetId : null;
-  const rotName = wb.presets.value?.rotations.find((r) => r.id === rot)?.name;
+  const rot = ch?.rotation.kind === 'preset' ? ch.rotation : null;
+  const preset = wb.presets.value?.rotations.find((r) => r.id === rot?.presetId);
+  const rotName = preset?.name;
+  const edited = !!preset && changedSwitches(preset, rot?.switches).length > 0;
   return [
     { label: 'Gear', to: tabTo('gear') },
     { label: 'Talents', to: tabTo('talents'), detail: ch ? talentPoints(ch.talents).join('/') : undefined },
@@ -60,7 +63,9 @@ const tabs = computed<NavItem[]>(() => {
       label: 'Rotation',
       to: tabTo('rotation'),
       // Always shown: which rotation runs decides what gets cast. The longest upstream name is 20 characters.
-      detail: rotName && rotName.length > 20 ? `${rotName.slice(0, 19)}…` : rotName,
+      // "edited": its on/off settings were changed on the tab.
+      detail:
+        rotName && (rotName.length > 20 ? `${rotName.slice(0, 19)}…` : rotName) + (edited ? ' · edited' : ''),
     },
   ];
 });

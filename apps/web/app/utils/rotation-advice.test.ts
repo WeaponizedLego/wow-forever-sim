@@ -1,7 +1,7 @@
 import type { Character, Diagnostic } from '@fsim/contracts';
 import { characterFromPresets, fillFromPreset, loadSpecPresets } from '@fsim/gamedata';
 import { describe, expect, it } from 'vitest';
-import { buildsUsing, rotationAdvice, withRotationPick } from './rotation-advice';
+import { buildsUsing, rotationAdvice, switchTalentNote, withRotationPick } from './rotation-advice';
 
 const withRotation = (c: Character, presetId: string): Character => ({
   ...c,
@@ -25,6 +25,37 @@ describe('rotation advice', () => {
     // A variant no build uses is a choice, not a leftover.
     expect(rotationAdvice(withRotation(bm, 'turret-multi-shot'), hunter)!.state).toBe('alternative');
     expect(buildsUsing(hunter, 'turret')).toEqual(['MM', 'SV']);
+  });
+
+  it('takes a rotation with hand-changed settings as a choice, not a leftover', async () => {
+    const hunter = await loadSpecPresets('hunter');
+    const bm = characterFromPresets(hunter, 'bm');
+    const turret = (switches?: Record<string, boolean>): Character => ({
+      ...bm,
+      rotation: { kind: 'preset', presetId: 'turret', ...(switches && { switches }) },
+    });
+    expect(rotationAdvice(turret(), hunter)!.state).toBe('other-build');
+    expect(rotationAdvice(turret({ 'Use Summon Hawk': true }), hunter)!.state).toBe('alternative');
+    // A stored value equal to the rotation's own is no change.
+    expect(rotationAdvice(turret({ 'Use Summon Hawk': false }), hunter)!.state).toBe('other-build');
+    const edited: Character = {
+      ...bm,
+      rotation: { kind: 'preset', presetId: 'turret-hawks', switches: { 'Use Aimed Shot': false } },
+    };
+    expect(rotationAdvice(edited, hunter)!.state).toBe('fits');
+  });
+
+  it('says where a switch named after a talent disagrees with the talents', async () => {
+    const hunter = await loadSpecPresets('hunter');
+    const bm = characterFromPresets(hunter, 'bm');
+    const mm = characterFromPresets(hunter, 'mm');
+    expect(switchTalentNote(bm, { name: 'Use Summon Hawk', on: false })).toBe('unused');
+    expect(switchTalentNote(bm, { name: 'Use Summon Hawk', on: true })).toBeNull();
+    expect(switchTalentNote(mm, { name: 'Use Summon Hawk', on: true })).toBe('untaken');
+    expect(switchTalentNote(mm, { name: 'Use Summon Hawk', on: false })).toBeNull();
+    // Not a talent, or not a "Use …" switch.
+    expect(switchTalentNote(bm, { name: 'Use Multi-Shot', on: false })).toBeNull();
+    expect(switchTalentNote(bm, { name: 'Melee weave', on: false })).toBeNull();
   });
 
   it('has nothing to say without builds, or with another spec’s presets', async () => {
