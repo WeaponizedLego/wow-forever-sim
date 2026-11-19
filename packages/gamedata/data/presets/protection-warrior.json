@@ -2,7 +2,7 @@
   "specId": "protection-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "84c19d4326193cc522aeb590e050ce7de3348546",
+    "commit": "74a05455493e1bd4fd53dbd01924c2819b30d113",
     "dir": "ui/specs/warrior/protection",
     "files": [
       "apls/default.apl.json",

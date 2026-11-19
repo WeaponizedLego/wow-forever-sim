@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "84c19d4326193cc522aeb590e050ce7de3348546",
+    "commit": "74a05455493e1bd4fd53dbd01924c2819b30d113",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
@@ -442,6 +442,11 @@
       "id": "fury",
       "name": "Fury",
       "talents": "30303213002-350530005122100231-1"
+    },
+    {
+      "id": "fury-dragonkin-giant",
+      "name": "Fury Dragonkin/Giant",
+      "talents": "30303213102-250530005122100231-1"
     },
     {
       "id": "arms",
