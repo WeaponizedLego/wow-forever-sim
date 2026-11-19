@@ -2,7 +2,7 @@
   "specId": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "1381c2be3549f4b48c71219a1fee3bc626823e4b",
+    "commit": "c831b30f914b3b1b070cf63bc87d3af6953657b3",
     "dir": "ui/specs/mage/dps",
     "files": [
       "apls/arcane.apl.json",
@@ -12,6 +12,7 @@
       "apls/frost.apl.json",
       "gear_sets/preraid.gear.json",
       "gear_sets/preraidFire.gear.json",
+      "gear_sets/preraidFrost.gear.json",
       "presets.ts"
     ]
   },
@@ -288,7 +289,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "203205-5-053500011121331251",
-        "gearSetId": "arcane-preraid",
+        "gearSetId": "frost-preraid",
         "rotationId": "frost",
         "consumables": {
           "flaskId": 13512,
@@ -341,7 +342,7 @@
         "race": "human",
         "professions": ["Engineering", "Tailoring"],
         "talents": "2032250100003--053500001121331251",
-        "gearSetId": "arcane-preraid",
+        "gearSetId": "frost-preraid",
         "rotationId": "frost",
         "consumables": {
           "flaskId": 13512,
@@ -516,6 +517,70 @@
         },
         "ranged": {
           "itemId": 13938
+        }
+      }
+    },
+    {
+      "id": "frost-preraid",
+      "name": "Preraid",
+      "group": "Frost",
+      "phase": 1,
+      "gear": {
+        "head": {
+          "itemId": 226935,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 22403,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 226936
+        },
+        "back": {
+          "itemId": 272411
+        },
+        "chest": {
+          "itemId": 14152,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 226929,
+          "enchantId": 7665
+        },
+        "hands": {
+          "itemId": 226930,
+          "enchantId": 2615
+        },
+        "waist": {
+          "itemId": 18405
+        },
+        "legs": {
+          "itemId": 226933,
+          "enchantId": 2544
+        },
+        "feet": {
+          "itemId": 226931,
+          "enchantId": 8492
+        },
+        "finger1": {
+          "itemId": 272406
+        },
+        "finger2": {
+          "itemId": 22339
+        },
+        "trinket1": {
+          "itemId": 272438
+        },
+        "trinket2": {
+          "itemId": 13968
+        },
+        "mainHand": {
+          "itemId": 944,
+          "enchantId": 7662
+        },
+        "ranged": {
+          "itemId": 19108
         }
       }
     }
