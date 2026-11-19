@@ -1,8 +1,9 @@
 <script setup lang="ts">
 // Import findings, once and compactly: warnings on one line each, info notes folded away. First, gear the
 // loaded game data lacks: the sim leaves it out (pre-sim guard, @fsim/gamedata missingGameData), so say
-// which slot and id before anyone sims.
-import { missingGameData } from '@fsim/gamedata';
+// which slot and id before anyone sims. Then a rotation that is upstream's for another build than the talents
+// point at (talents changed since the rotation was picked): it decides what gets cast, so it is said on every tab.
+import { buildLabel, missingGameData } from '@fsim/gamedata';
 import { SLOT_LABELS } from '~/composables/workbench';
 
 const session = useSession();
@@ -20,6 +21,24 @@ const leftOut = computed(() => {
   return `Left out of the sim, not in ${build ? `data build ${build}` : 'the game data'}: ${list}. Pick a substitute to sim with it.`;
 });
 
+const route = useRoute();
+const rotation = computed(() => {
+  const c = wb.draft.value;
+  const p = wb.presets.value;
+  // The Rotation tab says the same in place, next to the list.
+  if (route.query.tab === 'rotation') return null;
+  const advice = c && p ? rotationAdvice(c, p) : null;
+  if (advice?.state !== 'other-build' || !advice.current) return null;
+  return {
+    text: `Rotation ${advice.current.name} is what upstream plays with ${advice.currentBuilds.join(', ')}. These talents are closest to its ${buildLabel(advice.build)} build, played with ${advice.suggested.name}.`,
+    suggested: advice.suggested,
+  };
+});
+function useSuggested() {
+  const id = rotation.value?.suggested.id;
+  if (id) session.updateCharacter((c) => (c.rotation = { kind: 'preset', presetId: id }));
+}
+
 const warnings = computed(() =>
   session.importDiagnostics.value.filter((d) => d.severity !== 'info' && d.code !== 'DATA-03'),
 );
@@ -29,7 +48,7 @@ const infos = computed(() => session.importDiagnostics.value.filter((d) => d.sev
 
 <template>
   <section
-    v-if="leftOut || warnings.length || dataMissing.length || infos.length"
+    v-if="leftOut || rotation || warnings.length || dataMissing.length || infos.length"
     class="diag"
     aria-label="Import notes"
   >
@@ -38,6 +57,16 @@ const infos = computed(() => session.importDiagnostics.value.filter((d) => d.sev
         <UiStatusGlyph status="warning" hide-label />
         <span class="num diag__code">DATA-03</span>
         <span class="diag__msg">{{ leftOut }}</span>
+      </li>
+      <li v-if="rotation" class="diag__row" data-testid="rotation-mismatch">
+        <UiStatusGlyph status="warning" hide-label />
+        <span class="num diag__code">ROTATION</span>
+        <span class="diag__msg"
+          >{{ rotation.text }}
+          <UiButton size="sm" class="diag__fix" @click="useSuggested"
+            >Use {{ rotation.suggested.name }}</UiButton
+          ></span
+        >
       </li>
       <li v-for="(d, i) in warnings" :key="`${d.code}-${i}`" class="diag__row">
         <UiStatusGlyph status="warning" hide-label :label="d.severity" />
@@ -96,6 +125,9 @@ const infos = computed(() => session.importDiagnostics.value.filter((d) => d.sev
 }
 .diag__msg {
   color: var(--text-2);
+}
+.diag__fix {
+  margin-left: var(--space-2);
 }
 .diag__more summary {
   margin-top: var(--space-1);

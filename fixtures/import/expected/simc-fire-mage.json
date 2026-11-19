@@ -79,7 +79,7 @@
     "buffs": "full-raid",
     "rotation": {
       "kind": "preset",
-      "presetId": "default"
+      "presetId": ""
     },
     "encounter": {
       "style": "patchwerk-3m",
@@ -115,7 +115,7 @@
     {
       "code": "DEFAULT-05",
       "severity": "info",
-      "message": "Rotation not in the export. Using the upstream default for Mage.",
+      "message": "Rotation not in the export. Using the one upstream plays with the Mage preset build closest to the talents.",
       "field": "rotation"
     },
     {

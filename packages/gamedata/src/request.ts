@@ -8,18 +8,25 @@ import { Debuffs, PartyBuffs, RaidBuffs } from '@fsim/proto/buffs';
 import { characterToPlayer, type CharacterToPlayerOptions } from './character';
 import type { GameDatabase } from './database';
 import { encounterProto } from './fights';
-import { presetSetup, type SpecPresets } from './presets';
+import { closestBuild, presetSetup, type SpecPresets } from './presets';
 
 /**
- * Fills what an import could not provide from the spec's preset defaults: talents, consumables, spec options and
- * the rotation (an importer's `presetId: 'default'`). Values the character already has are kept.
+ * Fills what an import could not provide (talents, consumables, spec options, and the rotation when its preset id
+ * names none of the spec's: importers leave it empty) from the preset build closest to the character's talents,
+ * so a Beast Mastery hunter gets upstream's BM rotation and not the spec-wide default. Without talents or builds
+ * to go by, the spec's defaults are used. Values the character already has are kept.
  */
 export function fillFromPreset(character: Character, presets: SpecPresets): Character {
-  const setup = presetSetup(presets, presets.defaultBuildId);
+  const setup =
+    closestBuild(presets, character.talents)?.setup ?? presetSetup(presets, presets.defaultBuildId);
+  const hasApl = (id: string | null) => presets.rotations.some((r) => r.id === id && r.kind === 'apl');
+  const rotationId = hasApl(setup.rotationId)
+    ? setup.rotationId
+    : presetSetup(presets, presets.defaultBuildId).rotationId;
   const rotation =
     character.rotation.kind === 'preset' &&
     !presets.rotations.some((r) => r.id === (character.rotation as { presetId: string }).presetId)
-      ? { kind: 'preset' as const, presetId: setup.rotationId ?? '' }
+      ? { kind: 'preset' as const, presetId: rotationId ?? '' }
       : character.rotation;
   return {
     ...character,

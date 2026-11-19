@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import type { Character } from '@fsim/contracts';
 import { RaidSimRequest } from '@fsim/proto';
 import { describe, expect, it } from 'vitest';
 import { characterFromPresets } from './character';
@@ -80,7 +81,7 @@ describe('buildRaidSimRequest', () => {
     const presets = await loadSpecPresets('elemental-shaman');
     const c = characterFromPresets(presets);
     const filled = fillFromPreset(
-      { ...c, talents: '', consumables: {}, rotation: { kind: 'preset', presetId: 'default' } },
+      { ...c, talents: '', consumables: {}, rotation: { kind: 'preset', presetId: '' } },
       presets,
     );
     expect(filled.talents).toBe(c.talents);
@@ -88,5 +89,51 @@ describe('buildRaidSimRequest', () => {
     expect(presets.rotations.some((r) => r.id === (filled.rotation as { presetId: string }).presetId)).toBe(
       true,
     );
+  });
+
+  // What an importer hands over: talents and gear, no rotation, consumables or spec options.
+  const imported = (c: Character): Character => ({
+    ...c,
+    consumables: {},
+    specOptions: {},
+    rotation: { kind: 'preset', presetId: '' },
+  });
+  const rotationId = (c: Character) => (c.rotation as { presetId: string }).presetId;
+
+  it('fills an import from the preset build closest to its talents, not the spec default', async () => {
+    const presets = await loadSpecPresets('hunter');
+    // Upstream's default hunter is SV Weave; every other build has its own rotation.
+    expect(presets.defaults.rotationId).toBe('melee-weave-max');
+    for (const build of presets.builds) {
+      const filled = fillFromPreset(imported(characterFromPresets(presets, build.id)), presets);
+      expect(rotationId(filled), build.id).toBe(build.setup.rotationId);
+      expect(filled.consumables, build.id).toEqual(build.setup.consumables);
+      expect(filled.specOptions, build.id).toEqual(build.setup.specOptions);
+    }
+    // A Beast Mastery hunter a few points off upstream's build still gets the hawk rotation.
+    const bm = characterFromPresets(presets, 'bm');
+    const tweaked = { ...imported(bm), talents: '5320001505101251-0053050201-3' };
+    expect(rotationId(fillFromPreset(tweaked, presets))).toBe('turret-hawks');
+  });
+
+  it('matches by talents where the spec has a rotation called "default"', async () => {
+    // "default" is the Shadow rotation's id; a Smite priest must not be left on it.
+    const presets = await loadSpecPresets('dps-priest');
+    const smite = characterFromPresets(presets, 'smite-testing');
+    expect(rotationId(fillFromPreset(imported(smite), presets))).toBe('smite');
+    const shadow = characterFromPresets(presets, 'shadow-testing');
+    expect(rotationId(fillFromPreset(imported(shadow), presets))).toBe('default');
+  });
+
+  it('keeps a rotation the character already names, and falls back to the defaults without builds', async () => {
+    const hunter = await loadSpecPresets('hunter');
+    const bm = characterFromPresets(hunter, 'bm');
+    const chosen = { ...bm, rotation: { kind: 'preset' as const, presetId: 'turret' } };
+    expect(rotationId(fillFromPreset(chosen, hunter))).toBe('turret');
+
+    const druid = await loadSpecPresets('balance-druid');
+    expect(druid.builds).toHaveLength(0);
+    const filled = fillFromPreset(imported(characterFromPresets(druid)), druid);
+    expect(rotationId(filled)).toBe(druid.defaults.rotationId);
   });
 });

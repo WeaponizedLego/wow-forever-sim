@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ImportResult } from '@fsim/contracts';
+import { fillFromPreset, findRotation, loadSpecPresets, type SpecPresets } from '@fsim/gamedata';
 import { parseWowheadLink } from '@fsim/importers';
 
 // Parse report: who was read, how much of the gear mapped, every diagnostic with its code and line,
@@ -33,8 +34,34 @@ const formatLabel = computed(() => {
   const game = parseWowheadLink(props.input)?.game;
   return game ? `Wowhead planner link · ${PLANNERS[game] ?? game}` : 'Wowhead link, not the gear planner';
 });
+// What the sim will run with once the preset has filled what the export lacks (as useSession().setCharacter does):
+// above all the rotation, which no export carries and which is picked from the talents.
+const presets = shallowRef<SpecPresets | null>(null);
+watch(
+  () => character.value?.spec,
+  async (spec) => {
+    presets.value = null;
+    if (!spec) return;
+    const loaded = await loadSpecPresets(spec);
+    if (character.value?.spec === spec) presets.value = loaded;
+  },
+  { immediate: true },
+);
+const filled = computed(() => {
+  const c = character.value;
+  const p = presets.value;
+  return c && p?.specId === c.spec ? fillFromPreset(c, p) : null;
+});
+const rotationName = computed(() => {
+  const r = filled.value?.rotation;
+  return r?.kind === 'preset' ? (findRotation(presets.value!, r.presetId)?.name ?? null) : null;
+});
 // Warnings first; lines set aside because the engine does not use them fold into one closed row.
-const report = computed(() => (props.result ? parseReport(props.result.diagnostics) : null));
+const report = computed(() => {
+  if (!props.result) return null;
+  const d = props.result.diagnostics;
+  return parseReport(filled.value ? withRotationPick(d, filled.value, presets.value!) : d);
+});
 const unusedGroup = computed(() =>
   report.value?.unused.length
     ? {
@@ -155,6 +182,7 @@ const progress = computed(() => {
           :items="[
             { label: 'Slots', value: identity.slots },
             { label: 'Talents', value: identity.talents },
+            ...(rotationName ? [{ label: 'Rotation', value: rotationName }] : []),
           ]"
         />
       </div>

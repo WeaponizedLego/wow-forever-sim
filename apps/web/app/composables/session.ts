@@ -20,6 +20,7 @@ import { EngineError, engineErrorText, withDatabases, withStatWeightsDatabase } 
 import { summarize } from '@fsim/analysis';
 import { loadDraft, saveDraft } from '~/utils/draft-store';
 import { lineageOf, newLineageId, runLineage } from '~/utils/lineage';
+import { withRotationPick } from '~/utils/rotation-advice';
 
 export interface RunEntry {
   record: RunRecord;
@@ -116,7 +117,8 @@ export function useSession() {
 
   /**
    * Make an imported, preset or shared character current. It starts a new lineage, with no baseline run.
-   * Missing talents, consumables and rotation come from the spec preset.
+   * Missing talents, consumables and rotation come from the preset build closest to the talents; the import's
+   * rotation note then names the rotation that was picked.
    */
   async function setCharacter(c: Character, diagnostics: ImportResult['diagnostics'] = []): Promise<void> {
     const presets = await loadSpecPresets(c.spec);
@@ -125,7 +127,7 @@ export function useSession() {
     baseline.value = structuredClone(toRaw(filled));
     lineageId.value = newLineageId();
     baseRunId.value = null;
-    importDiagnostics.value = diagnostics;
+    importDiagnostics.value = withRotationPick(diagnostics, filled, presets);
     persistDraft();
   }
 

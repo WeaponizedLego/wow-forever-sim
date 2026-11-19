@@ -151,7 +151,7 @@ function parseWowsims(input: string, ctx: ImportContext): ImportResult {
     diags.add(
       'PARSE-02',
       'info',
-      'Rotation in the export is an APL, which is not imported. The upstream default is used instead.',
+      'Rotation in the export is an APL, which is not imported. An upstream preset rotation is used instead.',
       { field: 'rotation' },
     );
   }

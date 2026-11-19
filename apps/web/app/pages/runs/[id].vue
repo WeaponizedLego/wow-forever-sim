@@ -2,7 +2,14 @@
 // Run analysis (docs/features.md §3): one run against its baseline.
 import { RaidSimResult } from '@fsim/proto/api';
 import { CLASSES, RACES, SPECS } from '@fsim/contracts';
-import { fightChange, fightLabel, sliceRanAsScheduled } from '@fsim/gamedata';
+import {
+  fightChange,
+  fightLabel,
+  findRotation,
+  loadSpecPresets,
+  sliceRanAsScheduled,
+  type SpecPresets,
+} from '@fsim/gamedata';
 import { engineErrorText } from '@fsim/engine';
 import { comparableBaseline, lineageOf } from '~/utils/lineage';
 
@@ -36,6 +43,21 @@ const record = computed(() => entry.value?.record ?? null);
 const char = computed(() => record.value?.character ?? null);
 const spec = computed(() => SPECS.find((s) => s.id === char.value?.spec));
 const workers = ref<number | null>(null);
+// The rotation the run used, by name: it decides what was cast, and no import carries one.
+const presets = shallowRef<SpecPresets | null>(null);
+watch(
+  () => char.value?.spec,
+  async (id) => {
+    presets.value = id ? await loadSpecPresets(id) : null;
+  },
+  { immediate: true },
+);
+const rotationName = computed(() => {
+  const r = char.value?.rotation;
+  if (!r) return null;
+  if (r.kind === 'siml') return 'Custom SIML';
+  return (presets.value && findRotation(presets.value, r.presetId)?.name) ?? r.presetId;
+});
 onMounted(async () => {
   workers.value = (await engine.client().catch(() => null))?.concurrency ?? null;
 });
@@ -67,6 +89,7 @@ const headerItems = computed(() => {
           value: `${fightLabel(e)} · not as scheduled (engine lacks slice support)`,
           tone: 'down' as const,
         },
+    ...(rotationName.value ? [{ label: 'Rotation', value: rotationName.value }] : []),
     { label: 'Seed', value: String(r.seed) },
     { label: 'Engine', value: `${r.engine.engineId} @ ${r.engine.commit.slice(0, 7)}` },
     {
