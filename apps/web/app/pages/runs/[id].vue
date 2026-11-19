@@ -5,8 +5,8 @@ import { CLASSES, RACES, SPECS } from '@fsim/contracts';
 import {
   fightChange,
   fightLabel,
-  findRotation,
   loadSpecPresets,
+  rotationLabel,
   sliceRanAsScheduled,
   type SpecPresets,
 } from '@fsim/gamedata';
@@ -43,7 +43,8 @@ const record = computed(() => entry.value?.record ?? null);
 const char = computed(() => record.value?.character ?? null);
 const spec = computed(() => SPECS.find((s) => s.id === char.value?.spec));
 const workers = ref<number | null>(null);
-// The rotation the run used, by name: it decides what was cast, and no import carries one.
+// The rotation the run used, by name and with its changed on/off settings: it decides what was cast, and no import
+// carries one.
 const presets = shallowRef<SpecPresets | null>(null);
 watch(
   () => char.value?.spec,
@@ -54,9 +55,7 @@ watch(
 );
 const rotationName = computed(() => {
   const r = char.value?.rotation;
-  if (!r) return null;
-  if (r.kind === 'siml') return 'Custom SIML';
-  return (presets.value && findRotation(presets.value, r.presetId)?.name) ?? r.presetId;
+  return r ? rotationLabel(r, presets.value?.specId === char.value?.spec ? presets.value : null) : null;
 });
 onMounted(async () => {
   workers.value = (await engine.client().catch(() => null))?.concurrency ?? null;

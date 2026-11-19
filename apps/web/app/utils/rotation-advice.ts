@@ -5,7 +5,10 @@
 import type { Character, Diagnostic } from '@fsim/contracts';
 import {
   buildLabel,
+  changedSwitches,
+  classTalents,
   findRotation,
+  parseTalents,
   suggestedRotation,
   type PresetBuild,
   type PresetRotation,
@@ -21,7 +24,8 @@ export interface RotationAdvice {
   /**
    * - `fits`: the suggested rotation is in use.
    * - `other-build`: the one in use is what upstream plays with other builds, not this one: most likely a leftover.
-   * - `alternative`: the one in use belongs to no build (a variant such as "Clean Weave"): a choice, not a mistake.
+   * - `alternative`: the one in use belongs to no build (a variant such as "Clean Weave"), or its on/off settings
+   *   were changed by hand: a choice, not a mistake.
    */
   state: 'fits' | 'other-build' | 'alternative';
   /** The builds upstream plays the rotation in use with, by label. */
@@ -40,13 +44,43 @@ export function rotationAdvice(character: Character, presets: SpecPresets): Rota
   const current =
     character.rotation.kind === 'preset' ? findRotation(presets, character.rotation.presetId) : undefined;
   const currentBuilds = current ? buildsUsing(presets, current.id) : [];
+  const edited =
+    !!current &&
+    character.rotation.kind === 'preset' &&
+    changedSwitches(current, character.rotation.switches).length > 0;
   return {
     current,
     build: match.build,
     suggested: match.rotation,
-    state: current?.id === match.rotation.id ? 'fits' : currentBuilds.length ? 'other-build' : 'alternative',
+    state:
+      current?.id === match.rotation.id
+        ? 'fits'
+        : currentBuilds.length && !edited
+          ? 'other-build'
+          : 'alternative',
     currentBuilds,
   };
+}
+
+/**
+ * For a switch named after a talent ("Use Summon Hawk"), where the two disagree: `unused` when the character has
+ * the talent and the rotation does not cast it, `untaken` when the rotation would cast it and the talent is not
+ * taken (the engine then skips it). Null when they agree or the switch names no talent.
+ */
+export function switchTalentNote(
+  character: Character,
+  s: { name: string; on: boolean },
+): 'unused' | 'untaken' | null {
+  const spell = /^Use (.+)$/.exec(s.name)?.[1];
+  if (!spell) return null;
+  const points = parseTalents(character.class, character.talents);
+  for (const [t, tree] of classTalents(character.class).trees.entries()) {
+    const i = tree.talents.findIndex((x) => x.name === spell);
+    if (i < 0) continue;
+    const taken = (points[t]?.[i] ?? 0) > 0;
+    return taken === s.on ? null : taken ? 'unused' : 'untaken';
+  }
+  return null;
 }
 
 /** "Turret (Hawks): upstream plays it with its BM build, the closest to these talents." */

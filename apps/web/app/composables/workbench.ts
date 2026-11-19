@@ -17,6 +17,7 @@ import {
 import {
   itemLevel,
   loadSpecPresets,
+  rotationLabel,
   weightStatsFor,
   type GameDatabase,
   type SpecPresets,
@@ -148,11 +149,7 @@ export function diffNames(d: GameDatabase | null, p: SpecPresets | null): DiffNa
     item: (g) => itemName(d, g),
     enchant: (g) => enchantName(d, g),
     buffs: (id) => BUFF_PRESETS.find((b) => b.id === id)?.label ?? id,
-    rotation: (c) =>
-      c.rotation.kind === 'preset'
-        ? (p?.rotations.find((r) => r.id === (c.rotation as { presetId: string }).presetId)?.name ??
-          c.rotation.presetId)
-        : 'custom SIML',
+    rotation: (c) => rotationLabel(c.rotation, p),
   };
 }
 

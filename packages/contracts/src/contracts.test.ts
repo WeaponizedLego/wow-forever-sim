@@ -40,6 +40,16 @@ describe('CharacterSchema', () => {
     expect(c.encounter.durationSec).toBe(180);
   });
 
+  it('keeps a preset rotation’s changed on/off settings, and has none when nothing was changed', () => {
+    const hunter = { class: 'hunter', spec: 'hunter', race: 'orc', gear: {}, talents: '' };
+    const rotation = { kind: 'preset', presetId: 'turret', switches: { 'Use Summon Hawk': true } };
+    expect(CharacterSchema.parse({ ...hunter, rotation }).rotation).toEqual(rotation);
+    const plain = CharacterSchema.parse({ ...hunter, rotation: { kind: 'preset', presetId: 'turret' } });
+    expect(plain.rotation).toEqual({ kind: 'preset', presetId: 'turret' });
+    const bad = { ...rotation, switches: { 'Use Summon Hawk': 'yes' } };
+    expect(CharacterSchema.safeParse({ ...hunter, rotation: bad }).success).toBe(false);
+  });
+
   it('rejects an unknown spec', () => {
     const r = CharacterSchema.safeParse({
       class: 'warrior',

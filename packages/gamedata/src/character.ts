@@ -29,6 +29,7 @@ import {
   findRotation,
   loadSpecPresets,
   presetSetup,
+  rotationApl,
   type PlayerOptions,
   type PresetSetup,
   type SpecPresets,
@@ -178,7 +179,7 @@ function rotationOf(
       `rotation preset "${r.presetId}" is an upstream simple rotation, which has no APL to sim`,
     );
   }
-  return APLRotation.fromJson(preset.rotation as never);
+  return APLRotation.fromJson(rotationApl(preset, r.switches) as never);
 }
 
 /** Drops keys whose value is undefined, so spreading an override never erases a default. */
