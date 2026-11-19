@@ -473,6 +473,12 @@ export interface TargetedActionMetrics {
      */
     resistedHits: number;
     /**
+     * # of times this action hit a target for more damage through Spell Piercing.
+     *
+     * @generated from protobuf field: int32 pierced_hits = 41
+     */
+    piercedHits: number;
+    /**
      * # of times this action was a critical strike.
      *
      * @generated from protobuf field: int32 crits = 4
@@ -484,6 +490,12 @@ export interface TargetedActionMetrics {
      * @generated from protobuf field: int32 resisted_crits = 28
      */
     resistedCrits: number;
+    /**
+     * # of times this action crit a target for more damage through Spell Piercing.
+     *
+     * @generated from protobuf field: int32 pierced_crits = 42
+     */
+    piercedCrits: number;
     /**
      * # of times this action ticked on a target.
      *
@@ -497,6 +509,12 @@ export interface TargetedActionMetrics {
      */
     resistedTicks: number;
     /**
+     * # of times this action ticked a target for more damage through Spell Piercing.
+     *
+     * @generated from protobuf field: int32 pierced_ticks = 43
+     */
+    piercedTicks: number;
+    /**
      * # of times this action was a critical tick on a target.
      *
      * @generated from protobuf field: int32 crit_ticks = 6
@@ -508,6 +526,12 @@ export interface TargetedActionMetrics {
      * @generated from protobuf field: int32 resisted_crit_ticks = 30
      */
     resistedCritTicks: number;
+    /**
+     * # of times this action was a critical tick on a target for more damage through Spell Piercing.
+     *
+     * @generated from protobuf field: int32 pierced_crit_ticks = 44
+     */
+    piercedCritTicks: number;
     /**
      * # of times this action was a Miss.
      *
@@ -576,6 +600,12 @@ export interface TargetedActionMetrics {
      */
     resistedDamage: number;
     /**
+     * Total damage done to this target by this action through Spell Piercing.
+     *
+     * @generated from protobuf field: double pierced_damage = 45
+     */
+    piercedDamage: number;
+    /**
      * Total critical damage done to this target by this action.
      *
      * @generated from protobuf field: double crit_damage = 15
@@ -587,6 +617,12 @@ export interface TargetedActionMetrics {
      * @generated from protobuf field: double resisted_crit_damage = 32
      */
     resistedCritDamage: number;
+    /**
+     * Total critical damage done to this target by this action through Spell Piercing.
+     *
+     * @generated from protobuf field: double pierced_crit_damage = 46
+     */
+    piercedCritDamage: number;
     /**
      * Total tick damage done to this target by this action.
      *
@@ -600,6 +636,12 @@ export interface TargetedActionMetrics {
      */
     resistedTickDamage: number;
     /**
+     * Total tick damage done to this target by this action through Spell Piercing.
+     *
+     * @generated from protobuf field: double pierced_tick_damage = 47
+     */
+    piercedTickDamage: number;
+    /**
      * Total critical tick damage done to this target by this action.
      *
      * @generated from protobuf field: double crit_tick_damage = 17
@@ -611,6 +653,12 @@ export interface TargetedActionMetrics {
      * @generated from protobuf field: double resisted_crit_tick_damage = 34
      */
     resistedCritTickDamage: number;
+    /**
+     * Total critical tick damage done to this target by this action through Spell Piercing.
+     *
+     * @generated from protobuf field: double pierced_crit_tick_damage = 48
+     */
+    piercedCritTickDamage: number;
     /**
      * Total glancing damage done to this target by this action.
      *
@@ -2426,7 +2474,7 @@ export interface BulkCandidatesResult {
     error?: ErrorOutcome;
 }
 /**
- * The outcome a range in TargetedActionMetrics.ranges covers. The resisted kinds are partial resists.
+ * The outcome a range in TargetedActionMetrics.ranges covers. The resisted kinds are partial resists; the pierced kinds are hits Spell Piercing raised.
  *
  * @generated from protobuf enum proto.HitKind
  */
@@ -2498,7 +2546,23 @@ export enum HitKind {
     /**
      * @generated from protobuf enum value: HitKindShield = 16;
      */
-    HitKindShield = 16
+    HitKindShield = 16,
+    /**
+     * @generated from protobuf enum value: HitKindPiercedHit = 17;
+     */
+    HitKindPiercedHit = 17,
+    /**
+     * @generated from protobuf enum value: HitKindPiercedCrit = 18;
+     */
+    HitKindPiercedCrit = 18,
+    /**
+     * @generated from protobuf enum value: HitKindPiercedTick = 19;
+     */
+    HitKindPiercedTick = 19,
+    /**
+     * @generated from protobuf enum value: HitKindPiercedCritTick = 20;
+     */
+    HitKindPiercedCritTick = 20
 }
 /**
  * @generated from protobuf enum proto.SimType
@@ -3455,12 +3519,16 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
             { no: 2, name: "casts", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 3, name: "hits", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 27, name: "resisted_hits", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 41, name: "pierced_hits", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "crits", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 28, name: "resisted_crits", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 42, name: "pierced_crits", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 5, name: "ticks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 29, name: "resisted_ticks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 43, name: "pierced_ticks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "crit_ticks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 30, name: "resisted_crit_ticks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 44, name: "pierced_crit_ticks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "misses", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 39, name: "tick_misses", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 8, name: "dodges", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
@@ -3472,12 +3540,16 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
             { no: 36, name: "crushes", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 14, name: "damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 31, name: "resisted_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 45, name: "pierced_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 15, name: "crit_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 32, name: "resisted_crit_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 46, name: "pierced_crit_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 16, name: "tick_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 33, name: "resisted_tick_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 47, name: "pierced_tick_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 17, name: "crit_tick_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 34, name: "resisted_crit_tick_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 48, name: "pierced_crit_tick_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 18, name: "glance_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 19, name: "glance_block_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 35, name: "crush_damage", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
@@ -3499,12 +3571,16 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
         message.casts = 0;
         message.hits = 0;
         message.resistedHits = 0;
+        message.piercedHits = 0;
         message.crits = 0;
         message.resistedCrits = 0;
+        message.piercedCrits = 0;
         message.ticks = 0;
         message.resistedTicks = 0;
+        message.piercedTicks = 0;
         message.critTicks = 0;
         message.resistedCritTicks = 0;
+        message.piercedCritTicks = 0;
         message.misses = 0;
         message.tickMisses = 0;
         message.dodges = 0;
@@ -3516,12 +3592,16 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
         message.crushes = 0;
         message.damage = 0;
         message.resistedDamage = 0;
+        message.piercedDamage = 0;
         message.critDamage = 0;
         message.resistedCritDamage = 0;
+        message.piercedCritDamage = 0;
         message.tickDamage = 0;
         message.resistedTickDamage = 0;
+        message.piercedTickDamage = 0;
         message.critTickDamage = 0;
         message.resistedCritTickDamage = 0;
+        message.piercedCritTickDamage = 0;
         message.glanceDamage = 0;
         message.glanceBlockDamage = 0;
         message.crushDamage = 0;
@@ -3556,11 +3636,17 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
                 case /* int32 resisted_hits */ 27:
                     message.resistedHits = reader.int32();
                     break;
+                case /* int32 pierced_hits */ 41:
+                    message.piercedHits = reader.int32();
+                    break;
                 case /* int32 crits */ 4:
                     message.crits = reader.int32();
                     break;
                 case /* int32 resisted_crits */ 28:
                     message.resistedCrits = reader.int32();
+                    break;
+                case /* int32 pierced_crits */ 42:
+                    message.piercedCrits = reader.int32();
                     break;
                 case /* int32 ticks */ 5:
                     message.ticks = reader.int32();
@@ -3568,11 +3654,17 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
                 case /* int32 resisted_ticks */ 29:
                     message.resistedTicks = reader.int32();
                     break;
+                case /* int32 pierced_ticks */ 43:
+                    message.piercedTicks = reader.int32();
+                    break;
                 case /* int32 crit_ticks */ 6:
                     message.critTicks = reader.int32();
                     break;
                 case /* int32 resisted_crit_ticks */ 30:
                     message.resistedCritTicks = reader.int32();
+                    break;
+                case /* int32 pierced_crit_ticks */ 44:
+                    message.piercedCritTicks = reader.int32();
                     break;
                 case /* int32 misses */ 7:
                     message.misses = reader.int32();
@@ -3607,11 +3699,17 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
                 case /* double resisted_damage */ 31:
                     message.resistedDamage = reader.double();
                     break;
+                case /* double pierced_damage */ 45:
+                    message.piercedDamage = reader.double();
+                    break;
                 case /* double crit_damage */ 15:
                     message.critDamage = reader.double();
                     break;
                 case /* double resisted_crit_damage */ 32:
                     message.resistedCritDamage = reader.double();
+                    break;
+                case /* double pierced_crit_damage */ 46:
+                    message.piercedCritDamage = reader.double();
                     break;
                 case /* double tick_damage */ 16:
                     message.tickDamage = reader.double();
@@ -3619,11 +3717,17 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
                 case /* double resisted_tick_damage */ 33:
                     message.resistedTickDamage = reader.double();
                     break;
+                case /* double pierced_tick_damage */ 47:
+                    message.piercedTickDamage = reader.double();
+                    break;
                 case /* double crit_tick_damage */ 17:
                     message.critTickDamage = reader.double();
                     break;
                 case /* double resisted_crit_tick_damage */ 34:
                     message.resistedCritTickDamage = reader.double();
+                    break;
+                case /* double pierced_crit_tick_damage */ 48:
+                    message.piercedCritTickDamage = reader.double();
                     break;
                 case /* double glance_damage */ 18:
                     message.glanceDamage = reader.double();
@@ -3816,6 +3920,30 @@ class TargetedActionMetrics$Type extends MessageType<TargetedActionMetrics> {
         /* int32 manual_casts = 40; */
         if (message.manualCasts !== 0)
             writer.tag(40, WireType.Varint).int32(message.manualCasts);
+        /* int32 pierced_hits = 41; */
+        if (message.piercedHits !== 0)
+            writer.tag(41, WireType.Varint).int32(message.piercedHits);
+        /* int32 pierced_crits = 42; */
+        if (message.piercedCrits !== 0)
+            writer.tag(42, WireType.Varint).int32(message.piercedCrits);
+        /* int32 pierced_ticks = 43; */
+        if (message.piercedTicks !== 0)
+            writer.tag(43, WireType.Varint).int32(message.piercedTicks);
+        /* int32 pierced_crit_ticks = 44; */
+        if (message.piercedCritTicks !== 0)
+            writer.tag(44, WireType.Varint).int32(message.piercedCritTicks);
+        /* double pierced_damage = 45; */
+        if (message.piercedDamage !== 0)
+            writer.tag(45, WireType.Bit64).double(message.piercedDamage);
+        /* double pierced_crit_damage = 46; */
+        if (message.piercedCritDamage !== 0)
+            writer.tag(46, WireType.Bit64).double(message.piercedCritDamage);
+        /* double pierced_tick_damage = 47; */
+        if (message.piercedTickDamage !== 0)
+            writer.tag(47, WireType.Bit64).double(message.piercedTickDamage);
+        /* double pierced_crit_tick_damage = 48; */
+        if (message.piercedCritTickDamage !== 0)
+            writer.tag(48, WireType.Bit64).double(message.piercedCritTickDamage);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
