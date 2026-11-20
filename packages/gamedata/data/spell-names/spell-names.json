@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "86bf16eb8a8ed50a873839830637e6ff1d7461aa",
+    "commit": "38786d6412ad771f772bbeb41e1c72a7e5f4fdc0",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -6997,7 +6997,7 @@
     ],
     [1301706, "1.60.0 - Item - Tier 1 - Priest - Shadow 5P Bonus - Devouring Plague", 0],
     [1301707, "Briarwood Reed", 0],
-    [1301708, "1.60.0 - Item - Tier 1 - Rogue 5P Bonus - Envenom and Eviscerate", 0],
+    [1301708, "1.60.0 - Item - Tier 1 - Rogue 5P Bonus - Eviscerate and Death Mark", 0],
     [1301709, "1.60.0 - Item - Tier 1 - Shaman - Enhancement 5P Bonus - Stormstrike", 0],
     [1301711, "1.60.0 - Item - Tier 1 - Shaman - Elemental 5P Bonus - Lava Burst", 0],
     [1301713, "1.60.0 - Item - Tier 1 - Shaman - Restoration 5P Bonus - Riptide", 0],
