@@ -2,7 +2,7 @@
   "specId": "protection-paladin",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "8d305c56cd19d0c28c5a2f5c7010c428ac0991ca",
+    "commit": "86bf16eb8a8ed50a873839830637e6ff1d7461aa",
     "dir": "ui/specs/paladin/protection",
     "files": ["apls/default.apl.siml", "defaults.siml", "gear_sets/default.gear.siml", "presets.ts"]
   },
