@@ -1,16 +1,11 @@
 import { RaidSimRequest } from '@fsim/proto/api';
-import { SimDatabase } from '@fsim/proto/db';
+import { SimDatabase, SimEnchant, SimItem } from '@fsim/proto/db';
+import { UIEnchant, UIItem } from '@fsim/proto/ui';
 import { afterAll, describe, expect, it } from 'vitest';
 import type { WasmEngineClient } from './client';
 import { buildPlayerDatabase, consumableIds, withDatabases } from './database';
 import { createVendorEngineClient } from './node';
-import {
-  FIXTURE_DPS,
-  VENDOR_MISSING,
-  hasVendorDb,
-  loadRaidSimRequest,
-  loadVendorUIDatabase,
-} from './testing/fixtures';
+import { VENDOR_MISSING, hasVendorDb, loadRaidSimRequest, loadVendorUIDatabase } from './testing/fixtures';
 
 const fixtureReq = loadRaidSimRequest();
 const player = fixtureReq.raid!.parties[0]!.players[0]!;
@@ -53,13 +48,13 @@ describe.skipIf(!hasVendorDb())('buildPlayerDatabase from upstream db.bin', () =
     ).toBe(true);
   });
 
-  describe.skipIf(!!VENDOR_MISSING)('sims like the fixture', () => {
+  describe.skipIf(!!VENDOR_MISSING)('sims like the whole database', () => {
     // A fresh client: the engine's item database is global per worker and only grows, so a worker that
-    // already ran the full-database fixture would hide anything missing from the subset.
+    // already ran with more rows would hide anything missing from the subset.
     let client: WasmEngineClient | undefined;
     afterAll(() => client?.dispose());
 
-    it('rebuilt request gives the fixture DPS exactly', async () => {
+    it('the subset gives exactly the DPS the whole database gives', async () => {
       const stripped: RaidSimRequest = withDatabases(fixtureReq, {
         ...db!,
         items: [],
@@ -67,11 +62,29 @@ describe.skipIf(!hasVendorDb())('buildPlayerDatabase from upstream db.bin', () =
         consumables: [],
       });
       expect(stripped.raid!.parties[0]!.players[0]!.database!.items).toHaveLength(0);
-      const rebuilt = withDatabases(fixtureReq, db!);
+      const some = { ...fixtureReq, simOptions: { ...fixtureReq.simOptions!, iterations: 1000 } };
+      const subset = withDatabases(some, db!);
       expect(fixtureReq.raid!.parties[0]!.players[0]!.database!.consumables.length).toBeGreaterThan(100); // input untouched
+
+      // The reference: the same player with every row of the same db.bin (not the fixture's own database,
+      // which is upstream's data as of the capture). It runs second, on the worker the subset ran on.
+      const whole = RaidSimRequest.clone(some);
+      const json = { ignoreUnknownFields: true };
+      whole.raid!.parties[0]!.players[0]!.database = SimDatabase.create({
+        items: db!.items.map((i) => SimItem.fromJson(UIItem.toJson(i), json)),
+        enchants: db!.enchants.map((e) => SimEnchant.fromJson(UIEnchant.toJson(e), json)),
+        randomSuffixes: db!.randomSuffixes,
+        itemEffectRandPropPoints: db!.itemEffectRandPropPoints,
+        consumables: db!.consumables,
+        spellEffects: db!.spellEffects,
+      });
+
       client = createVendorEngineClient({ concurrency: 1, engineLogs: false });
-      const res = await client.raidSim(rebuilt);
-      expect(res.raidMetrics!.dps!.avg).toBe(FIXTURE_DPS);
+      const fromSubset = await client.raidSim(subset);
+      const fromWhole = await client.raidSim(whole);
+      expect(fromSubset.raidMetrics!.dps!.avg).toBeGreaterThan(0);
+      expect(fromSubset.raidMetrics!.dps!.avg).toBe(fromWhole.raidMetrics!.dps!.avg);
+      expect(fromSubset.raidMetrics!.dps!.allValues).toEqual(fromWhole.raidMetrics!.dps!.allValues);
     });
   });
 });

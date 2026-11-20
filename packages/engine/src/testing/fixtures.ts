@@ -10,12 +10,13 @@ const json = (name: string) => readFileSync(`${fixtureDir}${name}`, 'utf8');
 const opts = { ignoreUnknownFields: true };
 
 export const loadRaidSimRequest = () => RaidSimRequest.fromJsonString(json('sv-raidsim-request.json'), opts);
+/**
+ * The request's result as upstream b2047bf gave it (5,000 iterations, seed 0x5F1A, 850.20 DPS). A frozen sample:
+ * later engines sim the same request to nearby numbers, not these.
+ */
 export const loadRaidSimResult = () => RaidSimResult.fromJsonString(json('sv-raidsim-result.json'), opts);
 export const loadStatWeightsRequest = () =>
   StatWeightsRequest.fromJsonString(json('sv-statweights-request.json'), opts);
-
-/** The fixture's expected mean DPS (5,000 iterations, seed 0x5F1A). */
-export const FIXTURE_DPS = 850.196788593879;
 
 export const VENDOR_MISSING = hasVendorEngine()
   ? ''
