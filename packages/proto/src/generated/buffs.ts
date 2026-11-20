@@ -227,9 +227,9 @@ export interface Debuffs {
      */
     huntersMark: boolean;
     /**
-     * @generated from protobuf field: bool judgement_of_the_crusader = 2
+     * @generated from protobuf field: proto.TristateEffect judgement_of_the_crusader = 2
      */
-    judgementOfTheCrusader: boolean;
+    judgementOfTheCrusader: TristateEffect;
     /**
      * @generated from protobuf field: bool judgement_of_light = 3
      */
@@ -797,7 +797,7 @@ class Debuffs$Type extends MessageType<Debuffs> {
     constructor() {
         super("proto.Debuffs", [
             { no: 1, name: "hunters_mark", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 2, name: "judgement_of_the_crusader", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 2, name: "judgement_of_the_crusader", kind: "enum", T: () => ["proto.TristateEffect", TristateEffect] },
             { no: 3, name: "judgement_of_light", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 4, name: "judgement_of_wisdom", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 5, name: "curse_of_elements", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
@@ -824,7 +824,7 @@ class Debuffs$Type extends MessageType<Debuffs> {
     create(value?: PartialMessage<Debuffs>): Debuffs {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.huntersMark = false;
-        message.judgementOfTheCrusader = false;
+        message.judgementOfTheCrusader = 0;
         message.judgementOfLight = false;
         message.judgementOfWisdom = false;
         message.curseOfElements = false;
@@ -858,8 +858,8 @@ class Debuffs$Type extends MessageType<Debuffs> {
                 case /* bool hunters_mark */ 1:
                     message.huntersMark = reader.bool();
                     break;
-                case /* bool judgement_of_the_crusader */ 2:
-                    message.judgementOfTheCrusader = reader.bool();
+                case /* proto.TristateEffect judgement_of_the_crusader */ 2:
+                    message.judgementOfTheCrusader = reader.int32();
                     break;
                 case /* bool judgement_of_light */ 3:
                     message.judgementOfLight = reader.bool();
@@ -939,9 +939,9 @@ class Debuffs$Type extends MessageType<Debuffs> {
         /* bool hunters_mark = 1; */
         if (message.huntersMark !== false)
             writer.tag(1, WireType.Varint).bool(message.huntersMark);
-        /* bool judgement_of_the_crusader = 2; */
-        if (message.judgementOfTheCrusader !== false)
-            writer.tag(2, WireType.Varint).bool(message.judgementOfTheCrusader);
+        /* proto.TristateEffect judgement_of_the_crusader = 2; */
+        if (message.judgementOfTheCrusader !== 0)
+            writer.tag(2, WireType.Varint).int32(message.judgementOfTheCrusader);
         /* bool judgement_of_light = 3; */
         if (message.judgementOfLight !== false)
             writer.tag(3, WireType.Varint).bool(message.judgementOfLight);
