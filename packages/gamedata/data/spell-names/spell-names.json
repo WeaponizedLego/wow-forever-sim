@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "1d811b4e66f8f81dbad7be89702cc9331b91ac57",
+    "commit": "50f275da5f8a16eec51bd142ae21005469dc2c11",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -7337,7 +7337,6 @@
     [1318479, "Royal Seal of Eldre'Thalas", 0],
     [1318480, "Royal Seal of Eldre'Thalas", 0],
     [1318514, "Defender of the Barkskin", 0],
-    [1318846, "Eye of the Beast", 0],
     [1318930, "Draconic Infused Emblem", 0],
     [1318931, "Draconic Infused Emblem", 0],
     [1318938, "Counterattack Lodestone", 0],
