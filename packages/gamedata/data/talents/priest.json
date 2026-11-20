@@ -2,7 +2,7 @@
   "class": "priest",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b32b784bce7ec86b80a849bafcd1e6e5d6ac5f4c",
+    "commit": "ed8d15e14c70126376a1e7bfcd572f7e0c7051b8",
     "files": ["ui/sim/talents/trees/priest.json", "assets/database/db.json"]
   },
   "trees": [

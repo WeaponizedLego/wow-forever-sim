@@ -2,7 +2,7 @@
   "specId": "dps-priest",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b32b784bce7ec86b80a849bafcd1e6e5d6ac5f4c",
+    "commit": "ed8d15e14c70126376a1e7bfcd572f7e0c7051b8",
     "dir": "ui/specs/priest/dps",
     "files": ["builds/smite_testing.build.json", "builds/testing.build.json", "presets.ts"]
   },
@@ -122,7 +122,6 @@
               "id": 31146,
               "name": "Raid Target",
               "level": 63,
-              "mobType": "MobTypeMechanical",
               "stats": [
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
                 1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -198,7 +197,6 @@
               "id": 31146,
               "name": "Raid Target",
               "level": 63,
-              "mobType": "MobTypeMechanical",
               "stats": [
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
                 1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
