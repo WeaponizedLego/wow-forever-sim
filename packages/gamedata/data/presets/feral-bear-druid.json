@@ -2,14 +2,14 @@
   "specId": "feral-bear-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "50f275da5f8a16eec51bd142ae21005469dc2c11",
+    "commit": "8d305c56cd19d0c28c5a2f5c7010c428ac0991ca",
     "dir": "ui/specs/druid/feralbear",
     "files": ["apls/adaptive.apl.json", "gear_sets/default.gear.json", "presets.ts"]
   },
   "status": "complete",
   "defaultBuildId": null,
   "missing": ["builds"],
-  "notes": ["Encounter \"Mount Hyjal\" is built by UI code upstream and is not extracted."],
+  "notes": ["Encounter \"Default\" is built by UI code upstream and is not extracted."],
   "defaults": {
     "race": "tauren",
     "professions": ["Engineering", "Enchanting"],
