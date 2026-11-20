@@ -2,7 +2,7 @@
   "class": "shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "38786d6412ad771f772bbeb41e1c72a7e5f4fdc0",
+    "commit": "6f3d3dac2a6157516371633855ecc73789b11fe1",
     "files": ["ui/sim/talents/trees/shaman.json", "assets/database/db.json"]
   },
   "trees": [

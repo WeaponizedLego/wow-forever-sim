@@ -2,7 +2,7 @@
   "specId": "dps-priest",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "38786d6412ad771f772bbeb41e1c72a7e5f4fdc0",
+    "commit": "6f3d3dac2a6157516371633855ecc73789b11fe1",
     "dir": "ui/specs/priest/dps",
     "files": ["builds/smite_testing.build.json", "builds/testing.build.json", "presets.ts"]
   },
@@ -48,7 +48,7 @@
       "moonkinAura": true
     },
     "debuffs": {
-      "judgementOfTheCrusader": true,
+      "judgementOfTheCrusader": "TristateEffectRegular",
       "judgementOfWisdom": true,
       "curseOfElements": true
     },
@@ -100,7 +100,7 @@
           "moonkinAura": true
         },
         "debuffs": {
-          "judgementOfTheCrusader": true,
+          "judgementOfTheCrusader": "TristateEffectRegular",
           "judgementOfWisdom": true,
           "curseOfElements": true
         },
@@ -176,7 +176,7 @@
           "moonkinAura": true
         },
         "debuffs": {
-          "judgementOfTheCrusader": true,
+          "judgementOfTheCrusader": "TristateEffectRegular",
           "judgementOfWisdom": true,
           "curseOfElements": true
         },
