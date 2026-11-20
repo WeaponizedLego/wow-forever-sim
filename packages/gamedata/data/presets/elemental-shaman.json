@@ -2,7 +2,7 @@
   "specId": "elemental-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "bfd4d29e25a0741de0208ed20c83a764cd8cdf64",
+    "commit": "21377c070b5ea111a9bb5e36eb766193270b0cc7",
     "dir": "ui/specs/shaman/elemental",
     "files": ["builds/default.build.json", "presets.ts"]
   },
@@ -62,12 +62,11 @@
           "id": 31146,
           "name": "Raid Target",
           "level": 63,
-          "mobType": "MobTypeMechanical",
           "stats": [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
             1428900, 0, 0, 0, 0, 0, 0, 0, 0
           ],
-          "minBaseDamage": 15113,
+          "minBaseDamage": 2601,
           "damageSpread": 0.5,
           "swingSpeed": 2,
           "parryHaste": true,
@@ -132,12 +131,11 @@
               "id": 31146,
               "name": "Raid Target",
               "level": 63,
-              "mobType": "MobTypeMechanical",
               "stats": [
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
                 1428900, 0, 0, 0, 0, 0, 0, 0, 0
               ],
-              "minBaseDamage": 15113,
+              "minBaseDamage": 2601,
               "damageSpread": 0.5,
               "swingSpeed": 2,
               "parryHaste": true,
