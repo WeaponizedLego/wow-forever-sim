@@ -179,7 +179,7 @@ function rotationOf(
       `rotation preset "${r.presetId}" is an upstream simple rotation, which has no APL to sim`,
     );
   }
-  return APLRotation.fromJson(rotationApl(preset, r.switches) as never);
+  return APLRotation.fromJson(rotationApl(preset, r) as never);
 }
 
 /** Drops keys whose value is undefined, so spreading an override never erases a default. */

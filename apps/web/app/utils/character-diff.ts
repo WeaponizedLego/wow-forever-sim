@@ -10,7 +10,6 @@ import {
   type ClassId,
   type GearItem,
   type ItemSlotId,
-  type Rotation,
 } from '@fsim/contracts';
 import { talentChanges } from '@fsim/gamedata';
 import type { DiffRow } from '~/composables/ui-types';
@@ -30,8 +29,10 @@ export interface DiffNames {
   /** Short enchant name, or null when the item has none. */
   enchant: (g: GearItem | undefined) => string | null;
   buffs: (preset: BuffsPreset) => string;
-  /** Rotation preset name with its changed on/off settings, or "Custom SIML". */
+  /** Rotation preset name with its changed settings, or "Custom SIML". */
   rotation: (c: Character) => string;
+  /** A numeric setting of the character's rotation with its unit ("12", "8s"), changed or not. */
+  rotationValue: (c: Character, name: string) => string;
 }
 
 export const sameGear = (a: GearItem | undefined, b: GearItem | undefined) =>
@@ -100,24 +101,29 @@ function talentRows(cls: ClassId, a: string, b: string): DiffRow[] {
 }
 
 /**
- * The same rotation preset with other on/off settings: one row per setting that differs ("Use Summon Hawk: on",
- * + when it goes on). Null when the rotations themselves differ. Only changed settings are stored (contracts
- * RotationSchema), so a setting one side does not list is at the opposite of what the other side changed it to.
+ * The same rotation preset with other settings: one row per on/off setting that differs ("Use Summon Hawk: on",
+ * + when it goes on) and a −/+ pair per number ("Shoot spot: 12", "Shoot spot: 15"). Null when the rotations
+ * themselves differ. Only changed settings are stored (contracts RotationSchema), so a switch one side does not
+ * list is at the opposite of what the other side changed it to, and a number at what `names` says.
  */
-function switchRows(a: Rotation, b: Rotation): DiffRow[] | null {
-  if (a.kind !== 'preset' || b.kind !== 'preset' || a.presetId !== b.presetId) return null;
-  const x = a.switches ?? {};
-  const y = b.switches ?? {};
-  return [...new Set([...Object.keys(x), ...Object.keys(y)])]
-    .filter((name) => x[name] !== y[name])
-    .map((name, i) => {
-      const on = y[name] ?? !x[name];
-      return {
-        op: on ? ('+' as const) : ('-' as const),
-        label: `${name}: ${on ? 'on' : 'off'}`,
-        ...(i === 0 && { detail: 'rotation' }),
-      };
-    });
+function settingRows(a: Character, b: Character, names: DiffNames): DiffRow[] | null {
+  const ra = a.rotation;
+  const rb = b.rotation;
+  if (ra.kind !== 'preset' || rb.kind !== 'preset' || ra.presetId !== rb.presetId) return null;
+  const differing = <T>(x: Record<string, T> = {}, y: Record<string, T> = {}) =>
+    [...new Set([...Object.keys(x), ...Object.keys(y)])].filter((name) => x[name] !== y[name]);
+  const rows: DiffRow[] = [
+    ...differing(ra.switches, rb.switches).map((name): DiffRow => {
+      const on = rb.switches?.[name] ?? !ra.switches?.[name];
+      return { op: on ? '+' : '-', label: `${name}: ${on ? 'on' : 'off'}` };
+    }),
+    ...differing(ra.values, rb.values).flatMap((name): DiffRow[] => [
+      { op: '-', label: `${name}: ${names.rotationValue(a, name)}` },
+      { op: '+', label: `${name}: ${names.rotationValue(b, name)}` },
+    ]),
+  ];
+  if (rows[0]) rows[0].detail = 'rotation';
+  return rows;
 }
 
 /** `b` against `a`: one group per changed slot, then talents, buffs, fight, rotation and the rest. */
@@ -187,7 +193,7 @@ export function diffCharacters(a: Character, b: Character, names: DiffNames): Ch
     });
   }
   if (stable(a.rotation) !== stable(b.rotation)) {
-    const rows = switchRows(a.rotation, b.rotation) ?? [
+    const rows = settingRows(a, b, names) ?? [
       { op: '-', label: `Rotation: ${names.rotation(a)}`, detail: 'rotation' },
       { op: '+', label: `Rotation: ${names.rotation(b)}` },
     ];

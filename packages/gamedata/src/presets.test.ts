@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { characterFromPresets, characterToPlayer } from './character';
 import {
   buildLabel,
-  changedSwitches,
+  changedSettings,
   closestBuild,
   findGearSet,
   findRotation,
@@ -11,8 +11,9 @@ import {
   PRESET_INDEX,
   rotationApl,
   rotationLabel,
+  rotationNumbers,
   rotationSwitches,
-  setRotationSwitch,
+  setRotationSetting,
   suggestedRotation,
   talentDistance,
 } from './presets';
@@ -102,30 +103,66 @@ describe('spec presets', () => {
     expect(rotationSwitches(findRotation(hunter, 'clean-weave')!)).toEqual([]);
   });
 
-  it('applies changed on/off settings, and stores only what differs from the rotation’s own', async () => {
+  it('applies changed settings, and stores only what differs from the rotation’s own', async () => {
     const hunter = await loadSpecPresets('hunter');
     const turret = findRotation(hunter, 'turret')!;
+    const plain = { kind: 'preset' as const, presetId: 'turret' };
     const hawk = (changed?: Record<string, boolean>) =>
       rotationSwitches(turret, changed).find((x) => x.name === 'Use Summon Hawk');
 
     expect(hawk()).toEqual({ name: 'Use Summon Hawk', on: false, preset: false });
     expect(hawk({ 'Use Summon Hawk': true })).toEqual({ name: 'Use Summon Hawk', on: true, preset: false });
+    expect(rotationNumbers(turret)).toEqual([
+      { name: 'Shoot spot', value: 12, preset: 12, unit: '' },
+      { name: 'Pull range', value: 25, preset: 25, unit: '' },
+    ]);
+    // Three decimals; a value that does not fit is ignored.
+    expect(rotationNumbers(turret, { 'Shoot spot': 14.56789, 'Pull range': -1 }).map((n) => n.value)).toEqual(
+      [14.568, 25],
+    );
 
-    const on = setRotationSwitch(turret, undefined, 'Use Summon Hawk', true);
-    expect(on).toEqual({ 'Use Summon Hawk': true });
-    expect(setRotationSwitch(turret, on, 'Use Aimed Shot', false)).toEqual({
-      'Use Aimed Shot': false,
-      'Use Summon Hawk': true,
+    const on = setRotationSetting(turret, plain, 'Use Summon Hawk', true);
+    expect(on).toEqual({ ...plain, switches: { 'Use Summon Hawk': true } });
+    const both = setRotationSetting(turret, on, 'Shoot spot', 15);
+    expect(both).toEqual({ ...plain, switches: { 'Use Summon Hawk': true }, values: { 'Shoot spot': 15 } });
+    expect(changedSettings(turret, both)).toEqual(['Use Summon Hawk on', 'Shoot spot 15']);
+    // Put back, set to what it already is, the wrong kind of value, or not a setting of this rotation:
+    // nothing is stored, and the rotation is the plain preset again.
+    expect(setRotationSetting(turret, both, 'Use Summon Hawk', false)).toEqual({
+      ...plain,
+      values: { 'Shoot spot': 15 },
     });
-    // Put back, set to what it already is, or not a switch of this rotation: nothing is stored.
-    expect(setRotationSwitch(turret, on, 'Use Summon Hawk', false)).toBeUndefined();
-    expect(setRotationSwitch(turret, undefined, 'Use Aimed Shot', true)).toBeUndefined();
-    expect(setRotationSwitch(turret, undefined, 'Melee weave', false)).toBeUndefined();
-    expect(setRotationSwitch(turret, undefined, 'Pull range', true)).toBeUndefined();
-    expect(changedSwitches(turret, { 'Use Summon Hawk': true, 'Melee weave': false })).toHaveLength(1);
+    expect(setRotationSetting(turret, on, 'Use Summon Hawk', false)).toEqual(plain);
+    expect(setRotationSetting(turret, plain, 'Use Aimed Shot', true)).toEqual(plain);
+    expect(setRotationSetting(turret, plain, 'Shoot spot', 12)).toEqual(plain);
+    expect(setRotationSetting(turret, plain, 'Shoot spot', Number.NaN)).toEqual(plain);
+    expect(setRotationSetting(turret, plain, 'Pull range', true)).toEqual(plain);
+    expect(setRotationSetting(turret, plain, 'Use Summon Hawk', 1)).toEqual(plain);
+    expect(setRotationSetting(turret, plain, 'Melee weave', false)).toEqual(plain);
+    expect(changedSettings(turret, { switches: { 'Melee weave': false }, values: { Nope: 3 } })).toEqual([]);
   });
 
-  it('writes changed switches into the APL it sends, leaving the preset as it was', async () => {
+  it('reads numbers with their unit: plain, percent and seconds', async () => {
+    const bear = findRotation(await loadSpecPresets('feral-bear-druid'), 'adaptive-bear')!;
+    expect(rotationNumbers(bear).map((n) => `${n.name}=${n.value}${n.unit}`)).toEqual([
+      'Healthstone health threshold=30%',
+      'Barkskin health threshold=60%',
+      'Maul minimum rage=20',
+    ]);
+    const warlock = findRotation(await loadSpecPresets('warlock'), 'sm-ruin')!;
+    expect(rotationNumbers(warlock)).toEqual([{ name: 'Doom tick', value: 60, preset: 60, unit: 's' }]);
+    if (bear.kind !== 'apl' || warlock.kind !== 'apl') throw new Error('both are APLs');
+    const val = (apl: Record<string, unknown>, name: string) =>
+      (apl['valueVariables'] as { name: string; value: { const?: { val: string } } }[]).find(
+        (v) => v.name === name,
+      )?.value.const?.val;
+    expect(
+      val(rotationApl(bear, { values: { 'Barkskin health threshold': 45.5 } }), 'Barkskin health threshold'),
+    ).toBe('45.5%');
+    expect(val(rotationApl(warlock, { values: { 'Doom tick': 30 } }), 'Doom tick')).toBe('30s');
+  });
+
+  it('writes changed settings into the APL it sends, leaving the preset as it was', async () => {
     const hunter = await loadSpecPresets('hunter');
     const turret = findRotation(hunter, 'turret')!;
     if (turret.kind !== 'apl') throw new Error('turret is an APL');
@@ -136,20 +173,33 @@ describe('spec presets', () => {
       )?.value.const?.val;
 
     expect(rotationApl(turret)).toBe(turret.rotation);
-    const apl = rotationApl(turret, { 'Use Summon Hawk': true, 'Pull range': true });
+    expect(rotationApl(turret, { switches: { 'Pull range': true }, values: { 'Shoot spot': 12 } })).toBe(
+      turret.rotation,
+    );
+    const apl = rotationApl(turret, {
+      switches: { 'Use Summon Hawk': true },
+      values: { 'Shoot spot': 14.5 },
+    });
     expect(val(apl, 'Use Summon Hawk')).toBe('true');
     expect(val(apl, 'Use Aimed Shot')).toBe('true');
+    expect(val(apl, 'Shoot spot')).toBe('14.5');
     expect(val(apl, 'Pull range')).toBe('25');
     expect(apl['priorityList']).toBe(turret.rotation['priorityList']);
     expect(JSON.stringify(turret.rotation)).toBe(before);
 
     const character = {
       ...characterFromPresets(hunter, 'mm'),
-      rotation: { kind: 'preset' as const, presetId: 'turret', switches: { 'Use Summon Hawk': true } },
+      rotation: {
+        kind: 'preset' as const,
+        presetId: 'turret',
+        switches: { 'Use Summon Hawk': true },
+        values: { 'Shoot spot': 20 },
+      },
     };
     const sent = characterToPlayer(CharacterSchema.parse(character), hunter, db).rotation!;
-    const sentHawk = sent.valueVariables.find((v) => v.name === 'Use Summon Hawk')!.value!.value;
-    expect(sentHawk).toEqual({ oneofKind: 'const', const: { val: 'true' } });
+    const sentVal = (name: string) => sent.valueVariables.find((v) => v.name === name)!.value!.value;
+    expect(sentVal('Use Summon Hawk')).toEqual({ oneofKind: 'const', const: { val: 'true' } });
+    expect(sentVal('Shoot spot')).toEqual({ oneofKind: 'const', const: { val: '20' } });
   });
 
   it('names a rotation with what was changed in it', async () => {
@@ -164,6 +214,12 @@ describe('spec presets', () => {
     expect(turret({ 'Use Summon Hawk': true, 'Use Aimed Shot': false, 'Use Multi-Shot': true })).toBe(
       'Turret · 3 settings changed',
     );
+    const values = { 'Shoot spot': 15 };
+    expect(rotationLabel({ kind: 'preset', presetId: 'turret', values }, hunter)).toBe(
+      'Turret · Shoot spot 15',
+    );
+    const doom = { kind: 'preset' as const, presetId: 'sm-ruin', values: { 'Doom tick': 30 } };
+    expect(rotationLabel(doom, await loadSpecPresets('warlock'))).toBe('SM/Ruin · Doom tick 30s');
     expect(rotationLabel({ kind: 'preset', presetId: 'turret' }, null)).toBe('turret');
     expect(rotationLabel({ kind: 'siml', source: 'x' }, hunter)).toBe('Custom SIML');
   });

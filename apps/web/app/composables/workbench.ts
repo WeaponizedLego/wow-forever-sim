@@ -18,6 +18,7 @@ import {
   itemLevel,
   loadSpecPresets,
   rotationLabel,
+  rotationNumbers,
   weightStatsFor,
   type GameDatabase,
   type SpecPresets,
@@ -150,6 +151,14 @@ export function diffNames(d: GameDatabase | null, p: SpecPresets | null): DiffNa
     enchant: (g) => enchantName(d, g),
     buffs: (id) => BUFF_PRESETS.find((b) => b.id === id)?.label ?? id,
     rotation: (c) => rotationLabel(c.rotation, p),
+    rotationValue: (c, name) => {
+      if (c.rotation.kind !== 'preset') return '—';
+      const { presetId, values } = c.rotation;
+      const preset = p?.rotations.find((r) => r.id === presetId);
+      const n = preset && rotationNumbers(preset, values).find((x) => x.name === name);
+      // Without the presets only a changed value is known.
+      return n ? `${n.value}${n.unit}` : String(values?.[name] ?? 'the rotation’s own');
+    },
   };
 }
 

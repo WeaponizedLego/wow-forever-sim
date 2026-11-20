@@ -5,7 +5,7 @@
 import type { Character, Diagnostic } from '@fsim/contracts';
 import {
   buildLabel,
-  changedSwitches,
+  changedSettings,
   classTalents,
   findRotation,
   parseTalents,
@@ -24,8 +24,8 @@ export interface RotationAdvice {
   /**
    * - `fits`: the suggested rotation is in use.
    * - `other-build`: the one in use is what upstream plays with other builds, not this one: most likely a leftover.
-   * - `alternative`: the one in use belongs to no build (a variant such as "Clean Weave"), or its on/off settings
-   *   were changed by hand: a choice, not a mistake.
+   * - `alternative`: the one in use belongs to no build (a variant such as "Clean Weave"), or its settings were
+   *   changed by hand: a choice, not a mistake.
    */
   state: 'fits' | 'other-build' | 'alternative';
   /** The builds upstream plays the rotation in use with, by label. */
@@ -47,7 +47,7 @@ export function rotationAdvice(character: Character, presets: SpecPresets): Rota
   const edited =
     !!current &&
     character.rotation.kind === 'preset' &&
-    changedSwitches(current, character.rotation.switches).length > 0;
+    changedSettings(current, character.rotation).length > 0;
   return {
     current,
     build: match.build,
