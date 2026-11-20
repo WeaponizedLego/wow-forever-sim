@@ -12,6 +12,11 @@ instead of a live engine.
 
 All are protojson. Parse with `RaidSimResult.fromJson(...)` from `@fsim/proto`.
 
+The results are frozen samples for the code that reads results (`packages/analysis`, `packages/proto`), not what
+today's engine returns: upstream retunes the sim between engine syncs (the same request gave 849.44 DPS at
+`132a66a`). The real-WASM tests in `packages/engine` therefore hold the engine to the capture's range only, and
+check exactness against the engine's own runs.
+
 `engine/action-ids.json` is not protojson: the action ids (`spell:1680#14`, …) that the DPS Warrior presets and the
 Wowhead-imported Hunter (`import/real/wowhead-forever-sv-hunter.url`) report in the locked engine, split into damage
 rows, player auras and everything else. `packages/gamedata/src/action-names.test.ts` names them offline;
