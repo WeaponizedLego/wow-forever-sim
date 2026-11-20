@@ -2,30 +2,34 @@
   "specId": "enhancement-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "bfd4d29e25a0741de0208ed20c83a764cd8cdf64",
+    "commit": "21377c070b5ea111a9bb5e36eb766193270b0cc7",
     "dir": "ui/specs/shaman/enhancement",
-    "files": ["builds/testing.build.json", "presets.ts"]
+    "files": ["builds/default.build.json", "presets.ts"]
   },
   "status": "complete",
   "defaultBuildId": null,
   "missing": [],
-  "notes": [
-    "Upstream defaults to the TypeAuto rotation, which the site builds into an APL in the browser; the defaults here use the APL preset \"default\" instead."
-  ],
+  "notes": [],
   "defaults": {
-    "race": "orc",
+    "race": "dwarf",
     "professions": ["Engineering", "Leatherworking"],
-    "talents": "053303102-053030310051002251-03",
-    "gearSetId": "testing",
+    "talents": "053303102-053030310051012251-02",
+    "gearSetId": "default",
     "rotationId": "default",
     "consumables": {
       "flaskId": 13512,
       "foodId": 20452,
       "conjuredId": 12662,
-      "explosiveId": 260817,
-      "mhImbueId": 18262,
-      "extraIds": [10646],
-      "elixirIds": [250337, 250338, 250341, 250343, 13454, 12820, 250328, 250350],
+      "mhImbueId": 12404,
+      "potions": [
+        1072, 2455, 2456, 3087, 3385, 3827, 6048, 6049, 6050, 6051, 6052, 6149, 9144, 9224, 13443, 13444,
+        13456, 13457, 13458, 13459, 13460, 13461, 14894, 17351, 17352, 18253, 18841, 250932, 250933, 250934,
+        250935, 250936, 250937, 250938, 250939, 250940, 250941, 250942, 250943, 250951, 250953, 250954,
+        250955, 255663, 274935, 282013
+      ],
+      "conjuredItems": [11952, 12662, 15723, 17747],
+      "extraIds": [12217, 8410],
+      "elixirIds": [250343, 13454, 250351, 13452, 250337, 250338, 250341, 12820],
       "resourcePotId": 13444
     },
     "specOptions": {
@@ -35,17 +39,19 @@
     },
     "individualBuffs": {
       "greaterBlessingOfKings": true,
-      "greaterBlessingOfMight": 1
+      "greaterBlessingOfMight": 1,
+      "greaterBlessingOfWisdom": 1
     },
     "partyBuffs": {},
     "raidBuffs": {
       "arcaneIntellect": true,
+      "prayerOfSpirit": true,
       "markOfTheWild": true,
       "powerWordFortitude": true,
-      "strengthOfEarthTotem": 1,
-      "windfuryTotem": true,
+      "graceOfAirTotem": 1,
       "battleShout": 1,
-      "leaderOfThePack": true
+      "leaderOfThePack": true,
+      "moonkinAura": true
     },
     "debuffs": {
       "huntersMark": true,
@@ -63,23 +69,46 @@
       "reactionTimeMs": 100,
       "reactionTimeMaxMs": 0,
       "inFrontOfTarget": false
+    },
+    "encounter": {
+      "apiVersion": 2,
+      "duration": 180,
+      "durationVariation": 5,
+      "executeProportion20": 0.2,
+      "executeProportion35": 0.35,
+      "targets": [
+        {
+          "id": 31146,
+          "name": "Raid Target",
+          "level": 63,
+          "stats": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
+            1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
+          ],
+          "minBaseDamage": 2601,
+          "damageSpread": 0.5,
+          "swingSpeed": 2,
+          "parryHaste": true,
+          "canCrush": true
+        }
+      ]
     }
   },
   "builds": [
     {
-      "id": "testing",
-      "name": "Testing",
+      "id": "default",
+      "name": "Default",
       "setup": {
-        "race": "windshaperskyborne",
+        "race": "dwarf",
         "professions": ["Engineering", "Leatherworking"],
-        "talents": "053303102-053030310051002251-03",
-        "gearSetId": "testing",
+        "talents": "053303102-053030310051012251-02",
+        "gearSetId": "default",
         "rotationId": "default",
         "consumables": {
           "flaskId": 13512,
-          "foodId": 13935,
+          "foodId": 20452,
           "conjuredId": 12662,
-          "mhImbueId": 20750,
+          "mhImbueId": 12404,
           "potions": [
             1072, 2455, 2456, 3087, 3385, 3827, 6048, 6049, 6050, 6051, 6052, 6149, 9144, 9224, 13443, 13444,
             13456, 13457, 13458, 13459, 13460, 13461, 14894, 17351, 17352, 18253, 18841, 250932, 250933,
@@ -87,15 +116,13 @@
             250954, 250955, 255663, 274935, 282013
           ],
           "conjuredItems": [11952, 12662, 15723, 17747],
-          "extraIds": [12217, 8423],
+          "extraIds": [12217, 8410],
           "elixirIds": [250343, 13454, 250351, 13452, 250337, 250338, 250341, 12820],
-          "swapMhImbueId": 20750,
           "resourcePotId": 13444
         },
         "specOptions": {
           "classOptions": {
-            "imbueMh": "FlametongueWeapon",
-            "imbueMhSwap": "FlametongueWeapon"
+            "imbueMh": "WindfuryWeapon"
           }
         },
         "individualBuffs": {
@@ -143,7 +170,7 @@
               "name": "Raid Target",
               "level": 63,
               "stats": [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3731, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 3731, 0,
                 1428900, 0, 0, 0, 0, 0, 0, 0, 0, 0
               ],
               "minBaseDamage": 2601,
@@ -159,65 +186,65 @@
   ],
   "gearSets": [
     {
-      "id": "testing",
-      "name": "Testing",
+      "id": "default",
+      "name": "Default",
       "gear": {
         "head": {
-          "itemId": 252604,
-          "enchantId": 1509
+          "itemId": 227021,
+          "enchantId": 2543
         },
         "neck": {
-          "itemId": 22149,
-          "enchantId": 8218
+          "itemId": 15411,
+          "enchantId": 856
         },
         "shoulder": {
-          "itemId": 19050
+          "itemId": 227003
         },
         "back": {
-          "itemId": 279270,
-          "enchantId": 849
+          "itemId": 272411,
+          "enchantId": 7667
         },
         "chest": {
-          "itemId": 21183,
-          "enchantId": 1893
+          "itemId": 227024,
+          "enchantId": 1891
         },
         "wrist": {
-          "itemId": 21186,
-          "enchantId": 1901
+          "itemId": 227017,
+          "enchantId": 1885
         },
         "hands": {
-          "itemId": 12632,
-          "enchantId": 8213
+          "itemId": 227022,
+          "enchantId": 931
         },
         "waist": {
-          "itemId": 18405
+          "itemId": 227018
         },
         "legs": {
-          "itemId": 252486,
-          "enchantId": 1509
+          "itemId": 252606,
+          "enchantId": 2543
         },
         "feet": {
-          "itemId": 275621,
-          "enchantId": 8492
+          "itemId": 273336,
+          "enchantId": 1887
         },
         "finger1": {
-          "itemId": 275972
+          "itemId": 19325
         },
         "finger2": {
           "itemId": 272406
         },
         "trinket1": {
-          "itemId": 272438
+          "itemId": 22321
         },
         "trinket2": {
-          "itemId": 249469
+          "itemId": 13965
         },
         "mainHand": {
-          "itemId": 9449,
-          "enchantId": 8211
+          "itemId": 13285,
+          "enchantId": 1900
         },
         "ranged": {
-          "itemId": 23199
+          "itemId": 22395
         }
       }
     }
@@ -226,7 +253,7 @@
     {
       "id": "standard",
       "name": "Standard",
-      "talents": "053303102-053030310051002251-03"
+      "talents": "053303102-053030310051012251-02"
     }
   ],
   "rotations": [
@@ -591,6 +618,16 @@
               },
               {
                 "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 10414,
+                      "rank": 7
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
                   "condition": {
                     "and": {
                       "vals": [
@@ -626,16 +663,6 @@
                     "spellId": {
                       "spellId": 15208,
                       "rank": 10
-                    }
-                  }
-                }
-              },
-              {
-                "action": {
-                  "castSpell": {
-                    "spellId": {
-                      "spellId": 10414,
-                      "rank": 7
                     }
                   }
                 }
