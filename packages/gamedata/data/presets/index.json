@@ -1,5 +1,5 @@
 {
-  "commit": "ed8d15e14c70126376a1e7bfcd572f7e0c7051b8",
+  "commit": "00fecd9cff1be57483e21c061ed50d69748ae056",
   "specs": [
     {
       "specId": "balance-druid",
@@ -261,8 +261,19 @@
       "specId": "protection-warrior",
       "status": "complete",
       "defaultBuildId": null,
-      "builds": [],
-      "missing": ["builds"]
+      "builds": [
+        {
+          "id": "offensive-pre-bis",
+          "name": "Pre-BiS",
+          "group": "Offensive"
+        },
+        {
+          "id": "balanced-pre-bis",
+          "name": "Pre-BiS",
+          "group": "Balanced"
+        }
+      ],
+      "missing": []
     }
   ]
 }
