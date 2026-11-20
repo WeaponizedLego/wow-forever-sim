@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "dd03ce5b58e7623ea777387ae08f5c00e3072d5d",
+    "commit": "b32b784bce7ec86b80a849bafcd1e6e5d6ac5f4c",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -5182,7 +5182,6 @@
     [456538, "S03 - Item - T1 - Paladin - Protection 4P Bonus", 0],
     [456540, "Bastion of Light", 0],
     [456541, "S03 - Item - T1 - Paladin - Protection 6P Bonus", 0],
-    [456544, "Holy Shield", 0],
     [456545, "S03 - Item - T1 - Priest - Healer 2P Bonus", 0],
     [456546, "S03 - Item - T1 - Priest - Healer 4P Bonus", 0],
     [456547, "S03 - Item - T1 - Priest - Healer 6P Bonus", 0],
