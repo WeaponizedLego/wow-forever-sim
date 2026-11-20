@@ -2,7 +2,7 @@
   "specId": "feral-bear-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "ed8d15e14c70126376a1e7bfcd572f7e0c7051b8",
+    "commit": "00fecd9cff1be57483e21c061ed50d69748ae056",
     "dir": "ui/specs/druid/feralbear",
     "files": ["apls/adaptive.apl.json", "gear_sets/default.gear.json", "presets.ts"]
   },

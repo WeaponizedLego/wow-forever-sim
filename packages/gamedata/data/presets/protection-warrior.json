@@ -2,20 +2,20 @@
   "specId": "protection-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "ed8d15e14c70126376a1e7bfcd572f7e0c7051b8",
+    "commit": "00fecd9cff1be57483e21c061ed50d69748ae056",
     "dir": "ui/specs/warrior/protection",
     "files": [
       "apls/default.apl.json",
       "gear_sets/p1_bis.gear.json",
-      "gear_sets/prebis.gear.json",
-      "gear_sets/prebis_threat.gear.json",
+      "gear_sets/prebis_balanced.gear.json",
+      "gear_sets/prebis_offensive.gear.json",
       "gear_sets/preraid.gear.json",
       "presets.ts"
     ]
   },
   "status": "complete",
   "defaultBuildId": null,
-  "missing": ["builds"],
+  "missing": [],
   "notes": [
     "Upstream defaults to the TypeAuto rotation, which the site builds into an APL in the browser; the defaults here use the APL preset \"generic\" instead.",
     "Gear file p1_bis.gear.json is listed by no preset upstream; kept as gear set \"file-p1-bis\".",
@@ -25,13 +25,13 @@
     "race": "orc",
     "professions": ["Engineering", "Blacksmithing"],
     "talents": "05-05050005-150531120300001351",
-    "gearSetId": "pre-bis-defense-cap",
+    "gearSetId": "balanced-pre-bis",
     "rotationId": "generic",
     "consumables": {
       "foodId": 20452,
       "conjuredId": 9421,
       "explosiveId": 260814,
-      "mhImbueId": 12404,
+      "mhImbueId": 12643,
       "extraIds": [10646, 17048],
       "elixirIds": [250350, 13452, 12820, 13445, 250329],
       "offensivePotId": 250943
@@ -74,89 +74,137 @@
       "inFrontOfTarget": false
     }
   },
-  "builds": [],
-  "gearSets": [
+  "builds": [
     {
-      "id": "pre-bis-defense-cap",
-      "name": "Pre-BiS (Defense Cap)",
-      "gear": {
-        "head": {
-          "itemId": 12640,
-          "enchantId": 1506
+      "id": "offensive-pre-bis",
+      "name": "Pre-BiS",
+      "group": "Offensive",
+      "setup": {
+        "race": "orc",
+        "professions": ["Engineering", "Blacksmithing"],
+        "talents": "3-0505000501-050032120331021351",
+        "gearSetId": "offensive-pre-bis",
+        "rotationId": "generic",
+        "consumables": {
+          "foodId": 20452,
+          "conjuredId": 9421,
+          "explosiveId": 260814,
+          "mhImbueId": 12643,
+          "extraIds": [10646, 17048],
+          "elixirIds": [250350, 13452, 12820, 13445, 250329],
+          "offensivePotId": 250943
         },
-        "neck": {
-          "itemId": 275736
+        "specOptions": {
+          "classOptions": {
+            "defaultStance": "WarriorStanceDefensive",
+            "stanceSnapshot": true,
+            "useBattleShout": true,
+            "queueDelay": 250
+          }
         },
-        "shoulder": {
-          "itemId": 10390,
-          "randomSuffix": 12736
+        "individualBuffs": {
+          "greaterBlessingOfKings": true,
+          "greaterBlessingOfMight": 1
         },
-        "back": {
-          "itemId": 272414,
-          "enchantId": 7667
+        "partyBuffs": {},
+        "raidBuffs": {
+          "markOfTheWild": true,
+          "powerWordFortitude": true,
+          "shadowProtection": true,
+          "strengthOfEarthTotem": 1,
+          "graceOfAirTotem": 1,
+          "windfuryTotem": true,
+          "leaderOfThePack": true
         },
-        "chest": {
-          "itemId": 10378,
-          "enchantId": 1891,
-          "randomSuffix": 12736
+        "debuffs": {
+          "curseOfRecklessness": true,
+          "faerieFire": true,
+          "exposeArmor": true,
+          "insectSwarm": true,
+          "curseOfWeakness": true,
+          "vindication": true
         },
-        "wrist": {
-          "itemId": 250582,
-          "enchantId": 8214
-        },
-        "hands": {
-          "itemId": 9410,
-          "enchantId": 8207,
-          "randomSuffix": 13103
-        },
-        "waist": {
-          "itemId": 250572
-        },
-        "legs": {
-          "itemId": 22385,
-          "enchantId": 1506
-        },
-        "feet": {
-          "itemId": 287033,
-          "enchantId": 1887
-        },
-        "finger1": {
-          "itemId": 17713
-        },
-        "finger2": {
-          "itemId": 272409
-        },
-        "trinket1": {
-          "itemId": 272440
-        },
-        "trinket2": {
-          "itemId": 19120
-        },
-        "mainHand": {
-          "itemId": 12798,
-          "enchantId": 1900
-        },
-        "offHand": {
-          "itemId": 10271,
-          "enchantId": 1886,
-          "randomSuffix": 12736
-        },
-        "ranged": {
-          "itemId": 15289,
-          "randomSuffix": 12736
+        "playerOptions": {
+          "distanceFromTarget": 0,
+          "channelClipDelayMs": 0,
+          "reactionTimeMs": 100,
+          "reactionTimeMaxMs": 0,
+          "inFrontOfTarget": false
         }
       }
     },
     {
-      "id": "pre-bis-threat",
-      "name": "Pre-BiS (Threat)",
+      "id": "balanced-pre-bis",
+      "name": "Pre-BiS",
+      "group": "Balanced",
+      "setup": {
+        "race": "orc",
+        "professions": ["Engineering", "Blacksmithing"],
+        "talents": "05-05050005-150531120300001351",
+        "gearSetId": "balanced-pre-bis",
+        "rotationId": "generic",
+        "consumables": {
+          "foodId": 20452,
+          "conjuredId": 9421,
+          "explosiveId": 260814,
+          "mhImbueId": 12643,
+          "extraIds": [10646, 17048],
+          "elixirIds": [250350, 13452, 12820, 13445, 250329],
+          "offensivePotId": 250943
+        },
+        "specOptions": {
+          "classOptions": {
+            "defaultStance": "WarriorStanceDefensive",
+            "stanceSnapshot": true,
+            "useBattleShout": true,
+            "queueDelay": 250
+          }
+        },
+        "individualBuffs": {
+          "greaterBlessingOfKings": true,
+          "greaterBlessingOfMight": 1
+        },
+        "partyBuffs": {},
+        "raidBuffs": {
+          "markOfTheWild": true,
+          "powerWordFortitude": true,
+          "shadowProtection": true,
+          "strengthOfEarthTotem": 1,
+          "graceOfAirTotem": 1,
+          "windfuryTotem": true,
+          "leaderOfThePack": true
+        },
+        "debuffs": {
+          "curseOfRecklessness": true,
+          "faerieFire": true,
+          "exposeArmor": true,
+          "insectSwarm": true,
+          "curseOfWeakness": true,
+          "vindication": true
+        },
+        "playerOptions": {
+          "distanceFromTarget": 0,
+          "channelClipDelayMs": 0,
+          "reactionTimeMs": 100,
+          "reactionTimeMaxMs": 0,
+          "inFrontOfTarget": false
+        }
+      }
+    }
+  ],
+  "gearSets": [
+    {
+      "id": "offensive-pre-bis",
+      "name": "Pre-BiS",
+      "group": "Offensive",
       "gear": {
         "head": {
           "itemId": 12640,
           "enchantId": 1506
         },
         "neck": {
-          "itemId": 15411
+          "itemId": 15411,
+          "enchantId": 856
         },
         "shoulder": {
           "itemId": 287022
@@ -170,7 +218,7 @@
           "enchantId": 1891
         },
         "wrist": {
-          "itemId": 13400,
+          "itemId": 12936,
           "enchantId": 1885
         },
         "hands": {
@@ -181,7 +229,7 @@
           "itemId": 276742
         },
         "legs": {
-          "itemId": 22385,
+          "itemId": 13498,
           "enchantId": 1506
         },
         "feet": {
@@ -192,24 +240,92 @@
           "itemId": 272408
         },
         "finger2": {
-          "itemId": 17713
+          "itemId": 19325
         },
         "trinket1": {
-          "itemId": 13965
-        },
-        "trinket2": {
           "itemId": 272437
         },
+        "trinket2": {
+          "itemId": 22321
+        },
         "mainHand": {
-          "itemId": 12798,
+          "itemId": 11684,
           "enchantId": 1900
         },
         "offHand": {
-          "itemId": 13375,
-          "enchantId": 1886
+          "itemId": 19321,
+          "enchantId": 1704
         },
         "ranged": {
-          "itemId": 12653
+          "itemId": 18323
+        }
+      }
+    },
+    {
+      "id": "balanced-pre-bis",
+      "name": "Pre-BiS",
+      "group": "Balanced",
+      "gear": {
+        "head": {
+          "itemId": 12640,
+          "enchantId": 1503
+        },
+        "neck": {
+          "itemId": 275736,
+          "enchantId": 904
+        },
+        "shoulder": {
+          "itemId": 226867
+        },
+        "back": {
+          "itemId": 272415,
+          "enchantId": 7667
+        },
+        "chest": {
+          "itemId": 226862,
+          "enchantId": 1892
+        },
+        "wrist": {
+          "itemId": 226865,
+          "enchantId": 1886
+        },
+        "hands": {
+          "itemId": 226870,
+          "enchantId": 8207
+        },
+        "waist": {
+          "itemId": 272403
+        },
+        "legs": {
+          "itemId": 13498,
+          "enchantId": 1503
+        },
+        "feet": {
+          "itemId": 287033,
+          "enchantId": 929
+        },
+        "finger1": {
+          "itemId": 272408
+        },
+        "finger2": {
+          "itemId": 19325
+        },
+        "trinket1": {
+          "itemId": 272437
+        },
+        "trinket2": {
+          "itemId": 18466
+        },
+        "mainHand": {
+          "itemId": 11684,
+          "enchantId": 1900
+        },
+        "offHand": {
+          "itemId": 19321,
+          "enchantId": 7663
+        },
+        "ranged": {
+          "itemId": 18323
         }
       }
     },
@@ -332,8 +448,13 @@
   ],
   "talents": [
     {
-      "id": "protection",
-      "name": "Protection",
+      "id": "offensive",
+      "name": "Offensive",
+      "talents": "3-0505000501-050032120331021351"
+    },
+    {
+      "id": "balanced",
+      "name": "Balanced",
       "talents": "05-05050005-150531120300001351"
     }
   ],
@@ -432,6 +553,22 @@
           }
         ],
         "priorityList": [
+          {
+            "hide": true,
+            "action": {
+              "groupReference": {
+                "groupName": "Execute Swap ON/OFF"
+              }
+            }
+          },
+          {
+            "hide": true,
+            "action": {
+              "groupReference": {
+                "groupName": "Recklessness ON/OFF"
+              }
+            }
+          },
           {
             "action": {
               "groupReference": {
@@ -836,7 +973,6 @@
             }
           },
           {
-            "hide": true,
             "action": {
               "groupReference": {
                 "groupName": "Execute"
@@ -1322,6 +1458,14 @@
         ],
         "groups": [
           {
+            "name": "Execute Swap ON/OFF",
+            "actions": [
+              {
+                "action": {}
+              }
+            ]
+          },
+          {
             "name": "Recklessness ON/OFF",
             "actions": [
               {
@@ -1539,8 +1683,19 @@
               {
                 "action": {
                   "condition": {
-                    "isExecutePhase": {
-                      "threshold": "E20"
+                    "and": {
+                      "vals": [
+                        {
+                          "actionGroupUsed": {
+                            "name": "Execute Swap ON/OFF"
+                          }
+                        },
+                        {
+                          "isExecutePhase": {
+                            "threshold": "E20"
+                          }
+                        }
+                      ]
                     }
                   },
                   "castSpell": {
@@ -1553,8 +1708,19 @@
               {
                 "action": {
                   "condition": {
-                    "isExecutePhase": {
-                      "threshold": "E20"
+                    "and": {
+                      "vals": [
+                        {
+                          "actionGroupUsed": {
+                            "name": "Recklessness ON/OFF"
+                          }
+                        },
+                        {
+                          "isExecutePhase": {
+                            "threshold": "E20"
+                          }
+                        }
+                      ]
                     }
                   },
                   "castSpell": {

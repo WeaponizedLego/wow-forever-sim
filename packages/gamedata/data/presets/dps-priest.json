@@ -2,7 +2,7 @@
   "specId": "dps-priest",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "ed8d15e14c70126376a1e7bfcd572f7e0c7051b8",
+    "commit": "00fecd9cff1be57483e21c061ed50d69748ae056",
     "dir": "ui/specs/priest/dps",
     "files": ["builds/smite_testing.build.json", "builds/testing.build.json", "presets.ts"]
   },
