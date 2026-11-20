@@ -25,15 +25,17 @@ export const GearSchema = z.partialRecord(z.enum(ITEM_SLOTS), GearItemSchema);
 export type Gear = z.infer<typeof GearSchema>;
 
 /**
- * Rotation is either one of the spec's upstream presets or user-written SIML. `switches` holds the preset's on/off
- * settings the user changed, by name ("Use Summon Hawk": true): only the ones that differ from the preset's own,
- * so an untouched rotation has none and two characters on the same settings compare equal.
+ * Rotation is either one of the spec's upstream presets or user-written SIML. `switches` and `values` hold the
+ * preset's settings the user changed, by name: on/off ones ("Use Summon Hawk": true) and numbers ("Shoot spot": 15,
+ * in the preset's own unit). Only the ones that differ from the preset's own are kept, so an untouched rotation has
+ * neither and two characters on the same settings compare equal.
  */
 export const RotationSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('preset'),
     presetId: z.string(),
     switches: z.record(z.string(), z.boolean()).optional(),
+    values: z.record(z.string(), z.number().nonnegative()).optional(),
   }),
   z.object({ kind: z.literal('siml'), source: z.string() }),
 ]);

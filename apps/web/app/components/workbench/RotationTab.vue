@@ -2,9 +2,15 @@
 // The spec's upstream rotations (APL presets). Simple rotations are listed but cannot be simmed here.
 // Nothing derives a rotation from the talents, so the tab says which one fits them (the rotation upstream plays
 // with the preset build closest to the talents), which builds each rotation belongs to, and what the selected one
-// has switched on and off. Those on/off settings can be changed: the changes are kept on the character
-// (`rotation.switches`) and written into the rotation when it is simmed.
-import { buildLabel, rotationSwitches, setRotationSwitch } from '@fsim/gamedata';
+// has set. Those settings (on/off switches and numbers) can be changed: the changes are kept on the character
+// (`rotation.switches`, `rotation.values`) and written into the rotation when it is simmed.
+import {
+  buildLabel,
+  changedSettings,
+  rotationNumbers,
+  rotationSwitches,
+  setRotationSetting,
+} from '@fsim/gamedata';
 
 const wb = useWorkbench();
 const session = useSession();
@@ -46,28 +52,34 @@ const adviceText = computed(() => {
     ? `${closest} ${a.current.name} is its rotation for ${a.currentBuilds.join(', ')}.`
     : closest;
 });
+const choice = computed(() => {
+  const r = wb.draft.value?.rotation;
+  return r?.kind === 'preset' ? r : null;
+});
 const switches = computed(() => {
   const c = wb.draft.value;
-  const preset = current.value;
-  if (!c || !preset || c.rotation.kind !== 'preset') return [];
-  return rotationSwitches(preset, c.rotation.switches).map((s) => ({
+  if (!c || !current.value || !choice.value) return [];
+  return rotationSwitches(current.value, choice.value.switches).map((s) => ({
     ...s,
     talent: switchTalentNote(c, s),
   }));
 });
-const changedCount = computed(() => switches.value.filter((s) => s.on !== s.preset).length);
+const numbers = computed(() =>
+  current.value && choice.value ? rotationNumbers(current.value, choice.value.values) : [],
+);
+const changedCount = computed(() =>
+  current.value && choice.value ? changedSettings(current.value, choice.value).length : 0,
+);
 
 // Another rotation starts from its own settings: the changes belong to the rotation they were made in.
 function pick(id: string) {
   session.updateCharacter((c) => (c.rotation = { kind: 'preset', presetId: id }));
 }
-function setSwitch(name: string, on: boolean) {
+function setSetting(name: string, value: boolean | number) {
   const preset = current.value;
   if (!preset) return;
   session.updateCharacter((c) => {
-    if (c.rotation.kind !== 'preset') return;
-    const changed = setRotationSwitch(preset, c.rotation.switches, name, on);
-    c.rotation = { kind: 'preset', presetId: preset.id, ...(changed && { switches: changed }) };
+    if (c.rotation.kind === 'preset') c.rotation = setRotationSetting(preset, c.rotation, name, value);
   });
 }
 </script>
@@ -123,9 +135,13 @@ function setSwitch(name: string, on: boolean) {
         }}</span>
       </label>
     </fieldset>
-    <div v-if="current && switches.length" class="switches" data-testid="rotation-switches">
-      <div class="switches__head">
-        <span class="switches__title"
+    <div
+      v-if="current && (switches.length || numbers.length)"
+      class="settings"
+      data-testid="rotation-settings"
+    >
+      <div class="settings__head">
+        <span class="settings__title"
           >{{ current.name }} settings<template v-if="changedCount">
             · {{ changedCount }} changed</template
           ></span
@@ -134,21 +150,30 @@ function setSwitch(name: string, on: boolean) {
           >Reset to {{ current.name }}’s own</UiButton
         >
       </div>
-      <ul class="switches__list">
+      <ul v-if="switches.length" class="settings__switches">
         <li v-for="s in switches" :key="s.name" :class="{ 'is-changed': s.on !== s.preset }">
-          <UiCheckbox :model-value="s.on" @update:model-value="setSwitch(s.name, $event)">{{
+          <UiCheckbox :model-value="s.on" @update:model-value="setSetting(s.name, $event)">{{
             s.name
           }}</UiCheckbox>
-          <span v-if="s.talent === 'unused'" class="switches__hint switches__hint--warn"
+          <span v-if="s.talent === 'unused'" class="settings__hint settings__hint--warn"
             >talent taken, not cast</span
           >
-          <span v-else-if="s.talent === 'untaken'" class="switches__hint">talent not taken</span>
-          <span v-if="s.on !== s.preset" class="switches__hint">was {{ s.preset ? 'on' : 'off' }}</span>
+          <span v-else-if="s.talent === 'untaken'" class="settings__hint">talent not taken</span>
+          <span v-if="s.on !== s.preset" class="settings__hint">was {{ s.preset ? 'on' : 'off' }}</span>
         </li>
       </ul>
-      <p class="switches__note">
-        What the rotation casts or does. A change applies to this character’s sims and is listed with the
-        pending changes; picking another rotation starts from that rotation’s own settings.
+      <div v-if="numbers.length" class="settings__numbers">
+        <WorkbenchRotationNumber
+          v-for="n in numbers"
+          :key="`${current.id}:${n.name}`"
+          :setting="n"
+          @change="setSetting(n.name, $event)"
+        />
+      </div>
+      <p class="settings__note">
+        What the rotation casts or does, and the numbers it decides by. A change applies to this character’s
+        sims and is listed with the pending changes; picking another rotation starts from that rotation’s own
+        settings.
       </p>
     </div>
     <p v-if="!rotations.length" class="note">
@@ -157,7 +182,7 @@ function setSwitch(name: string, on: boolean) {
     <p class="note">
       Rotations are upstream's action priority lists (APL) for this spec. No export carries one, so an import
       starts on the rotation upstream plays with the preset build closest to its talents. Simple rotations are
-      built into an APL by the WoWSims site in the browser; this tool cannot sim them yet. A rotation’s on/off
+      built into an APL by the WoWSims site in the browser; this tool cannot sim them yet. A rotation’s
       settings can be changed above; editing the priority list itself is not in this version.
     </p>
   </UiPanel>
@@ -215,11 +240,11 @@ function setSwitch(name: string, on: boolean) {
   flex: 1 1 14em;
   min-width: 0;
 }
-.switches {
+.settings {
   padding: 10px var(--space-4);
   border-bottom: 1px solid var(--line-row);
 }
-.switches__head {
+.settings__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -227,11 +252,11 @@ function setSwitch(name: string, on: boolean) {
   gap: var(--space-2);
   min-height: 24px;
 }
-.switches__title {
+.settings__title {
   font-size: var(--text-xs);
   color: var(--text-3);
 }
-.switches__list {
+.settings__switches {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(17em, 1fr));
   gap: 0 var(--space-4);
@@ -240,26 +265,32 @@ function setSwitch(name: string, on: boolean) {
   list-style: none;
 }
 /* The label is the click target: room around it instead of a gap between rows. */
-.switches__list :deep(.check) {
+.settings__switches :deep(.check) {
   padding: var(--space-1) 0;
 }
-.switches__list li {
+.settings__switches li {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 0 var(--space-2);
 }
-.switches__list li.is-changed :deep(.check) {
+.settings__switches li.is-changed :deep(.check) {
   color: var(--text-1);
 }
-.switches__hint {
+.settings__hint {
   font-size: var(--text-xs);
   color: var(--text-3);
 }
-.switches__hint--warn {
+.settings__hint--warn {
   color: var(--status-warning);
 }
-.switches__note {
+.settings__numbers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(19em, 1fr));
+  gap: 0 var(--space-5);
+  margin-top: var(--space-2);
+}
+.settings__note {
   margin: var(--space-2) 0 0;
   font-size: var(--text-xs);
   color: var(--text-3);

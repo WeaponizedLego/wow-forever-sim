@@ -193,6 +193,13 @@ type ValueVariable = { name?: string; value?: { const?: { val?: string } } };
 const variablesOf = (rotation: PresetRotation): ValueVariable[] =>
   rotation.kind === 'apl' ? ((rotation.rotation['valueVariables'] ?? []) as ValueVariable[]) : [];
 
+/** What a character changed in a preset rotation (contracts `RotationSchema`), by setting name. */
+export interface RotationChanges {
+  switches?: Readonly<Record<string, boolean>> | undefined;
+  values?: Readonly<Record<string, number>> | undefined;
+}
+type PresetChoice = Extract<Rotation, { kind: 'preset' }>;
+
 export interface RotationSwitch {
   name: string;
   on: boolean;
@@ -216,39 +223,103 @@ export function rotationSwitches(
   });
 }
 
-/** The switches that are not at the rotation's own value. */
-export const changedSwitches = (
-  rotation: PresetRotation,
-  changed: Readonly<Record<string, boolean>> = {},
-): RotationSwitch[] => rotationSwitches(rotation, changed).filter((s) => s.on !== s.preset);
-
-/**
- * `changed` with one switch set, as `Rotation.switches` stores it: only what differs from the rotation's own
- * values (a switch put back is dropped, as is a name the rotation has no switch for), undefined when nothing does.
- */
-export function setRotationSwitch(
-  rotation: PresetRotation,
-  changed: Readonly<Record<string, boolean>> | undefined,
-  name: string,
-  on: boolean,
-): Record<string, boolean> | undefined {
-  const next = changedSwitches(rotation, { ...changed, [name]: on });
-  return next.length ? Object.fromEntries(next.map((s) => [s.name, s.on])) : undefined;
+export interface RotationNumber {
+  name: string;
+  value: number;
+  /** What the rotation has it at before anyone changes it. */
+  preset: number;
+  /** How the engine reads the constant: a plain number ("25"), a percentage ("30%") or seconds ("8s"). */
+  unit: '' | '%' | 's';
 }
 
-/** The engine `APLRotation` protojson of a rotation, with the changed switches written into its variables. */
+/** The largest number a rotation setting takes. */
+export const MAX_ROTATION_NUMBER = 100_000;
+// The three forms upstream's rotations write a number in, which the engine's constant parser reads as a number,
+// a fraction and a duration (sim/core/apl_values_operators.go newValueConst).
+const NUMBER_CONST = /^(\d+(?:\.\d+)?)(%|s)?$/;
+/** Whether a number can be a setting's value: 0 to the maximum. Kept to three decimals, so no exponent is sent. */
+export const rotationNumberFits = (n: unknown): n is number =>
+  typeof n === 'number' && n >= 0 && n <= MAX_ROTATION_NUMBER;
+const round3 = (n: number) => Math.round(n * 1000) / 1000;
+
+/**
+ * A rotation's numeric settings: its APL value variables that are a constant number ("Shoot spot": 12,
+ * "Rip minimum fight left": 8 s, "Healthstone health threshold": 30 %), with the character's changed ones
+ * (`Rotation.values`) applied. A changed value that does not fit is ignored. The unit is the rotation's own.
+ */
+export function rotationNumbers(
+  rotation: PresetRotation,
+  changed: Readonly<Record<string, number>> = {},
+): RotationNumber[] {
+  return variablesOf(rotation).flatMap((v) => {
+    const m = NUMBER_CONST.exec(v.value?.const?.val ?? '');
+    if (!v.name || !m) return [];
+    const preset = Number(m[1]);
+    const mine = changed[v.name];
+    return [
+      {
+        name: v.name,
+        value: rotationNumberFits(mine) ? round3(mine) : preset,
+        preset,
+        unit: (m[2] ?? '') as RotationNumber['unit'],
+      },
+    ];
+  });
+}
+
+const changedSwitches = (rotation: PresetRotation, changes: RotationChanges) =>
+  rotationSwitches(rotation, changes.switches).filter((s) => s.on !== s.preset);
+const changedNumbers = (rotation: PresetRotation, changes: RotationChanges) =>
+  rotationNumbers(rotation, changes.values).filter((n) => n.value !== n.preset);
+
+/** What is not at the rotation's own value, as text: "Use Summon Hawk on", "Shoot spot 15", "Doom tick 30s". */
+export function changedSettings(rotation: PresetRotation, changes: RotationChanges = {}): string[] {
+  return [
+    ...changedSwitches(rotation, changes).map((s) => `${s.name} ${s.on ? 'on' : 'off'}`),
+    ...changedNumbers(rotation, changes).map((n) => `${n.name} ${n.value}${n.unit}`),
+  ];
+}
+
+/**
+ * A character's choice of `rotation` (`changes`: the choice so far) with one setting set, a switch by a boolean and
+ * a number by a number. As contracts stores it: only what differs from the rotation's own values. A setting put
+ * back is dropped, as is a name the rotation has no setting for, so a rotation put back the way it was is the
+ * plain preset again.
+ */
+export function setRotationSetting(
+  rotation: PresetRotation,
+  changes: PresetChoice,
+  name: string,
+  value: boolean | number,
+): PresetChoice {
+  const next: RotationChanges =
+    typeof value === 'boolean'
+      ? { ...changes, switches: { ...changes.switches, [name]: value } }
+      : { ...changes, values: { ...changes.values, [name]: value } };
+  const switches = changedSwitches(rotation, next);
+  const values = changedNumbers(rotation, next);
+  return {
+    kind: 'preset',
+    presetId: rotation.id,
+    ...(switches.length && { switches: Object.fromEntries(switches.map((s) => [s.name, s.on])) }),
+    ...(values.length && { values: Object.fromEntries(values.map((n) => [n.name, n.value])) }),
+  };
+}
+
+/** The engine `APLRotation` protojson of a rotation, with the changed settings written into its variables. */
 export function rotationApl(
   rotation: PresetRotation & { kind: 'apl' },
-  changed: Readonly<Record<string, boolean>> = {},
+  changes: RotationChanges = {},
 ): JsonObject {
-  const set = new Map(changedSwitches(rotation, changed).map((s) => [s.name, s.on]));
+  const set = new Map([
+    ...changedSwitches(rotation, changes).map((s) => [s.name, String(s.on)] as const),
+    ...changedNumbers(rotation, changes).map((n) => [n.name, `${n.value}${n.unit}`] as const),
+  ]);
   if (!set.size) return rotation.rotation;
   return {
     ...rotation.rotation,
     valueVariables: variablesOf(rotation).map((v) =>
-      v.name !== undefined && set.has(v.name)
-        ? { ...v, value: { const: { val: String(set.get(v.name)) } } }
-        : v,
+      v.name !== undefined && set.has(v.name) ? { ...v, value: { const: { val: set.get(v.name) } } } : v,
     ),
   };
 }
@@ -261,9 +332,9 @@ export function rotationLabel(rotation: Rotation, presets: SpecPresets | null): 
   if (rotation.kind === 'siml') return 'Custom SIML';
   const preset = presets && findRotation(presets, rotation.presetId);
   if (!preset) return rotation.presetId;
-  const changed = changedSwitches(preset, rotation.switches);
+  const changed = changedSettings(preset, rotation);
   if (!changed.length) return preset.name;
   return changed.length > 2
     ? `${preset.name} · ${changed.length} settings changed`
-    : `${preset.name} · ${changed.map((s) => `${s.name} ${s.on ? 'on' : 'off'}`).join(', ')}`;
+    : `${preset.name} · ${changed.join(', ')}`;
 }

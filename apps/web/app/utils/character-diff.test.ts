@@ -21,6 +21,8 @@ const names: DiffNames = {
   enchant: (g) => (g?.enchantId ? `Enchant ${g.enchantId}` : null),
   buffs: (b) => b.toUpperCase(),
   rotation: (c) => (c.rotation.kind === 'preset' ? c.rotation.presetId : 'custom SIML'),
+  // The rotation's own "Shoot spot" is 12.
+  rotationValue: (c, name) => String((c.rotation.kind === 'preset' && c.rotation.values?.[name]) || 12),
 };
 
 const edit = (mutate: (c: Character) => void) => {
@@ -102,6 +104,18 @@ describe('diffCharacters', () => {
       { op: '-', label: 'Use Summon Hawk: off', detail: 'rotation' },
     ]);
     expect(rows(turret({ 'Use Summon Hawk': true }), turret({ 'Use Summon Hawk': true }))).toEqual([]);
+    // A number: what it was and what it is, whichever side has the rotation's own value.
+    const spot = (n?: number) =>
+      edit(
+        (c) =>
+          (c.rotation = { kind: 'preset', presetId: 'turret', ...(n && { values: { 'Shoot spot': n } }) }),
+      );
+    expect(rows(spot(), spot(15))).toEqual([
+      { op: '-', label: 'Shoot spot: 12', detail: 'rotation' },
+      { op: '+', label: 'Shoot spot: 15' },
+    ]);
+    expect(rows(spot(15), spot()).map((r) => r.label)).toEqual(['Shoot spot: 15', 'Shoot spot: 12']);
+    expect(rows(spot(15), spot(15))).toEqual([]);
     // Another rotation: the two names, as `names.rotation` gives them.
     expect(rows(base, turret({ 'Use Summon Hawk': true })).map((r) => r.label)).toEqual([
       'Rotation: default',

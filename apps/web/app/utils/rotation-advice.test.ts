@@ -36,6 +36,11 @@ describe('rotation advice', () => {
     });
     expect(rotationAdvice(turret(), hunter)!.state).toBe('other-build');
     expect(rotationAdvice(turret({ 'Use Summon Hawk': true }), hunter)!.state).toBe('alternative');
+    const moved: Character = {
+      ...bm,
+      rotation: { kind: 'preset', presetId: 'turret', values: { 'Shoot spot': 15 } },
+    };
+    expect(rotationAdvice(moved, hunter)!.state).toBe('alternative');
     // A stored value equal to the rotation's own is no change.
     expect(rotationAdvice(turret({ 'Use Summon Hawk': false }), hunter)!.state).toBe('other-build');
     const edited: Character = {
