@@ -2,7 +2,7 @@
   "specId": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "21377c070b5ea111a9bb5e36eb766193270b0cc7",
+    "commit": "12dafebed9e9e5190f6f4b894bcfdd8b75ca44c1",
     "dir": "ui/specs/mage/dps",
     "files": [
       "apls/arcane.apl.json",
@@ -47,7 +47,7 @@
     "partyBuffs": {
       "manaSpringTotem": "TristateEffectImproved",
       "manaTideTotems": 1,
-      "darkInspiration": 1
+      "darkInspiration": 5
     },
     "raidBuffs": {
       "arcaneIntellect": true,
@@ -100,7 +100,7 @@
         "partyBuffs": {
           "manaSpringTotem": "TristateEffectImproved",
           "manaTideTotems": 1,
-          "darkInspiration": 1
+          "darkInspiration": 5
         },
         "raidBuffs": {
           "arcaneIntellect": true,
@@ -153,7 +153,7 @@
         "partyBuffs": {
           "manaSpringTotem": "TristateEffectImproved",
           "manaTideTotems": 1,
-          "darkInspiration": 1
+          "darkInspiration": 5
         },
         "raidBuffs": {
           "arcaneIntellect": true,
@@ -206,7 +206,7 @@
         "partyBuffs": {
           "manaSpringTotem": "TristateEffectImproved",
           "manaTideTotems": 1,
-          "darkInspiration": 1
+          "darkInspiration": 5
         },
         "raidBuffs": {
           "arcaneIntellect": true,
@@ -259,7 +259,7 @@
         "partyBuffs": {
           "manaSpringTotem": "TristateEffectImproved",
           "manaTideTotems": 1,
-          "darkInspiration": 1
+          "darkInspiration": 5
         },
         "raidBuffs": {
           "arcaneIntellect": true,
@@ -312,7 +312,7 @@
         "partyBuffs": {
           "manaSpringTotem": "TristateEffectImproved",
           "manaTideTotems": 1,
-          "darkInspiration": 1
+          "darkInspiration": 5
         },
         "raidBuffs": {
           "arcaneIntellect": true,
@@ -365,7 +365,7 @@
         "partyBuffs": {
           "manaSpringTotem": "TristateEffectImproved",
           "manaTideTotems": 1,
-          "darkInspiration": 1
+          "darkInspiration": 5
         },
         "raidBuffs": {
           "arcaneIntellect": true,
