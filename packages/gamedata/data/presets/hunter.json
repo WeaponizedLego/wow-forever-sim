@@ -2,7 +2,7 @@
   "specId": "hunter",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "f51b351ff1be72b07e6a3fd9c7304d6b0c7fb052",
+    "commit": "8aea8c27bcdfda963ee17b8c18ae73e163af4b08",
     "dir": "ui/specs/hunter/dps",
     "files": [
       "apls/clean_weave.apl.siml",
@@ -40,7 +40,7 @@
   "defaults": {
     "race": "orc",
     "professions": ["Engineering", "Blacksmithing"],
-    "talents": "-00530501114-530200230050220151",
+    "talents": "-00530501114-500230230050220151",
     "gearSetId": "weave-pre-bis",
     "rotationId": "melee-weave-max",
     "consumables": {
@@ -127,7 +127,7 @@
       "setup": {
         "race": "orc",
         "professions": ["Engineering", "Blacksmithing"],
-        "talents": "-00530501114-530200230050220151",
+        "talents": "-00530501114-500230230050220151",
         "gearSetId": "weave-pre-bis",
         "rotationId": "melee-weave-max",
         "consumables": {
@@ -586,12 +586,12 @@
           "enchantId": 1891
         },
         "wrist": {
-          "itemId": 226885,
+          "itemId": 18375,
           "enchantId": 7656
         },
         "hands": {
           "itemId": 272099,
-          "enchantId": 2564
+          "enchantId": 8206
         },
         "waist": {
           "itemId": 272397
@@ -611,13 +611,13 @@
           "itemId": 18500
         },
         "trinket1": {
-          "itemId": 13965
-        },
-        "trinket2": {
           "itemId": 22321
         },
+        "trinket2": {
+          "itemId": 13965
+        },
         "mainHand": {
-          "itemId": 12784,
+          "itemId": 13285,
           "enchantId": 2646
         },
         "ranged": {
@@ -632,7 +632,7 @@
       "group": "Weave",
       "gear": {
         "head": {
-          "itemId": 252605,
+          "itemId": 18421,
           "enchantId": 1508
         },
         "neck": {
@@ -656,7 +656,7 @@
         },
         "hands": {
           "itemId": 15063,
-          "enchantId": 2564
+          "enchantId": 8206
         },
         "waist": {
           "itemId": 272397
@@ -682,11 +682,11 @@
           "itemId": 22321
         },
         "mainHand": {
-          "itemId": 13348,
+          "itemId": 13285,
           "enchantId": 2646
         },
         "ranged": {
-          "itemId": 280020,
+          "itemId": 19107,
           "enchantId": 8720
         }
       }
@@ -701,7 +701,7 @@
           "enchantId": 1508
         },
         "neck": {
-          "itemId": 15411,
+          "itemId": 22340,
           "enchantId": 904
         },
         "shoulder": {
@@ -721,10 +721,10 @@
         },
         "hands": {
           "itemId": 15063,
-          "enchantId": 2564
+          "enchantId": 8206
         },
         "waist": {
-          "itemId": 22232
+          "itemId": 272397
         },
         "legs": {
           "itemId": 15062,
@@ -751,7 +751,7 @@
           "enchantId": 2646
         },
         "ranged": {
-          "itemId": 13023,
+          "itemId": 19107,
           "enchantId": 8720
         }
       }
@@ -762,7 +762,7 @@
       "group": "Turret",
       "gear": {
         "head": {
-          "itemId": 252605,
+          "itemId": 18421,
           "enchantId": 1508
         },
         "neck": {
@@ -770,7 +770,7 @@
           "enchantId": 904
         },
         "shoulder": {
-          "itemId": 12082
+          "itemId": 18686
         },
         "back": {
           "itemId": 13340,
@@ -781,12 +781,12 @@
           "enchantId": 1891
         },
         "wrist": {
-          "itemId": 18375,
+          "itemId": 270125,
           "enchantId": 7656
         },
         "hands": {
           "itemId": 15063,
-          "enchantId": 2564
+          "enchantId": 8206
         },
         "waist": {
           "itemId": 22232
@@ -803,7 +803,7 @@
           "itemId": 272408
         },
         "finger2": {
-          "itemId": 260217
+          "itemId": 272406
         },
         "trinket1": {
           "itemId": 13965
@@ -812,13 +812,12 @@
           "itemId": 22321
         },
         "mainHand": {
-          "itemId": 250619,
+          "itemId": 279910,
           "enchantId": 2646
         },
         "ranged": {
-          "itemId": 15296,
-          "enchantId": 8720,
-          "randomSuffix": 12728
+          "itemId": 19107,
+          "enchantId": 8720
         }
       }
     },
@@ -852,7 +851,7 @@
         },
         "hands": {
           "itemId": 15063,
-          "enchantId": 2564
+          "enchantId": 931
         },
         "waist": {
           "itemId": 272397
@@ -878,7 +877,7 @@
           "itemId": 19289
         },
         "mainHand": {
-          "itemId": 12798,
+          "itemId": 1728,
           "enchantId": 1900
         },
         "offHand": {
@@ -897,7 +896,7 @@
       "group": "Melee",
       "gear": {
         "head": {
-          "itemId": 252605,
+          "itemId": 18421,
           "enchantId": 2543
         },
         "neck": {
@@ -905,14 +904,14 @@
           "enchantId": 904
         },
         "shoulder": {
-          "itemId": 12082
+          "itemId": 12927
         },
         "back": {
           "itemId": 13340,
           "enchantId": 7667
         },
         "chest": {
-          "itemId": 11726,
+          "itemId": 18530,
           "enchantId": 1891
         },
         "wrist": {
@@ -921,7 +920,7 @@
         },
         "hands": {
           "itemId": 15063,
-          "enchantId": 2564
+          "enchantId": 931
         },
         "waist": {
           "itemId": 272397
@@ -947,7 +946,7 @@
           "itemId": 19289
         },
         "mainHand": {
-          "itemId": 13286,
+          "itemId": 6622,
           "enchantId": 1900
         },
         "offHand": {
@@ -955,7 +954,7 @@
           "enchantId": 2564
         },
         "ranged": {
-          "itemId": 18680,
+          "itemId": 12653,
           "enchantId": 8720
         }
       }
@@ -965,7 +964,7 @@
     {
       "id": "sv-weave",
       "name": "SV Weave",
-      "talents": "-00530501114-530200230050220151"
+      "talents": "-00530501114-500230230050220151"
     },
     {
       "id": "mm",

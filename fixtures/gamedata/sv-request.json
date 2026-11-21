@@ -13,7 +13,7 @@
                   "enchant": 1508
                 },
                 {
-                  "id": 15411,
+                  "id": 22340,
                   "enchant": 904
                 },
                 {
@@ -33,10 +33,10 @@
                 },
                 {
                   "id": 15063,
-                  "enchant": 2564
+                  "enchant": 8206
                 },
                 {
-                  "id": 22232
+                  "id": 272397
                 },
                 {
                   "id": 15062,
@@ -64,7 +64,7 @@
                 },
                 {},
                 {
-                  "id": 13023,
+                  "id": 19107,
                   "enchant": 8720
                 }
               ]
@@ -748,26 +748,6 @@
             "database": {
               "items": [
                 {
-                  "id": 13023,
-                  "name": "Eaglehorn Long Bow",
-                  "type": "ItemTypeRanged",
-                  "rangedWeaponType": "RangedWeaponTypeBow",
-                  "weaponSpeed": 1.8,
-                  "scalingOptions": {
-                    "0": {
-                      "randPropPoints": 11,
-                      "weaponDamageMin": 40,
-                      "weaponDamageMax": 76,
-                      "unroundedDps": 32.3671,
-                      "stats": {
-                        "1": 10,
-                        "2": 4
-                      },
-                      "ilvl": 63
-                    }
-                  }
-                },
-                {
                   "id": 13340,
                   "name": "Cape of the Black Baron",
                   "type": "ItemTypeBack",
@@ -916,22 +896,6 @@
                   }
                 },
                 {
-                  "id": 15411,
-                  "name": "Mark of Fordring",
-                  "type": "ItemTypeNeck",
-                  "scalingOptions": {
-                    "0": {
-                      "randPropPoints": 20,
-                      "stats": {
-                        "14": 26,
-                        "15": 26,
-                        "18": 14
-                      },
-                      "ilvl": 63
-                    }
-                  }
-                },
-                {
                   "id": 18500,
                   "name": "Tarnished Elven Ring",
                   "type": "ItemTypeFinger",
@@ -949,20 +913,22 @@
                   "unique": true
                 },
                 {
-                  "id": 22232,
-                  "name": "Marksman's Girdle",
-                  "type": "ItemTypeWaist",
-                  "armorType": "ArmorTypeMail",
+                  "id": 19107,
+                  "name": "Bloodseeker",
+                  "type": "ItemTypeRanged",
+                  "rangedWeaponType": "RangedWeaponTypeCrossbow",
+                  "weaponSpeed": 3.3,
                   "scalingOptions": {
                     "0": {
-                      "randPropPoints": 26,
+                      "randPropPoints": 11,
+                      "weaponDamageMin": 85,
+                      "weaponDamageMax": 128,
+                      "unroundedDps": 32.3671,
                       "stats": {
-                        "1": 21,
-                        "17": 10,
-                        "27": 202,
-                        "31": 2
+                        "0": 8,
+                        "1": 7
                       },
-                      "ilvl": 61
+                      "ilvl": 63
                     }
                   }
                 },
@@ -987,6 +953,22 @@
                     }
                   ],
                   "unique": true
+                },
+                {
+                  "id": 22340,
+                  "name": "Pendant of Celerity",
+                  "type": "ItemTypeNeck",
+                  "scalingOptions": {
+                    "0": {
+                      "randPropPoints": 20,
+                      "stats": {
+                        "1": 10,
+                        "17": 10,
+                        "34": 10
+                      },
+                      "ilvl": 63
+                    }
+                  }
                 },
                 {
                   "id": 226885,
@@ -1088,6 +1070,27 @@
                       "ilvl": 65
                     }
                   }
+                },
+                {
+                  "id": 272397,
+                  "name": "Ranger's Belt",
+                  "type": "ItemTypeWaist",
+                  "armorType": "ArmorTypeMail",
+                  "scalingOptions": {
+                    "0": {
+                      "randPropPoints": 33,
+                      "stats": {
+                        "1": 24,
+                        "2": 11,
+                        "3": 14,
+                        "27": 217
+                      },
+                      "ilvl": 60
+                    }
+                  },
+                  "classAllowlist": [
+                    "ClassHunter"
+                  ]
                 },
                 {
                   "id": 272408,
@@ -1480,98 +1483,6 @@
                   ]
                 },
                 {
-                  "effectId": 2564,
-                  "name": "Enchant Gloves - Superior Agility",
-                  "type": "ItemTypeHands",
-                  "stats": [
-                    0,
-                    15,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                  ]
-                },
-                {
-                  "effectId": 2564,
-                  "name": "Enchant Weapon - Agility",
-                  "type": "ItemTypeWeapon",
-                  "stats": [
-                    0,
-                    15,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                  ]
-                },
-                {
                   "effectId": 2646,
                   "name": "Enchant 2H Weapon - Agility",
                   "type": "ItemTypeWeapon",
@@ -1717,6 +1628,52 @@
                   "stats": [
                     0,
                     5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "effectId": 8206,
+                  "name": "Enchant Gloves - Greater Agility",
+                  "type": "ItemTypeHands",
+                  "stats": [
+                    0,
+                    10,
                     0,
                     0,
                     0,
