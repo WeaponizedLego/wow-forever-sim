@@ -2,7 +2,7 @@
   "specId": "protection-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "7322fc059777a394ae259d2059451d4c2ecd66ed",
+    "commit": "a73af7145111ce19c621e3b5f678553adf326907",
     "dir": "ui/specs/warrior/protection",
     "files": [
       "apls/default.apl.json",
@@ -484,8 +484,7 @@
             "action": {
               "castSpell": {
                 "spellId": {
-                  "spellId": 25289,
-                  "rank": 7
+                  "spellId": 11551
                 }
               }
             },
@@ -879,7 +878,7 @@
                           {
                             "auraIsInactive": {
                               "auraId": {
-                                "spellId": 25288
+                                "spellId": 11601
                               },
                               "includeReactionTime": true
                             }
@@ -890,8 +889,7 @@
                               "lhs": {
                                 "spellTimeToReady": {
                                   "spellId": {
-                                    "spellId": 25288,
-                                    "rank": 6
+                                    "spellId": 11601
                                   }
                                 }
                               },
@@ -983,8 +981,7 @@
             "action": {
               "castSpell": {
                 "spellId": {
-                  "spellId": 25288,
-                  "rank": 6
+                  "spellId": 11601
                 }
               }
             }
@@ -1160,8 +1157,7 @@
                         "lhs": {
                           "auraRemainingTime": {
                             "auraId": {
-                              "spellId": 25289,
-                              "rank": 7
+                              "spellId": 11551
                             }
                           }
                         },
@@ -1177,8 +1173,7 @@
               },
               "castSpell": {
                 "spellId": {
-                  "spellId": 25289,
-                  "rank": 7
+                  "spellId": 11551
                 }
               }
             }
@@ -1351,7 +1346,7 @@
               },
               "castSpell": {
                 "spellId": {
-                  "spellId": 25286,
+                  "spellId": 11567,
                   "tag": 1
                 }
               }
