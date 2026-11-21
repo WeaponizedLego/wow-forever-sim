@@ -2,33 +2,33 @@
   "schema": 1,
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "d0ba78b81e1e302392cacf5c7d5e7eecb05cf6a0",
-    "committedAt": "2026-11-21T11:13:09+01:00"
+    "commit": "fd59de0aa3de267947834b5f4630a6732a54100c",
+    "committedAt": "2026-11-21T12:35:10+01:00"
   },
-  "engineId": "d0ba78b",
+  "engineId": "fd59de0",
   "dataBuild": "1.60.1.71037",
   "goVersion": "1.27.4",
   "artifacts": {
     "wasm": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-d0ba78b/lib.wasm.gz",
-      "sha256": "3c3a5d85a4e49778dcbc7d5351a4ca9ecdf50186a4ab5e538e0e372d0cdabbb0",
-      "bytes": 5858363
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-fd59de0/lib.wasm.gz",
+      "sha256": "6e0fe1036702e829ac598e0122e44544300af146dbcd065beededdd4fb1b6cc3",
+      "bytes": 5857853
     },
     "wasmExec": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-d0ba78b/wasm_exec.js",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-fd59de0/wasm_exec.js",
       "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
       "bytes": 16992
     },
     "db": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-d0ba78b/db.bin",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-fd59de0/db.bin",
       "sha256": "0aa47af5a9bae850d7dce79f1aa853604136286e7db32fa807bf7abb6d333318",
       "bytes": 1684159
     },
     "leftoverDb": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-d0ba78b/leftover_db.bin",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-fd59de0/leftover_db.bin",
       "sha256": "8be49cad75882e095c3d4e1a26b66fbade53158136dab175033a9dabe0b28edb",
       "bytes": 540183
     }
   },
-  "syncedAt": "2026-11-21T11:21:54Z"
+  "syncedAt": "2026-11-21T12:25:36Z"
 }
