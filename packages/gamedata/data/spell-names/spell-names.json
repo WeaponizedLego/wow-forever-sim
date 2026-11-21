@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "21377c070b5ea111a9bb5e36eb766193270b0cc7",
+    "commit": "12dafebed9e9e5190f6f4b894bcfdd8b75ca44c1",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -408,7 +408,6 @@
     [4978, "Cleanse Wildmane Well", 0],
     [4987, "Cleanse", 0],
     [5004, "Food", 0],
-    [5006, "Food", 0],
     [5020, "Stormstout", 0],
     [5021, "Trogg Ale", 0],
     [5024, "Flee", 0],
@@ -2935,7 +2934,6 @@
     [19660, "Tainted Blood", 4],
     [19675, "Feral Charge", 0],
     [19705, "Well Fed", 0],
-    [19708, "Well Fed", 0],
     [19710, "Well Fed", 0],
     [19731, "Devour Magic", 2],
     [19732, "Devour Magic Effect", 2],
@@ -5066,8 +5064,10 @@
     [442897, "Spell Specialization", 0],
     [442898, "Spell Specialization", 0],
     [443265, "Infernal Lasso", 0],
+    [443278, "Seed of Renewal", 0],
     [443320, "Loyal Beta", 0],
     [443632, "Filcher's Cowl", 0],
+    [443678, "Seed of Renewal", 0],
     [443813, "High-Yield Radiation Bomb", 0],
     [444678, "Lava Breath", 1],
     [444680, "Lava Breath", 1],
