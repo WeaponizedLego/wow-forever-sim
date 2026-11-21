@@ -2,7 +2,7 @@
   "class": "warlock",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "f51b351ff1be72b07e6a3fd9c7304d6b0c7fb052",
+    "commit": "8aea8c27bcdfda963ee17b8c18ae73e163af4b08",
     "files": ["ui/sim/talents/trees/warlock.json", "assets/database/db.json"]
   },
   "trees": [

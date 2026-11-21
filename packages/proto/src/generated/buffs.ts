@@ -106,7 +106,7 @@ export interface RaidBuffs {
 }
 /**
  * Buffs that affect a single party.
- * Next index: 16
+ * Next index: 17
  *
  * @generated from protobuf message proto.PartyBuffs
  */
@@ -171,6 +171,10 @@ export interface PartyBuffs {
      * @generated from protobuf field: int32 dark_inspiration = 15
      */
     darkInspiration: number;
+    /**
+     * @generated from protobuf field: bool headmasters_charge = 16
+     */
+    headmastersCharge: boolean;
 }
 /**
  * These are usually individual actions taken by other Characters.
@@ -540,7 +544,8 @@ class PartyBuffs$Type extends MessageType<PartyBuffs> {
             { no: 12, name: "stoneskin_totem", kind: "enum", T: () => ["proto.TristateEffect", TristateEffect] },
             { no: 13, name: "darkspear", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 14, name: "admirals_hat", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 15, name: "dark_inspiration", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 15, name: "dark_inspiration", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 16, name: "headmasters_charge", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<PartyBuffs>): PartyBuffs {
@@ -560,6 +565,7 @@ class PartyBuffs$Type extends MessageType<PartyBuffs> {
         message.darkspear = false;
         message.admiralsHat = false;
         message.darkInspiration = 0;
+        message.headmastersCharge = false;
         if (value !== undefined)
             reflectionMergePartial<PartyBuffs>(this, message, value);
         return message;
@@ -613,6 +619,9 @@ class PartyBuffs$Type extends MessageType<PartyBuffs> {
                     break;
                 case /* int32 dark_inspiration */ 15:
                     message.darkInspiration = reader.int32();
+                    break;
+                case /* bool headmasters_charge */ 16:
+                    message.headmastersCharge = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -671,6 +680,9 @@ class PartyBuffs$Type extends MessageType<PartyBuffs> {
         /* int32 dark_inspiration = 15; */
         if (message.darkInspiration !== 0)
             writer.tag(15, WireType.Varint).int32(message.darkInspiration);
+        /* bool headmasters_charge = 16; */
+        if (message.headmastersCharge !== false)
+            writer.tag(16, WireType.Varint).bool(message.headmastersCharge);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
