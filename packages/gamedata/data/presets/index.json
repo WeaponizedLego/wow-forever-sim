@@ -1,5 +1,5 @@
 {
-  "commit": "7322fc059777a394ae259d2059451d4c2ecd66ed",
+  "commit": "a73af7145111ce19c621e3b5f678553adf326907",
   "specs": [
     {
       "specId": "balance-druid",
@@ -248,6 +248,11 @@
           "id": "fury-pre-bis",
           "name": "Pre-BiS",
           "group": "Fury"
+        },
+        {
+          "id": "fury-2h-pre-bis",
+          "name": "Pre-BiS",
+          "group": "Fury 2H"
         },
         {
           "id": "arms-pre-bis",
