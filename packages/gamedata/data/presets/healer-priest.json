@@ -2,7 +2,7 @@
   "specId": "healer-priest",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "fd59de0aa3de267947834b5f4630a6732a54100c",
+    "commit": "d71bce5bf905e0ba55553fc56ca033a172df3f74",
     "dir": "ui/specs/priest/healer",
     "files": ["gear_sets/preraid.gear.json", "presets.ts"]
   },
