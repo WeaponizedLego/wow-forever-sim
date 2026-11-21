@@ -277,7 +277,15 @@ export interface RetributionPaladin_Rotation {
     /**
      * @generated from protobuf field: int32 uw_sor_stacks = 7
      */
-    uwSorStacks: number; // Amount of stacks of Echo of Righteousness to pool before swapping to Seal of Command
+    uwSorStacks: number; // Amount of stacks of Echo of Righteousness to pool before swapping to the twisted seal
+    /**
+     * @generated from protobuf field: proto.PaladinSealTwist uw_twist = 8
+     */
+    uwTwist: PaladinSealTwist; // The seal twisted with Seal of Righteousness under Unsealed Wrath
+    /**
+     * @generated from protobuf field: int32 uw_sof_stacks = 9
+     */
+    uwSofStacks: number; // Amount of stacks of Echo of Fury to pool before swapping to Seal of Righteousness
 }
 /**
  * @generated from protobuf message proto.RetributionPaladin.Options
@@ -414,6 +422,29 @@ export enum PaladinSeal {
      * @generated from protobuf enum value: SealOfRighteousness = 2;
      */
     SealOfRighteousness = 2
+}
+/**
+ * The seal the simple rotation twists with Seal of Righteousness under Unsealed Wrath.
+ *
+ * @generated from protobuf enum proto.PaladinSealTwist
+ */
+export enum PaladinSealTwist {
+    /**
+     * Seal of Command when it is talented, and no twist without it.
+     *
+     * @generated from protobuf enum value: SealTwistUnknown = 0;
+     */
+    SealTwistUnknown = 0,
+    /**
+     * @generated from protobuf enum value: SealTwistCommand = 1;
+     */
+    SealTwistCommand = 1,
+    /**
+     * Judgement is not cast under Seal of Fury, since Judgement of Fury taunts.
+     *
+     * @generated from protobuf enum value: SealTwistFury = 2;
+     */
+    SealTwistFury = 2
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class PaladinTalents$Type extends MessageType<PaladinTalents> {
@@ -956,7 +987,9 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
             { no: 4, name: "pull_range", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 5, name: "delay_major_cds", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "uw_soc_stacks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 7, name: "uw_sor_stacks", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 7, name: "uw_sor_stacks", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 8, name: "uw_twist", kind: "enum", T: () => ["proto.PaladinSealTwist", PaladinSealTwist] },
+            { no: 9, name: "uw_sof_stacks", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<RetributionPaladin_Rotation>): RetributionPaladin_Rotation {
@@ -968,6 +1001,8 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
         message.delayMajorCds = 0;
         message.uwSocStacks = 0;
         message.uwSorStacks = 0;
+        message.uwTwist = 0;
+        message.uwSofStacks = 0;
         if (value !== undefined)
             reflectionMergePartial<RetributionPaladin_Rotation>(this, message, value);
         return message;
@@ -997,6 +1032,12 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
                     break;
                 case /* int32 uw_sor_stacks */ 7:
                     message.uwSorStacks = reader.int32();
+                    break;
+                case /* proto.PaladinSealTwist uw_twist */ 8:
+                    message.uwTwist = reader.int32();
+                    break;
+                case /* int32 uw_sof_stacks */ 9:
+                    message.uwSofStacks = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1031,6 +1072,12 @@ class RetributionPaladin_Rotation$Type extends MessageType<RetributionPaladin_Ro
         /* int32 uw_sor_stacks = 7; */
         if (message.uwSorStacks !== 0)
             writer.tag(7, WireType.Varint).int32(message.uwSorStacks);
+        /* proto.PaladinSealTwist uw_twist = 8; */
+        if (message.uwTwist !== 0)
+            writer.tag(8, WireType.Varint).int32(message.uwTwist);
+        /* int32 uw_sof_stacks = 9; */
+        if (message.uwSofStacks !== 0)
+            writer.tag(9, WireType.Varint).int32(message.uwSofStacks);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
