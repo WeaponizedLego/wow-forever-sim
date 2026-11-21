@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "d71bce5bf905e0ba55553fc56ca033a172df3f74",
+    "commit": "29c28a7ee41e75f82ab515014c1aae8de7585ec5",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
