@@ -2,7 +2,7 @@
   "specId": "warlock",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "a73af7145111ce19c621e3b5f678553adf326907",
+    "commit": "c868e4a31c24f35e10d00f4dece09fd9209f8a3e",
     "dir": "ui/specs/warlock/dps",
     "files": [
       "builds/aff_wrack.build.json",
