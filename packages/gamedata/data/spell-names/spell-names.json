@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "c868e4a31c24f35e10d00f4dece09fd9209f8a3e",
+    "commit": "3289d8314fec155f97c79b08ab0dff85b5555e68",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
