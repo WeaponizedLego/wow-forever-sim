@@ -2,7 +2,7 @@
   "specId": "holy-paladin",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "56473177e74075430751313fd227ba22d72ab11e",
+    "commit": "07648faf129cd82f99f4dd9e63b015f59f8ec811",
     "dir": "ui/specs/paladin/holy",
     "files": ["gear_sets/default.gear.json", "presets.ts"]
   },
