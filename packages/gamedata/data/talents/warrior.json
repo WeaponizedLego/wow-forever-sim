@@ -2,7 +2,7 @@
   "class": "warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "b103664fb549e98e5982f87d1809446b56c4c0ac",
+    "commit": "295771933643352a9853b8c9996e4b587b15fb5b",
     "files": ["ui/sim/talents/trees/warrior.json", "assets/database/db.json"]
   },
   "trees": [
