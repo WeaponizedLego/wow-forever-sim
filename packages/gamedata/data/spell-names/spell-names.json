@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "07648faf129cd82f99f4dd9e63b015f59f8ec811",
+    "commit": "ceb0e99b77fcf1d9406db66683c7157f92c1597d",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -2798,6 +2798,7 @@
     [18633, "Weakening Disease", 0],
     [18647, "Banish", 2],
     [18652, "Siphon Health", 0],
+    [18653, "Siphon Health", 0],
     [18656, "Corruption", 0],
     [18657, "Hibernate", 2],
     [18658, "Hibernate", 3],
