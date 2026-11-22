@@ -339,8 +339,6 @@ export interface Warlock {
     options?: Warlock_Options;
 }
 /**
- * The build rotations cast the ranks books teach; each use_ field left false casts the trainer's top rank in its place.
- *
  * @generated from protobuf message proto.Warlock.Rotation
  */
 export interface Warlock_Rotation {
@@ -348,18 +346,6 @@ export interface Warlock_Rotation {
      * @generated from protobuf field: proto.WarlockRotation rotation = 1
      */
     rotation: WarlockRotation;
-    /**
-     * @generated from protobuf field: bool use_shadow_bolt_rank_10 = 2
-     */
-    useShadowBoltRank10: boolean;
-    /**
-     * @generated from protobuf field: bool use_immolate_rank_8 = 3
-     */
-    useImmolateRank8: boolean;
-    /**
-     * @generated from protobuf field: bool use_corruption_rank_7 = 4
-     */
-    useCorruptionRank7: boolean;
 }
 /**
  * @generated from protobuf message proto.Warlock.Options
@@ -985,18 +971,12 @@ export const Warlock = new Warlock$Type();
 class Warlock_Rotation$Type extends MessageType<Warlock_Rotation> {
     constructor() {
         super("proto.Warlock.Rotation", [
-            { no: 1, name: "rotation", kind: "enum", T: () => ["proto.WarlockRotation", WarlockRotation] },
-            { no: 2, name: "use_shadow_bolt_rank_10", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 3, name: "use_immolate_rank_8", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 4, name: "use_corruption_rank_7", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 1, name: "rotation", kind: "enum", T: () => ["proto.WarlockRotation", WarlockRotation] }
         ]);
     }
     create(value?: PartialMessage<Warlock_Rotation>): Warlock_Rotation {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.rotation = 0;
-        message.useShadowBoltRank10 = false;
-        message.useImmolateRank8 = false;
-        message.useCorruptionRank7 = false;
         if (value !== undefined)
             reflectionMergePartial<Warlock_Rotation>(this, message, value);
         return message;
@@ -1008,15 +988,6 @@ class Warlock_Rotation$Type extends MessageType<Warlock_Rotation> {
             switch (fieldNo) {
                 case /* proto.WarlockRotation rotation */ 1:
                     message.rotation = reader.int32();
-                    break;
-                case /* bool use_shadow_bolt_rank_10 */ 2:
-                    message.useShadowBoltRank10 = reader.bool();
-                    break;
-                case /* bool use_immolate_rank_8 */ 3:
-                    message.useImmolateRank8 = reader.bool();
-                    break;
-                case /* bool use_corruption_rank_7 */ 4:
-                    message.useCorruptionRank7 = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1033,15 +1004,6 @@ class Warlock_Rotation$Type extends MessageType<Warlock_Rotation> {
         /* proto.WarlockRotation rotation = 1; */
         if (message.rotation !== 0)
             writer.tag(1, WireType.Varint).int32(message.rotation);
-        /* bool use_shadow_bolt_rank_10 = 2; */
-        if (message.useShadowBoltRank10 !== false)
-            writer.tag(2, WireType.Varint).bool(message.useShadowBoltRank10);
-        /* bool use_immolate_rank_8 = 3; */
-        if (message.useImmolateRank8 !== false)
-            writer.tag(3, WireType.Varint).bool(message.useImmolateRank8);
-        /* bool use_corruption_rank_7 = 4; */
-        if (message.useCorruptionRank7 !== false)
-            writer.tag(4, WireType.Varint).bool(message.useCorruptionRank7);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
