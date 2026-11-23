@@ -2,7 +2,7 @@
   "specId": "feral-cat-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "57df2a7a5a2bb085bfce15890a33d655bb7fd66f",
+    "commit": "1380e5b76c8132f1fdc2157f70c76db30a76d82e",
     "dir": "ui/specs/druid/feralcat",
     "files": [
       "apls/adaptive.apl.json",
