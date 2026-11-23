@@ -1,4 +1,12 @@
-import { expect, kpiValue, openShamanInWorkbench, pasteShaman, simDraft, test } from './helpers';
+import {
+  expect,
+  expectNamedAbilities,
+  kpiValue,
+  openShamanInWorkbench,
+  pasteShaman,
+  simDraft,
+  test,
+} from './helpers';
 
 test('import the shaman export, open it in the workbench, sim and read the analysis', async ({ page }) => {
   const parsed = await pasteShaman(page);
@@ -24,19 +32,17 @@ test('import the shaman export, open it in the workbench, sim and read the analy
 
   await simDraft(page, '0001');
 
-  // KPI strip: the mean is a real number in the band this export sims at (~470 DPS as Enhancement).
-  const mean = await kpiValue(page, 'Mean DPS · 95% CI');
-  expect(mean).toBeGreaterThan(350);
-  expect(mean).toBeLessThan(600);
+  // KPI strip: the mean is a real number. Which number is upstream's tuning (447 DPS at one engine, 498 three
+  // days later), and engine sync's smoke test is what holds each spec's DPS to a range.
+  expect(await kpiValue(page, 'Mean DPS · 95% CI')).toBeGreaterThan(0);
   await expect(page.getByText('run #0001 · no baseline')).toBeVisible();
   await expect(page.getByRole('definition').filter({ hasText: /^1,000$/ })).toBeVisible();
 
-  // The plain summary on top: DPS ±, the fight, iterations, the top abilities by name, and no earlier run.
+  // The plain summary on top: DPS ±, the fight, iterations, and no earlier run. Its top abilities are checked
+  // with the ability table below.
   const summary = page.getByTestId('run-summary');
   await expect(summary).toContainText(/\d+\.\d DPS\s*± \d+\.\d/);
   await expect(summary).toContainText(/on Patchwerk.*, averaged over 1,000 simulated fights\./);
-  await expect(summary).toContainText(/Most damage.*Windfury Weapon \d+%/);
-  await expect(summary).not.toContainText(/Spell \d+/);
   await expect(summary).toContainText('This is the first run of Testshaman in this browser.');
 
   // Every analysis panel renders with its data, not an empty state.
@@ -46,12 +52,9 @@ test('import the shaman export, open it in the workbench, sim and read the analy
   ).toBeAttached();
   await expect(panel('Convergence').getByRole('table', { name: /^Running mean settles at/ })).toBeAttached();
   await expect(panel('Fight timeline').getByRole('table', { name: /^Fight 1 of 1,000/ })).toBeAttached();
-  const abilities = panel('Damage by ability').getByRole('table', { name: 'Damage by ability' });
-  await expect(abilities.getByRole('row').filter({ hasText: 'Stormstrike' }).first()).toBeVisible();
-  // Windfury Weapon's strike (spell 439440, ~18% of the damage) is named from the engine's spell table, and no
-  // ability is left as a bare "Spell N".
-  await expect(abilities.getByRole('row').filter({ hasText: 'Windfury Weapon' }).first()).toBeVisible();
-  await expect(abilities.getByRole('row').filter({ hasText: /Spell \d+/ })).toHaveCount(0);
+  // Every damage row is named, none as a bare "Spell N" (the weapon imbue's strike is not in the item database
+  // and takes its name from the engine's spell table), and the summary leads with the three biggest.
+  await expectNamedAbilities(page);
   await expect(panel('Run notes').getByRole('listitem').first()).toBeVisible();
 
   // The run is listed under Runs in the header and on the start screen.

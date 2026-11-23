@@ -1,4 +1,4 @@
-import { expect, simDraft, test } from './helpers';
+import { expect, expectNamedAbilities, RAW_LABEL, simDraft, test } from './helpers';
 
 test('start from a spec preset and land on the workbench with gear', async ({ page }) => {
   await page.goto('/');
@@ -17,9 +17,6 @@ test('start from a spec preset and land on the workbench with gear', async ({ pa
   await expect(page.getByRole('button', { name: /^Sim draft/ })).toBeEnabled();
 });
 
-/** A label that leaks an engine id or tag: "Melee (tag 14)", "Item 10646", "Spell 12345". */
-const RAW_LABEL = /tag -?\d|\b(Item|Spell|Other action) \d+/;
-
 test('a Fury Warrior preset run names every ability, hand and proc', async ({ page }) => {
   await page.goto('/');
   const specs = page.getByRole('region', { name: 'Start from a spec' });
@@ -27,24 +24,13 @@ test('a Fury Warrior preset run names every ability, hand and proc', async ({ pa
   await expect(page).toHaveURL(/\/workbench$/);
   await simDraft(page, '0001');
 
-  const summary = page.getByTestId('run-summary');
-  await expect(summary).toContainText(/Most damage/);
-  await expect(summary).not.toContainText(RAW_LABEL);
+  // Every row is named: swings, strikes per hand, extra attacks by their source, consumables by their item. Which
+  // of those the preset's gear and rotation produce is upstream's, so only the two hands are asked for by name:
+  // the build dual wields, and each hand's swings are a row of their own.
+  const names = await expectNamedAbilities(page);
+  expect(names).toEqual(expect.arrayContaining(['Melee (main hand)', 'Melee (off hand)']));
 
   const panel = (name: string) => page.getByRole('region', { name });
-  const abilities = panel('Damage by ability').getByRole('table', { name: 'Damage by ability' });
-  // Dual wield: each hand's swings, Whirlwind's strikes per hand, extra attacks by their source, and the sapper.
-  for (const name of [
-    'Melee (main hand)',
-    'Melee (off hand)',
-    'Whirlwind (main hand)',
-    'Whirlwind (off hand)',
-    'Melee (Hand of Justice)',
-    'Goblin Sapper Charge',
-  ])
-    await expect(abilities.getByRole('row').filter({ hasText: name }).first()).toBeAttached();
-  await expect(abilities.getByRole('row').filter({ hasText: RAW_LABEL })).toHaveCount(0);
-
   // The timeline (DPS table and aura lanes) names its auras, and lists each 5 s bucket once.
   const timeline = panel('Fight timeline');
   await expect(timeline.getByRole('table', { name: /^Fight 1 of 1,000/ })).toBeAttached();
