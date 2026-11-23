@@ -2,7 +2,7 @@
   "specId": "rogue",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "9d7bc812b38f817fa113e604f1696368fe3ac26d",
+    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
     "dir": "ui/specs/rogue/dps",
     "files": [
       "apls/default.apl.json",
