@@ -25,7 +25,20 @@ interface SpellIconLike {
   rank: number;
 }
 
-/** Joins db.bin's `spellIcons` with the extracted rows. `spellIcons` wins where both name a spell. */
+/**
+ * Spells the engine reports that neither source names: it builds them by hand, outside its spell table. Kept
+ * here by id, with the name upstream's code gives them. Engine sync lists any new one in the action-id fixture's
+ * `gaps` (fixtures/README.md).
+ */
+export const UNLISTED_SPELLS: readonly SpellNameRow[] = [
+  [22482, 'Blade Flurry', 0], // the copy of a hit on a second target (sim/rogue/talents_combat.go)
+  [408501, 'Maelstrom Ready!', 0], // five Maelstrom Weapon stacks (sim/shaman/talents_enhancement.go)
+];
+
+/**
+ * Joins db.bin's `spellIcons` with the extracted rows and the hand-kept `UNLISTED_SPELLS`. `spellIcons` wins
+ * where two name a spell, then the extracted rows.
+ */
 export function buildSpellNames(
   spellIcons: readonly SpellIconLike[],
   extra: readonly SpellNameRow[] = [],
@@ -37,7 +50,7 @@ export function buildSpellNames(
     out.set(s.id, { name: s.name, rank: s.rank, icon: s.icon });
     if (s.icon && !iconByName.has(s.name)) iconByName.set(s.name, s.icon);
   }
-  for (const [id, name, rank] of extra) {
+  for (const [id, name, rank] of [...extra, ...UNLISTED_SPELLS]) {
     if (out.has(id) || !name) continue;
     out.set(id, { name, rank, icon: iconByName.get(name) ?? '' });
   }

@@ -58,14 +58,19 @@ one extraction by hand: `node packages/gamedata/scripts/extract-talents.ts --ups
 
 ## The action-id fixture
 
-`fixtures/engine/action-ids.json` lists every action id that the Warrior presets and a Wowhead-imported Hunter
-report in the locked engine (`fixtures/README.md`). The gamedata tests name each one offline, so a run page never
-shows "Spell 12345". The ids change when upstream changes what a preset casts or adds a build, and CI's own jobs
-do not sim in a real engine, so the workflow rewrites the file on every sync. Its "Regenerate the action-id
-fixture" step runs `packages/engine/src/action-names.test.ts` with `UPDATE_ACTION_IDS=1` and
-`ACTION_IDS_ENGINE_DIR` set to `out/<id>/`, after `promote` (the test sims the new presets with the new database)
-and before the CI check (which names every id in the new file). The file's `engine` field is the engine id, so
-it changes on every sync. The rest changes only when the ids do.
+`fixtures/engine/action-ids.json` lists every action id that each spec's preset builds and a Wowhead-imported
+Hunter report in the locked engine, and the `gaps` in their names (`fixtures/README.md`). The gamedata tests hold
+the names to it offline, so a run page does not show "Spell 12345". The ids change when upstream changes what a
+preset casts or adds a build, and CI's own jobs do not sim in a real engine, so the workflow rewrites the file on
+every sync. Its "Regenerate the action-id fixture" step runs `packages/engine/src/action-names.test.ts` with
+`UPDATE_ACTION_IDS=1` and `ACTION_IDS_ENGINE_DIR` set to `out/<id>/`, after `promote` (the test sims the new
+presets with the new database) and before the CI check. The file's `engine` field is the engine id, so it changes
+on every sync. The rest changes only when the ids do.
+
+That step sims every spec through the app's own request path (presets, request builder, per-player database), so
+a spec the app can no longer sim fails the sync. A gap in the names does not: an action with no name, or two rows
+that read the same, is recorded in `gaps`, and the "Report gaps in action names" step keeps one issue ("Action
+names: gaps at the locked engine") up to date with them and closes it when there are none.
 
 ## Run locally
 
@@ -137,7 +142,7 @@ Not smoke-tested:
 | `wasm-opt not found`                                           | binaryen is missing. CI fails because of `--require-wasm-opt`.                                                                                                  | Install binaryen (`apt-get install binaryen`).                                                                                                             |
 | `protoc not found` / wrong protoc-gen-go                       | Toolchain problem.                                                                                                                                              | The workflow pins protoc 34.1 and protoc-gen-go to upstream's `go.mod`.                                                                                    |
 | `dataBuild` is null                                            | No `[DB] … <build>` commit touched `db.bin`, or the GitHub API limit was hit (60 requests per hour without a token).                                            | Harmless. Set `GH_TOKEN` locally.                                                                                                                          |
-| Action-id step, or `action names` in the CI check, fails       | A preset reports an action the app cannot name or tell apart: a spell missing from `data/spell-names`, or a tag no rule in `action-names.ts` (gamedata) covers. | Add the tag rule (`SPELL_TAGS`) or fix the spell-name extraction on main, then retry with `force: true`.                                                   |
+| Action-id step fails on a run's error or 0 DPS                 | The app's own request for that spec no longer sims: a preset names a rotation or item that is gone, or the engine wants a field the request lacks.              | Read the log in the issue, fix `packages/gamedata` (presets, request) on main, then retry with `force: true`.                                              |
 | Workflow: `release … is referenced by main's engine.lock.json` | A forced rebuild of the engine already on main.                                                                                                                 | Release assets the lock points at are never overwritten. Leave it as is, or bump upstream.                                                                 |
 
 When a step fails, the workflow publishes nothing and opens an `engine-sync failed: <id>` issue

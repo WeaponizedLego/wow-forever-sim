@@ -81,11 +81,18 @@ export {
   sliceRanAsScheduled,
 } from './fights';
 export * from './talents';
-export { buildSpellNames, loadSpellNames, type SpellName, type SpellNameRow } from './spell-names';
+export {
+  buildSpellNames,
+  loadSpellNames,
+  UNLISTED_SPELLS,
+  type SpellName,
+  type SpellNameRow,
+} from './spell-names';
 export {
   actionName,
   actionBaseName,
   actionTagLabel,
+  actionNameGaps,
   actionNameSources,
   distinctActionNames,
   enchantProcNames,
@@ -93,4 +100,5 @@ export {
   AURA_SHOWN_BY,
   type ActionRef,
   type ActionNameSources,
+  type RunActionIds,
 } from './action-names';
