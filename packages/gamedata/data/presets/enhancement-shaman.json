@@ -2,7 +2,7 @@
   "specId": "enhancement-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/shaman/enhancement",
     "files": ["builds/default.build.json", "presets.ts"]
   },
@@ -29,7 +29,7 @@
       ],
       "conjuredItems": [11952, 12662, 15723, 17747],
       "extraIds": [12217, 8410],
-      "elixirIds": [250343, 13454, 250351, 13452, 250337, 250338, 250341, 12820],
+      "elixirIds": [250343, 13454, 250351, 250341, 12820, 9187],
       "resourcePotId": 13444
     },
     "specOptions": {
@@ -117,7 +117,7 @@
           ],
           "conjuredItems": [11952, 12662, 15723, 17747],
           "extraIds": [12217, 8410],
-          "elixirIds": [250343, 13454, 250351, 13452, 250337, 250338, 250341, 12820],
+          "elixirIds": [250343, 13454, 250351, 250341, 12820, 9187],
           "resourcePotId": 13444
         },
         "specOptions": {

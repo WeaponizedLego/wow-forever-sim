@@ -2,7 +2,7 @@
   "specId": "feral-bear-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/druid/feralbear",
     "files": ["apls/adaptive.apl.json", "gear_sets/default.gear.json", "presets.ts"]
   },
@@ -45,8 +45,8 @@
       "foodId": 21023,
       "conjuredId": 9421,
       "mhImbueId": 18262,
-      "extraIds": [10646, 12460, 10307, 8411],
-      "elixirIds": [9088, 250351, 250328, 250329, 13445],
+      "extraIds": [10646, 12460, 8411],
+      "elixirIds": [9088, 250351, 250328, 250329],
       "swapMhImbueId": 12643,
       "defensivePotId": 13455,
       "offensivePotId": 13442

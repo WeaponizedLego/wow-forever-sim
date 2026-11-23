@@ -2,7 +2,7 @@
   "specId": "dps-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/warrior/dps",
     "files": [
       "apls/arms.apl.json",
@@ -38,8 +38,8 @@
       "explosiveId": 260814,
       "mhImbueId": 12643,
       "ohImbueId": 12404,
-      "extraIds": [10646],
-      "elixirIds": [250350, 13452, 12820],
+      "extraIds": [10646, 12451, 12460, 5206, 8410],
+      "elixirIds": [13452],
       "resourcePotId": 13442
     },
     "specOptions": {
@@ -95,8 +95,8 @@
           "explosiveId": 260814,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
-          "extraIds": [10646],
-          "elixirIds": [250350, 13452, 12820],
+          "extraIds": [10646, 12451, 12460, 5206, 8410],
+          "elixirIds": [13452],
           "resourcePotId": 13442
         },
         "specOptions": {
@@ -151,8 +151,8 @@
           "foodId": 20452,
           "explosiveId": 260814,
           "mhImbueId": 12404,
-          "extraIds": [10646],
-          "elixirIds": [250350, 13452, 12820],
+          "extraIds": [10646, 12451, 12460, 5206, 8410],
+          "elixirIds": [13452],
           "resourcePotId": 13442
         },
         "specOptions": {
@@ -207,8 +207,8 @@
           "foodId": 20452,
           "explosiveId": 260814,
           "mhImbueId": 12404,
-          "extraIds": [10646],
-          "elixirIds": [250350, 13452, 12820],
+          "extraIds": [10646, 12451, 12460, 5206, 8410],
+          "elixirIds": [13452],
           "resourcePotId": 13442
         },
         "specOptions": {

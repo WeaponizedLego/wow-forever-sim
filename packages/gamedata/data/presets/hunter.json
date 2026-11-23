@@ -2,7 +2,7 @@
   "specId": "hunter",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/hunter/dps",
     "files": [
       "apls/clean_weave.apl.siml",
@@ -50,7 +50,7 @@
       "explosiveId": 18588,
       "mhImbueId": 18262,
       "extraIds": [10646, 10310, 12460, 12217, 8412],
-      "elixirIds": [13452, 250341, 9179],
+      "elixirIds": [13452, 250341],
       "resourcePotId": 13444,
       "offensivePotId": 250943
     },
@@ -137,7 +137,7 @@
           "explosiveId": 18588,
           "mhImbueId": 18262,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341, 9179],
+          "elixirIds": [13452, 250341],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -224,7 +224,7 @@
           "explosiveId": 18588,
           "mhImbueId": 20748,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341, 9179],
+          "elixirIds": [13452, 250341],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -311,7 +311,7 @@
           "explosiveId": 18588,
           "mhImbueId": 20748,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341, 9179],
+          "elixirIds": [13452, 250341],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -399,7 +399,7 @@
           "explosiveId": 18588,
           "mhImbueId": 20748,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341, 9179],
+          "elixirIds": [13452, 250341],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },
@@ -487,7 +487,7 @@
           "mhImbueId": 18262,
           "ohImbueId": 12404,
           "extraIds": [10646, 10310, 12460, 12217, 8412],
-          "elixirIds": [13452, 250341, 9179],
+          "elixirIds": [13452, 250341],
           "resourcePotId": 13444,
           "offensivePotId": 250943
         },

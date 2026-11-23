@@ -321,6 +321,13 @@ export interface Consumable {
      * @generated from protobuf field: repeated proto.ZoneStats zone_stats = 24
      */
     zoneStats: ZoneStats[];
+    /**
+     * A consumable the game files do not type as an elixir whose stats count with the elixirs': each stat
+     * at the strongest amount among them (R-0053).
+     *
+     * @generated from protobuf field: bool counts_with_elixirs = 25
+     */
+    countsWithElixirs: boolean;
 }
 /**
  * @generated from protobuf message proto.ItemEffectRandPropPoints
@@ -811,7 +818,8 @@ class Consumable$Type extends MessageType<Consumable> {
             { no: 21, name: "holiday", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 22, name: "potion_classes", kind: "enum", repeat: 1 /*RepeatType.PACKED*/, T: () => ["proto.PotionClass", PotionClass] },
             { no: 23, name: "mob_type_stats", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => MobTypeStats },
-            { no: 24, name: "zone_stats", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ZoneStats }
+            { no: 24, name: "zone_stats", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ZoneStats },
+            { no: 25, name: "counts_with_elixirs", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<Consumable>): Consumable {
@@ -839,6 +847,7 @@ class Consumable$Type extends MessageType<Consumable> {
         message.potionClasses = [];
         message.mobTypeStats = [];
         message.zoneStats = [];
+        message.countsWithElixirs = false;
         if (value !== undefined)
             reflectionMergePartial<Consumable>(this, message, value);
         return message;
@@ -943,6 +952,9 @@ class Consumable$Type extends MessageType<Consumable> {
                     break;
                 case /* repeated proto.ZoneStats zone_stats */ 24:
                     message.zoneStats.push(ZoneStats.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* bool counts_with_elixirs */ 25:
+                    message.countsWithElixirs = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1052,6 +1064,9 @@ class Consumable$Type extends MessageType<Consumable> {
         /* repeated proto.ZoneStats zone_stats = 24; */
         for (let i = 0; i < message.zoneStats.length; i++)
             ZoneStats.internalBinaryWrite(message.zoneStats[i], writer.tag(24, WireType.LengthDelimited).fork(), options).join();
+        /* bool counts_with_elixirs = 25; */
+        if (message.countsWithElixirs !== false)
+            writer.tag(25, WireType.Varint).bool(message.countsWithElixirs);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

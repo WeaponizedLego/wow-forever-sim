@@ -2,7 +2,7 @@
   "specId": "protection-warrior",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/warrior/protection",
     "files": [
       "apls/default.apl.json",
@@ -31,9 +31,9 @@
       "foodId": 20452,
       "conjuredId": 9421,
       "explosiveId": 260814,
-      "mhImbueId": 12643,
-      "extraIds": [10646, 17048],
-      "elixirIds": [250350, 13452, 12820, 13445, 250329],
+      "mhImbueId": 3241,
+      "extraIds": [10646, 17048, 12451, 12460, 5206, 8410],
+      "elixirIds": [13452, 9088, 250335, 13445],
       "offensivePotId": 250943
     },
     "specOptions": {
@@ -89,9 +89,9 @@
           "foodId": 20452,
           "conjuredId": 9421,
           "explosiveId": 260814,
-          "mhImbueId": 12643,
-          "extraIds": [10646, 17048],
-          "elixirIds": [250350, 13452, 12820, 13445, 250329],
+          "mhImbueId": 3241,
+          "extraIds": [10646, 17048, 12451, 12460, 5206, 8410],
+          "elixirIds": [13452, 9088, 250335, 13445],
           "offensivePotId": 250943
         },
         "specOptions": {
@@ -147,9 +147,9 @@
           "foodId": 20452,
           "conjuredId": 9421,
           "explosiveId": 260814,
-          "mhImbueId": 12643,
-          "extraIds": [10646, 17048],
-          "elixirIds": [250350, 13452, 12820, 13445, 250329],
+          "mhImbueId": 3241,
+          "extraIds": [10646, 17048, 12451, 12460, 5206, 8410],
+          "elixirIds": [13452, 9088, 250335, 13445],
           "offensivePotId": 250943
         },
         "specOptions": {
