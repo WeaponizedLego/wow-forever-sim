@@ -74,7 +74,7 @@ function undo() {
   <UiPanel title="Pending changes" :meta="vs" :span="4">
     <p v-if="!hasChanges" class="empty">
       No changes since {{ wb.baseRunId.value ? `run ${wb.baseRunId.value}` : 'the import' }}. Pick an item in
-      the gear table, or change talents, buffs, fight or rotation.
+      the gear table, or change talents, options, buffs, fight or rotation.
     </p>
     <template v-else>
       <UiDiffRows :groups="groups" />
@@ -97,7 +97,7 @@ function undo() {
           Linear estimate from run {{ wb.weights.value.runId }} weights; ± is the 95% interval of the weights,
           combined as independent. Set bonuses, procs and caps are only exact after a sim.
           <template v-if="wb.unpriced.value.length">
-            Talent, buff, fight and rotation changes are not in the total.</template
+            Talent, option, buff, fight and rotation changes are not in the total.</template
           >
         </template>
       </p>

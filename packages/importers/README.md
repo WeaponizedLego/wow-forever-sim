@@ -19,22 +19,24 @@ const result = importAny(pasted, ctx); // { format, character, diagnostics }
 
 ## Diagnostics
 
-| Code         | Severity       | When                                                                                                                                                                              |
-| ------------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `FMT-01`     | error          | Not a recognised format; not valid JSON; not a planner link                                                                                                                       |
-| `PARSE-02`   | warning        | A SimC line that is not `key=value`; gear line without an id; bad number; level out of range                                                                                      |
-| `PARSE-02`   | info           | Read but not used: `legacy_talents`, `pet_*`, `bagN`, `shirt`/`tabard`/`ammo`, unknown options and item keys (`bonus_id`, `gem_id`…), unknown professions, a WoWSims APL rotation |
-| `DATA-03`    | warning        | Item id not in the data build (slot left empty); enchant not in it (item kept without the enchant)                                                                                |
-| `SPEC-04`    | error          | No class, or a class Forever does not have (`character: null`)                                                                                                                    |
-| `SPEC-04`    | warning / info | Spec not given or unknown, so it was picked (info when the class has one spec or talents decided)                                                                                 |
-| `SPEC-04`    | warning        | Race the engine lacks; class default race used                                                                                                                                    |
-| `DEFAULT-05` | info           | Rotation, consumables (always), race, gear, talents missing → spec preset fills them                                                                                              |
-| `DEFAULT-05` | warning        | Talents present but unusable (a SimC client loadout string that cannot be read safely, with the reason; WoWSims export from a non-Forever client)                                 |
-| `TALENT-08`  | warning        | Talents converted from a client loadout string for a class whose tree layout no real export has confirmed yet (see below)                                                         |
+| Code         | Severity       | When                                                                                                                                                                                                           |
+| ------------ | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FMT-01`     | error          | Not a recognised format; not valid JSON; not a planner link                                                                                                                                                    |
+| `PARSE-02`   | warning        | A SimC line that is not `key=value`; gear line without an id; bad number; level out of range                                                                                                                   |
+| `PARSE-02`   | info           | Read but not used: `legacy_talents`, `pet_*` (but see `pet_family` below), `bagN`, `shirt`/`tabard`/`ammo`, unknown options and item keys (`bonus_id`, `gem_id`…), unknown professions, a WoWSims APL rotation |
+| `DATA-03`    | warning        | Item id not in the data build (slot left empty); enchant not in it (item kept without the enchant)                                                                                                             |
+| `SPEC-04`    | error          | No class, or a class Forever does not have (`character: null`)                                                                                                                                                 |
+| `SPEC-04`    | warning / info | Spec not given or unknown, so it was picked (info when the class has one spec or talents decided)                                                                                                              |
+| `SPEC-04`    | warning        | Race the engine lacks; class default race used                                                                                                                                                                 |
+| `DEFAULT-05` | info           | Rotation, consumables (always), race, gear, talents missing → spec preset fills them; a hunter pet family the engine has no pet of → the preset's pet is simmed                                                |
+| `DEFAULT-05` | warning        | Talents present but unusable (a SimC client loadout string that cannot be read safely, with the reason; WoWSims export from a non-Forever client)                                                              |
+| `TALENT-08`  | warning        | Talents converted from a client loadout string for a class whose tree layout no real export has confirmed yet (see below)                                                                                      |
 
 SimC diagnostics carry the 1-based `line`; gear findings carry `field` = slot id (`mainHand`, …).
 `character.rotation` is always `{ kind: 'preset', presetId: '' }` (no preset chosen) and `consumables` is `{}`;
 `fillFromPreset` in `@fsim/gamedata` fills them from the preset build closest to the talents. `professions` are lowercase English names (`engineering`).
+`character.specOptions` is `{}` except for a SimC hunter whose pet family the engine sims: `{ classOptions: { petType } }`,
+which `fillFromPreset` completes with the preset's other options (ammo, quiver, the pet's attack speed).
 
 ## SimC (Forever) — what the real format is
 
@@ -68,8 +70,18 @@ Findings:
    gems, bonus ids from the link); `suffix=N` is accepted when present (SimC's own item option).
    Slots: `head neck shoulder back chest shirt tabard wrist hands waist legs feet finger1 finger2
 trinket1 trinket2 main_hand off_hand ammo ranged`.
-5. **Forever extras** (`legacy_talents=`, `bag1..4=`, `pet_family=` …, `# ammo_count=`, stats/skills/buffs
+5. **Forever extras** (`legacy_talents=`, `bag1..4=`, `pet_creature_id=` …, `# ammo_count=`, stats/skills/buffs
    comments, `# Checksum: <adler32>`) are skipped with an info note. The checksum is not verified.
+6. **A hunter's pet** is read. The reconstructed fixture (written from addon 12.1.5-04's `forever/pet.lua`)
+   has a `pet_family=cat` line; the one real hunter export we have, from 12.1.5-02
+   (`fixtures/import/real/simc-hunter-lvl11.simc`), has no such line and names the pet only inside its
+   commented character info block: `# pet_info=npc_id:…/name:bear/family:boar/type:beast/…`. Both are read
+   (`pet_family` wins), and the family is matched against the engine's own pet types
+   (`ImportContext.hunterPetTypes`, from `HunterOptions.PetType` in `hunter.proto`): `wind_serpent` is
+   `WindSerpent`, `crocolisk` the engine's `Crocilisk`, `owl` its `BirdOfPrey`. The match sets
+   `specOptions.classOptions.petType`. A family the engine has no pet of sets nothing and gets a `DEFAULT-05`
+   note; the app then names the pet that is simmed instead (`apps/web/app/utils/pet-note.ts`). Other classes'
+   pet lines (a warlock's demon) are still not used.
 
 ## Client loadout strings (talents)
 

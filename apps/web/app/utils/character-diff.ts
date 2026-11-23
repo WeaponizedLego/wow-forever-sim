@@ -1,7 +1,7 @@
 // What differs between two characters, as −/+ groups: the Workbench's pending changes (draft vs baseline)
 // and the Compare screen's "what differs" (each variant vs the first). Pure: item, enchant, buff and rotation
 // names come in through `names`, talent names from the committed talent trees (@fsim/gamedata), so this runs
-// (and is tested) without db.bin or Nuxt.
+// (and is tested) without db.bin or Nuxt. Spec option names come from the engine's own types (@fsim/gamedata).
 import {
   ITEM_SLOTS,
   fightStyle,
@@ -11,12 +11,17 @@ import {
   type GearItem,
   type ItemSlotId,
 } from '@fsim/contracts';
-import { talentChanges } from '@fsim/gamedata';
+import {
+  specOptionChangeText,
+  specOptionChanges,
+  talentChanges,
+  type SpecOptionChange,
+} from '@fsim/gamedata';
 import type { DiffRow } from '~/composables/ui-types';
 
 export interface ChangeGroup {
   key: string;
-  kind: 'gear' | 'talents' | 'buffs' | 'fight' | 'rotation' | 'other';
+  kind: 'gear' | 'talents' | 'options' | 'buffs' | 'fight' | 'rotation' | 'other';
   slot?: ItemSlotId;
   rows: DiffRow[];
 }
@@ -61,6 +66,8 @@ const FIGHT_KEYS = new Set([
 ]);
 /** Character fields with their own group above, or display-only. Every other field lands in "other". */
 const OWN_GROUP = new Set(['gear', 'talents', 'buffs', 'encounter', 'rotation', 'name', 'realm', 'region']);
+/** The same with spec options, which have rows of their own between two characters of one spec. */
+const OWN_GROUP_AND_OPTIONS = new Set([...OWN_GROUP, 'specOptions']);
 
 /** Stable JSON (sorted keys), so field order never reads as a change. */
 function stable(v: unknown): string {
@@ -126,7 +133,34 @@ function settingRows(a: Character, b: Character, names: DiffNames): DiffRow[] | 
   return rows;
 }
 
-/** `b` against `a`: one group per changed slot, then talents, buffs, fight, rotation and the rest. */
+/** A change that takes something away: an option set to none or off, a number lowered. */
+function lowers({ field, before, after }: SpecOptionChange): boolean {
+  if (field.kind === 'bool') return after === false;
+  if (field.kind === 'number') return Number(after) < Number(before);
+  const none = field.choices[0]!;
+  return none.label === 'None' && after === none.value;
+}
+
+/**
+ * Spec options from `a` to `b`, two characters of one spec: one row per option that differs, by name with what it
+ * was and is ("Pet type: Raptor → Cat", "Cobra reflexes: on"; − when it takes something away), then one row when
+ * something the options form has no field for differs. The options are compared by value, so one that is written
+ * out at the engine's default equals one that is left out. A row wraps rather than being cut short: what the
+ * option changed to is at its end ("Quiver bonus: Ancient Sinew Wrapped Lamina → Quickdraw Quiver").
+ */
+function optionRows(a: Character, b: Character): DiffRow[] {
+  const { changes, rest } = specOptionChanges(a.spec, a.specOptions, b.specOptions);
+  const rows = changes.map((c): DiffRow => ({
+    op: lowers(c) ? '-' : '+',
+    label: specOptionChangeText(c),
+    wrap: true,
+  }));
+  if (rest) rows.push({ op: '+', label: 'Other spec options' });
+  if (rows[0]) rows[0].detail = 'options';
+  return rows;
+}
+
+/** `b` against `a`: one group per changed slot, then talents, spec options, buffs, fight, rotation and the rest. */
 export function diffCharacters(a: Character, b: Character, names: DiffNames): ChangeGroup[] {
   const out: ChangeGroup[] = [];
   for (const slot of ITEM_SLOTS) {
@@ -161,6 +195,12 @@ export function diffCharacters(a: Character, b: Character, names: DiffNames): Ch
         ],
       });
     }
+  }
+  // Another spec has other options: nothing to tell apart option by option, so they count under "other".
+  const sameSpec = a.spec === b.spec;
+  if (sameSpec) {
+    const rows = optionRows(a, b);
+    if (rows.length) out.push({ key: 'options', kind: 'options', rows });
   }
   if (a.buffs !== b.buffs) {
     out.push({
@@ -199,13 +239,13 @@ export function diffCharacters(a: Character, b: Character, names: DiffNames): Ch
     ];
     if (rows.length) out.push({ key: 'rotation', kind: 'rotation', rows });
   }
-  if (stable(without(a, OWN_GROUP)) !== stable(without(b, OWN_GROUP))) {
+  const own = sameSpec ? OWN_GROUP_AND_OPTIONS : OWN_GROUP;
+  if (stable(without(a, own)) !== stable(without(b, own))) {
+    const what = sameSpec ? 'race, professions, consumables' : 'race, professions, consumables, spec options';
     out.push({
       key: 'other',
       kind: 'other',
-      rows: [
-        { op: '+', label: 'Other settings: race, professions, consumables, spec options', detail: 'other' },
-      ],
+      rows: [{ op: '+', label: `Other settings: ${what}`, detail: 'other' }],
     });
   }
   return out;

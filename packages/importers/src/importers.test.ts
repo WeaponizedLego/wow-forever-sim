@@ -1,7 +1,7 @@
 import type { ImportResult } from '@fsim/contracts';
 import { describe, expect, it } from 'vitest';
 import { IMPORTERS, detectFormat, importAny, readWowheadHash, simcImporter, wowsimsImporter } from './index';
-import { testContext } from './test-context';
+import { protoPetTypes, readFixture, testContext } from './test-context';
 
 const ctx = testContext();
 const b64url = (bytes: number[]) =>
@@ -122,6 +122,111 @@ describe('SimC', () => {
     const r = parse('mage="X"\nlevel=70');
     expect(r.character?.level).toBe(60);
     expect(codes(r)).toContain('PARSE-02:warning');
+  });
+});
+
+describe('SimC hunter pet', () => {
+  const parse = (s: string) => simcImporter.parse(s, ctx);
+  const petNotes = (r: ImportResult) => r.diagnostics.filter((d) => d.field === 'pet_family');
+
+  it('reads pet_family as the engine’s pet type, the only option it sets', () => {
+    const r = parse('hunter="X"\npet_family=cat\npet_level=60');
+    expect(r.character?.specOptions).toEqual({ classOptions: { petType: 'Cat' } });
+    expect(petNotes(r)).toEqual([]);
+    // The rest of the pet block is still not used.
+    expect(r.diagnostics.find((d) => d.field === 'pet_level')).toMatchObject({ code: 'PARSE-02', line: 3 });
+  });
+
+  it.each([
+    ['cat', 'Cat'],
+    ['Cat', 'Cat'],
+    ['wind_serpent', 'WindSerpent'],
+    ['Carrion Bird', 'CarrionBird'],
+    ['core_hound', 'CoreHound'],
+    ['bird_of_prey', 'BirdOfPrey'],
+    ['owl', 'BirdOfPrey'],
+    ['crocolisk', 'Crocilisk'],
+    ['tallstrider', 'Tallstrider'],
+  ])('pet_family=%s → %s', (family, petType) => {
+    expect(parse(`hunter="X"\npet_family=${family}`).character?.specOptions).toEqual({
+      classOptions: { petType },
+    });
+  });
+
+  it('maps every pet type of the engine’s enum from its own name', () => {
+    const petTypes = protoPetTypes();
+    expect(petTypes).toEqual(expect.arrayContaining(['Bat', 'Cat', 'Raptor', 'WindSerpent', 'Wolf']));
+    expect(petTypes).not.toContain('PetNone');
+    for (const petType of petTypes) {
+      const family = petType.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+      expect(parse(`hunter="X"\npet_family=${family}`).character?.specOptions, family).toEqual({
+        classOptions: { petType },
+      });
+    }
+  });
+
+  it('notes a family the engine has no pet of and leaves the pet to the preset', () => {
+    const r = parse('hunter="X"\nlevel=60\npet_family=sporebat');
+    expect(r.character?.specOptions).toEqual({});
+    expect(petNotes(r)).toEqual([
+      {
+        code: 'DEFAULT-05',
+        severity: 'info',
+        message: 'Pet family "sporebat" is not one the engine sims. The spec preset’s pet is used instead.',
+        line: 3,
+        field: 'pet_family',
+      },
+    ]);
+  });
+
+  it('reads the family from the commented pet_info line of a real export', () => {
+    const info =
+      '# pet_info=npc_id:165189/level:9/name:bear/family:boar/type:beast/talent_tree:default/happiness:3';
+    const r = parse(`hunter="X"\n### Additional Character Info\n#\n${info}`);
+    expect(r.character?.specOptions).toEqual({ classOptions: { petType: 'Boar' } });
+    expect(petNotes(r)).toEqual([]);
+    // The pet is named "bear"; its family is what counts.
+    expect(parse(`hunter="X"\n${info.replace('family:boar', 'family:ravager')}`).diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'DEFAULT-05', line: 2, field: 'pet_family' }),
+    );
+    // pet_family, where the export has it, wins over the comment.
+    expect(parse(`hunter="X"\n${info}\npet_family=wolf`).character?.specOptions).toEqual({
+      classOptions: { petType: 'Wolf' },
+    });
+  });
+
+  it('imports the real level 11 hunter with its boar', () => {
+    const r = importAny(readFixture('real/simc-hunter-lvl11.simc'), ctx);
+    expect(r.character).toMatchObject({
+      class: 'hunter',
+      specOptions: { classOptions: { petType: 'Boar' } },
+    });
+    expect(petNotes(r)).toEqual([]);
+  });
+
+  it('leaves a hunter without pet lines, and any other class’s pet, to the preset', () => {
+    expect(parse('hunter="X"\nlevel=60').character?.specOptions).toEqual({});
+    expect(parse('hunter="X"\npet_family=').character?.specOptions).toEqual({});
+    // A warlock's demon is not a hunter pet: the line is set aside as before, the comment not read.
+    const lock = parse('warlock="X"\npet_family=imp');
+    expect(lock.character?.specOptions).toEqual({});
+    expect(petNotes(lock)).toEqual([
+      expect.objectContaining({
+        code: 'PARSE-02',
+        severity: 'info',
+        message: expect.stringMatching(/skipped/),
+      }),
+    ]);
+    const real = importAny(readFixture('real/simc-warlock-lvl10.simc'), ctx);
+    expect(real.character?.specOptions).toEqual({});
+    expect(petNotes(real)).toEqual([]);
+  });
+
+  it('without the engine’s pet list in the context, says the family was not checked', () => {
+    const plain = { dataBuild: ctx.dataBuild, hasItem: ctx.hasItem, hasEnchant: ctx.hasEnchant };
+    const r = simcImporter.parse('hunter="X"\npet_family=cat', plain);
+    expect(r.character?.specOptions).toEqual({});
+    expect(petNotes(r)).toEqual([expect.objectContaining({ code: 'PARSE-02', severity: 'info', line: 2 })]);
   });
 });
 

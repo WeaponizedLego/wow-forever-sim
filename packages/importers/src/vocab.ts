@@ -71,6 +71,22 @@ export function parseProfession(name: string): string | undefined {
   return PROFESSION_SET.has(s) ? s : undefined;
 }
 
+/** Pet families whose name in an export is not the engine's: its spelling of Crocolisk, and the Owl family's later name. */
+const PET_FAMILY_ALIASES: Record<string, string> = {
+  crocolisk: 'crocilisk',
+  owl: 'birdofprey',
+};
+
+/**
+ * The engine's pet type for a pet family as an export spells it ("cat", "wind_serpent", "Carrion Bird"), out of
+ * the engine's own list (`ImportContext.hunterPetTypes`). Undefined for a family the engine has no pet of.
+ */
+export function parsePetFamily(family: string, petTypes: readonly string[]): string | undefined {
+  const s = squash(family);
+  const wanted = PET_FAMILY_ALIASES[s] ?? s;
+  return petTypes.find((t) => squash(t) === wanted);
+}
+
 /**
  * Spec names → engine spec, per class. Covers SimC's retail-style tokens, the WoWSims exporter's
  * Forever spec names (Flavors/Forever/Flavor.lua) and Wowhead's. A `null` means "the class itself",

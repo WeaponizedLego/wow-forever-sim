@@ -3,7 +3,7 @@
 // Sub-views are ?tab=… so each has its own URL; the right-hand column (pending changes, stats, caps)
 // stays on every tab because every tab's edits show up there.
 import { ITEM_SLOTS, RACES, fightStyle, type ItemSlotId } from '@fsim/contracts';
-import { changedSettings } from '@fsim/gamedata';
+import { changedSettings, specOptionFields, specOptionRows } from '@fsim/gamedata';
 import type { KeyValue, NavItem } from '~/composables/ui-types';
 import { BUFF_PRESETS, specInfo, talentPoints } from '~/composables/workbench';
 
@@ -19,7 +19,7 @@ function openLatest() {
   if (latest.value) session.openRun(latest.value.id);
 }
 
-const TABS = ['gear', 'talents', 'buffs', 'fight', 'rotation'] as const;
+const TABS = ['gear', 'talents', 'options', 'buffs', 'fight', 'rotation'] as const;
 type Tab = (typeof TABS)[number];
 const tab = computed<Tab>(() => {
   const t = String(route.query.tab ?? 'gear');
@@ -46,9 +46,16 @@ const tabs = computed<NavItem[]>(() => {
   const preset = wb.presets.value?.rotations.find((r) => r.id === rot?.presetId);
   const rotName = preset?.name;
   const edited = !!preset && !!rot && changedSettings(preset, rot).length > 0;
+  // Options: only for a spec that has any (a Rogue has none), with how many are not at the preset's value.
+  const p = wb.presets.value;
+  const offPreset =
+    ch && p?.specId === ch.spec ? specOptionRows(ch, p).rows.filter((r) => r.value !== r.preset).length : 0;
   return [
     { label: 'Gear', to: tabTo('gear') },
     { label: 'Talents', to: tabTo('talents'), detail: ch ? talentPoints(ch.talents).join('/') : undefined },
+    ...(ch && specOptionFields(ch.spec).length
+      ? [{ label: 'Options', to: tabTo('options'), detail: offPreset ? `${offPreset} changed` : undefined }]
+      : []),
     { label: 'Buffs', to: tabTo('buffs'), detail: BUFF_PRESETS.find((b) => b.id === ch?.buffs)?.short },
     {
       label: 'Fight',
@@ -153,6 +160,7 @@ watch(
       <UiPanelGrid>
         <WorkbenchGearTable v-if="tab === 'gear'" @pick="openPicker" />
         <WorkbenchTalentsTab v-else-if="tab === 'talents'" />
+        <WorkbenchOptionsTab v-else-if="tab === 'options'" />
         <WorkbenchBuffsTab v-else-if="tab === 'buffs'" />
         <WorkbenchFightTab v-else-if="tab === 'fight'" />
         <WorkbenchRotationTab v-else />

@@ -38,6 +38,7 @@ export {
   buildLabel,
   talentDistance,
   closestBuild,
+  closestSetup,
   suggestedRotation,
   rotationSwitches,
   rotationNumbers,
@@ -68,6 +69,32 @@ export {
   type CharacterToPlayerOptions,
 } from './character';
 export { buildRaidSimRequest, fillFromPreset, type SimRequestOptions } from './request';
+export {
+  MAX_OPTION_NUMBER,
+  specOptionFields,
+  specOptionValue,
+  specOptionFits,
+  specOptionShown,
+  specOptionStored,
+  specOptionText,
+  setSpecOption,
+  completeSpecOptions,
+  mergeSpecOptions,
+  specOptionChanges,
+  specOptionChangeText,
+  specOptionRows,
+  optionLabel,
+  optionValueLabel,
+  hunterPetTypes,
+  type SpecOptionField,
+  type SpecOptionEnum,
+  type SpecOptionBool,
+  type SpecOptionNumber,
+  type SpecOptionChoice,
+  type SpecOptionValue,
+  type SpecOptionChange,
+  type SpecOptionRow,
+} from './spec-options';
 export { missingGameData, knowsItem, knowsEnchant, type MissingGameData } from './missing';
 export {
   DEFAULT_TARGET_JSON,

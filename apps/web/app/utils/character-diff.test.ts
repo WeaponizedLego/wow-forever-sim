@@ -189,6 +189,84 @@ describe('diffCharacters', () => {
     const b = { ...base, encounter: { ...base.encounter, fightStyle: 'movement' }, newThing: 1 } as Character;
     expect(diffCharacters(a, b, names).map((g) => g.key)).toEqual(['fight:other', 'other']);
   });
+
+  describe('spec options', () => {
+    // Upstream's Survival options: no pet, and the options it leaves out are at the engine's defaults.
+    const SV = { quiverBonus: 'AncientSinewWrappedLamina', ammo: 'ThoriumHeadedArrow', petUptime: 1 };
+    const hunter = (classOptions: Record<string, unknown>, more: Partial<Character> = {}) =>
+      CharacterSchema.parse({
+        ...structuredClone(base),
+        class: 'hunter',
+        spec: 'hunter',
+        specOptions: { classOptions },
+        ...more,
+      });
+
+    it('names each option that differs, with what it was and is', () => {
+      const a = hunter({ ...SV, petType: 'Raptor' });
+      const b = hunter({ ...SV, petType: 'Cat', petUptime: 0.5, cobraReflexes: true });
+      expect(diffCharacters(a, b, names)).toEqual([
+        {
+          key: 'options',
+          kind: 'options',
+          // Each row may wrap: what the option changed to is at the end of its label.
+          rows: [
+            { op: '+', label: 'Pet type: Raptor → Cat', detail: 'options', wrap: true },
+            { op: '-', label: 'Pet uptime: 100% → 50%', wrap: true },
+            { op: '+', label: 'Cobra reflexes: on', wrap: true },
+          ],
+        },
+      ]);
+      // Taking the pet away, or switching something off, is a − row.
+      expect(diffCharacters(b, hunter(SV), names)[0]!.rows).toEqual([
+        { op: '-', label: 'Pet type: Cat → None', detail: 'options', wrap: true },
+        { op: '+', label: 'Pet uptime: 50% → 100%', wrap: true },
+        { op: '-', label: 'Cobra reflexes: off', wrap: true },
+      ]);
+    });
+
+    it('finds no difference between the same options, left out or written at their default', () => {
+      const full = hunter({
+        ...SV,
+        petType: 'PetNone',
+        cobraReflexes: false,
+        petAttackSpeed: 'PetAttackSpeedNone',
+      });
+      expect(diffCharacters(hunter(SV), full, names)).toEqual([]);
+      expect(diffCharacters(full, hunter(SV), names)).toEqual([]);
+      expect(diffCharacters(hunter({}), hunter({}, { specOptions: {} }), names)).toEqual([]);
+    });
+
+    it('sits between talents and buffs, and counts once in the summary', () => {
+      const a = hunter(SV);
+      const b = hunter({ ...SV, petType: 'Wolf', ammo: 'Doomshot' }, { talents: '1-2-3', buffs: 'solo' });
+      const groups = diffCharacters(a, b, names);
+      expect(groups.map((g) => g.key)).toEqual(['talents', 'options', 'buffs']);
+      expect(changeSummary(groups, names.slot)).toBe('talents · options · buffs');
+    });
+
+    it('still notices an option without a field, and other settings stay their own row', () => {
+      const a = hunter(SV);
+      const b = hunter({ ...SV, fromANewerEngine: 2 }, { race: 'troll' });
+      expect(diffCharacters(a, b, names)).toEqual([
+        {
+          key: 'options',
+          kind: 'options',
+          rows: [{ op: '+', label: 'Other spec options', detail: 'options' }],
+        },
+        {
+          key: 'other',
+          kind: 'other',
+          rows: [{ op: '+', label: 'Other settings: race, professions, consumables', detail: 'other' }],
+        },
+      ]);
+    });
+
+    it('does not compare the options of two specs one by one', () => {
+      const shaman = edit((c) => (c.specOptions = { classOptions: { imbueMh: 'WindfuryWeapon' } }));
+      expect(diffCharacters(hunter(SV), shaman, names).map((g) => g.key)).toEqual(['other']);
+    });
+  });
 });
 
 describe('changeSummary', () => {

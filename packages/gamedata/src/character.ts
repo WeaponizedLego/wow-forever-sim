@@ -137,7 +137,11 @@ export function characterToPlayer(
   });
 
   const kind = SPEC_ONEOF[character.spec];
-  const { spec } = Player.fromJson({ [kind]: { options: character.specOptions } } as never);
+  // A stored character writes every option out (`completeSpecOptions`), so it may name one a later engine has
+  // dropped or renamed. That option is left at the engine's default, as the options form shows it, and the sim runs.
+  const { spec } = Player.fromJson({ [kind]: { options: character.specOptions } } as never, {
+    ignoreUnknownFields: true,
+  });
 
   return Player.create({
     name: character.name ?? '',

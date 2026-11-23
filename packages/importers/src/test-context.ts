@@ -16,6 +16,19 @@ interface DataIds {
   enchantSpells: Record<string, number>;
 }
 
+/**
+ * The engine's hunter pet types, read from the pinned hunter.proto (every value of `enum PetType` but the zero
+ * one), so these tests follow the engine without depending on the generated types.
+ */
+export function protoPetTypes(): string[] {
+  const proto = readFileSync(
+    fileURLToPath(new URL('../../proto/proto/hunter.proto', import.meta.url)),
+    'utf8',
+  );
+  const body = /enum PetType \{([^}]*)\}/.exec(proto)?.[1] ?? '';
+  return [...body.matchAll(/^\s*(\w+)\s*=\s*(\d+)\s*;/gm)].filter((m) => m[2] !== '0').map((m) => m[1]!);
+}
+
 export function testContext(): WowheadImportContext {
   const data = JSON.parse(readFixture('data-ids.json')) as DataIds;
   const items = new Set(data.items);
@@ -25,5 +38,6 @@ export function testContext(): WowheadImportContext {
     hasItem: (id) => items.has(id),
     hasEnchant: (id) => enchants.has(id),
     enchantIdForSpell: (spellId) => data.enchantSpells[String(spellId)],
+    hunterPetTypes: protoPetTypes(),
   };
 }

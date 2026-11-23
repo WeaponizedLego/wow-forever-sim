@@ -177,6 +177,18 @@ export function closestBuild(presets: SpecPresets, talents: string): PresetBuild
 }
 
 /**
+ * The setup that fills what a character with these talents lacks, and that its options are compared with: the
+ * closest preset build's, or without one (no builds, no talents) the setup the spec starts from.
+ */
+export function closestSetup(
+  presets: SpecPresets,
+  talents: string,
+): { build: PresetBuild | null; setup: PresetSetup } {
+  const build = closestBuild(presets, talents);
+  return { build, setup: build?.setup ?? presetSetup(presets, presets.defaultBuildId) };
+}
+
+/**
  * The rotation upstream plays with talents like these: the closest preset build and its APL rotation. Null when
  * no build matches or the build has no rotation to sim.
  */

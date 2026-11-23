@@ -55,7 +55,7 @@ describe('fixture specifics', () => {
     expect(codes(r, 'warning')).toContain('DEFAULT-05@talents');
   });
 
-  it('Survival hunter: malformed line is PARSE-02 with its line, pet/bag/ammo lines are info', () => {
+  it('Survival hunter: malformed line is PARSE-02 with its line, the pet is read, bag/ammo lines are info', () => {
     const r = run('simc-survival-hunter.simc');
     const lines = readFixture('simc-survival-hunter.simc').split('\n');
     const bad = r.diagnostics.find((x) => x.code === 'PARSE-02' && x.severity === 'warning');
@@ -64,8 +64,11 @@ describe('fixture specifics', () => {
     expect(r.character!.gear.finger2).toEqual({ itemId: 11990, randomSuffix: 12728 });
     expect(r.character!.gear.ranged).toEqual({ itemId: 22347, enchantId: 2523 });
     expect(r.character).toMatchObject({ spec: 'hunter', professions: ['engineering', 'blacksmithing'] });
+    // pet_family=cat is the engine's Cat: read, so it has no note. The other pet lines stay unused.
+    expect(r.character!.specOptions).toEqual({ classOptions: { petType: 'Cat' } });
+    expect(r.diagnostics.filter((d) => d.field === 'pet_family')).toEqual([]);
     expect(codes(r, 'info')).toEqual(
-      expect.arrayContaining(['PARSE-02@ammo', 'PARSE-02@pet_family', 'PARSE-02@bag1']),
+      expect.arrayContaining(['PARSE-02@ammo', 'PARSE-02@pet_creature_id', 'PARSE-02@bag1']),
     );
   });
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// What differs: each variant against the baseline (A) as −/+ rows (gear slots, talents, buffs, fight,
-// rotation, other settings), as the Workbench shows pending changes.
+// What differs: each variant against the baseline (A) as −/+ rows (gear slots, talents, spec options, buffs,
+// fight, rotation, other settings), as the Workbench shows pending changes.
 import type { CompareRow } from '~/composables/compare';
 import { SLOT_LABELS } from '~/composables/workbench';
 import { changeSummary } from '~/utils/character-diff';

@@ -71,7 +71,11 @@
       "blacksmithing"
     ],
     "consumables": {},
-    "specOptions": {},
+    "specOptions": {
+      "classOptions": {
+        "petType": "Cat"
+      }
+    },
     "playerOptions": {},
     "buffs": "full-raid",
     "rotation": {
@@ -121,13 +125,6 @@
       "message": "bag1 skipped; the engine does not use it.",
       "line": 54,
       "field": "bag1"
-    },
-    {
-      "code": "PARSE-02",
-      "severity": "info",
-      "message": "pet_family skipped; the engine does not use it.",
-      "line": 57,
-      "field": "pet_family"
     },
     {
       "code": "PARSE-02",

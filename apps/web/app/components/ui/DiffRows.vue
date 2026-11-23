@@ -3,6 +3,7 @@ import type { DiffRow } from '~/composables/ui-types';
 
 // −/+ rows like a code diff (Workbench "Pending changes"). Each group is one change: what goes out,
 // what comes in. `detail` sits right-aligned: a slot name, or the estimated gain in delta color.
+// A label too long for its row is cut with an ellipsis, unless the row asks to wrap (`wrap`).
 defineProps<{ groups: DiffRow[][] }>();
 </script>
 
@@ -16,7 +17,7 @@ defineProps<{ groups: DiffRow[][] }>();
         :class="row.op === '-' ? 'is-del' : 'is-add'"
       >
         <span class="diff__op" aria-hidden="true">{{ row.op === '-' ? '−' : '+' }}</span>
-        <span class="diff__label"
+        <span class="diff__label" :class="{ 'diff__label--wrap': row.wrap }"
           ><span class="visually-hidden">{{ row.op === '-' ? 'Remove' : 'Add' }}:</span> {{ row.label }}</span
         >
         <span v-if="row.detail" class="diff__detail" :class="`tone-${row.detailTone ?? 'muted'}`">{{
@@ -62,6 +63,10 @@ defineProps<{ groups: DiffRow[][] }>();
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.diff__label--wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .tone-up {
   color: var(--delta-up);

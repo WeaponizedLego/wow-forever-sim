@@ -56,6 +56,8 @@ export interface DiffRow {
   label: string;
   detail?: string;
   detailTone?: 'up' | 'down' | 'muted';
+  /** The label wraps onto more lines instead of being cut short: for one whose end says what it changed to. */
+  wrap?: boolean;
 }
 
 export interface CheckItem {
