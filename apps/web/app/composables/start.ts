@@ -161,12 +161,16 @@ export const START_CLASSES: StartClassEntry[] = CLASS_IDS.map((cls) => ({
   specs: SPECS.filter((s) => s.class === cls).map((s) => {
     const p = PRESET_INDEX.specs.find((x) => x.specId === s.id);
     const missing = p?.missing ?? [];
-    const blocked =
-      !p || p.status === 'none'
-        ? 'No upstream presets yet'
-        : missing.includes('apl-rotation')
-          ? 'No upstream rotation to sim'
-          : null;
+    const noRotation = !p || p.status === 'none' || missing.includes('apl-rotation');
+    // One reason for every healer, in the player's terms: the engine has no healing rotations at all, so the
+    // preset data lacking this or that piece is not what stops them.
+    const blocked = !noRotation
+      ? null
+      : s.role === 'healer'
+        ? 'Not simmed: this tool sims damage only'
+        : !p || p.status === 'none'
+          ? 'Not simmed yet: the engine has no presets for this spec'
+          : 'Not simmed yet: the engine has no rotation for this spec';
     const caveat =
       !blocked && missing.includes('gear') ? 'Starts without gear: upstream has no default set' : null;
     return {

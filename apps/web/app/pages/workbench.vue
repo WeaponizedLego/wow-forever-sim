@@ -75,7 +75,7 @@ const kv = computed<KeyValue[]>(() => {
   const est = wb.draftEstimate.value;
   const items: KeyValue[] = [
     { label: 'Avg ilvl', value: wb.avgIlvl.value === null ? '—' : formatNumber(wb.avgIlvl.value, 1) },
-    { label: 'Last run', value: run ? formatNumber(run.summary.dpsMean, 1) : '—' },
+    { label: 'Last run', value: run ? `${formatNumber(run.summary.dpsMean, 1)} DPS` : '—' },
   ];
   if (est && run && wb.changes.value.length) {
     items.push({

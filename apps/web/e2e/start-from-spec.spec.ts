@@ -17,6 +17,16 @@ test('start from a spec preset and land on the workbench with gear', async ({ pa
   await expect(page.getByRole('button', { name: /^Sim draft/ })).toBeEnabled();
 });
 
+test('a healer spec cannot start, and says why in plain words', async ({ page }) => {
+  await page.goto('/');
+  const specs = page.getByRole('region', { name: 'Start from a spec' });
+  for (const name of ['Holy', 'Restoration']) {
+    const button = specs.getByRole('button', { name, exact: true }).first();
+    await expect(button).toBeDisabled();
+    await expect(button).toHaveAccessibleDescription('Not simmed: this tool sims damage only');
+  }
+});
+
 test('a Fury Warrior preset run names every ability, hand and proc', async ({ page }) => {
   await page.goto('/');
   const specs = page.getByRole('region', { name: 'Start from a spec' });

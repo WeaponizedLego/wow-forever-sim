@@ -142,13 +142,15 @@ const rowState = (r: Row): RowState | undefined =>
     <p class="foot">
       <template v-if="wb.weights.value">
         <template v-if="weighsWeapons"
-          >Linear in the item's stats and weapon damage. Procs and set bonuses carry no weight here, so proc
+          >Linear in the item's stats and weapon damage. Procs and set effects carry no weight here, so proc
           trinkets read low; only a sim prices them.</template
         >
         <template v-else
-          >Linear in the item's stats. Weapon damage, procs and set bonuses carry no weight here (this spec's
+          >Linear in the item's stats. Weapon damage, procs and set effects carry no weight here (this spec's
           weights leave weapon damage out), so proc trinkets read low; only a sim prices them.</template
         >
+        A value is what the character loses with the slot empty. Stats a set bonus gives count for each piece
+        that completes it, so swapping one piece of a set also lowers the others' values.
       </template>
       <template v-else>
         Tick <strong>Stat weights</strong> in the sim bar and run once: values and estimated gains then fill

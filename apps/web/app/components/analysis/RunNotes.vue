@@ -27,8 +27,8 @@ const items = computed<CheckItem[]>(() => {
     <template #meta><span class="sans">Rule-based checks on this run's metrics</span></template>
     <UiCheckList :items="items" />
     <p class="note">
-      Hit cap check (HIT-01) is not run: the engine does not report the hit cap for this fight. Use Hit
-      scaling to see where hit stops paying.
+      There is no check for the hit cap here: the engine does not report it for this fight. The Hit scaling
+      panel shows where more hit stops adding damage.
     </p>
   </UiPanel>
 </template>

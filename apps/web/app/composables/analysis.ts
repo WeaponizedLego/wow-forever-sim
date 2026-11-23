@@ -21,7 +21,7 @@ import {
   type RunNote,
   type StatRef,
 } from '@fsim/analysis';
-import { fightStyle, type SpecId } from '@fsim/contracts';
+import { fightStyle, MAX_LEVEL, type SpecId } from '@fsim/contracts';
 import {
   missingGameData,
   shownAuraKeys,
@@ -299,6 +299,7 @@ export function useRunAnalysis(
     const nameMap: Record<ActionKey, string> = {};
     for (const l of auraLanes(events.value, fight1Duration.value)) nameMap[l.key] = names.actionName(l.id);
     return evaluateNotes({
+      level: { level: entry.value.record.character.level, simmed: MAX_LEVEL },
       resources: { rows: waste.value },
       cooldowns: {
         lanes: auraLanes(events.value, fight1Duration.value),

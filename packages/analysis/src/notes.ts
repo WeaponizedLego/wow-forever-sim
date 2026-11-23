@@ -68,8 +68,16 @@ export interface CooldownInput {
   minOverlap?: number;
 }
 
+export interface LevelInput {
+  /** The character's own level. */
+  level: number;
+  /** The level the engine sims everyone at. */
+  simmed: number;
+}
+
 /** Everything the rules read. Each part is optional; a rule whose part is missing returns null. */
 export interface RunNotesInput {
+  level?: LevelInput;
   hit?: HitInput;
   resources?: ResourceInput;
   missingItems?: MissingItemsInput;
@@ -243,7 +251,26 @@ export function cooldownKeysFromLog(events: readonly LogEvent[]): ActionKey[] {
   return [...new Set(events.filter((e) => e.type === 'major-cooldown').map((e) => e.key))];
 }
 
-export const DEFAULT_RULES: readonly NoteRule[] = [HIT_01, RES_02, DATA_03, CD_04];
+/**
+ * LEVEL-07: a character below the level the engine sims. The import says so once; the run page has to say it
+ * too, since the DPS there is what gets compared with the game.
+ */
+export const LEVEL_07: NoteRule = {
+  id: 'LEVEL-07',
+  severity: 'warning',
+  evaluate({ level }) {
+    if (!level || level.level >= level.simmed) return null;
+    return {
+      id: 'LEVEL-07',
+      severity: 'warning',
+      text: `This character is level ${level.level}, and the engine only sims level ${level.simmed}. The result is this gear and these talents on a level ${level.simmed} character, not the damage the character does today.`,
+      action: null,
+      data: { level: level.level, simmed: level.simmed },
+    };
+  },
+};
+
+export const DEFAULT_RULES: readonly NoteRule[] = [LEVEL_07, HIT_01, RES_02, DATA_03, CD_04];
 
 /** Runs each rule and returns the notes that fired, in rule order. */
 export function evaluateNotes(input: RunNotesInput, rules: readonly NoteRule[] = DEFAULT_RULES): RunNote[] {
