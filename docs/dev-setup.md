@@ -34,9 +34,10 @@ node apps/web/scripts/stage-engine.mjs
 ```
 
 Engine sync moves the lock several times a day. After pulling a sync, run those two again: the real-WASM tests
-sim the locked presets in whatever engine is in `vendor/`. If `packages/engine/src/action-names.test.ts` then says
-a run reports action ids the fixture lacks (a preset changed upstream), rerun it with `UPDATE_ACTION_IDS=1` and
-commit `fixtures/engine/action-ids.json`; CI has no engine in its unit job and cannot notice.
+sim the locked presets in whatever engine is in `vendor/`. Each sync also rewrites `fixtures/engine/action-ids.json`
+from the engine it built, so if `packages/engine/src/action-names.test.ts` says a run reports action ids the
+fixture lacks, the local engine is behind the lock. Only a change of your own to what those runs cast needs the
+file rewritten by hand: rerun the test with `UPDATE_ACTION_IDS=1` and commit the file.
 
 This fills `packages/engine/vendor/` and stages the browser copy in `apps/web/public/engine/` (both gitignored).
 Without it the app shows "engine unavailable" and the real-engine tests skip.

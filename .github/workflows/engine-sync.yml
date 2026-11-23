@@ -3,8 +3,8 @@ name: engine-sync
 # Keeps engine.lock.json on the engine wowsims.com/forever serves (wowsims/pages-deploy
 # forever/version.json): build the WASM at that commit, smoke-sim every spec in Node, publish the
 # artifacts as release engine-<id>, and open an auto-merging PR with the new lock, regenerated
-# protos and smoke baseline. A failed build or smoke test publishes nothing and opens (or updates)
-# an issue instead. Scripts and failure modes: tools/engine-build/README.md.
+# protos, game data, action-id fixture and smoke baseline. A failed step publishes nothing and opens
+# (or updates) an issue instead. Scripts and failure modes: tools/engine-build/README.md.
 #
 # Repo setup this needs (done 2026-11-13 via gh):
 #   - "Allow auto-merge" on, and branch protection on main that requires a `check` status (any source).
@@ -161,6 +161,20 @@ jobs:
           pnpm --filter @fsim/proto exec tsc -p tsconfig.json
           pnpm exec vitest run --project proto
 
+      # fixtures/engine/action-ids.json lists what the Warrior presets and an imported Hunter report in the
+      # locked engine. No other job sims in a real engine, so nothing would notice it going stale when a sync
+      # changes what a preset casts. After promote (the test sims the new presets with the new database), and
+      # before the CI check, whose gamedata tests name every id in the file. An id the app cannot name fails here.
+      - name: Regenerate the action-id fixture
+        if: steps.gate.outputs.run == 'true'
+        env:
+          ENGINE_ID: ${{ steps.check.outputs.engineId }}
+          UPDATE_ACTION_IDS: '1'
+        run: |
+          set -o pipefail
+          ACTION_IDS_ENGINE_DIR="$ENGINE_BUILD_WORK/out/$ENGINE_ID" \
+            pnpm exec vitest run packages/engine/src/action-names.test.ts 2>&1 | tee "$ENGINE_BUILD_WORK/action-ids.log"
+
       # ci.yml's `check` job, on the tree the sync PR will hold (see the header for why it runs here).
       # Before publishing, so a failure publishes nothing and opens the failure issue.
       - name: CI check
@@ -211,7 +225,7 @@ jobs:
             echo
             cat "$ENGINE_BUILD_WORK/out/$ENGINE_ID/smoke-report.md"
           } > "$body"
-          git add engine.lock.json tools/engine-build/smoke-baseline.json packages/proto/proto packages/proto/src/generated packages/gamedata/data/talents packages/gamedata/data/presets packages/gamedata/data/spell-names fixtures/gamedata
+          git add engine.lock.json tools/engine-build/smoke-baseline.json packages/proto/proto packages/proto/src/generated packages/gamedata/data/talents packages/gamedata/data/presets packages/gamedata/data/spell-names fixtures/gamedata fixtures/engine/action-ids.json
           if git diff --cached --quiet; then
             echo "::notice::nothing changed; no PR"
             exit 0
@@ -262,7 +276,7 @@ jobs:
             echo
             report="$ENGINE_BUILD_WORK/out/$ENGINE_ID/smoke-report.md"
             [ -f "$report" ] && cat "$report" && echo
-            for f in build smoke; do
+            for f in build smoke action-ids; do
               if [ -f "$ENGINE_BUILD_WORK/$f.log" ]; then
                 echo "<details><summary>$f log (last 150 lines)</summary>"
                 echo

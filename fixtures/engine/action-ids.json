@@ -1,38 +1,10 @@
 {
-  "engine": "132a66a-local",
+  "engine": "57df2a7",
   "runs": {
     "warrior-fury-pre-bis": {
       "abilities": [
         [
-          "spell:11574",
-          null
-        ],
-        [
-          "spell:25286",
-          null
-        ],
-        [
-          "spell:23894",
-          null
-        ],
-        [
-          "spell:10610",
-          null
-        ],
-        [
-          "spell:1680#14",
-          null
-        ],
-        [
-          "spell:412609",
-          null
-        ],
-        [
-          "spell:11585",
-          null
-        ],
-        [
-          "other:3#18797",
+          "item:10646",
           null
         ],
         [
@@ -44,15 +16,43 @@
           null
         ],
         [
-          "spell:1680#15",
-          null
-        ],
-        [
           "other:3#15",
           null
         ],
         [
-          "spell:7373",
+          "other:3#18797",
+          null
+        ],
+        [
+          "spell:10610",
+          null
+        ],
+        [
+          "spell:11567",
+          null
+        ],
+        [
+          "spell:11574",
+          null
+        ],
+        [
+          "spell:11585",
+          null
+        ],
+        [
+          "spell:1680#14",
+          null
+        ],
+        [
+          "spell:1680#15",
+          null
+        ],
+        [
+          "spell:20662",
+          null
+        ],
+        [
+          "spell:23894",
           null
         ],
         [
@@ -60,11 +60,11 @@
           null
         ],
         [
-          "item:10646",
+          "spell:412609",
           null
         ],
         [
-          "spell:20662",
+          "spell:7373",
           null
         ]
       ],
@@ -79,6 +79,8 @@
         "spell:10614#-1",
         "spell:10626#-1",
         "spell:10938#-1",
+        "spell:11551",
+        "spell:11567#1",
         "spell:12328",
         "spell:1282733",
         "spell:12966",
@@ -92,8 +94,6 @@
         "spell:2457",
         "spell:2458",
         "spell:24932#-1",
-        "spell:25286#1",
-        "spell:25289",
         "spell:25782#-1",
         "spell:25898#-1",
         "spell:29131",
@@ -186,14 +186,10 @@
         "spell:9885#-1"
       ]
     },
-    "warrior-arms-pre-bis": {
+    "warrior-fury-2h-pre-bis": {
       "abilities": [
         [
-          "spell:27655",
-          null
-        ],
-        [
-          "spell:7373",
+          "item:10646",
           null
         ],
         [
@@ -201,35 +197,7 @@
           null
         ],
         [
-          "spell:21553",
-          null
-        ],
-        [
-          "item:10646",
-          null
-        ],
-        [
-          "spell:11585",
-          null
-        ],
-        [
-          "spell:10610",
-          null
-        ],
-        [
-          "spell:412609",
-          null
-        ],
-        [
-          "spell:20662",
-          null
-        ],
-        [
-          "other:3#1290261",
-          null
-        ],
-        [
-          "spell:11574",
+          "other:3#14",
           null
         ],
         [
@@ -237,15 +205,43 @@
           null
         ],
         [
-          "spell:1310222",
+          "spell:10610",
           null
         ],
         [
-          "other:3#14",
+          "spell:11567",
           null
         ],
         [
-          "spell:11605",
+          "spell:11574",
+          null
+        ],
+        [
+          "spell:11585",
+          null
+        ],
+        [
+          "spell:1680#14",
+          null
+        ],
+        [
+          "spell:20662",
+          null
+        ],
+        [
+          "spell:23894",
+          null
+        ],
+        [
+          "spell:27655",
+          null
+        ],
+        [
+          "spell:412609",
+          null
+        ],
+        [
+          "spell:7373",
           null
         ]
       ],
@@ -260,22 +256,26 @@
         "spell:10614#-1",
         "spell:10626#-1",
         "spell:10938#-1",
-        "spell:11578",
+        "spell:11551",
+        "spell:11567#1",
+        "spell:12328",
         "spell:1282733",
-        "spell:1290261#3",
+        "spell:12966",
+        "spell:1323969",
+        "spell:1329555",
         "spell:17152",
         "spell:17528",
         "spell:18499",
-        "spell:18679",
         "spell:20007#14",
         "spell:20572",
+        "spell:20617",
         "spell:2457",
         "spell:2458",
         "spell:24932#-1",
-        "spell:25289",
         "spell:25782#-1",
         "spell:25898#-1",
         "spell:29131",
+        "spell:460230",
         "spell:9885#-1"
       ],
       "all": [
@@ -290,10 +290,187 @@
         "other:11",
         "other:20",
         "other:20#1",
-        "other:3#1290261",
         "other:3#14",
         "other:3#15",
         "other:3#15601",
+        "spell:10441#-1",
+        "spell:10610",
+        "spell:10612#-1",
+        "spell:10614#-1",
+        "spell:10626#-1",
+        "spell:10938#-1",
+        "spell:11551",
+        "spell:11556",
+        "spell:11567",
+        "spell:11567#1",
+        "spell:11574",
+        "spell:11578",
+        "spell:11581",
+        "spell:11585",
+        "spell:11597",
+        "spell:11601",
+        "spell:11605",
+        "spell:1161",
+        "spell:12328",
+        "spell:1282733",
+        "spell:12880",
+        "spell:12966",
+        "spell:1299026",
+        "spell:1323968",
+        "spell:1323969",
+        "spell:1329555",
+        "spell:16488",
+        "spell:1672",
+        "spell:1680#14",
+        "spell:1680#15",
+        "spell:17152",
+        "spell:1719",
+        "spell:17528",
+        "spell:18499",
+        "spell:20007#14",
+        "spell:20007#15",
+        "spell:20230",
+        "spell:20240",
+        "spell:20560",
+        "spell:20569",
+        "spell:20569#1",
+        "spell:20572",
+        "spell:20615",
+        "spell:20617",
+        "spell:20662",
+        "spell:23894",
+        "spell:2457",
+        "spell:2458",
+        "spell:24932#-1",
+        "spell:25286",
+        "spell:25286#1",
+        "spell:25288",
+        "spell:25289",
+        "spell:2565",
+        "spell:25782#-1",
+        "spell:25898#-1",
+        "spell:2687",
+        "spell:27655",
+        "spell:29131",
+        "spell:355",
+        "spell:402927",
+        "spell:402975",
+        "spell:412609",
+        "spell:460230",
+        "spell:5246",
+        "spell:5302",
+        "spell:6554",
+        "spell:676",
+        "spell:71",
+        "spell:7373",
+        "spell:871",
+        "spell:9885#-1"
+      ]
+    },
+    "warrior-arms-pre-bis": {
+      "abilities": [
+        [
+          "item:10646",
+          null
+        ],
+        [
+          "item:260814",
+          null
+        ],
+        [
+          "other:3#1290261",
+          null
+        ],
+        [
+          "other:3#14",
+          null
+        ],
+        [
+          "spell:10610",
+          null
+        ],
+        [
+          "spell:11574",
+          null
+        ],
+        [
+          "spell:11585",
+          null
+        ],
+        [
+          "spell:11605",
+          null
+        ],
+        [
+          "spell:1310222",
+          null
+        ],
+        [
+          "spell:20662",
+          null
+        ],
+        [
+          "spell:21553",
+          null
+        ],
+        [
+          "spell:27655",
+          null
+        ],
+        [
+          "spell:412609",
+          null
+        ],
+        [
+          "spell:7373",
+          null
+        ]
+      ],
+      "auras": [
+        "item:12820",
+        "item:13452",
+        "item:20452",
+        "item:250350",
+        "other:20",
+        "spell:10441#-1",
+        "spell:10612#-1",
+        "spell:10614#-1",
+        "spell:10626#-1",
+        "spell:10938#-1",
+        "spell:11551",
+        "spell:11578",
+        "spell:1282733",
+        "spell:1290261#3",
+        "spell:17152",
+        "spell:17528",
+        "spell:18499",
+        "spell:20007#14",
+        "spell:20572",
+        "spell:2457",
+        "spell:2458",
+        "spell:24932#-1",
+        "spell:25782#-1",
+        "spell:25898#-1",
+        "spell:29131",
+        "spell:460230",
+        "spell:9885#-1"
+      ],
+      "all": [
+        "item:10646",
+        "item:10646#1",
+        "item:12820",
+        "item:13442",
+        "item:13452",
+        "item:13965",
+        "item:20452",
+        "item:250350",
+        "item:260814",
+        "other:11",
+        "other:20",
+        "other:20#1",
+        "other:3#1290261",
+        "other:3#14",
+        "other:3#15",
         "spell:10441#-1",
         "spell:10610",
         "spell:10612#-1",
@@ -327,7 +504,6 @@
         "spell:1719",
         "spell:17528",
         "spell:18499",
-        "spell:18679",
         "spell:20007#14",
         "spell:20007#15",
         "spell:20230",
@@ -357,6 +533,7 @@
         "spell:402927",
         "spell:402975",
         "spell:412609",
+        "spell:460230",
         "spell:5246",
         "spell:5302",
         "spell:6554",
@@ -370,15 +547,7 @@
     "hunter-wowhead": {
       "abilities": [
         [
-          "spell:20904",
-          null
-        ],
-        [
-          "spell:14287",
-          null
-        ],
-        [
-          "spell:13555",
+          "item:18588",
           null
         ],
         [
@@ -386,7 +555,15 @@
           null
         ],
         [
-          "item:18588",
+          "spell:13555",
+          null
+        ],
+        [
+          "spell:14287",
+          null
+        ],
+        [
+          "spell:20904",
           null
         ]
       ],
