@@ -2,7 +2,7 @@
   "class": "rogue",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "295771933643352a9853b8c9996e4b587b15fb5b",
+    "commit": "ac1c1d4ed882174d1e4eeb82a3f5749abd47ecc1",
     "files": ["ui/sim/talents/trees/rogue.json", "assets/database/db.json"]
   },
   "trees": [
