@@ -67,7 +67,9 @@ const outcomes = (r: Row) => ({
         />
         <span v-else-if="hasIcons" class="icon" aria-hidden="true" />
         <span class="name">{{ row.name }}</span>
-        <span v-if="row.basis === 'ticks'" class="tag">DoT</span>
+        <!-- The space is in the text, so the row reads "Corruption DoT" to a screen reader and when copied. A name
+             that already says it ("Pyroblast (DoT)") gets no second tag. -->
+        <span v-if="row.basis === 'ticks' && !row.name.includes('(DoT')" class="tag">&#32;DoT</span>
       </template>
       <template #cell-dps="{ row }">{{ formatNumber(row.dps, 1) }}</template>
       <template #cell-share="{ row }">
@@ -109,7 +111,7 @@ const outcomes = (r: Row) => ({
   font-size: var(--text-md);
 }
 .tag {
-  margin-left: 6px;
+  margin-left: 3px;
   font-size: var(--text-xs);
   color: var(--text-3);
 }

@@ -61,8 +61,26 @@ const fixed =
 const ticks: TagRule = (tag) => (tag >= 1 && tag <= 5 ? `${tag} tick${tag > 1 ? 's' : ''}` : undefined);
 const comboPoints: TagRule = (tag) => (tag > 0 && tag <= 5 ? `${tag} combo points` : undefined);
 const dot = fixed({ 1: 'DoT' });
+const anyDot: TagRule = (tag) => (tag ? 'DoT' : undefined);
 const queue = fixed({ 1: 'queued' });
 const damageShield = fixed({ 1: 'hit', 2: 'hit', [-1]: 'external' });
+const shock = fixed({ 1: 'DoT', 7: 'echo' });
+/** Shaman bolts: what cast the copy, or the Maelstrom Weapon stacks the cast spent. */
+const BOLT: Record<number, string> = {
+  6: 'overload',
+  7: 'echo',
+  8: 'echo overload',
+  9: 'mastery',
+  10: 'haste',
+  11: 'crit',
+  12: 'agility',
+};
+const bolt: TagRule = (tag) => BOLT[tag] ?? (tag > 0 ? `${tag} Maelstrom Weapon` : undefined);
+/** A targeted buff is tagged with its caster's raid index, or -1 for one from outside the raid. */
+const caster: TagRule = (tag) => (tag === -1 ? 'raid' : 'self');
+/** The Holy Shield hit a Shieldsworn Holy Strike casts is a spell of its own, and Shield Specialization's tag. */
+const SHIELDSWORN_STRIKE = 456544;
+const SHIELDSWORN_TAG = 1328544;
 
 /**
  * Spell-specific tags, by base name, ported from upstream's fill() for the classes WoW Forever has.
@@ -72,10 +90,12 @@ const SPELL_TAGS: Record<string, TagRule> = {
   'Arcane Blast': (t) =>
     t === 1 ? 'no stacks' : t === 2 ? '1 stack' : t > 2 ? `${t - 1} stacks` : undefined,
   'Hot Streak': (t) => (t ? 'crits' : undefined),
-  Fireball: (t) => (t ? 'DoT' : undefined),
-  Flamestrike: (t) => (t ? 'DoT' : undefined),
-  Pyroblast: (t) => (t ? 'DoT' : undefined),
-  Combustion: (t) => (t ? 'DoT' : undefined),
+  Fireball: anyDot,
+  Flamestrike: anyDot,
+  'Frostfire Bolt': anyDot,
+  Pyroblast: anyDot,
+  // Two auras: 11129 counts the crits left, 28682 carries the crit chance (sim/mage/combustion.go).
+  Combustion: (t, id) => (t ? 'DoT' : id === 28682 ? 'crit chance' : undefined),
   Evocation: ticks,
   'Mind Flay': ticks,
   'Mind Sear': ticks,
@@ -85,31 +105,58 @@ const SPELL_TAGS: Record<string, TagRule> = {
   Rupture: comboPoints,
   'Slice and Dice': comboPoints,
   'Expose Armor': comboPoints,
+  'Death Mark': comboPoints,
+  'Crimson Tempest': (t, id) => (t === 7 ? 'DoT' : comboPoints(t, id)),
   'Wound Poison': fixed({ 1: 'Shiv' }),
   Mutilate: (t) => (t === 0 ? 'cast' : undefined),
-  'Chain Lightning': dot,
-  'Lightning Bolt': dot,
+  // The buff the strike leaves is a spell of its own (sim/rogue/talents_subtlety.go, GhostlyStrikeTriggered).
+  'Ghostly Strike': (_t, id) => (id === 1329326 ? 'triggered' : undefined),
+  'Chain Lightning': bolt,
+  'Lightning Bolt': bolt,
+  'Lava Burst': bolt,
+  'Flame Shock': shock,
+  'Earth Shock': shock,
+  'Frost Shock': shock,
+  Fulmination: (t) => `${t + 2} charges`,
   Moonfire: dot,
   Sunfire: dot,
+  // Every rank casts the same weapon hit, a spell of its own; the rank's row is the bleed (sim/druid/lacerate.go).
+  Lacerate: (_t, id) => (id === 414647 ? 'hit' : undefined),
+  'Feral Charge (Bear)': fixed({ 1: 'moving' }),
   Immolate: dot,
   'Unstable Affliction': fixed({ 1: 'Malefic' }),
   Corruption: fixed({ 1: 'Malefic' }),
+  // Demonic Sacrifice's effects, each named with the demon sacrificed for it.
+  'Burning Shadow': () => 'imp sacrificed',
+  'Touch of Fire': () => 'succubus sacrificed',
+  'Fel Energy': () => 'voidwalker sacrificed',
+  'Fel Stamina': () => 'felhunter sacrificed',
   'Raptor Strike': fixed({ 1: 'queued', 2: 'cooldown' }),
+  // A damage shield's proc is tagged 1 (a copy from outside) or 2 (the player's own); the outside aura is -1.
   'Retribution Aura': damageShield,
-  'Holy Shield': damageShield,
+  'Holy Shield': (t, id) => damageShield(t, id) ?? (id === SHIELDSWORN_STRIKE ? 'Shieldsworn' : undefined),
   Thorns: damageShield,
   Brambles: damageShield,
+  Bristlecone: damageShield,
+  'Heart of the Scale': damageShield,
   Immolation: damageShield,
+  'Fiery Aura': damageShield,
+  'Chitinous Spikes': damageShield,
+  'Shield Specialization': fixed({ [SHIELDSWORN_TAG]: 'Shieldsworn' }),
   'Searing Totem': fixed({ 1: 'attack', [-1]: 'external' }),
   'Magma Totem': fixed({ 1: 'attack', [-1]: 'external' }),
   'Flametongue Totem': fixed({ 1: 'attack', [-1]: 'external' }),
   'Fire Nova': fixed({ 1: 'damage' }),
   'Lightning Shield': fixed({ 1: 'wasted' }),
   'Power Word: Shield': fixed({ 1: 'shield' }),
+  Penance: fixed({ 1: 'heal' }),
+  'Read Leyline': fixed({ 1: 'attuned' }),
+  Skysight: fixed({ 1: 'charged' }),
   'Curse of Weakness': fixed({ 1: 'amplified', [-1]: 'external' }),
-  Innervate: (t) => (t === -1 ? 'raid' : 'self'),
-  'Power Infusion': (t) => (t === -1 ? 'raid' : 'self'),
-  'Mana Tide Totem': (t) => (t === -1 ? 'raid' : 'self'),
+  Innervate: caster,
+  'Power Infusion': caster,
+  'Mana Tide Totem': caster,
+  'Unholy Frenzy': caster,
   Berserking: (t) => (t > 0 ? `${10 + (t - 1) * 5}%` : undefined),
   'Heroic Strike': queue,
   Cleave: queue,
@@ -118,6 +165,7 @@ const SPELL_TAGS: Record<string, TagRule> = {
   'Sunder Armor': fixed({ 1: 'Devastate' }),
   Thunderfury: fixed({ 1: 'single target', 2: 'multi-target' }),
   'Devouring Plague': fixed({ 1: 'DoT', 2: 'heal' }),
+  'Shadow Word: Death': fixed({ 1: 'no orb' }),
   Shadowfiend: fixed({ 1: 'mana restore' }),
   'Hack and Slash': fixed({ 1: 'axe/sword', 2: 'fist/dagger', 3: 'mace' }),
   Weaponmaster: fixed({ 1: 'axe/polearm', 2: 'mace/staff', 3: 'sword' }),
@@ -214,6 +262,15 @@ export function distinctActionNames(
   src: ActionNameSources,
   owners?: readonly (string | null)[],
 ): string[] {
+  return distinct(ids, src, owners).map((d) => d.name);
+}
+
+/** `distinctActionNames`, with whether a name only differs from another by the count at its end. */
+function distinct(
+  ids: readonly ActionRef[],
+  src: ActionNameSources,
+  owners?: readonly (string | null)[],
+): { name: string; counted: boolean }[] {
   const names = ids.map((a) => actionName(a, src));
   const key = (n: string, i: number) => `${owners?.[i] ?? ''}\u0000${n}`;
   const rankOf = (a: ActionRef) => (a.kind === 'spell' ? src.spell(a.id)?.rank || 0 : 0);
@@ -223,14 +280,60 @@ export function distinctActionNames(
     const group = groups.get(key(n, i))!;
     if (group.length < 2) return n;
     const rank = rankOf(ids[i]!);
-    return rank && new Set(group.map((j) => rankOf(ids[j]!))).size > 1 ? `${n} (rank ${rank})` : n;
+    if (!rank || new Set(group.map((j) => rankOf(ids[j]!))).size < 2) return n;
+    // One pair of brackets: "Lightning Bolt (overload, rank 8)".
+    return n.endsWith(')') ? `${n.slice(0, -1)}, rank ${rank})` : `${n} (rank ${rank})`;
   });
+  const total = new Map<string, number>();
+  ranked.forEach((n, i) => total.set(key(n, i), (total.get(key(n, i)) ?? 0) + 1));
   const seen = new Map<string, number>();
   return ranked.map((n, i) => {
     const k = (seen.get(key(n, i)) ?? 0) + 1;
     seen.set(key(n, i), k);
-    return k > 1 ? `${n} (${k})` : n;
+    return { name: k > 1 ? `${n} (${k})` : n, counted: total.get(key(n, i))! > 1 };
   });
+}
+
+/** The action ids one run reports, as fixtures/engine/action-ids.json keeps them (`spell:1680#14`). */
+export interface RunActionIds {
+  /** Damage rows: [id, the pet that owns the row or null for the player]. */
+  abilities: readonly (readonly [string, string | null])[];
+  /** The player's auras in the first fight's log. */
+  auras: readonly string[];
+  /** Every action and aura id of the player and its pets. */
+  all: readonly string[];
+}
+
+const parseKey = (k: string): ActionRef => {
+  const m = /^(spell|item|other):(-?\d+)(?:#(-?\d+))?$/.exec(k);
+  if (!m) throw new Error(`not an action id: ${k}`);
+  return { kind: m[1] as ActionRef['kind'], id: Number(m[2]), tag: m[3] ? Number(m[3]) : 0 };
+};
+
+/**
+ * What the names cannot do for a run: ids with no name at all (the page would show "Spell 12345"), and damage
+ * rows or shown auras that read the same and are only told apart by a count ("Combustion", "Combustion (2)").
+ * Empty when every row has a name of its own.
+ */
+export function actionNameGaps(run: RunActionIds, src: ActionNameSources): string[] {
+  const gaps = run.all
+    .filter((k) => actionBaseName(parseKey(k), src) === null)
+    .map((k) => `${k} has no name`);
+  const shared = (kind: string, keys: readonly string[], owners?: readonly (string | null)[]) =>
+    distinct(keys.map(parseKey), src, owners).forEach((d, i) => {
+      if (d.counted) gaps.push(`${kind} ${keys[i]} shares the name "${actionName(parseKey(keys[i]!), src)}"`);
+    });
+  shared(
+    'row',
+    run.abilities.map(([k]) => k),
+    run.abilities.map(([, owner]) => owner),
+  );
+  const shown = shownAuraKeys(run.auras);
+  shared(
+    'aura',
+    run.auras.filter((k) => shown.has(k)),
+  );
+  return gaps.sort();
 }
 
 /** "Enchant Weapon - Crusader" → "Crusader". */
@@ -252,6 +355,12 @@ export function enchantProcNames(
   return new Map([...names].filter((x): x is [number, string] => x[1] !== null));
 }
 
+/**
+ * Items the engine reports as an aura that are neither gear nor a consumable in the database: the warlock's
+ * Soul Shards are the stacks of an aura with the shard's item id (sim/warlock/soul_shards.go).
+ */
+const UNLISTED_ITEMS: Record<number, string> = { 6265: 'Soul Shards' };
+
 /** Name sources over a game database and the spell-name table (`buildSpellNames`). */
 export function actionNameSources(
   db: {
@@ -267,6 +376,6 @@ export function actionNameSources(
     spell: (id) => spells?.get(id),
     // Consumables (bombs, potions, runes) are not in the item table. Item and spell ids are separate
     // number spaces (item 13442 Mighty Rage Potion, spell 13442 Firebolt), so an item never takes a spell's name.
-    item: (id) => db?.item(id)?.name || db?.consumables.get(id)?.name || undefined,
+    item: (id) => db?.item(id)?.name || db?.consumables.get(id)?.name || UNLISTED_ITEMS[id],
   };
 }

@@ -161,10 +161,11 @@ jobs:
           pnpm --filter @fsim/proto exec tsc -p tsconfig.json
           pnpm exec vitest run --project proto
 
-      # fixtures/engine/action-ids.json lists what the Warrior presets and an imported Hunter report in the
-      # locked engine. No other job sims in a real engine, so nothing would notice it going stale when a sync
+      # fixtures/engine/action-ids.json lists what every spec's preset builds and an imported Hunter report in
+      # the locked engine. No other job sims in a real engine, so nothing would notice it going stale when a sync
       # changes what a preset casts. After promote (the test sims the new presets with the new database), and
-      # before the CI check, whose gamedata tests name every id in the file. An id the app cannot name fails here.
+      # before the CI check, whose gamedata tests hold the names to the file. A spec that cannot be simmed through
+      # the app's own request path fails here. A gap in the names does not: see "Report gaps in action names".
       - name: Regenerate the action-id fixture
         if: steps.gate.outputs.run == 'true'
         env:
@@ -259,6 +260,37 @@ jobs:
               gh pr close "$n" --delete-branch --comment "Superseded by the $ENGINE_ID engine sync ($branch)." ||
                 echo "::warning::could not close superseded sync PR #$n"
             done
+
+      # A gap in the names (a row the run page would show as "Spell 12345", or two rows that read the same) does
+      # not stop a sync: an engine a day behind is worse for a player. The gaps the new fixture lists go to one
+      # issue, rewritten on every sync and closed when there are none. Never fails the job.
+      - name: Report gaps in action names
+        if: steps.gate.outputs.run == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_ID: ${{ steps.check.outputs.engineId }}
+        run: |
+          title="Action names: gaps at the locked engine"
+          body="$ENGINE_BUILD_WORK/gaps-body.md"
+          count=$(jq '.gaps | length' fixtures/engine/action-ids.json)
+          issue=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number // empty')
+          if [ "$count" -gt 0 ]; then
+            {
+              echo "At engine \`$ENGINE_ID\`, $count rows of the runs in \`fixtures/engine/action-ids.json\` have no name of their own."
+              echo "The run page shows such a row as \"Spell 12345\", or as two rows that differ only by a count."
+              echo "Name them in \`packages/gamedata/src/spell-names.ts\` (\`UNLISTED_SPELLS\`) or \`action-names.ts\` (\`SPELL_TAGS\`). The next sync rewrites this list."
+              echo
+              jq -r '.gaps[] | "- `" + . + "`"' fixtures/engine/action-ids.json
+            } > "$body"
+            if [ -n "$issue" ]; then
+              gh issue edit "$issue" --body-file "$body"
+            else
+              gh issue create --title "$title" --body-file "$body"
+            fi
+          elif [ -n "$issue" ]; then
+            gh issue close "$issue" --comment "No gaps at engine $ENGINE_ID."
+          fi
 
       - name: Report failure
         if: failure() && steps.gate.outputs.run == 'true'

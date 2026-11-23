@@ -3,34 +3,27 @@ import { OtherAction } from '@fsim/proto/common';
 import { beforeAll, describe, expect, it } from 'vitest';
 import {
   actionName,
+  actionNameGaps,
   enchantProcNames,
   actionNameSources,
   distinctActionNames,
-  shownAuraKeys,
   type ActionNameSources,
   type ActionRef,
+  type RunActionIds,
 } from './action-names';
 import { buildSpellNames, loadSpellNames } from './spell-names';
 import { fixtureDb } from './test-db';
 
-// Every action id the Warrior presets and a Wowhead-imported Hunter report in the locked engine (written by
-// packages/engine/src/action-names.test.ts with UPDATE_ACTION_IDS=1).
+// Every action id that each spec's preset builds and a Wowhead-imported Hunter report in the locked engine, and
+// the gaps in their names at that engine (written by packages/engine/src/action-names.test.ts with
+// UPDATE_ACTION_IDS=1, which engine sync runs on every sync).
 const fixture = JSON.parse(
   readFileSync(new URL('../../../fixtures/engine/action-ids.json', import.meta.url), 'utf8'),
-) as {
-  runs: Record<string, { abilities: [string, string | null][]; auras: string[]; all: string[] }>;
-};
+) as { gaps: string[]; runs: Record<string, RunActionIds> };
 
-const parse = (k: string): ActionRef => {
-  const m = /^(spell|item|other):(-?\d+)(?:#(-?\d+))?$/.exec(k)!;
-  return { kind: m[1] as ActionRef['kind'], id: Number(m[2]), tag: m[3] ? Number(m[3]) : 0 };
-};
 const spell = (id: number, tag = 0): ActionRef => ({ kind: 'spell', id, tag });
 const item = (id: number, tag = 0): ActionRef => ({ kind: 'item', id, tag });
 const melee = (tag = 0): ActionRef => ({ kind: 'other', id: OtherAction.OtherActionAttack, tag });
-
-/** A label that leaks a raw id or tag: "tag 14", "Item 10646", "Spell 12345", "Other action 20". */
-const RAW = /tag |\b(Item|Spell|Other action) \d+/;
 
 let src: ActionNameSources;
 beforeAll(async () => {
@@ -105,25 +98,64 @@ describe('action names', () => {
     expect(distinctActionNames([spell(3), spell(3, 7)], fake, [null, 'Cat'])).toEqual(['Bolt', 'Bolt']);
   });
 
-  for (const [run, ids] of Object.entries(fixture.runs)) {
-    it(`names every action of the ${run} run`, () => {
-      const names = ids.all.map((k) => actionName(parse(k), src));
-      expect(names.filter((n) => RAW.test(n))).toEqual([]);
+  it('names the ids the engine builds outside its spell table', () => {
+    expect(actionName(spell(22482), src)).toBe('Blade Flurry');
+    expect(actionName(spell(408501), src)).toBe('Maelstrom Ready!');
+    expect(actionName(item(6265), src)).toBe('Soul Shards');
+  });
 
-      const abilities = distinctActionNames(
-        ids.abilities.map(([k]) => parse(k)),
-        src,
-        ids.abilities.map(([, o]) => o),
-      );
-      const shown = shownAuraKeys(ids.auras);
-      const auras = distinctActionNames(ids.auras.filter((k) => shown.has(k)).map(parse), src);
-      for (const list of [abilities, auras]) {
-        expect(list.filter((n) => RAW.test(n))).toEqual([]);
-        // Same-named rows only ever come from the count fallback, which these runs should not need.
-        expect(list.filter((n) => / \(\d+\)$/.test(n))).toEqual([]);
-      }
-      expect(new Set(abilities.map((n, i) => `${ids.abilities[i]![1]}|${n}`)).size).toBe(abilities.length);
-      expect(new Set(auras).size).toBe(auras.length);
-    });
-  }
+  it("tells a spell's copies and parts apart the way upstream does", () => {
+    expect(actionName(spell(15208, 6), src)).toBe('Lightning Bolt (overload)');
+    expect(actionName(spell(15208, 5), src)).toBe('Lightning Bolt (5 Maelstrom Weapon)');
+    expect(actionName(spell(10605, 7), src)).toBe('Chain Lightning (echo)');
+    expect(actionName(spell(1237313, 1), src)).toBe('Frostfire Bolt (DoT)');
+    expect(actionName(spell(1325758, 4), src)).toBe('Death Mark (4 combo points)');
+    // Same name, different spells: the id says which part it is.
+    expect(actionName(spell(11129), src)).toBe('Combustion');
+    expect(actionName(spell(28682), src)).toBe('Combustion (crit chance)');
+    expect(actionName(spell(414647), src)).toBe('Lacerate (hit)');
+    expect(actionName(spell(1329326), src)).toBe('Ghostly Strike (triggered)');
+  });
+
+  it('puts a rank inside the brackets a name already has', () => {
+    const bolts = [spell(10392), spell(15208), spell(10392, 6), spell(15208, 6)];
+    expect(distinctActionNames(bolts, src)).toEqual([
+      'Lightning Bolt (rank 8)',
+      'Lightning Bolt (rank 10)',
+      'Lightning Bolt (overload, rank 8)',
+      'Lightning Bolt (overload, rank 10)',
+    ]);
+  });
+
+  it('lists what it cannot name or tell apart as gaps', () => {
+    const run = { abilities: [], auras: [], all: ['spell:1', 'item:1', 'spell:25286'] };
+    expect(actionNameGaps(run, src)).toEqual(['item:1 has no name', 'spell:1 has no name']);
+    // Two rows with one name and nothing to tell them apart but a count; a pet's row never clashes with its owner's.
+    const twice = {
+      abilities: [
+        ['spell:25286#9', null],
+        ['spell:25286#8', null],
+        ['spell:25286#9', 'Wolf'],
+      ] as [string, string | null][],
+      auras: ['spell:25286#9', 'spell:25286#8'],
+      all: [],
+    };
+    expect(actionNameGaps(twice, src)).toEqual([
+      'aura spell:25286#8 shares the name "Heroic Strike"',
+      'aura spell:25286#9 shares the name "Heroic Strike"',
+      'row spell:25286#8 shares the name "Heroic Strike"',
+      'row spell:25286#9 shares the name "Heroic Strike"',
+    ]);
+  });
+
+  // The fixture's own `gaps` are what engine sync found at its engine (it opens an issue for them and does not
+  // stop). Offline, the names must not do worse than that: a gap here that the fixture does not list is a
+  // regression in this package.
+  it(`has no gap in ${Object.keys(fixture.runs).length} real runs beyond those the fixture lists`, () => {
+    expect(Object.keys(fixture.runs).length).toBeGreaterThan(30);
+    const gaps = Object.entries(fixture.runs).flatMap(([run, ids]) =>
+      actionNameGaps(ids, src).map((gap) => `${run}: ${gap}`),
+    );
+    expect(gaps.filter((g) => !fixture.gaps.includes(g))).toEqual([]);
+  });
 });

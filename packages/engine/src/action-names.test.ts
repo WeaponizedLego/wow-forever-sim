@@ -2,35 +2,39 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  actionName,
+  actionNameGaps,
   actionNameSources,
   buildSpellNames,
   characterFromPresets,
   buildRaidSimRequest,
-  distinctActionNames,
   fillFromPreset,
+  findRotation,
   loadDatabase,
   loadSpecPresets,
   loadSpellNames,
   toImportContext,
   type ActionRef,
+  type SpecPresets,
 } from '@fsim/gamedata';
 import { importAny } from '@fsim/importers';
 import type { RaidSimResult, UnitMetrics } from '@fsim/proto/api';
 import type { ActionID } from '@fsim/proto/common';
-import type { Character } from '@fsim/contracts';
+import { SPECS, type Character } from '@fsim/contracts';
 import { afterAll, describe, expect, it } from 'vitest';
 import { withDatabases } from './database';
 import { createNodeEngineClient } from './node';
 
-// Names every action of real runs: the Warrior presets and a Wowhead-imported Hunter, simmed in the engine the
-// app stages (apps/web/public/engine, `node apps/web/scripts/stage-engine.mjs`). Skipped when none is staged, as
-// in CI's unit job; fixtures/engine/action-ids.json keeps the ids these runs report, and the gamedata test names
-// those offline. UPDATE_ACTION_IDS=1 rewrites that file from these runs.
+// The action ids of real runs: every spec's preset builds on their own rotation, and a Wowhead-imported Hunter,
+// simmed in the engine the app stages (apps/web/public/engine, `node apps/web/scripts/stage-engine.mjs`). Skipped
+// when none is staged, as in CI's unit job. fixtures/engine/action-ids.json keeps the ids these runs report and
+// the `gaps` in their names (an id with no name, two rows that read the same); the gamedata test holds the names
+// to that file offline. UPDATE_ACTION_IDS=1 rewrites the file from these runs.
 //
 // Engine sync does that on every sync, so the file follows the presets: it sets ACTION_IDS_ENGINE_DIR to the
 // folder of the build it is about to publish (lib.wasm.gz, wasm_exec.js), which nothing has staged yet. With that
-// set the test never skips, so a missing build fails the sync instead of leaving the file as it was.
+// set the test never skips, so a missing build fails the sync instead of leaving the file as it was. A spec that
+// cannot be simmed fails it too. A gap in the names does not: the sync records it and opens an issue, since an
+// engine a day behind is worse for a player than one row called "Spell 12345".
 
 const root = new URL('../../../', import.meta.url);
 const read = (p: string) => new Uint8Array(readFileSync(new URL(p, root)));
@@ -106,23 +110,29 @@ describe.skipIf(!current)('action names in real runs', () => {
   afterAll(() => client?.dispose());
   const db = loadDatabase(read('fixtures/gamedata/db.bin'), read('fixtures/gamedata/leftover_db.bin'));
 
-  it('names every action of the Warrior presets and an imported Hunter', async () => {
+  it('reports the ids the fixture holds, with no gap in their names the fixture does not list', async () => {
     const src = actionNameSources(db, buildSpellNames(db.raw.spellIcons, await loadSpellNames()));
-    const warrior = await loadSpecPresets('dps-warrior');
-    const runs: [string, Character, typeof warrior][] = warrior.builds.map((b) => [
-      `warrior-${b.id}`,
-      characterFromPresets(warrior, b.id),
-      warrior,
-    ]);
+    const runs: [string, Character, SpecPresets][] = [];
+    for (const spec of SPECS) {
+      const presets = await loadSpecPresets(spec.id);
+      for (const build of presets.builds.length ? presets.builds.map((b) => b.id) : [null]) {
+        const character = characterFromPresets(presets, build ?? presets.defaultBuildId);
+        // Healers have no rotation upstream, so there is nothing to sim.
+        const rotation = character.rotation.kind === 'preset' ? character.rotation.presetId : '';
+        if (findRotation(presets, rotation)?.kind !== 'apl') continue;
+        runs.push([`${spec.id}/${build ?? 'default'}`, character, presets]);
+      }
+    }
     const url = readFileSync(
       new URL('fixtures/import/real/wowhead-forever-sv-hunter.url', root),
       'utf8',
     ).trim();
     const imported = importAny(url, toImportContext(db, 'fixture')).character!;
     const hunter = await loadSpecPresets(imported.spec);
-    runs.push(['hunter-wowhead', fillFromPreset(imported, hunter), hunter]);
+    runs.push(['import/wowhead-hunter', fillFromPreset(imported, hunter), hunter]);
 
     const out: Record<string, ReturnType<typeof runActionIds>> = {};
+    const gaps: string[] = [];
     for (const [name, character, presets] of runs) {
       const req = withDatabases(
         buildRaidSimRequest(character, presets, db, { iterations: 20, seed: 1 }),
@@ -130,43 +140,33 @@ describe.skipIf(!current)('action names in real runs', () => {
       );
       req.simOptions!.debugFirstIteration = true;
       const res = await client!.raidSim(req);
-      expect(res.error).toBeUndefined();
+      expect(res.error, name).toBeUndefined();
+      expect(res.raidMetrics!.dps!.avg, `${name} DPS`).toBeGreaterThan(0);
       out[name] = runActionIds(res);
+      gaps.push(...actionNameGaps(out[name], src).map((gap) => `${name}: ${gap}`));
     }
-    const parse = (k: string): ActionRef => {
-      const m = /^(spell|item|other):(-?\d+)(?:#(-?\d+))?$/.exec(k)!;
-      return { kind: m[1] as ActionRef['kind'], id: Number(m[2]), tag: m[3] ? Number(m[3]) : 0 };
-    };
-    for (const [name, ids] of Object.entries(out)) {
-      const labels = ids.all.map((k) => actionName(parse(k), src));
-      for (const [i, l] of labels.entries())
-        expect(l, `${name} ${ids.all[i]}`).not.toMatch(
-          /tag |^(Item|Spell|Other action) \d+$|\((Item|Spell) \d+\)/,
-        );
-      const abilities = distinctActionNames(
-        ids.abilities.map(([k]) => parse(k)),
-        src,
-        ids.abilities.map(([, o]) => o),
-      );
-      expect(new Set(abilities.map((n, i) => `${ids.abilities[i]![1]}|${n}`)).size, name).toBe(
-        abilities.length,
-      );
-      console.info(`${name}: ${ids.all.length} actions named; damage rows: ${abilities.join(', ')}`);
-    }
+    console.info(
+      `${runs.length} runs, ${gaps.length} gaps in their names${gaps.map((g) => `\n  ${g}`).join('')}`,
+    );
 
     if (process.env.UPDATE_ACTION_IDS) {
-      const body = { engine: current!.engineId, runs: out };
+      const body = { engine: current!.engineId, gaps, runs: out };
       writeFileSync(FIXTURE, `${JSON.stringify(body, null, 2)}\n`);
     } else {
-      // The offline fixture must hold every id these runs report, so the gamedata test covers them.
       const fixture = JSON.parse(readFileSync(FIXTURE, 'utf8')) as {
+        gaps: string[];
         runs: Record<string, { all: string[] }>;
       };
+      // The offline fixture must hold every id these runs report, so the gamedata test covers them.
       for (const [name, ids] of Object.entries(out))
         expect(
           ids.all.filter((k) => !fixture.runs[name]?.all.includes(k)),
           `${name}: run UPDATE_ACTION_IDS=1`,
         ).toEqual([]);
+      expect(
+        gaps.filter((g) => !fixture.gaps.includes(g)),
+        'gaps the fixture does not list: name them in packages/gamedata/src (action-names.ts, spell-names.ts)',
+      ).toEqual([]);
     }
   });
 });
