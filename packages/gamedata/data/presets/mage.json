@@ -2,7 +2,7 @@
   "specId": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/mage/dps",
     "files": [
       "apls/arcane.apl.json",
@@ -30,7 +30,7 @@
       "flaskId": 13512,
       "foodId": 13931,
       "mhImbueId": 20749,
-      "elixirIds": [13454, 13447, 250348, 20007],
+      "elixirIds": [13454, 20007],
       "mhWeaponImbueId": 277502,
       "resourcePotId": 13444
     },
@@ -83,7 +83,7 @@
           "flaskId": 13512,
           "foodId": 13931,
           "mhImbueId": 20749,
-          "elixirIds": [13454, 13447, 250348, 20007],
+          "elixirIds": [13454, 20007],
           "mhWeaponImbueId": 277502,
           "resourcePotId": 13444
         },
@@ -136,7 +136,7 @@
           "flaskId": 13512,
           "foodId": 13931,
           "mhImbueId": 20749,
-          "elixirIds": [13454, 13447, 250348, 20007],
+          "elixirIds": [13454, 20007],
           "mhWeaponImbueId": 277502,
           "resourcePotId": 13444
         },
@@ -189,7 +189,7 @@
           "flaskId": 13512,
           "foodId": 13931,
           "mhImbueId": 20749,
-          "elixirIds": [13454, 13447, 250348, 20007],
+          "elixirIds": [13454, 20007],
           "mhWeaponImbueId": 277502,
           "resourcePotId": 13444
         },
@@ -242,7 +242,7 @@
           "flaskId": 13512,
           "foodId": 13931,
           "mhImbueId": 20749,
-          "elixirIds": [13454, 13447, 250348, 20007],
+          "elixirIds": [13454, 20007],
           "mhWeaponImbueId": 277502,
           "resourcePotId": 13444
         },
@@ -295,7 +295,7 @@
           "flaskId": 13512,
           "foodId": 13931,
           "mhImbueId": 20749,
-          "elixirIds": [13454, 13447, 250348, 20007],
+          "elixirIds": [13454, 20007],
           "mhWeaponImbueId": 277502,
           "resourcePotId": 13444
         },
@@ -348,7 +348,7 @@
           "flaskId": 13512,
           "foodId": 13931,
           "mhImbueId": 20749,
-          "elixirIds": [13454, 13447, 250348, 20007],
+          "elixirIds": [13454, 20007],
           "mhWeaponImbueId": 277502,
           "resourcePotId": 13444
         },

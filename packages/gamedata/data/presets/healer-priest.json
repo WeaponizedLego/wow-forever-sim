@@ -2,7 +2,7 @@
   "specId": "healer-priest",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/priest/healer",
     "files": ["gear_sets/preraid.gear.json", "presets.ts"]
   },
@@ -20,7 +20,7 @@
       "foodId": 249869,
       "conjuredId": 12662,
       "mhImbueId": 20748,
-      "elixirIds": [250351, 250328, 250337, 250338, 250341, 250333],
+      "elixirIds": [250351, 250328, 250341, 250333],
       "resourcePotId": 13444
     },
     "specOptions": {

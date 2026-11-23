@@ -2,7 +2,7 @@
   "specId": "protection-paladin",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/paladin/protection",
     "files": ["apls/default.apl.siml", "defaults.siml", "gear_sets/default.gear.siml", "presets.ts"]
   },
@@ -22,8 +22,8 @@
       "conjuredId": 12662,
       "explosiveId": 18588,
       "mhImbueId": 20749,
-      "extraIds": [10646, 12460, 10307],
-      "elixirIds": [21546, 13454, 250337, 250338, 250335, 250341, 13445, 250350, 13452],
+      "extraIds": [10646, 12460],
+      "elixirIds": [21546, 13454, 250335, 250341, 13445, 250350, 13452],
       "defensivePotId": 13455
     },
     "specOptions": {

@@ -2,7 +2,7 @@
   "specId": "rogue",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/rogue/dps",
     "files": [
       "apls/default.apl.json",
@@ -37,7 +37,8 @@
       "conjuredId": 7676,
       "mhImbueId": 12643,
       "ohImbueId": 12404,
-      "elixirIds": [13452, 250335, 250350, 12460],
+      "extraIds": [12460],
+      "elixirIds": [13452, 250335, 250350],
       "mhWeaponImbueId": 8928,
       "ohWeaponImbueId": 8985,
       "offensivePotId": 250943
@@ -88,7 +89,8 @@
           "conjuredId": 7676,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
-          "elixirIds": [13452, 250335, 250350, 12460],
+          "extraIds": [12460],
+          "elixirIds": [13452, 250335, 250350],
           "mhWeaponImbueId": 8928,
           "ohWeaponImbueId": 8985,
           "offensivePotId": 250943
@@ -139,7 +141,8 @@
           "conjuredId": 7676,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
-          "elixirIds": [13452, 250335, 250350, 12460],
+          "extraIds": [12460],
+          "elixirIds": [13452, 250335, 250350],
           "mhWeaponImbueId": 8928,
           "ohWeaponImbueId": 8985,
           "offensivePotId": 250943
@@ -190,7 +193,8 @@
           "conjuredId": 7676,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
-          "elixirIds": [13452, 250335, 250350, 12460],
+          "extraIds": [12460],
+          "elixirIds": [13452, 250335, 250350],
           "mhWeaponImbueId": 8928,
           "ohWeaponImbueId": 8985,
           "offensivePotId": 250943
@@ -241,7 +245,8 @@
           "conjuredId": 7676,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
-          "elixirIds": [13452, 250335, 250350, 12460],
+          "extraIds": [12460],
+          "elixirIds": [13452, 250335, 250350],
           "mhWeaponImbueId": 8928,
           "ohWeaponImbueId": 8985,
           "offensivePotId": 250943
@@ -292,7 +297,8 @@
           "conjuredId": 7676,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
-          "elixirIds": [13452, 250335, 250350, 12460],
+          "extraIds": [12460],
+          "elixirIds": [13452, 250335, 250350],
           "mhWeaponImbueId": 8928,
           "ohWeaponImbueId": 8985,
           "offensivePotId": 250943
@@ -343,7 +349,8 @@
           "conjuredId": 7676,
           "mhImbueId": 12643,
           "ohImbueId": 12404,
-          "elixirIds": [13452, 250335, 250350, 12460],
+          "extraIds": [12460],
+          "elixirIds": [13452, 250335, 250350],
           "mhWeaponImbueId": 8928,
           "ohWeaponImbueId": 8985,
           "offensivePotId": 250943

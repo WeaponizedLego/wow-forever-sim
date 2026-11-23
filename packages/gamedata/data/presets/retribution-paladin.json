@@ -2,7 +2,7 @@
   "specId": "retribution-paladin",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/paladin/retribution",
     "files": [
       "apls/default.apl.siml",
@@ -38,8 +38,8 @@
       "foodId": 13933,
       "conjuredId": 12662,
       "mhImbueId": 3824,
-      "extraIds": [8410, 10646, 12217, 18269],
-      "elixirIds": [21546, 250338, 13452, 250337, 250351, 250329, 13454, 250341, 12460],
+      "extraIds": [8410, 10646, 12217, 18269, 12460],
+      "elixirIds": [21546, 13452, 250329, 13454, 250341, 9206],
       "resourcePotId": 13444,
       "offensivePotId": 250937
     },
@@ -119,8 +119,8 @@
           "foodId": 13933,
           "conjuredId": 12662,
           "mhImbueId": 3824,
-          "extraIds": [8410, 10646, 12217, 18269],
-          "elixirIds": [21546, 250338, 13452, 250337, 250351, 250329, 13454, 250341, 12460],
+          "extraIds": [8410, 10646, 12217, 18269, 12460],
+          "elixirIds": [21546, 13452, 250329, 13454, 250341, 9206],
           "resourcePotId": 13444,
           "offensivePotId": 250937
         },
@@ -200,8 +200,8 @@
           "foodId": 13933,
           "conjuredId": 12662,
           "mhImbueId": 3824,
-          "extraIds": [8423, 10646, 12217, 18269],
-          "elixirIds": [21546, 250338, 13452, 250337, 250351, 250329, 13454, 250341, 12460],
+          "extraIds": [8423, 10646, 12217, 18269, 12460],
+          "elixirIds": [21546, 13452, 250329, 13454, 250341, 9206],
           "swapMhImbueId": 3829,
           "resourcePotId": 13444,
           "offensivePotId": 250937

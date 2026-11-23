@@ -2,7 +2,7 @@
   "specId": "balance-druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/druid/balance",
     "files": ["apls/default.apl.json", "gear_sets/p1.gear.json", "gear_sets/prebis.gear.json", "presets.ts"]
   },
@@ -24,7 +24,7 @@
       "conjuredId": 12662,
       "explosiveId": 260814,
       "mhImbueId": 20749,
-      "elixirIds": [13454, 250343, 250337, 250341],
+      "elixirIds": [13454, 250343, 250341],
       "resourcePotId": 13444,
       "offensivePotId": 250937
     },

@@ -2,7 +2,7 @@
   "specId": "warlock",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "2b90c0cf9edb3917212a54c133bce0d2229e352d",
+    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
     "dir": "ui/specs/warlock/dps",
     "files": [
       "builds/aff_wrack.build.json",
@@ -101,7 +101,7 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 9264, 6373],
           "mhWeaponImbueId": 13701,
           "resourcePotId": 13444,
           "offensivePotId": 250937
@@ -168,7 +168,7 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 9264, 6373],
           "mhWeaponImbueId": 13603,
           "resourcePotId": 13444,
           "offensivePotId": 250937
@@ -235,7 +235,7 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 9264, 6373],
           "mhWeaponImbueId": 13701,
           "resourcePotId": 13444
         },
@@ -300,7 +300,7 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 9264, 6373],
           "mhWeaponImbueId": 13603,
           "resourcePotId": 13444
         },
@@ -365,7 +365,7 @@
           ],
           "conjuredItems": [1703, 5509, 5510, 5511, 5512, 9421, 11951, 11952, 12662, 15723, 17747],
           "extraIds": [18269, 10309],
-          "elixirIds": [250341, 250335, 13454, 250337, 250347, 9264, 6373],
+          "elixirIds": [250341, 250335, 13454, 9264, 6373],
           "mhWeaponImbueId": 13701,
           "resourcePotId": 13444,
           "offensivePotId": 250937
