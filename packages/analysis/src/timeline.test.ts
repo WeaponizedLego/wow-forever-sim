@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { auraLanes, damageSeries, parseCombatLog, parseLogUnit, resourceSeries } from './combatLog';
-import { CD_04, DATA_03, HIT_01, RES_02, cooldownKeysFromLog, evaluateNotes } from './notes';
+import { CD_04, DATA_03, HIT_01, LEVEL_07, RES_02, cooldownKeysFromLog, evaluateNotes } from './notes';
 import { resourceWaste } from './auras';
 import { findPlayer } from './abilities';
 import { ResourceType } from '@fsim/proto/spell';
@@ -193,6 +193,14 @@ describe('run notes', () => {
       'In iteration 1, Blood Fury and Rapid Fire overlap for 100% of the shorter one (15.0s).',
     );
     expect(n?.data.iterationOneOnly).toBe(true);
+  });
+
+  it('LEVEL-07 says a lower-level character was simmed at the engine level', () => {
+    const note = LEVEL_07.evaluate({ level: { level: 42, simmed: 60 } });
+    expect(note?.severity).toBe('warning');
+    expect(note?.text).toMatch(/level 42.*only sims level 60/);
+    expect(LEVEL_07.evaluate({ level: { level: 60, simmed: 60 } })).toBeNull();
+    expect(LEVEL_07.evaluate({})).toBeNull();
   });
 
   it('evaluateNotes runs every rule in order', () => {

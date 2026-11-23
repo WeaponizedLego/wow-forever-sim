@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ImportResult } from '@fsim/contracts';
+import { ITEM_SLOTS, type Character, type ImportResult } from '@fsim/contracts';
 import { fillFromPreset, findRotation, loadSpecPresets, type SpecPresets } from '@fsim/gamedata';
 import { parseWowheadLink } from '@fsim/importers';
 
@@ -72,6 +72,12 @@ const unusedGroup = computed(() =>
     : null,
 );
 
+/** " (no ranged)", so the count says which slots are empty; more than three are left as the count. */
+function emptySlots(c: Character): string {
+  const empty = ITEM_SLOTS.filter((slot) => !c.gear[slot]).map((slot) => SLOT_LABELS[slot].toLowerCase());
+  return empty.length && empty.length <= 3 ? ` (no ${empty.join(', ')})` : '';
+}
+
 const identity = computed(() => {
   const c = character.value;
   if (!c) return null;
@@ -84,7 +90,7 @@ const identity = computed(() => {
     line: [`${startRaceName(c.race)} ${startSpecName(c.spec)}`, `level ${c.level}`, where]
       .filter(Boolean)
       .join(' · '),
-    slots: `${Object.keys(c.gear).length}/${START_SLOT_COUNT}`,
+    slots: `${Object.keys(c.gear).length}/${START_SLOT_COUNT}${emptySlots(c)}`,
     talents: talentsFromPreset || !c.talents ? 'preset' : (startTalentPoints(c.talents) ?? 'export'),
   };
 });

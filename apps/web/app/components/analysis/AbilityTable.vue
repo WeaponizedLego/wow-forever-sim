@@ -13,7 +13,7 @@ const cols: TableColumn<Row>[] = [
   { key: 'share', label: 'Share', width: '18%', sortable: true },
   {
     key: 'cpm',
-    label: 'CPM',
+    label: 'Casts/min',
     numeric: true,
     tone: '2',
     sortable: true,

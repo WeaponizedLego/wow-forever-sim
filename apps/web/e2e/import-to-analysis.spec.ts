@@ -15,7 +15,8 @@ test('import the shaman export, open it in the workbench, sim and read the analy
   // the real export raises. Its talents convert (verified shaman tree), so no DEFAULT-05.
   await expect(parsed.getByText('SimC addon export · 12.1.5-04')).toBeVisible();
   await expect(parsed.getByText(/Enhancement Shaman · level 42/)).toBeVisible();
-  await expect(parsed.getByRole('definition').filter({ hasText: '16/17' })).toBeVisible();
+  // The slot count names what is empty (this shaman's export has no off hand).
+  await expect(parsed.getByRole('definition').filter({ hasText: '16/17 (no off hand)' })).toBeVisible();
   await expect(parsed.getByRole('listitem').filter({ hasText: /Warning\s*DEFAULT-05/ })).toHaveCount(0);
   for (const code of ['LEVEL-07']) {
     await expect(
@@ -55,7 +56,12 @@ test('import the shaman export, open it in the workbench, sim and read the analy
   // Every damage row is named, none as a bare "Spell N" (the weapon imbue's strike is not in the item database
   // and takes its name from the engine's spell table), and the summary leads with the three biggest.
   await expectNamedAbilities(page);
-  await expect(panel('Run notes').getByRole('listitem').first()).toBeVisible();
+  // The run page repeats the import's level warning: its DPS is what a player compares with the game.
+  await expect(
+    panel('Run notes')
+      .getByRole('listitem')
+      .filter({ hasText: /level 42/ }),
+  ).toContainText('the engine only sims level 60');
 
   // The run is listed under Runs in the header and on the start screen.
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'New run' }).click();
