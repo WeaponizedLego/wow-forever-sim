@@ -158,12 +158,15 @@ watch(
       <WorkbenchDiagnostics />
 
       <UiPanelGrid>
+        <!-- Only the gear tab is in the page's first load. The others are chunks of their own, fetched when
+             opened (the service worker precaches them, so they open offline too): each tab added to the page
+             would otherwise count against every visit's first-load budget (scripts/check-budget.mjs). -->
         <WorkbenchGearTable v-if="tab === 'gear'" @pick="openPicker" />
-        <WorkbenchTalentsTab v-else-if="tab === 'talents'" />
-        <WorkbenchOptionsTab v-else-if="tab === 'options'" />
-        <WorkbenchBuffsTab v-else-if="tab === 'buffs'" />
-        <WorkbenchFightTab v-else-if="tab === 'fight'" />
-        <WorkbenchRotationTab v-else />
+        <LazyWorkbenchTalentsTab v-else-if="tab === 'talents'" />
+        <LazyWorkbenchOptionsTab v-else-if="tab === 'options'" />
+        <LazyWorkbenchBuffsTab v-else-if="tab === 'buffs'" />
+        <LazyWorkbenchFightTab v-else-if="tab === 'fight'" />
+        <LazyWorkbenchRotationTab v-else />
         <WorkbenchPendingChanges />
         <WorkbenchStatsPanel />
         <WorkbenchCapsPanel />
