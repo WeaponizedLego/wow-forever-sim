@@ -1,4 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   actionName,
   actionNameSources,
@@ -25,13 +27,28 @@ import { createNodeEngineClient } from './node';
 // app stages (apps/web/public/engine, `node apps/web/scripts/stage-engine.mjs`). Skipped when none is staged, as
 // in CI's unit job; fixtures/engine/action-ids.json keeps the ids these runs report, and the gamedata test names
 // those offline. UPDATE_ACTION_IDS=1 rewrites that file from these runs.
+//
+// Engine sync does that on every sync, so the file follows the presets: it sets ACTION_IDS_ENGINE_DIR to the
+// folder of the build it is about to publish (lib.wasm.gz, wasm_exec.js), which nothing has staged yet. With that
+// set the test never skips, so a missing build fails the sync instead of leaving the file as it was.
 
 const root = new URL('../../../', import.meta.url);
 const read = (p: string) => new Uint8Array(readFileSync(new URL(p, root)));
-const staged = new URL('apps/web/public/engine/current.json', root);
-const current = existsSync(staged)
-  ? (JSON.parse(readFileSync(staged, 'utf8')) as { engineId: string; commit: string })
-  : null;
+const json = <T>(p: string) => JSON.parse(readFileSync(new URL(p, root), 'utf8')) as T;
+const STAGED = 'apps/web/public/engine/';
+const built = process.env.ACTION_IDS_ENGINE_DIR;
+
+/** Which engine to sim in: its id and commit, and the folder holding its files. */
+function findEngine(): { engineId: string; commit: string; dir: string } | null {
+  if (built) {
+    const lock = json<{ engineId: string; upstream: { commit: string } }>('engine.lock.json');
+    return { engineId: lock.engineId, commit: lock.upstream.commit, dir: built };
+  }
+  if (!existsSync(new URL(`${STAGED}current.json`, root))) return null;
+  const { engineId, commit } = json<{ engineId: string; commit: string }>(`${STAGED}current.json`);
+  return { engineId, commit, dir: fileURLToPath(new URL(`${STAGED}${engineId}/`, root)) };
+}
+const current = findEngine();
 const FIXTURE = new URL('fixtures/engine/action-ids.json', root);
 
 function ref(id: ActionID | undefined): ActionRef {
@@ -73,18 +90,16 @@ function runActionIds(res: RaidSimResult) {
     auras.add(key({ kind, id: Number(id[2]), tag: id[3] ? Number(id[3]) : 0 }));
   }
   for (const a of auras) all.add(a);
+  // The engine lists a unit's actions in no fixed order; sorted, the file changes only when the ids do.
+  abilities.sort((a, b) => `${a[1] ?? ''}|${a[0]}`.localeCompare(`${b[1] ?? ''}|${b[0]}`));
   return { abilities, auras: [...auras].sort(), all: [...all].sort() };
 }
 
 describe.skipIf(!current)('action names in real runs', () => {
-  const dir = `apps/web/public/engine/${current?.engineId}/`;
   const client = current
     ? createNodeEngineClient({
         concurrency: 2,
-        sources: {
-          wasm: new URL(`${dir}lib.wasm.gz`, root).pathname,
-          wasmExec: new URL(`${dir}wasm_exec.js`, root).pathname,
-        },
+        sources: { wasm: join(current.dir, 'lib.wasm.gz'), wasmExec: join(current.dir, 'wasm_exec.js') },
         version: { engineId: current.engineId, commit: current.commit, dataBuild: null },
       })
     : undefined;

@@ -37,7 +37,7 @@ upstream code it relies on, and the build stops with a message naming it if upst
 
 Nothing under the work dir is committed. The workflow commits only `engine.lock.json`,
 `tools/engine-build/smoke-baseline.json`, `packages/proto/proto/`,
-`packages/proto/src/generated/`, and the game data below.
+`packages/proto/src/generated/`, the game data below and the action-id fixture after it.
 
 ## Game data that follows the engine
 
@@ -56,6 +56,17 @@ Then `prettier --write packages/gamedata/data`. The workflow's `git add` lists t
 CI check step runs the gamedata tests over them. `--no-data` skips all of it (lock only). To rerun
 one extraction by hand: `node packages/gamedata/scripts/extract-talents.ts --upstream <clone>`.
 
+## The action-id fixture
+
+`fixtures/engine/action-ids.json` lists every action id that the Warrior presets and a Wowhead-imported Hunter
+report in the locked engine (`fixtures/README.md`). The gamedata tests name each one offline, so a run page never
+shows "Spell 12345". The ids change when upstream changes what a preset casts or adds a build, and CI's own jobs
+do not sim in a real engine, so the workflow rewrites the file on every sync. Its "Regenerate the action-id
+fixture" step runs `packages/engine/src/action-names.test.ts` with `UPDATE_ACTION_IDS=1` and
+`ACTION_IDS_ENGINE_DIR` set to `out/<id>/`, after `promote` (the test sims the new presets with the new database)
+and before the CI check (which names every id in the new file). The file's `engine` field is the engine id, so
+it changes on every sync. The rest changes only when the ids do.
+
 ## Run locally
 
 Needs git, Go (any recent version; `GOTOOLCHAIN=auto` fetches upstream's 1.27), `protoc`, Node 24,
@@ -70,6 +81,9 @@ node tools/engine-build/smoke.mjs $C                   # ~1–2 min (8 workers)
 node tools/engine-build/promote.mjs $C                 # writes engine.lock.json + talents, presets, fixtures
 corepack pnpm@12.18.0 exec vitest run --project proto  # generated types still parse the fixtures
 corepack pnpm@12.18.0 --filter @fsim/proto exec tsc -p tsconfig.json
+# the action-id fixture, from the build in the work dir (default $TMPDIR/fsim-engine-build)
+ACTION_IDS_ENGINE_DIR=$TMPDIR/fsim-engine-build/out/${C:0:7} UPDATE_ACTION_IDS=1 \
+  corepack pnpm@12.18.0 exec vitest run packages/engine/src/action-names.test.ts
 ```
 
 To try a commit without touching the repo, use `build.mjs $C --no-protos` and
@@ -123,6 +137,7 @@ Not smoke-tested:
 | `wasm-opt not found`                                           | binaryen is missing. CI fails because of `--require-wasm-opt`.                                                                                                  | Install binaryen (`apt-get install binaryen`).                                                                                                             |
 | `protoc not found` / wrong protoc-gen-go                       | Toolchain problem.                                                                                                                                              | The workflow pins protoc 34.1 and protoc-gen-go to upstream's `go.mod`.                                                                                    |
 | `dataBuild` is null                                            | No `[DB] … <build>` commit touched `db.bin`, or the GitHub API limit was hit (60 requests per hour without a token).                                            | Harmless. Set `GH_TOKEN` locally.                                                                                                                          |
+| Action-id step, or `action names` in the CI check, fails       | A preset reports an action the app cannot name or tell apart: a spell missing from `data/spell-names`, or a tag no rule in `action-names.ts` (gamedata) covers. | Add the tag rule (`SPELL_TAGS`) or fix the spell-name extraction on main, then retry with `force: true`.                                                   |
 | Workflow: `release … is referenced by main's engine.lock.json` | A forced rebuild of the engine already on main.                                                                                                                 | Release assets the lock points at are never overwritten. Leave it as is, or bump upstream.                                                                 |
 
 When a step fails, the workflow publishes nothing and opens an `engine-sync failed: <id>` issue
