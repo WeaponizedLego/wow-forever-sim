@@ -2,33 +2,33 @@
   "schema": 1,
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "ac1c1d4ed882174d1e4eeb82a3f5749abd47ecc1",
-    "committedAt": "2026-11-23T09:50:43+01:00"
+    "commit": "57df2a7a5a2bb085bfce15890a33d655bb7fd66f",
+    "committedAt": "2026-11-23T11:36:57+01:00"
   },
-  "engineId": "ac1c1d4",
+  "engineId": "57df2a7",
   "dataBuild": "1.60.1.71037",
   "goVersion": "1.27.4",
   "artifacts": {
     "wasm": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-ac1c1d4/lib.wasm.gz",
-      "sha256": "0135f8a5b2b623c6185f545746703fc08cd652a032a0d97d3a65f6132657ad64",
-      "bytes": 5865046
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-57df2a7/lib.wasm.gz",
+      "sha256": "3bd61a4cb059b63463d7200553ebb34623aa548808065cddae333bf0c2889831",
+      "bytes": 5865047
     },
     "wasmExec": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-ac1c1d4/wasm_exec.js",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-57df2a7/wasm_exec.js",
       "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
       "bytes": 16992
     },
     "db": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-ac1c1d4/db.bin",
-      "sha256": "f3ec1ed009796dde013f761820527b72d2f10491c16f79bbf72589618df90021",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-57df2a7/db.bin",
+      "sha256": "0c550cb1e0d4ce40d1b838ce95265838548b5be7357ed75acaea4fd85262b3ab",
       "bytes": 1682529
     },
     "leftoverDb": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-ac1c1d4/leftover_db.bin",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-57df2a7/leftover_db.bin",
       "sha256": "8db0faca142bf1b609faf62fb68f87b40d5f1f35b8ec5cbddf1c248515723b48",
       "bytes": 540092
     }
   },
-  "syncedAt": "2026-11-23T09:31:04Z"
+  "syncedAt": "2026-11-23T11:27:01Z"
 }
