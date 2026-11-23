@@ -3,7 +3,8 @@
 // Nothing derives a rotation from the talents, so the tab says which one fits them (the rotation upstream plays
 // with the preset build closest to the talents), which builds each rotation belongs to, and what the selected one
 // has set. Those settings (on/off switches and numbers) can be changed: the changes are kept on the character
-// (`rotation.switches`, `rotation.values`) and written into the rotation when it is simmed.
+// (`rotation.switches`, `rotation.values`) and written into the rotation when it is simmed. Under them, the
+// rotation check says what the engine will not do with this rotation for this character (RotationCheck.vue).
 import {
   buildLabel,
   changedSettings,
@@ -176,6 +177,7 @@ function setSetting(name: string, value: boolean | number) {
         settings.
       </p>
     </div>
+    <WorkbenchRotationCheck v-if="current || wb.draft.value?.rotation.kind === 'siml'" />
     <p v-if="!rotations.length" class="note">
       Upstream has no rotation for this spec, so it cannot be simmed.
     </p>

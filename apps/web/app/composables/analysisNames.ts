@@ -91,5 +91,5 @@ export function useActionNames() {
     return qualityFromEnum(db.value?.item(itemId)?.quality);
   }
 
-  return { db, actionName, actionIcon, distinctNames, itemName, itemQuality };
+  return { db, sources, actionName, actionIcon, distinctNames, itemName, itemQuality };
 }
