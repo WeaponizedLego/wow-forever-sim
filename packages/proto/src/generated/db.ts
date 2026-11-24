@@ -323,7 +323,7 @@ export interface Consumable {
     zoneStats: ZoneStats[];
     /**
      * A consumable the game files do not type as an elixir whose stats count with the elixirs': each stat
-     * at the strongest amount among them (R-0053).
+     * at the strongest amount among them (R-0054).
      *
      * @generated from protobuf field: bool counts_with_elixirs = 25
      */

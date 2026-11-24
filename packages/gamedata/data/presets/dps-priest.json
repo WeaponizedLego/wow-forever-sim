@@ -2,7 +2,7 @@
   "specId": "dps-priest",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
+    "commit": "1b6eca816854b5579df5dcb4037418c14e56c164",
     "dir": "ui/specs/priest/dps",
     "files": ["builds/smite_testing.build.json", "builds/testing.build.json", "presets.ts"]
   },
@@ -23,7 +23,7 @@
       "foodId": 13931,
       "conjuredId": 12662,
       "mhImbueId": 20749,
-      "elixirIds": [9264, 13454, 250328, 250341],
+      "elixirIds": [9264, 13454, 250328, 250338, 250341],
       "resourcePotId": 13444,
       "offensivePotId": 250937
     },
@@ -75,7 +75,7 @@
           "foodId": 13931,
           "conjuredId": 12662,
           "mhImbueId": 20749,
-          "elixirIds": [9264, 13454, 250328, 250341],
+          "elixirIds": [9264, 13454, 250328, 250338, 250341],
           "resourcePotId": 13444,
           "offensivePotId": 250937
         },
@@ -150,7 +150,7 @@
           "foodId": 13931,
           "conjuredId": 12662,
           "mhImbueId": 20749,
-          "elixirIds": [9264, 13454, 250328, 250341, 21546],
+          "elixirIds": [9264, 13454, 250328, 250338, 250341, 21546],
           "resourcePotId": 13444,
           "offensivePotId": 250937
         },
