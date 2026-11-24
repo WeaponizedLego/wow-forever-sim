@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "6987e9ae4f892f11d6efe333cb3b29eb076d23f1",
+    "commit": "045bf261010b5aaf4f6261d90f0136fb775c03a2",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -7358,6 +7358,7 @@
     [1320579, "Desert Winds", 0],
     [1320643, "Water Breathing", 0],
     [1320726, "Increased Feral Combat", 0],
+    [1320808, "Wound", 0],
     [1320824, "Rend", 0],
     [1320922, "Stock Crate", 0],
     [1320925, "Ablaze", 0],

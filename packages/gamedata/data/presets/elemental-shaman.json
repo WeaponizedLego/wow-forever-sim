@@ -2,9 +2,9 @@
   "specId": "elemental-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "6987e9ae4f892f11d6efe333cb3b29eb076d23f1",
+    "commit": "045bf261010b5aaf4f6261d90f0136fb775c03a2",
     "dir": "ui/specs/shaman/elemental",
-    "files": ["builds/default.build.json", "presets.ts"]
+    "files": ["builds/default.build.json", "gear_sets/budget.gear.json", "presets.ts"]
   },
   "status": "complete",
   "defaultBuildId": null,
@@ -207,6 +207,73 @@
         },
         "offHand": {
           "itemId": 19315
+        },
+        "ranged": {
+          "itemId": 23199
+        }
+      }
+    },
+    {
+      "id": "budget",
+      "name": "Budget",
+      "gear": {
+        "head": {
+          "itemId": 22267,
+          "enchantId": 2544
+        },
+        "neck": {
+          "itemId": 22403,
+          "enchantId": 8218
+        },
+        "shoulder": {
+          "itemId": 15067
+        },
+        "back": {
+          "itemId": 272411,
+          "enchantId": 2621
+        },
+        "chest": {
+          "itemId": 15066,
+          "enchantId": 8492
+        },
+        "wrist": {
+          "itemId": 10265,
+          "enchantId": 7665,
+          "randomSuffix": 12734
+        },
+        "hands": {
+          "itemId": 20133,
+          "enchantId": 8213
+        },
+        "waist": {
+          "itemId": 11662
+        },
+        "legs": {
+          "itemId": 252486,
+          "enchantId": 2544
+        },
+        "feet": {
+          "itemId": 22240,
+          "enchantId": 8492
+        },
+        "finger1": {
+          "itemId": 272406
+        },
+        "finger2": {
+          "itemId": 22339
+        },
+        "trinket1": {
+          "itemId": 272438
+        },
+        "trinket2": {
+          "itemId": 18471
+        },
+        "mainHand": {
+          "itemId": 13964,
+          "enchantId": 8217
+        },
+        "offHand": {
+          "itemId": 18316
         },
         "ranged": {
           "itemId": 23199
