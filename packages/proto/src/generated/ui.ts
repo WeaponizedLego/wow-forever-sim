@@ -479,6 +479,10 @@ export interface QuestSource {
      * @generated from protobuf field: proto.Faction faction = 3
      */
     faction: Faction; // The side that may take it; Unknown is both.
+    /**
+     * @generated from protobuf field: int32 zone_id = 4
+     */
+    zoneId: number; // The quest's AreaTable zone, or a negative QuestSort id for a quest sorted by theme (class, profession, holiday); 0 is unknown.
 }
 /**
  * @generated from protobuf message proto.SoldBySource
@@ -3039,7 +3043,8 @@ class QuestSource$Type extends MessageType<QuestSource> {
         super("proto.QuestSource", [
             { no: 1, name: "id", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "faction", kind: "enum", T: () => ["proto.Faction", Faction] }
+            { no: 3, name: "faction", kind: "enum", T: () => ["proto.Faction", Faction] },
+            { no: 4, name: "zone_id", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<QuestSource>): QuestSource {
@@ -3047,6 +3052,7 @@ class QuestSource$Type extends MessageType<QuestSource> {
         message.id = 0;
         message.name = "";
         message.faction = 0;
+        message.zoneId = 0;
         if (value !== undefined)
             reflectionMergePartial<QuestSource>(this, message, value);
         return message;
@@ -3064,6 +3070,9 @@ class QuestSource$Type extends MessageType<QuestSource> {
                     break;
                 case /* proto.Faction faction */ 3:
                     message.faction = reader.int32();
+                    break;
+                case /* int32 zone_id */ 4:
+                    message.zoneId = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -3086,6 +3095,9 @@ class QuestSource$Type extends MessageType<QuestSource> {
         /* proto.Faction faction = 3; */
         if (message.faction !== 0)
             writer.tag(3, WireType.Varint).int32(message.faction);
+        /* int32 zone_id = 4; */
+        if (message.zoneId !== 0)
+            writer.tag(4, WireType.Varint).int32(message.zoneId);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
