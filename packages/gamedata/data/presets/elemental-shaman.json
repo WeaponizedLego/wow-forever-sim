@@ -2,7 +2,7 @@
   "specId": "elemental-shaman",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "1b6eca816854b5579df5dcb4037418c14e56c164",
+    "commit": "23dd5378a00d975c428f085ffe0fbe0d2a273ca3",
     "dir": "ui/specs/shaman/elemental",
     "files": ["builds/default.build.json", "presets.ts"]
   },
