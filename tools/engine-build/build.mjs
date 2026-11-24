@@ -38,6 +38,7 @@ import {
   log,
   outDir,
   parseArgs,
+  readLock,
   releaseUrl,
   REPO_ROOT,
   run,
@@ -220,19 +221,26 @@ log(`artifacts in ${out}`);
 log(`sizes: ${JSON.stringify(sizes)}`);
 console.log(JSON.stringify({ engineId, out, sizes, timings }));
 
+// The client build the item data was extracted from: the newest "[DB] … 1.x.y.z" commit that touched db.bin.
+// Upstream changes db.bin in many commits that name no build ("[DB] Bonus armor comes from stat 50 alone"), so
+// the window is 100 commits, not 20: at a8bd7fd the newest that named one was the 21st, and the lock said null.
+// When none is found, or the lookup fails, the lock's own value is kept: a build does not stop being the data's
+// build because nobody named it lately.
 async function findDataBuild(sha) {
   try {
     const commits = await githubApi(
-      `/repos/${UPSTREAM_REPO}/commits?path=assets/database/db.bin&sha=${sha}&per_page=20`,
+      `/repos/${UPSTREAM_REPO}/commits?path=assets/database/db.bin&sha=${sha}&per_page=100`,
     );
     for (const c of commits) {
       const subject = c.commit.message.split('\n')[0];
       const m = subject.startsWith('[DB]') && subject.match(/\b(\d+\.\d+\.\d+\.\d+)\b/);
       if (m) return m[1];
     }
-    console.warn('::warning::no "[DB] ... <build>" commit found for db.bin; dataBuild = null');
+    console.warn('::warning::no "[DB] ... <build>" commit among the last 100 that touched db.bin');
   } catch (e) {
-    console.warn(`::warning::dataBuild lookup failed (${e.message}); dataBuild = null`);
+    console.warn(`::warning::dataBuild lookup failed (${e.message})`);
   }
-  return null;
+  const kept = readLock()?.dataBuild ?? null;
+  console.warn(`::warning::dataBuild = ${kept} (kept from engine.lock.json)`);
+  return kept;
 }

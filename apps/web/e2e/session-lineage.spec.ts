@@ -123,7 +123,11 @@ test('gear missing from the game data is left out of the sim, with a readable wa
   // The sim runs (the engine would panic on the unknown id), and the run says what was left out.
   await simDraft(page, '0001');
   await expect(
-    page.getByText(/Trinket 1 item 999999 is not in data build .* left out of the sim/),
+    // "data build 1.60.1.71037", or "the game data" when the engine lock carries no build (it may not: the
+    // sync reads it from upstream's commit titles).
+    page.getByText(
+      /Trinket 1 item 999999 is not in (data build \S+|the game data) and was left out of the sim/,
+    ),
   ).toBeVisible();
   await expect(page.getByText(/goroutine|Stack Trace/)).toHaveCount(0);
 });
