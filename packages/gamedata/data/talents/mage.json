@@ -2,7 +2,7 @@
   "class": "mage",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "045bf261010b5aaf4f6261d90f0136fb775c03a2",
+    "commit": "90d12bb0d130b407f78b8e6936abaabd5ff8a249",
     "files": ["ui/sim/talents/trees/mage.json", "assets/database/db.json"]
   },
   "trees": [
