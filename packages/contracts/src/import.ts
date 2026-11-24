@@ -64,5 +64,10 @@ export interface ImportContext {
    * an item's suffix as a `bonus_id`, so importers use this to pick it out of the bonus ids.
    */
   isRandomSuffixFor?(itemId: number, suffixId: number): boolean;
+  /**
+   * The hunter pet families the engine sims, by the engine's own name for each ("Cat", "WindSerpent"). An
+   * export's pet family is matched against them. Optional: without it the pet is left to the spec preset.
+   */
+  hunterPetTypes?: readonly string[];
   dataBuild: string;
 }

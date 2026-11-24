@@ -60,7 +60,8 @@ const rotationName = computed(() => {
 const report = computed(() => {
   if (!props.result) return null;
   const d = props.result.diagnostics;
-  return parseReport(filled.value ? withRotationPick(d, filled.value, presets.value!) : d);
+  const f = filled.value;
+  return parseReport(f ? withPetPick(withRotationPick(d, f, presets.value!), f, presets.value!) : d);
 });
 const unusedGroup = computed(() =>
   report.value?.unused.length

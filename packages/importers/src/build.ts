@@ -217,6 +217,8 @@ export interface Draft {
   gear: Gear;
   talents: string;
   professions: string[];
+  /** The spec options the export states (a hunter's pet), in the engine's vocabulary; the preset fills the rest. */
+  specOptions?: Record<string, unknown> | undefined;
 }
 
 /**
@@ -243,7 +245,7 @@ export function finish(draft: Draft, diags: Diags): Character | null {
     talents: draft.talents,
     professions: draft.professions.slice(0, 2),
     consumables: {},
-    specOptions: {},
+    specOptions: draft.specOptions ?? {},
     // No preset chosen: fillFromPreset (@fsim/gamedata) picks the one that fits the talents. Not 'default', which
     // is a real rotation id in some specs.
     rotation: { kind: 'preset', presetId: '' },

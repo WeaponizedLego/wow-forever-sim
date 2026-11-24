@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { characterFromPresets } from './character';
 import { loadSpecPresets, presetSetup } from './presets';
 import { buildRaidSimRequest, fillFromPreset } from './request';
+import { completeSpecOptions, specOptionChanges } from './spec-options';
 import { fixtureDb } from './test-db';
 
 const fixture = RaidSimRequest.fromJson(
@@ -108,7 +109,9 @@ describe('buildRaidSimRequest', () => {
       const filled = fillFromPreset(imported(characterFromPresets(presets, build.id)), presets);
       expect(rotationId(filled), build.id).toBe(build.setup.rotationId);
       expect(filled.consumables, build.id).toEqual(build.setup.consumables);
-      expect(filled.specOptions, build.id).toEqual(build.setup.specOptions);
+      // The build's options, every one written out.
+      expect(filled.specOptions, build.id).toEqual(completeSpecOptions('hunter', build.setup.specOptions));
+      expect(specOptionChanges('hunter', build.setup.specOptions, filled.specOptions).changes).toEqual([]);
     }
     // A Beast Mastery hunter a few points off upstream's build still gets the hawk rotation.
     const bm = characterFromPresets(presets, 'bm');
@@ -123,6 +126,66 @@ describe('buildRaidSimRequest', () => {
     expect(rotationId(fillFromPreset(imported(smite), presets))).toBe('smite');
     const shadow = characterFromPresets(presets, 'shadow-testing');
     expect(rotationId(fillFromPreset(imported(shadow), presets))).toBe('default');
+  });
+
+  it('fills spec options option by option: the character’s own over the preset’s', async () => {
+    const presets = await loadSpecPresets('hunter');
+    // An import that read only the pet: upstream's SV build has none, and sets ammo, quiver and the pet's speed.
+    const sv = characterFromPresets(presets, 'sv');
+    const cat = fillFromPreset(
+      { ...imported(sv), specOptions: { classOptions: { petType: 'Cat' } } },
+      presets,
+    );
+    expect(cat.specOptions).toEqual({
+      classOptions: {
+        quiverBonus: 'AncientSinewWrappedLamina',
+        ammo: 'ThoriumHeadedArrow',
+        petType: 'Cat',
+        petUptime: 1,
+        cobraReflexes: false,
+        petAttackSpeed: 'FasterAttackII',
+      },
+    });
+    const pet = (c: Character) =>
+      (c.specOptions as { classOptions: { petType?: string } }).classOptions.petType;
+    // The BM build's Raptor fills in for an import without a pet, and gives way to one that says "no pet".
+    const bm = imported(characterFromPresets(presets, 'bm'));
+    expect(pet(fillFromPreset(bm, presets))).toBe('Raptor');
+    expect(
+      pet(fillFromPreset({ ...bm, specOptions: { classOptions: { petType: 'PetNone' } } }, presets)),
+    ).toBe('PetNone');
+
+    // Options outside classOptions merge the same way.
+    const cats = await loadSpecPresets('feral-cat-druid');
+    const feral = imported(characterFromPresets(cats));
+    expect(
+      fillFromPreset({ ...feral, specOptions: { prepullClearcasting: true } }, cats).specOptions,
+    ).toEqual({ assumeBleedActive: true, cannotShredTarget: false, prepullClearcasting: true });
+  });
+
+  it('changes nothing when a filled character is filled again, whatever build its talents are closest to', async () => {
+    const presets = await loadSpecPresets('hunter');
+    const sv = fillFromPreset(imported(characterFromPresets(presets, 'sv')), presets);
+    expect(fillFromPreset(sv, presets)).toEqual(sv);
+    // Retalented to Beast Mastery, whose build has a Raptor: the character still has no pet (a share link or a
+    // saved variant is filled again when it is opened, and must sim as it did).
+    const retalented = { ...sv, talents: presetSetup(presets, 'bm').talents };
+    expect(fillFromPreset(retalented, presets).specOptions).toEqual(sv.specOptions);
+  });
+
+  it('sims a stored option the engine no longer has as if it were not there', async () => {
+    const presets = await loadSpecPresets('hunter');
+    const sv = characterFromPresets(presets, 'sv');
+    const stale = {
+      ...sv,
+      specOptions: {
+        classOptions: { ...(sv.specOptions.classOptions as object), petType: 'Sporebat', gone: 1 },
+      },
+    };
+    const opts = { iterations: 10, seed: 1 };
+    expect(comparable(buildRaidSimRequest(stale, presets, fixtureDb(), opts))).toEqual(
+      comparable(buildRaidSimRequest(sv, presets, fixtureDb(), opts)),
+    );
   });
 
   it('keeps a rotation the character already names, and falls back to the defaults without builds', async () => {

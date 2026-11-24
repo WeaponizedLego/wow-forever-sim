@@ -1,9 +1,11 @@
 import type { ImportContext } from '@fsim/contracts';
 import type { GameDatabase } from './database';
+import { hunterPetTypes } from './spec-options';
 
 /**
  * What importers may ask about the data build. An enchant id may be its effect, item or spell id.
  * `enchantIdForSpell` maps a spell id (what Wowhead planner links store) to the enchant's effect id.
+ * `hunterPetTypes` are the pet families of the engine's own pet type enum, not of the data build.
  */
 export function toImportContext(db: GameDatabase, dataBuild: string): Required<ImportContext> {
   return {
@@ -12,6 +14,7 @@ export function toImportContext(db: GameDatabase, dataBuild: string): Required<I
     enchantIdForSpell: (spellId) => db.enchantIdForSpell(spellId),
     isRandomSuffixFor: (itemId, suffixId) =>
       db.items.get(itemId)?.randomSuffixOptions.includes(suffixId) ?? false,
+    hunterPetTypes: hunterPetTypes(),
     dataBuild,
   };
 }

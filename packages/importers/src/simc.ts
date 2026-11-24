@@ -9,10 +9,12 @@
 //   talents=<Blizzard C_Traits loadout string>  converted by ./loadout.ts (see README)
 //   legacy_talents=entry:rank/...               Forever Legacy trees; not used by the engine
 //   head=,id=123,enchant_id=456,bonus_id=1/2    one line per slot, preceded by "# Item (ilvl)"
-//   bag1=,id=...  pet_family=...                Forever extras; not used by the engine
+//   bag1=,id=...  pet_creature_id=...           Forever extras; not used by the engine
+//   pet_family=cat                              a hunter's pet: the engine's pet type (see `hunterPet`)
+//   # pet_info=npc_id:1/level:9/family:boar/…   the same, as the real 12.1.5-02 export has it
 //   # Checksum: <adler32 hex>
 //
-// Lines starting with "#" are comments. Everything is optional except the class line.
+// Lines starting with "#" are comments (only `# pet_info=` is read). Everything is optional except the class line.
 import type { ClassId, Gear, ImportContext, ImportResult, Importer, ItemSlotId } from '@fsim/contracts';
 import { MAX_LEVEL } from '@fsim/contracts';
 import { Diags, checkItem, finish, parseRegion, resolveRace, resolveSpec, slotLabel } from './build';
@@ -24,6 +26,7 @@ import {
   SIMC_SLOTS,
   isOtherGameClass,
   parseClass,
+  parsePetFamily,
   parseProfession,
   parseRole,
 } from './vocab';
@@ -36,7 +39,6 @@ const SLOT_LINE = /^(head|neck|shoulder|chest|main_hand|finger1|trinket1)\s*=[^\
 const IGNORED_KEYS = new Set([
   'legacy_talents',
   'loot_spec',
-  'pet_family',
   'pet_creature_id',
   'pet_level',
   'pet_happiness',
@@ -47,6 +49,11 @@ const IGNORED_KEYS = new Set([
   'position',
 ]);
 const BAG_KEY = /^bag\d+$/;
+/**
+ * The pet line of the addon's commented "Additional Character Info" block, the only place a real export from
+ * addon 12.1.5-02 names the pet: `# pet_info=npc_id:165189/level:9/name:bear/family:boar/type:beast/…`.
+ */
+const PET_INFO = /^#\s*pet_info\s*=(.*)$/i;
 
 /** Item option keys the engine reads. Everything else on an item line is noted and skipped. */
 const ITEM_KEYS = new Set(['id', 'enchant_id', 'suffix', 'bonus_id']);
@@ -87,10 +94,22 @@ function parseSimc(input: string, ctx: ImportContext): ImportResult {
   let name: string | undefined;
   const opts = new Map<string, Lined<string>>();
   const items = new Map<ItemSlotId, Lined<RawItem>>();
+  // The pet's family: the `pet_family` option, else the commented `pet_info` line.
+  let petFamily: Lined<string> | undefined;
+  let petInfoFamily: Lined<string> | undefined;
 
   lines.forEach((raw, index) => {
     const line = index + 1;
     const text = raw.trim();
+    const info = PET_INFO.exec(text);
+    if (info) {
+      const family = info[1]!
+        .split('/')
+        .map((part) => part.split(':'))
+        .find(([k]) => k?.trim().toLowerCase() === 'family')?.[1];
+      if (family?.trim()) petInfoFamily ??= { value: family.trim(), line };
+      return;
+    }
     if (text === '' || text.startsWith('#')) return;
 
     const m = OPTION.exec(text);
@@ -133,6 +152,10 @@ function parseSimc(input: string, ctx: ImportContext): ImportResult {
     }
     if (IGNORED_KEYS.has(key) || BAG_KEY.test(key)) {
       diags.add('PARSE-02', 'info', `${key} skipped; the engine does not use it.`, { line, field: key });
+      return;
+    }
+    if (key === 'pet_family') {
+      petFamily ??= { value, line };
       return;
     }
     if (['level', 'race', 'region', 'server', 'role', 'spec', 'talents', 'professions'].includes(key)) {
@@ -245,6 +268,16 @@ function parseSimc(input: string, ctx: ImportContext): ImportResult {
     if (item) gear[slot] = item;
   }
 
+  // The pet: a hunter's is a spec option of the engine. Any other class's pet line stays unused, as before.
+  let specOptions: Record<string, unknown> | undefined;
+  const pet = petFamily ?? petInfoFamily;
+  if (cls.value === 'hunter' && pet && pet.value !== '') specOptions = hunterPet(pet, ctx, diags);
+  else if (petFamily)
+    diags.add('PARSE-02', 'info', 'pet_family skipped; the engine does not use it.', {
+      line: petFamily.line,
+      field: 'pet_family',
+    });
+
   const regionOpt = opts.get('region');
   const character = finish(
     {
@@ -258,10 +291,40 @@ function parseSimc(input: string, ctx: ImportContext): ImportResult {
       gear,
       talents,
       professions,
+      specOptions,
     },
     diags,
   );
   return { format: 'simc', character, diagnostics: sortByLine(diags.list) };
+}
+
+/**
+ * A hunter's spec options for the pet family the export names: the engine's pet type of that family, the only
+ * option set, so the preset fills in the rest (ammo, quiver, the pet's attack speed). A family the engine has no
+ * pet for sets nothing and is noted: the preset's pet is simmed.
+ */
+function hunterPet(family: Lined<string>, ctx: ImportContext, diags: Diags): Record<string, unknown> {
+  const where = { line: family.line, field: 'pet_family' };
+  if (!ctx.hunterPetTypes) {
+    diags.add(
+      'PARSE-02',
+      'info',
+      `Pet family "${family.value}" not checked (no engine pet list); the spec preset’s pet is used.`,
+      where,
+    );
+    return {};
+  }
+  const petType = parsePetFamily(family.value, ctx.hunterPetTypes);
+  if (!petType) {
+    diags.add(
+      'DEFAULT-05',
+      'info',
+      `Pet family "${family.value}" is not one the engine sims. The spec preset’s pet is used instead.`,
+      where,
+    );
+    return {};
+  }
+  return { classOptions: { petType } };
 }
 
 function parseItem(value: string, slot: ItemSlotId, line: number, diags: Diags): RawItem | undefined {

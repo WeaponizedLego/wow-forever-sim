@@ -14,3 +14,5 @@ export {
 export { Class, Race, Spec, ItemSlot, Stat, PseudoStat, Encounter } from './generated/common';
 export { SimDatabase } from './generated/db';
 export { UIDatabase } from './generated/ui';
+// Field types of the generated messages' reflection info (`X.fields`), for code that reads it.
+export { ScalarType } from '@protobuf-ts/runtime';

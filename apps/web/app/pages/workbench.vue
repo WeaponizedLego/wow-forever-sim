@@ -3,7 +3,7 @@
 // Sub-views are ?tab=… so each has its own URL; the right-hand column (pending changes, stats, caps)
 // stays on every tab because every tab's edits show up there.
 import { ITEM_SLOTS, RACES, fightStyle, type ItemSlotId } from '@fsim/contracts';
-import { changedSettings } from '@fsim/gamedata';
+import { changedSettings, specOptionFields, specOptionRows } from '@fsim/gamedata';
 import type { KeyValue, NavItem } from '~/composables/ui-types';
 import { BUFF_PRESETS, specInfo, talentPoints } from '~/composables/workbench';
 
@@ -19,7 +19,7 @@ function openLatest() {
   if (latest.value) session.openRun(latest.value.id);
 }
 
-const TABS = ['gear', 'talents', 'buffs', 'fight', 'rotation'] as const;
+const TABS = ['gear', 'talents', 'options', 'buffs', 'fight', 'rotation'] as const;
 type Tab = (typeof TABS)[number];
 const tab = computed<Tab>(() => {
   const t = String(route.query.tab ?? 'gear');
@@ -46,9 +46,16 @@ const tabs = computed<NavItem[]>(() => {
   const preset = wb.presets.value?.rotations.find((r) => r.id === rot?.presetId);
   const rotName = preset?.name;
   const edited = !!preset && !!rot && changedSettings(preset, rot).length > 0;
+  // Options: only for a spec that has any (a Rogue has none), with how many are not at the preset's value.
+  const p = wb.presets.value;
+  const offPreset =
+    ch && p?.specId === ch.spec ? specOptionRows(ch, p).rows.filter((r) => r.value !== r.preset).length : 0;
   return [
     { label: 'Gear', to: tabTo('gear') },
     { label: 'Talents', to: tabTo('talents'), detail: ch ? talentPoints(ch.talents).join('/') : undefined },
+    ...(ch && specOptionFields(ch.spec).length
+      ? [{ label: 'Options', to: tabTo('options'), detail: offPreset ? `${offPreset} changed` : undefined }]
+      : []),
     { label: 'Buffs', to: tabTo('buffs'), detail: BUFF_PRESETS.find((b) => b.id === ch?.buffs)?.short },
     {
       label: 'Fight',
@@ -151,11 +158,15 @@ watch(
       <WorkbenchDiagnostics />
 
       <UiPanelGrid>
+        <!-- Only the gear tab is in the page's first load. The others are chunks of their own, fetched when
+             opened (the service worker precaches them, so they open offline too): each tab added to the page
+             would otherwise count against every visit's first-load budget (scripts/check-budget.mjs). -->
         <WorkbenchGearTable v-if="tab === 'gear'" @pick="openPicker" />
-        <WorkbenchTalentsTab v-else-if="tab === 'talents'" />
-        <WorkbenchBuffsTab v-else-if="tab === 'buffs'" />
-        <WorkbenchFightTab v-else-if="tab === 'fight'" />
-        <WorkbenchRotationTab v-else />
+        <LazyWorkbenchTalentsTab v-else-if="tab === 'talents'" />
+        <LazyWorkbenchOptionsTab v-else-if="tab === 'options'" />
+        <LazyWorkbenchBuffsTab v-else-if="tab === 'buffs'" />
+        <LazyWorkbenchFightTab v-else-if="tab === 'fight'" />
+        <LazyWorkbenchRotationTab v-else />
         <WorkbenchPendingChanges />
         <WorkbenchStatsPanel />
         <WorkbenchCapsPanel />

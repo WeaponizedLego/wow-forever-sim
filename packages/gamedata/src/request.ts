@@ -8,17 +8,22 @@ import { Debuffs, PartyBuffs, RaidBuffs } from '@fsim/proto/buffs';
 import { characterToPlayer, type CharacterToPlayerOptions } from './character';
 import type { GameDatabase } from './database';
 import { encounterProto } from './fights';
-import { closestBuild, presetSetup, type SpecPresets } from './presets';
+import { closestSetup, presetSetup, type SpecPresets } from './presets';
+import { completeSpecOptions, mergeSpecOptions } from './spec-options';
 
 /**
  * Fills what an import could not provide (talents, consumables, spec options, and the rotation when its preset id
  * names none of the spec's: importers leave it empty) from the preset build closest to the character's talents,
  * so a Beast Mastery hunter gets upstream's BM rotation and not the spec-wide default. Without talents or builds
  * to go by, the spec's defaults are used. Values the character already has are kept.
+ *
+ * Spec options are filled option by option: the preset's, with the character's own on top, so an import that
+ * read only the pet keeps it and takes ammo and quiver from the preset. The result has every option written out
+ * (`completeSpecOptions`), which makes a second fill change nothing, whatever build the talents are closest to
+ * by then: a shared or saved character sims as it did.
  */
 export function fillFromPreset(character: Character, presets: SpecPresets): Character {
-  const setup =
-    closestBuild(presets, character.talents)?.setup ?? presetSetup(presets, presets.defaultBuildId);
+  const { setup } = closestSetup(presets, character.talents);
   const hasApl = (id: string | null) => presets.rotations.some((r) => r.id === id && r.kind === 'apl');
   const rotationId = hasApl(setup.rotationId)
     ? setup.rotationId
@@ -35,10 +40,10 @@ export function fillFromPreset(character: Character, presets: SpecPresets): Char
       Object.keys(character.consumables).length > 0
         ? character.consumables
         : structuredClone(setup.consumables),
-    specOptions:
-      Object.keys(character.specOptions).length > 0
-        ? character.specOptions
-        : structuredClone(setup.specOptions),
+    specOptions: completeSpecOptions(
+      character.spec,
+      mergeSpecOptions(structuredClone(setup.specOptions), character.specOptions),
+    ),
     rotation,
   };
 }
