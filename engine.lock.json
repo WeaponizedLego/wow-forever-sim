@@ -2,33 +2,33 @@
   "schema": 1,
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "03b1a2c1e7b7893d96137786e08861d458da4753",
-    "committedAt": "2026-11-24T17:11:12+01:00"
+    "commit": "680ed6f99191ff5884794a3d595176ae1a316353",
+    "committedAt": "2026-11-24T18:45:50+01:00"
   },
-  "engineId": "03b1a2c",
+  "engineId": "680ed6f",
   "dataBuild": "1.60.1.71037",
   "goVersion": "1.27.4",
   "artifacts": {
     "wasm": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-03b1a2c/lib.wasm.gz",
-      "sha256": "511e5c353156b764cdcb9341cad7b48688809c62d235695bd94eec4f1dd98a29",
-      "bytes": 5872334
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-680ed6f/lib.wasm.gz",
+      "sha256": "77e5dbd9330c4d485bde070bff23bf330b448d7e3ea14d49ea3c52d1ff7d2bef",
+      "bytes": 5874285
     },
     "wasmExec": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-03b1a2c/wasm_exec.js",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-680ed6f/wasm_exec.js",
       "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
       "bytes": 16992
     },
     "db": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-03b1a2c/db.bin",
-      "sha256": "69a898e94305d9fae17e03fd540af37a0ce3d0853086bcd21e2bee4ca9b15626",
-      "bytes": 1683913
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-680ed6f/db.bin",
+      "sha256": "67949482cb8e18089291475ad88120b57ee3eea56854ec439458cfdb193cfc8e",
+      "bytes": 1691210
     },
     "leftoverDb": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-03b1a2c/leftover_db.bin",
-      "sha256": "19c377a5bdbeb97e01a463e64ac174b4386138512ecf344d97200cda62cf6abf",
-      "bytes": 539425
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-680ed6f/leftover_db.bin",
+      "sha256": "e215a29ac758dfc2fedbe2ae90a53dabe0b2269828be6bb1e2d1f0c1d96033d8",
+      "bytes": 542926
     }
   },
-  "syncedAt": "2026-11-24T16:25:36Z"
+  "syncedAt": "2026-11-24T18:27:24Z"
 }

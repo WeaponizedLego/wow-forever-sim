@@ -2,7 +2,7 @@
   "specId": "hunter",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "03b1a2c1e7b7893d96137786e08861d458da4753",
+    "commit": "680ed6f99191ff5884794a3d595176ae1a316353",
     "dir": "ui/specs/hunter/dps",
     "files": [
       "apls/clean_weave.apl.siml",
@@ -11,6 +11,7 @@
       "apls/melee.apl.siml",
       "apls/normal_weave.apl.siml",
       "apls/pull.apl.siml",
+      "apls/track.apl.siml",
       "apls/turret.apl.siml",
       "apls/turret_hawk.apl.siml",
       "apls/turret_multi.apl.siml",
@@ -1002,6 +1003,18 @@
         "prepullActions": [
           {
             "action": {
+              "groupReference": {
+                "groupName": "Track the target"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-24s"
+              }
+            }
+          },
+          {
+            "action": {
               "castSpell": {
                 "spellId": {
                   "spellId": 14325,
@@ -1901,6 +1914,74 @@
                 }
               }
             ]
+          },
+          {
+            "name": "Track the target",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1494
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19878
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19879
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19880
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19882
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19883
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19884
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "valueVariables": [
@@ -2153,6 +2234,18 @@
       "rotation": {
         "type": "TypeAPL",
         "prepullActions": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Track the target"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-24s"
+              }
+            }
+          },
           {
             "action": {
               "castSpell": {
@@ -2958,6 +3051,74 @@
                 }
               }
             ]
+          },
+          {
+            "name": "Track the target",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1494
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19878
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19879
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19880
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19882
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19883
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19884
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "valueVariables": [
@@ -3112,6 +3273,18 @@
       "rotation": {
         "type": "TypeAPL",
         "prepullActions": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Track the target"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-24s"
+              }
+            }
+          },
           {
             "action": {
               "castSpell": {
@@ -3744,6 +3917,74 @@
                 }
               }
             ]
+          },
+          {
+            "name": "Track the target",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1494
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19878
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19879
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19880
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19882
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19883
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19884
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "valueVariables": [
@@ -3900,6 +4141,18 @@
         "prepullActions": [
           {
             "action": {
+              "groupReference": {
+                "groupName": "Track the target"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-24s"
+              }
+            }
+          },
+          {
+            "action": {
               "castSpell": {
                 "spellId": {
                   "spellId": 14325,
@@ -4314,6 +4567,74 @@
                   "wait": {
                     "duration": {
                       "inputDelay": {}
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Track the target",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1494
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19878
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19879
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19880
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19882
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19883
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19884
                     }
                   }
                 }
@@ -4453,6 +4774,18 @@
         "prepullActions": [
           {
             "action": {
+              "groupReference": {
+                "groupName": "Track the target"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-24s"
+              }
+            }
+          },
+          {
+            "action": {
               "castSpell": {
                 "spellId": {
                   "spellId": 14325,
@@ -4872,6 +5205,74 @@
                 }
               }
             ]
+          },
+          {
+            "name": "Track the target",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1494
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19878
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19879
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19880
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19882
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19883
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19884
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "valueVariables": [
@@ -5004,6 +5405,18 @@
       "rotation": {
         "type": "TypeAPL",
         "prepullActions": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Track the target"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-24s"
+              }
+            }
+          },
           {
             "action": {
               "castSpell": {
@@ -5376,6 +5789,74 @@
                 }
               }
             ]
+          },
+          {
+            "name": "Track the target",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1494
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19878
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19879
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19880
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19882
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19883
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19884
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "valueVariables": [
@@ -5500,6 +5981,18 @@
       "rotation": {
         "type": "TypeAPL",
         "prepullActions": [
+          {
+            "action": {
+              "groupReference": {
+                "groupName": "Track the target"
+              }
+            },
+            "doAtValue": {
+              "const": {
+                "val": "-24s"
+              }
+            }
+          },
           {
             "action": {
               "castSpell": {
@@ -5842,6 +6335,74 @@
                   "wait": {
                     "duration": {
                       "inputDelay": {}
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "Track the target",
+            "actions": [
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 1494
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19878
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19879
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19880
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19882
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19883
+                    }
+                  }
+                }
+              },
+              {
+                "action": {
+                  "castSpell": {
+                    "spellId": {
+                      "spellId": 19884
                     }
                   }
                 }
