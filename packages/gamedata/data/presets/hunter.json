@@ -2,7 +2,7 @@
   "specId": "hunter",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "589c7a574b15ad6c3c938893d7872729f434452f",
+    "commit": "465127febb103dfbe512a4ee338dfd50ac2ba2b4",
     "dir": "ui/specs/hunter/dps",
     "files": [
       "apls/clean_weave.apl.siml",
