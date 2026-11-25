@@ -2,7 +2,7 @@
   "class": "druid",
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "09ec1dc2049676b3e352fedac34d7b69a141619d",
+    "commit": "467bdf176c3622535f7b1aa46c7b0c001721ebcb",
     "files": ["ui/sim/talents/trees/druid.json", "assets/database/db.json"]
   },
   "trees": [
