@@ -1,7 +1,7 @@
 {
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "d45287b64a140010800d631852ccc1f1a1bf91e2",
+    "commit": "589c7a574b15ad6c3c938893d7872729f434452f",
     "files": ["sim/core/spelldata/spells_auto_gen.go", "assets/database/db.json"]
   },
   "spells": [
@@ -183,7 +183,6 @@
     [1462, "Beast Lore", 0],
     [1463, "Mana Shield", 1],
     [1464, "Slam", 2],
-    [1494, "Track Beasts", 0],
     [1495, "Mongoose Bite", 1],
     [1499, "Freezing Trap", 1],
     [1510, "Volley", 1],
@@ -2966,12 +2965,6 @@
     [19870, "Improved Intimidating Shout", 1],
     [19871, "Improved Intimidating Shout", 2],
     [19874, "Lightning Bolt", 0],
-    [19878, "Track Demons", 0],
-    [19879, "Track Dragonkin", 0],
-    [19880, "Track Elementals", 0],
-    [19882, "Track Giants", 0],
-    [19883, "Track Humanoids", 0],
-    [19884, "Track Undead", 0],
     [19885, "Track Hidden", 0],
     [19970, "Entangling Roots", 6],
     [19971, "Entangling Roots", 5],
@@ -7358,7 +7351,6 @@
     [1320579, "Desert Winds", 0],
     [1320643, "Water Breathing", 0],
     [1320726, "Increased Feral Combat", 0],
-    [1320808, "Wound", 0],
     [1320824, "Rend", 0],
     [1320922, "Stock Crate", 0],
     [1320925, "Ablaze", 0],
