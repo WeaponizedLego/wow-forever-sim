@@ -2,33 +2,33 @@
   "schema": 1,
   "upstream": {
     "repo": "wowsims/forever",
-    "commit": "4b264ea90552ef077c0b5a159b64ed03738926ec",
-    "committedAt": "2026-11-25T13:16:05+01:00"
+    "commit": "09ec1dc2049676b3e352fedac34d7b69a141619d",
+    "committedAt": "2026-11-25T12:59:59Z"
   },
-  "engineId": "4b264ea",
+  "engineId": "09ec1dc",
   "dataBuild": "1.60.1.71091",
   "goVersion": "1.27.4",
   "artifacts": {
     "wasm": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-4b264ea/lib.wasm.gz",
-      "sha256": "3f531640b01c7b653c86c9cb6da67e862ae8d15f2259388bace0064b6f8f455d",
-      "bytes": 5882857
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-09ec1dc/lib.wasm.gz",
+      "sha256": "291ee7ef09f972d170922df06aa65e77d312deae4cd0345fd5b1349fc0184624",
+      "bytes": 5882858
     },
     "wasmExec": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-4b264ea/wasm_exec.js",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-09ec1dc/wasm_exec.js",
       "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14",
       "bytes": 16992
     },
     "db": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-4b264ea/db.bin",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-09ec1dc/db.bin",
       "sha256": "090c63132dc21db1a821aaef1017aa0c9a4f15862b1d834d287d0f8b5bcdaadf",
       "bytes": 1692230
     },
     "leftoverDb": {
-      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-4b264ea/leftover_db.bin",
+      "url": "https://github.com/WeaponizedLego/wow-forever-sim/releases/download/engine-09ec1dc/leftover_db.bin",
       "sha256": "e215a29ac758dfc2fedbe2ae90a53dabe0b2269828be6bb1e2d1f0c1d96033d8",
       "bytes": 542926
     }
   },
-  "syncedAt": "2026-11-25T12:32:01Z"
+  "syncedAt": "2026-11-25T13:25:16Z"
 }
